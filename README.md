@@ -69,62 +69,23 @@ export class ExampleWidget extends Component<IExampleWidgetProps, IExampleWidget
 ```
 
 ### Mounting the widget
-Create a script to mount your widget to the correct dom elements. The necessary 
-features for a mounting include a function to find all the DOM elements with your
-widget's name, read all the data attributes off of those elements into a config object
-and for each element, mount the Preact widget component onto that element.
+Using the `mountComponent` script that's provided in the shared `Utils` directory you can tell the widget sdk how to pull in and validate any configuration variables as well as which component should be mounted.
 ```ts
 // index.tsx
-import { h, render } from "preact";
-import { ExampleWidget } from "./Components/ExampleWidget";
+import { MyWidget } from "./Containers/MyWidget/MyWidget";
+import "./index.scss";
+import { mountComponent } from "../Utils/mount";
 
-type MyConfig = {
-  myConfigValue: number
-}
-// Select all the dom elements with the name of your widget as an attribute
-// and mount the widget on each of them.
-const mountPoints = document.querySelectorAll("[data-example-my-widget]");
-for (let i = 0; i < mountPoints.length; i++) {
-    mountWidget(mountPoints[i]);
-}
-
-function mountWidget(el: Element) {
-  // Read any custom data attributes off the element. You can define
-  const config = getExampleAppData<{ MyConfig?: string }>(el);
-  const configValue = parseInt(config.myConfigValue || "0");
-
-  //validate config values
-  if (configValue === 0) {
-      console.error("You did not give me the correct config!");
-      return;
-  }
-
-  // render the widget component with any necessary props to the 
-  // targeted dom element
-  render(<ExampleWidget configValue={configValue} />, el);
-}
-
-/**
-  * Finds all of the data-example-{key} attributes on the given element
-  * and converts them into an object literal.
-  */
-function getExampleAppData<T extends object = any>(el: Element): T {
-    let output: any = {};
-    for (let i = 0; i < el.attributes.length; i++) {
-        let attr = el.attributes[i];
-        if (attr.nodeName.indexOf("data-example-") === 0) {
-            const name = snakeToCamel(attr.nodeName.slice(12));
-            output[name] = attr.nodeValue;
+mountComponent({
+    dataName: "data-example",
+    formatData(data) {
+        if (!data.exampleMyData) {
+            throw new Error("You must specify the [data-example-my-data] attribute for this widget to load");
         }
-    }
-    return output;
-}
-
-function snakeToCamel(s: string): string {
-    return s.replace(/(\-\w)/g, function (m) {
-        return m[1].toUpperCase();
-    });
-}
+        return { ...data, myData: data.exampleMyDatan };
+    },
+    component: MyWidget,
+});
 ```
 
 ### Styling the widget
