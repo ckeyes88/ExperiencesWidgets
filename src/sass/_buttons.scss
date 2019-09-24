@@ -1,0 +1,51 @@
+.wide-blue-button{
+    background: $color-primary-blue;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    text-align: center;
+    width: 9rem;
+    padding: 7px;
+    font-size: 10px;
+    &:hover{
+      cursor: pointer;
+    }
+  }
+  .short-blue-button{
+    background-color: $color-primary-blue;
+    border: none;
+    border-radius: 3px;
+    color: $color-white;
+    text-align: center;
+    width: 5rem;
+    padding: 7px;
+    font-size: 10px;
+    &:hover{
+      cursor: pointer;
+    }
+  }
+  .short-black-button{
+    background-color: black;
+    border: none;
+    border-radius: 3px;
+    color: $color-white;
+    text-align: center;
+    width: 5rem;
+    padding: 7px;
+    font-size: 10px;
+    &:hover{
+      cursor: pointer;
+    }
+  }
+  .short-white-button{
+    background: $color-white $color-gradient-gray;
+    border: 1px solid $color-gray;
+    border-radius: 3px;
+    text-align: center;
+    width: 5rem;
+    padding: 7px;
+    font-size: 10px;
+    &:hover{
+      cursor: pointer;
+    }
+  }

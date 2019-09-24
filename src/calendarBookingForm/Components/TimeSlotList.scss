@@ -1,0 +1,59 @@
+.TimeSlot-DateSelected{
+    text-align: center;
+    font-size: .7rem;
+    display: block;
+    margin:-.5rem 0 3rem 0;
+}
+.TimeSlots-NextAvailableBtn{
+    background-color: $color-primary-blue;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    text-align: center;
+    width: 9rem;
+    padding: 7px;
+    font-size: .62rem;
+    &:hover{
+        cursor: pointer;
+    }
+}
+
+.TimeSlots-NotAvailable{
+    text-align: center;
+    & p{
+        font-size: 12px;
+        margin: 10px;
+    }
+}
+.SelectedDateContainer{
+    position: relative;
+    height: 100%;
+    padding: 2rem;
+    overflow: auto;
+}
+ 
+@include Tablet{
+    .TimeSlots-NotAvailable{
+        padding-top: 4rem;
+    }
+    .TimeSlot-DateSelected{
+        transform: translateY(7rem);
+    }
+}
+@include Laptop{
+    .TimeSlots-NotAvailable{
+        padding-top: 5rem;
+    }
+    .TimeSlot-DateSelected{
+        transform: translateY(8rem);
+    }
+}
+@include Large-Laptop{
+    .TimeSlots-NotAvailable{
+        padding-top: 7rem;
+    }
+    .TimeSlot-DateSelected{
+        transform: translateY(10rem);
+    }
+}
+

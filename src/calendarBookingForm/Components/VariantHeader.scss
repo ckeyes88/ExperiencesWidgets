@@ -1,0 +1,29 @@
+.VariantHeader-Container{
+   text-align: center;
+   padding-top: 2rem;
+}
+.VariantHeader-BackBtn{
+    border: none;
+    background: none;
+    color: $color-primary-blue;
+    text-decoration: underline;
+    display: block;
+    margin: 0 auto;
+    font-weight: 600;
+}
+.VariantHeader-DateSelected{
+    font-weight: bold;
+    text-align: center;
+    font-size: 1rem;
+    display: block;
+    margin: 1rem 0 .5rem 0;
+}
+#VariantHeader-StartTime{
+    font-size: 15px;
+    color: $color-primary-blue;
+}
+#VariantHeader-SpotsAvaliable{
+    font-size: 12px;
+    margin-top: 1px;
+    font-weight: 600;
+}

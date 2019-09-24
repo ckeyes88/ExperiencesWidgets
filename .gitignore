@@ -1,0 +1,11 @@
+dist/
+public/
+!public/widgets.js
+node_modules/
+test/
+*.log
+.env
+.rp2_cache
+.idea/
+.rpt2_cache/
+

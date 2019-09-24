@@ -1,0 +1,28 @@
+@import "./mixins";
+@import "./vars";
+//Components
+@import "./Components/AvailabilityListItem/AvailabilityListItem.scss";
+@import "./Components/Filters/Filters.scss";
+@import "./Components/Button/Button.scss";
+//Containers
+@import "./Containers/AvailabilityList/AvailabilityList.scss";
+@import "./Containers/CarouselWidget/CarouselWidget.scss";
+
+//Global styles
+//main wrapper classname:
+.CarouselWidget {
+
+  //doesn't import this font, it set in design but I beleive we need to choose something from this list:
+  //https://help.shopify.com/en/themes/development/fonts/library
+
+  font-family: "SF Pro Text", sans-serif;
+
+  div {
+    box-sizing: border-box;
+  }
+
+  .Container {
+    max-width: $container-width;
+    margin: 0 auto;
+  }
+}

@@ -1,0 +1,58 @@
+.Variant-Grid{
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns:  repeat(auto-fit, minmax(10rem, 1fr));
+    grid-template-areas: 
+    "box1 . box2";
+}
+.Variant-AddBtn{
+    grid-area: box2;
+    margin-top: -3px;
+    background: $color-white $color-gradient-gray;
+    font-weight: 600;
+    border: 1px solid $color-gray;
+    border-radius: 3px;
+    text-align: center;
+    width: 5rem;
+    padding: 7px;
+    font-size: 10px;
+    &:hover{
+        cursor: pointer;
+    }
+}
+#Variant-Details{
+    grid-area: box1;
+}
+.Variant-Age{
+    font-size: 15px;
+    display: block;
+}
+.Variant-Price{
+    font-size: 12px;
+    margin-top: 1px;
+    font-weight: 600;
+}
+.Variant-QtyContainer{
+    grid-area: box2;
+    width: 6.5rem;
+    align-content: center;
+    text-align: center;
+}
+.Variant-QtyBtn{
+    border-radius: 25px;
+    width: 1rem;
+    border: 1px solid $color-gray;
+    background-color: white;
+    text-align: center;
+    margin: 0 .5rem 0 .5rem;
+    padding: 3px;
+    &:hover{
+        cursor: pointer;
+      }
+}
+@include Tablet{
+    .Variant-Age{
+        display: inline;
+        padding: 5px;
+    }
+}

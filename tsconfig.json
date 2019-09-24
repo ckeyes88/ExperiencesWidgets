@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "target": "es5",
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "jsx": "react",
+    "jsxFactory": "h",
+    "lib": [
+      "es2015",
+      "es2016",
+      "es2017",
+      "dom"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/calendarBookingForm/Components/Calendar.jsx",
+    "src/calendarBookingForm/Components/Calendar-widget/DatePicker.jsx",
+    "src/calendarBookingForm/Components/Calendar-widget/lib/index.jsx",
+    "src/calendarBookingForm/Components/Calendar-widget/lib/CalendarHeader.jsx",
+    "src/calendarBookingForm/Components/Calendar-widget/lib/CalendarDay.jsx",
+    "src/calendarBookingForm/Components/Calendar-widget/lib/Calendar.jsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

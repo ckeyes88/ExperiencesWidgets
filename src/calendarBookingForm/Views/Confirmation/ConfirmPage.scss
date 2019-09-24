@@ -1,0 +1,18 @@
+.ConfirmPage{
+    text-align: center;
+    padding: 2rem;
+}
+.ConfirmPage-Btn{
+    margin-top: 1rem;
+    background-color: $color-primary-blue;
+    border: none;
+    border-radius: 3px;
+    color: $color-white;
+    text-align: center;
+    width: 5rem;
+    padding: 7px;
+    font-size: 10px;
+    &:hover{
+      cursor: pointer;
+    }
+}

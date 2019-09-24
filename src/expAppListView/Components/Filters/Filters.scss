@@ -1,0 +1,22 @@
+.Filters {
+  border: 0 solid $gray;
+  border-top-width: rem(1);
+  border-bottom-width: rem(1);
+
+  .Filters-Container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    padding: rem(10) 0;
+  }
+
+  .Filters-SortBy {
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: 0;
+    padding-left: rem(7);
+    font-size: rem(14);
+  }
+
+}
+

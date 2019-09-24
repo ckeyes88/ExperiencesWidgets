@@ -1,0 +1,36 @@
+.VariantContainer{
+    padding: 2rem;
+    overflow: auto;
+    height: 100%;
+}
+.VariantListTotal-Grid{
+    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    grid-template-areas: 
+    "box1 . box2";
+}
+.VariantListTotal-GrandTotal{
+    grid-area: box1;
+    font-size: 15px;
+}
+.VariantListTotal-ConfirmBtn{
+    grid-area: box2;
+    margin-top: -3px; 
+    background-color: $color-primary-blue;
+    border: none;
+    border-radius: 3px;
+    color: $color-white;
+    text-align: center;
+    width: 5rem;
+    padding: 7px;
+    font-size: 10px;
+    &:hover{
+      cursor: pointer;
+    }
+}
+.VariantListTotal-QtyMessage{
+    padding-top: 1rem;
+    font-size: .7rem;
+    color: rgb(119, 119, 119);
+}

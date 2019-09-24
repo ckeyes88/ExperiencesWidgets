@@ -1,0 +1,19 @@
+@include Tablet{
+    .CustomerInfo-Name{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+       
+    }
+    .CustomerInfo-Email{
+        display: flex;
+        justify-content: center;
+        margin-top: -2.5rem;
+        & label{
+            margin-left: -1.3rem;
+        }
+    }
+}
+@include Large-Laptop{
+  
+}

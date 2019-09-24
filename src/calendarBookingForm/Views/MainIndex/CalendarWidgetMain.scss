@@ -1,0 +1,34 @@
+@import "../../../sass/variables";
+
+[class^="CalendarWidgetMain-OpenModalButton"]{
+    background: $color-primary-blue;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    text-align: center;
+    width: 9rem;
+    padding: 7px;
+    font-size: 10px;
+    &:hover{
+        cursor: pointer;
+    }
+}
+.Loading-Container{
+    text-align: center;
+    padding: 3rem;
+    margin-bottom: 2rem;
+    font-weight: bold;
+}
+.Loading-ReserveSpot{
+    display: block;
+    margin-bottom: 1rem;
+}
+.Loading-ReserveDate{
+    display: block;
+    margin-bottom: 2rem;
+}
+ @include Tablet{
+     .Loading-Container{
+         font-size: 1rem;
+     }
+}

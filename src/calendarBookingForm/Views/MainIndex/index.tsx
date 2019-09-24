@@ -1,0 +1,506 @@
+import { h, Component } from "../../../../node_modules/preact";
+import { Modal } from "../../../SharedComponents/Modal/Modal";
+import { AvailabilityPage } from "../Availability/AvailabilityPage";
+import { OrderDetailsPage } from "../OrderDetails/OrderDetailsPage";
+import { ConfirmPage } from "../Confirmation/ConfirmPage";
+import NotFound from "../404/NotFound";
+import { ModalStateEnum } from "../../types";
+import "./CalendarWidgetMain.scss";
+import { getEvent, getShopDetails, getFirstAvailability, createOrder, CreateOrderArgs, AddToCartArgs, addToCart } from "../../../Utils/api";
+import { EventDBO, EventVariantDBO, PaymentType } from "../../../typings/Event";
+import { ShopDetails } from "../../../typings/ShopDetails";
+import { getFirstDayAvailabilities } from "../../../Utils/helpers";
+import { FirstAvailability } from "../../../typings/FirstAvailability";
+import { unionAvailability } from "../../../Utils/mergeAvailability";
+import { Availability } from "../../../typings/Availability";
+import { OrderLineItemInputData } from "../../../typings/OrderLineItemInput";
+import { CustomerInputData } from "../../../typings/CustomerInput";
+import { FormFieldValueInput } from "../../../typings/FormFieldValueInput";
+import { OrderInputData } from "../../../typings/CreateOrderInput";
+import { Loading } from "../../../SharedComponents/loading/Loading";
+import { format } from "date-fns";
+
+/** 32 days expressed in seconds, used to fetch new availability */
+const TIMESPAN_IN_SECONDS = 32 * 24 * 60 * 60;
+
+/** This is the app initial state, to be set upon loading and upon closing of the modal */
+const INITIAL_STATE: ICalendarWidgetMainState = {
+  showModal: false,
+  modalState: ModalStateEnum.Availability,
+  loading: false,
+  event: null,
+  error: "",
+  shop: {
+    name: "",
+    moneyFormat: "",
+    timezone: "",
+  },
+  now: new Date(),
+  availability: null,
+  firstAvailable: null,
+  fetchedMonths: {},
+  selectedDate: new Date(),
+  selectedTimeslot: null,
+  quantities: {},
+  lineItems: [],
+  customerInfo: null,
+};
+
+export interface ICalendarWidgetMainProps {
+  /** The shopify url of this shop */
+  shopUrl: string;
+  /** The base URL */
+  baseUrl: string;
+  /** The shopify ID for this product (event) */
+  shopifyProductId: number;
+}
+
+export interface ICalendarWidgetMainState {
+  /** Determines whether the modal is open at any given time */
+  showModal: boolean;
+  /** Determines the view displayed within the modal when open */
+  modalState: ModalStateEnum;
+  /** Used to display a loading message when true */
+  loading: boolean;
+  /** The event for which the user is booking spots */
+  event: EventDBO | null;
+  /** Stores an error message to display if necessary */
+  error: string;
+  /** The name, money format, and time zone for the shop */
+  shop: ShopDetails;
+  /** Stores the current date */
+  now: Date;
+  /** The first date with available timeslots for the given event */
+  firstAvailable: Date | null;
+  /** Object containing all of the availability data that has been fetched for the event */
+  availability: FirstAvailability | null;
+  /** The date the user has selected - the date picker only displays timeslots when this is not null */
+  selectedDate: Date | null;
+  /** The timeslot the user has selected - the date picker only displays variants when this is not null */
+  selectedTimeslot: Availability | null;
+  /** Tracks months for which availability has been fetched to prevent overfetching */
+  fetchedMonths: { [year: number]: number[] };
+  /** An object containing the number of spots a user has selected for each event variant */
+  quantities: { [variantId: number]: number };
+  /** Array of line item objects, used to create the order upon confirmation */
+  lineItems: OrderLineItemInputData[];
+  /** Name and email address of the purchaser collected when booking for a non-prepay event */
+  customerInfo: CustomerInputData | null;
+}
+
+/** This is the root component of the app, it stores all of the state as the user completes their order */
+export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICalendarWidgetMainState> {
+
+  constructor(props: ICalendarWidgetMainProps) {
+    super(props);
+
+    this.state = INITIAL_STATE;
+
+  }
+
+  /** Fetch shop, event, and availability data and set the state */
+  async componentDidMount() {
+    this.setLoading();
+    const { baseUrl, shopUrl, shopifyProductId } = this.props;
+    try {
+      //fetch the shop
+      const shop = await getShopDetails({ baseUrl, shopId: shopUrl });
+      //fetch the event
+      const response = await getEvent({ baseUrl, shopId: shopUrl, shopifyProductId });
+      //get availability for the current month and the next
+      const availability = await this.fetchRangeOfAvailability(this.state.now, TIMESPAN_IN_SECONDS * 2);
+      //add next month to the fetched month state
+      this.addFetchedMonth(this.state.now.getMonth() + 1, this.state.now.getFullYear());
+      //capture the first day with availability
+      const firstAvailable = getFirstDayAvailabilities(availability);
+      //set state with the fetched values
+      this.setState({
+        shop,
+        event: (response && response.data),
+        error: "",
+        availability,
+        firstAvailable: (firstAvailable[0] && new Date(firstAvailable[0].startsAt)),
+        loading: false,
+      });
+
+
+    } catch (err) {
+      this.setState({
+        error: err,
+
+        loading: false,
+      });
+    }
+  }
+
+  /** Add a new month to the fetchedMonths state object */
+  private addFetchedMonth(month: number, year: number) {
+    const { fetchedMonths } = this.state;
+    let newYear = [];
+    if (!fetchedMonths[year]) {
+      newYear = [month];
+    } else {
+      newYear = fetchedMonths[year].concat([month]);
+    }
+
+    this.setState({
+      fetchedMonths: {
+        ...this.state.fetchedMonths,
+        [year]: newYear,
+      },
+    });
+  }
+
+  /** Determine if a given month/year has previously been fetched */
+  private monthWasFetched(month: number, year: number) {
+    const { fetchedMonths } = this.state;
+
+    if (fetchedMonths[year] && fetchedMonths[year].includes(month)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Fetchs a chunk of availability based on the currently set timespan in seconds
+   */
+  fetchRangeOfAvailability = async (date: Date, timespanInSeconds = TIMESPAN_IN_SECONDS) => {
+    const { baseUrl, shopUrl, shopifyProductId } = this.props;
+    return getFirstAvailability({ baseUrl, shopId: shopUrl, productId: shopifyProductId, startingFrom: date, timespanInSeconds });
+  }
+
+  /**
+   * On navigation to a new month or year, this method is called to fetch more availability and add it to the current availability in state.
+   * Note: the date passed in is usually the first of the given month.
+   */
+  setNewAvailability = async (date: Date) => {
+    //pull the month and year from the date passed in
+    const month = date.getMonth();
+    const year = date.getFullYear();
+
+    //check to see whether the month has already been fetched. if not, fetch it.
+    if (!this.monthWasFetched(month, year)) {
+
+      let fetchedAvailability: FirstAvailability = {};
+
+      //if the current date is mid-month, only fetch beginning from the current date
+      if (this.state.now.getTime() >= date.getTime()) {
+        fetchedAvailability = await this.fetchRangeOfAvailability(this.state.now);
+        //else fetch from the date passed in (i.e. the first of the month)
+      } else {
+        fetchedAvailability = await this.fetchRangeOfAvailability(date);
+      }
+
+      //merge the fetched availability with the previously fetched availability in state
+      const newAvailability = unionAvailability(this.state.availability, fetchedAvailability);
+
+      this.setState({
+        availability: newAvailability,
+      });
+
+      //remember that this month has already been fetched
+      this.addFetchedMonth(month, year);
+    }
+  }
+
+  /** Sets the top-level loading state to true */
+  setLoading = () => {
+    //calls out to api
+    this.setState({ loading: true });
+  }
+
+  /** Sets the showModal state slice to true, displaying the modal */
+  openModal = () => {
+    this.setState({
+      showModal: true,
+    });
+  }
+
+  /** Sets the showModal state slice to false, and returns the component to its initial state */
+  closeModal = () => {
+    this.setState({
+      showModal: false,
+      modalState: ModalStateEnum.Availability,
+      loading: false,
+      error: "",
+      now: new Date(),
+      selectedDate: new Date(),
+      selectedTimeslot: null,
+      quantities: {},
+      lineItems: [],
+      customerInfo: null,
+    });
+  }
+
+  /** Pass in a valid modal state to dictate the modal's current content */
+  navigateTo = (modalState: ModalStateEnum) => {
+    this.setState({
+      modalState,
+    });
+  }
+  /** On click fires the first available event */
+  handleSelectFirstAvailability = () => {
+    this.handleDateSelect(this.state.firstAvailable);
+  }
+
+  /** Sets up the order and either sends confirmation email OR adds the order to the cart */
+  handleConfirmOrder = async () => {
+    //set loading to true
+    this.setLoading();
+    this.navigateTo(ModalStateEnum.ConfirmPage);
+
+
+    //if the event payment type is prepay, order will be added to cart
+    if (this.state.event.paymentType === PaymentType.Prepay) {
+      const { event } = this.state;
+      const { variants } = event;
+
+      //set up arguments for adding to cart
+      const shopifyVariants = variants.map(function (v) {
+        return {
+          id: v.shopifyVariantId,
+          name: `${event.name} - ${v.name}`,
+          title: v.name,
+          price: v.price,
+        };
+      });
+      const order: AddToCartArgs = {
+        variants: shopifyVariants,
+        timeslot: this.state.selectedTimeslot,
+        quantities: this.state.quantities,
+      };
+
+      //add the order to the cart
+      try {
+        await addToCart(order);
+        window.location.href = "/cart";
+      } catch (e) {
+        this.setState({ loading: false });
+        console.error(e);
+      }
+      //the order is not prepay, so it should be created in our system
+    } else {
+      //set up the order creation arguments
+      const order: OrderInputData = {
+        customer: this.state.customerInfo,
+        lineItems: this.state.lineItems,
+      };
+      const orderArgs: CreateOrderArgs = {
+        order,
+        baseUrl: this.props.baseUrl,
+        shopId: this.props.shopUrl,
+      };
+
+      //create the order
+      await createOrder(orderArgs);
+
+      //reset loading to false and navigate to the confirmation page
+      this.setState({ loading: false });
+    }
+  }
+
+  /** makes sure to set state to selected date */
+  handleDateSelect = (date: Date) => {
+    this.setState({
+      selectedDate: date,
+      selectedTimeslot: null,
+    });
+  }
+
+  /** Called when the user selects a timeslot
+   * Stores the timeslot in state and sets the initial quantities per variant to zero
+   * */
+  handleSelectTimeSlot = (timeslot: Availability) => {
+    //Set up or reset the quantities to be zero for each variant
+    const { variants } = this.state.event;
+    let quantities: { [variantId: number]: number } = {};
+    variants.forEach(function (variant) {
+      quantities[variant.shopifyVariantId] = 0;
+    });
+    //Set the state with the new timeslot and the zero quantities
+    this.setState({
+      selectedTimeslot: timeslot,
+      quantities,
+    });
+  }
+
+  /** Triggered when the user increments or decrements the quantity for a single variant */
+  handleChangeQuantity = (dir: number, variantId: number) => {
+    let newQuantities = this.state.quantities;
+    newQuantities[variantId] += dir;
+    this.setState({ quantities: newQuantities });
+  }
+
+  /** Triggered upon clicking the back button displayed on the date picker when a timeslot is selected
+   * Deselects the timeslot by setting the timeslot to null in state
+  */
+  handleClickBack = () => {
+    this.setState({
+      selectedTimeslot: null,
+    });
+  }
+  /** Triggered upon clicking the back button in the conformation view will display the selected time slot */
+  handleConfirmationClickBack = () => {
+    this.navigateTo(ModalStateEnum.Availability);
+  }
+
+  /** Creates an order line item  */
+  handleAddLineItem = (variant: EventVariantDBO, customFormFieldValues?: FormFieldValueInput[]) => {
+
+    const { event, selectedTimeslot } = this.state;
+
+    const eventId = event._id.toString();
+
+
+    const newLineItem = {
+      eventId,
+      eventVariantName: variant.name,
+      productId: event.shopifyProductId,
+      productVariantId: variant.shopifyVariantId,
+      startsAt: selectedTimeslot.startsAt,
+      endsAt: selectedTimeslot.endsAt,
+      timezone: selectedTimeslot.timezone,
+      quantity: 1,
+      customOrderDetailsValues: customFormFieldValues,
+    };
+
+    let newLineItems = this.state.lineItems;
+    newLineItems.push(newLineItem);
+    this.setState({
+      lineItems: newLineItems,
+    });
+  }
+
+  /** If an event is not prepay, this is triggered when the user enters their name and email
+   * This happens in the OrderDetailsPage view
+   */
+  handleAddCustomerInfo = (customer: CustomerInputData) => {
+    this.setState({
+      customerInfo: customer,
+    });
+  }
+
+  /** This is triggered when the user confirms their desired date, timeslot, and variant quantities */
+  handleConfirmVariants = () => {
+
+    //TODO: add state validation
+
+    const { event } = this.state;
+
+    // If the event has a custom form, redirect to the OrderDetailsPage view
+    if (event.customOrderDetails.fields &&
+      Array.isArray(event.customOrderDetails.fields) &&
+      event.customOrderDetails.fields.length) {
+      this.navigateTo(ModalStateEnum.OrderDetails);
+      // If the event is not prepay, also redirect to the OrderDetailsPage view
+    } else if (event.paymentType !== PaymentType.Prepay) {
+      this.navigateTo(ModalStateEnum.OrderDetails);
+      // If neither of the above cases apply, simply add the order to the user's cart
+    } else {
+      this.handleConfirmOrder();
+    }
+  }
+
+  /** Determine content of the loading view */
+  renderLoading = () => {
+
+    const { lineItems } = this.state;
+
+    if (this.state.modalState === ModalStateEnum.ConfirmPage) {
+      return (
+        <div className="Loading-Container">
+          <Loading>
+            <span className="Loading-ReserveSpot">Reserving {lineItems.length} spot{lineItems.length > 1 && "s"} for </span>
+            <span className="Loading-ReserveDate">{format(new Date(lineItems[0].startsAt), "EEEE MMMM d, yyyy")} at {format(new Date(lineItems[0].startsAt), "h:mma")}</span>
+          </Loading>
+        </div>
+      );
+    }
+    return (
+      <Loading>
+        <span>Loading...</span>
+      </Loading>
+    );
+  }
+
+  /** Switch case statement to render the appropriate view in the modal */
+  renderModalContent = () => {
+    if (this.state.loading) {
+      return (
+        this.renderLoading()
+      );
+    }
+    switch (this.state.modalState) {
+      case ModalStateEnum.Availability:
+        return (
+          // This view is the date picker where the user can select a date, timeslot, and set variant quantities
+          <AvailabilityPage
+            availability={this.state.availability}
+            moneyFormat={(this.state.shop && this.state.shop.moneyFormat)}
+            event={this.state.event}
+            navigateTo={this.navigateTo}
+            setNewAvailability={this.setNewAvailability}
+            selectedDate={this.state.selectedDate}
+            selectedTimeslot={this.state.selectedTimeslot}
+            onClickBack={this.handleClickBack}
+            onDateSelect={this.handleDateSelect}
+            onSelectTimeslot={this.handleSelectTimeSlot}
+            quantities={this.state.quantities}
+            onChangeQuantity={this.handleChangeQuantity}
+            onConfirm={this.handleConfirmVariants}
+            closeModal={this.closeModal}
+            confirmOrder={this.handleConfirmOrder}
+            onSelectFirstAvailability={this.handleSelectFirstAvailability}
+            onConfirmSelection={this.handleConfirmVariants}
+          />
+        );
+      case ModalStateEnum.OrderDetails:
+        return (
+          // This view renders forms to collect user and attendee data if applicable
+          <OrderDetailsPage
+            quantities={this.state.quantities}
+            selectedDate={this.state.selectedDate}
+            selectedTimeslot={this.state.selectedTimeslot}
+            event={this.state.event}
+            onAddCustomFormValues={this.handleAddLineItem}
+            onAddCustomerInfo={this.handleAddCustomerInfo}
+            customerInfo={this.state.customerInfo}
+            onConfirmOrder={this.handleConfirmOrder}
+            onClickBack={this.handleClickBack}
+            closeModal={this.closeModal}
+          />
+        );
+      case ModalStateEnum.ConfirmPage:
+        return (
+          <ConfirmPage
+            closeModal={this.closeModal}
+            customerInfo={this.state.customerInfo}
+          />
+        );
+      default:
+        <NotFound navigateTo={this.navigateTo} />;
+    }
+  }
+
+  /** Main render method - renders the display button, and the modal if open */
+  public render() {
+    const label = this.state.loading ? "Loading..." : "Reserve";
+    return (
+      <div>
+        <div className="CalendarWidgetMain">
+          <button
+            onClick={this.openModal}
+            className={`CalendarWidgetMain-OpenModalButton
+            ${this.state.loading ? "-isLoading" : ""}`}
+          >
+            {label}
+          </button>
+          <Modal showModal={this.state.showModal} closeModal={this.closeModal}>
+            {this.renderModalContent()}
+          </Modal>
+        </div>
+      </div>
+    );
+  }
+}

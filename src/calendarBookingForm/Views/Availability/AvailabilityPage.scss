@@ -1,0 +1,56 @@
+.AvailabilityPage{
+    position: absolute;
+    display: flex;
+    flex-flow: row wrap;
+    width: 100%;
+}
+.AvailabilityPage-DatePickerContainer{
+    position: relative;
+    width: 100%;
+    padding-right: 2rem;
+    background-color: rgb(238, 238, 238); 
+    overflow: hidden;
+}
+.AvailabilityPage-TimeSlotContainer{
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    overflow: auto;
+}
+.MobileView-Header{
+   padding: 1rem;
+    font-weight: bold;
+    background-color: #ffffff;
+    transform: translateX(-20px);
+    width: 109%;
+    & p{
+        margin-left: 1rem;
+    }
+}
+#MobileView-CloseBtn{
+    border-radius: 25px;
+    border: none;
+    background-color: $color-primary-blue;
+    color: #ffffff;
+    height: 1.5rem;
+    width: 1.5rem;
+    float: right;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-right: 1rem;
+    transform: translateY(-3px);
+}
+@include Tablet{
+    .AvailabilityPage{
+        flex-flow: row;
+    }
+    .AvailabilityPage-DatePickerContainer{
+        border: none;
+        border-right: 3px solid lightgray;
+        background-color: white;
+    }
+    .MobileView-Header{
+        display: none;
+    }
+}
+

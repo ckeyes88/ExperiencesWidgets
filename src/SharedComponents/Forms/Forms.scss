@@ -1,0 +1,78 @@
+.FormField-RenderInput{
+    position: relative;
+    margin: 1rem 0 1.5rem 0;
+}
+.FormField-Input{
+    border: none;
+    border-bottom: 2px solid lightgray;
+    width: 70%;
+    outline: none;
+}
+.FormField-Label{
+    position: absolute;
+    transition: all 200ms;
+    opacity: 0.5;
+    z-index: 2;
+    left: 15%;
+}
+.FormField-Input:focus + .FormField-Label,
+.FormField-Input:valid + .FormField-Label{
+    font-size: 75%;
+    transform: translate3d(0, -70%, 0);
+    opacity: 1;
+}
+.FormField-Input::placeholder{
+    color: transparent;
+}
+input.FormField-Input:focus::placeholder,
+input.FormField-Input:valid::placeholder{
+    color: black;
+}
+.FormField-SelectLabel{
+    display: block;
+}
+.FormField-RenderSelect select{
+    border: none;
+    border-bottom: 2px solid lightgray;
+    width: 70%;
+    font-size: .7rem;
+    padding: 1rem 0 .3rem 0;
+    margin: 0 auto;
+    outline: none;
+}
+.CustomForm-Container{
+    margin-bottom: 1rem;
+    padding: 1rem;
+    overflow: auto;
+}
+
+@include Tablet{
+    .FormField-Label{
+        padding-top: 1.3rem;
+        left: 6%;
+    }
+    .FormField-RenderInput input{
+        border: 2px solid lightgray;
+        padding: .5rem 0 .5rem .2rem;
+        width: 20rem;
+        margin: .7rem;
+    }
+    input[type=email]{      
+        width: 42rem;
+    }
+    .FormField-Container{
+        width: 50%;
+        text-align: center;
+        margin: 0 auto;
+        & input[type=email]{
+            width: 20rem;
+        }
+        & select{
+            width: 20rem;
+        }
+        & label{
+            left: 20%;
+        }
+    }
+
+}
