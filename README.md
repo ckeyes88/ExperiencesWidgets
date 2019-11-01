@@ -131,4 +131,4 @@ export class ExampleWidget extends Component<IExampleWidgetProps, IExampleWidget
 This repo is under heavy development and may have breaking changes at times. We will do our best to keep things working as much as possible. We're also always open to the community submitting PR's and contributing to the improvement of this code. If you come across any issues and/or missing features we welcome your PR's to address them!
 
 ### Contact
-For bugs and feature requests, please use github issues. For further questions for the Experiences App Team please submit an email to `team@experiencesapp.com` and we will try to respond within 24hrs.
+For bugs and feature requests, please use github issues. For further questions for the Experiences App Team please submit an email to `hello@experiencesapp.com` and we will try to respond within 24hrs.
