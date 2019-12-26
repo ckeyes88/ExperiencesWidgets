@@ -1,23 +1,23 @@
-.AvailabilityPage{
+.AvailabilityPage {
     position: absolute;
     display: flex;
     flex-flow: row wrap;
     width: 100%;
 }
+
 .AvailabilityPage-DatePickerContainer{
     position: relative;
     width: 100%;
-    padding-right: 2rem;
     background-color: rgb(238, 238, 238); 
     overflow: hidden;
 }
-.AvailabilityPage-TimeSlotContainer{
+.AvailabilityPage-TimeSlotContainer {
     position: relative;
     margin: 0 auto;
     width: 100%;
     overflow: auto;
 }
-.MobileView-Header{
+.MobileView-Header {
    padding: 1rem;
     font-weight: bold;
     background-color: #ffffff;
@@ -27,13 +27,40 @@
         margin-left: 1rem;
     }
 }
-#MobileView-CloseBtn{
+
+.product__display-grid__col1 .product__display-grid__divider {
+    border-top: 1px solid #dfdfdf;
+    margin: 20px 0;
+}
+
+.social-sharing a {
+    margin-right: 5px;
+    border: none;
+
+}
+
+.btn--share .icon {
+  fill: #3d4246;
+}
+
+// hide titles under share buttons
+.social-sharing .share-title { 
+    display: none;
+}
+
+.social-sharing {
+    border-top: 1px solid #dfdfdf;
+    margin: 20px 0;
+}
+
+#MobileView-CloseBtn {
     border-radius: 25px;
     border: none;
     background-color: $color-primary-blue;
     color: #ffffff;
     height: 1.5rem;
     width: 1.5rem;
+    line-height: 1.5rem;
     float: right;
     font-size: 1.2rem;
     text-align: center;
@@ -44,12 +71,12 @@
     .AvailabilityPage{
         flex-flow: row;
     }
-    .AvailabilityPage-DatePickerContainer{
+    .AvailabilityPage-DatePickerContainer {
         border: none;
         border-right: 3px solid lightgray;
         background-color: white;
     }
-    .MobileView-Header{
+    .MobileView-Header {
         display: none;
     }
 }

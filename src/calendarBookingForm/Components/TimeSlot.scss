@@ -21,10 +21,9 @@
 }
 .TimeSlot-SelectBtn{
     grid-area: box2;
-    margin-top: -3px; 
     background-color: $color-primary-blue;
     border: none;
-    border-radius: 3px 3px 3px 3px;
+    border-radius: 3px;
     color: $color-white;
     text-align: center;
     width: 5rem;
