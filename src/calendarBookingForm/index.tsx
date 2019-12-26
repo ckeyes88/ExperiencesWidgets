@@ -16,8 +16,14 @@ mountComponent({
     if (!data.calendarBookingFormProductId) {
       throw new Error("You must specify a product id for this widget to work");
     }
-
-    return { ...data, shopUrl: data.calendarBookingFormShopUrl, baseUrl: data.calendarBookingFormBaseUrl, shopifyProductId: parseInt(data.calendarBookingFormProductId) };
+    
+    return { 
+        ...data, 
+        baseUrl: data.calendarBookingFormBaseUrl, 
+        enableBuySdk: data.calendarBookingFormBuySdk === "true",
+        shopUrl: data.calendarBookingFormShopUrl, 
+        shopifyProductId: parseInt(data.calendarBookingFormProductId),
+    };
   },
   component: CalendarWidgetMain,
 });

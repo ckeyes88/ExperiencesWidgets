@@ -47,10 +47,12 @@ const INITIAL_STATE: ICalendarWidgetMainState = {
 };
 
 export interface ICalendarWidgetMainProps {
-  /** The shopify url of this shop */
-  shopUrl: string;
   /** The base URL */
   baseUrl: string;
+  /** Flag denoting whether buy sdk should be used */
+  enableBuySdk: boolean;
+  /** The shopify url of this shop */
+  shopUrl: string;
   /** The shopify ID for this product (event) */
   shopifyProductId: number;
 }
@@ -94,8 +96,7 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
   constructor(props: ICalendarWidgetMainProps) {
     super(props);
 
-    this.state = INITIAL_STATE;
-
+    this.state = INITIAL_STATE;        
   }
 
   /** Fetch shop, event, and availability data and set the state */
@@ -245,51 +246,62 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
   }
 
   /** Sets up the order and either sends confirmation email OR adds the order to the cart */
-  handleConfirmOrder = async () => {
+  private handleConfirmOrder = async () => {
     //set loading to true
     this.setLoading();
     this.navigateTo(ModalStateEnum.ConfirmPage);
 
+    const paymentType = this.state.event.paymentType;
 
     //if the event payment type is prepay, order will be added to cart
-    if (this.state.event.paymentType === PaymentType.Prepay) {
-      const { event } = this.state;
-      const { variants } = event;
+    if (paymentType === PaymentType.Prepay) {
+      const {
+        event: { name: eventName, variants },
+        quantities,
+        selectedTimeslot,
+      } = this.state;
 
       //set up arguments for adding to cart
       const shopifyVariants = variants.map(function (v) {
         return {
           id: v.shopifyVariantId,
-          name: `${event.name} - ${v.name}`,
+          name: `${eventName} - ${v.name}`,
           title: v.name,
           price: v.price,
         };
       });
+
+      // Define order object
       const order: AddToCartArgs = {
         variants: shopifyVariants,
-        timeslot: this.state.selectedTimeslot,
-        quantities: this.state.quantities,
+        timeslot: selectedTimeslot,
+        quantities,
       };
 
       //add the order to the cart
       try {
-        await addToCart(order);
+        await addToCart(order, { enableBuySdk: this.props.enableBuySdk });
         window.location.href = "/cart";
       } catch (e) {
         this.setState({ loading: false });
         console.error(e);
       }
       //the order is not prepay, so it should be created in our system
-    } else {
+    } 
+    else {
+      const { customerInfo, lineItems } = this.state;
+      const { baseUrl, shopUrl } = this.props;
+
       //set up the order creation arguments
       const order: OrderInputData = {
-        customer: this.state.customerInfo,
-        lineItems: this.state.lineItems,
+        customer: customerInfo,
+        lineItems,
       };
+      
       const orderArgs: CreateOrderArgs = {
         order,
-        baseUrl: this.props.baseUrl,
-        shopId: this.props.shopUrl,
+        baseUrl,
+        shopId: shopUrl,
       };
 
       //create the order

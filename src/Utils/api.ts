@@ -105,6 +105,11 @@ export type AddToCartArgs = {
   attendees?: FormAttendee[];
 };
 
+export type AddToCartOptions = {
+    /** Flag denoting whether buy sdk should be used over default add to cart logic */
+    enableBuySdk?: boolean;
+} | undefined;
+
 type AttendeeProperties = {
   firstName: string,
   lastName: string,
@@ -241,7 +246,10 @@ export async function getShopDetails({ baseUrl, shopId }: APIArguments): Promise
  * Adds the an event product to the cart with the selected quantity
  * and the date/time of the event.
  */
-export async function addToCart({ variants, timeslot, quantities, fields, attendees, shopUrl }: AddToCartArgs): Promise<void> {
+export async function addToCart(
+    { variants, timeslot, quantities, fields, attendees, shopUrl }: AddToCartArgs,
+    { enableBuySdk }: AddToCartOptions,
+): Promise<void> {
 
   const When: string = timeslot.formattedTimeslot.when;
   let requests: AddToCartRequestBody[] = [];
