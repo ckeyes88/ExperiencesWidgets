@@ -29,6 +29,15 @@
 }
 
 @include Phone { 
+    .VariantHeader-BackBtn {
+        display: none;
+    }
+
+    .VariantHeader-MobileContainer {
+        padding: 1rem;
+        background-color: #F5F5F5;
+    }
+
     .VariantHeader-DateSelected {
         margin: 0px;
     }
