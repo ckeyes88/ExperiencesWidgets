@@ -1,4 +1,4 @@
-.Variant-Grid{
+.Variant-Grid {
     margin-top: 2rem;
     display: grid;
     grid-template-columns:  repeat(auto-fit, minmax(10rem, 1fr));
@@ -53,8 +53,21 @@
         cursor: pointer;
       }
 }
-@include Tablet{
+@include Tablet {
     .Variant-Age {
         display: inline;
+    }
+}
+
+@include Phone {
+    .Variant-Grid {
+        padding: 1.5rem 2rem;
+        margin-top: 0px;
+        border-bottom: 1px solid #dfdfdf;
+    }
+
+    .VariantListTotal-Grid {
+        padding: 1.5rem 2rem;
+        margin-top: 0px;
     }
 }
