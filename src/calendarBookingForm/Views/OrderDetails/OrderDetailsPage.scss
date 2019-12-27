@@ -13,7 +13,7 @@
     text-align: center;
     width: 5rem;
     padding: 7px;
-    font-size: 10px;
+    font-size: 15px;
     transform: translateY(2rem);
     &:hover{
       cursor: pointer;
@@ -72,10 +72,11 @@
 }
 
 .CustomOrderDetails-SubmitBtn{
-    display:block;
+    display: block;
+    padding: 1rem;
     text-align: center;
-    transform: translateY(-3rem);
-    & button{
+    & button {
+        font-size: 15px;
         background-color: $color-primary-blue;
         border: none;
         border-radius: 3px;
@@ -83,7 +84,7 @@
         text-align: center;
         width: 5rem;
         padding: 7px;
-        font-size: 10px;
+        font-size: 15px;
         &:hover{
           cursor: pointer;
         }
@@ -98,16 +99,14 @@
     }
     .customer-info-EventDetails{
         background-color: white;
-        padding: 0 0 1rem 0;
-        margin-top: -.5rem;
+        padding: 0;
+        margin-top: 0;
     }
-    .customer-info-SubmitBtn{
+
+    .customer-info-SubmitBtn {
         transform: translateY(-1rem);
     }
-    .customer-info{
-        margin-top: 3rem;
-    }
-    .CustomOrderDetails-Header{
+    .CustomOrderDetails-Header {
         background-color: #ffffff;
     }
 }

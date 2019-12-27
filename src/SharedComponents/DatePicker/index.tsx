@@ -24,6 +24,8 @@ type DatePickerProps = {
   startDate?: Date;
   /** The initial end date of the range that will be selected on load if it is a date range selector */
   endDate?: Date;
+  /** Determine if we hide calendar */
+  hideCalendar?: boolean;
   /** Custom function to determine if a date is enabled for selection */
   isDateEnabled?(focused: number | Date): boolean;
   /** Fires every time a date is selected by the user either by clicking on it or navigating and hitting enter - Only applies to single date picker*/
@@ -402,6 +404,7 @@ export class DatePicker extends Component<DatePickerProps, DatePickerState> {
 
     return (
       <Calendar
+        hideCalendar={this.props.hideCalendar}
         calendarRef={this.bindRef}
         month={this.state.month}
         year={this.state.year}
