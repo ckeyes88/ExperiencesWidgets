@@ -21,9 +21,7 @@
     padding: 1rem;
     font-weight: bold;
     background-color: #ffffff;
-    transform: translateX(-20px);
     position: inherit;
-    right: -20px;
     & p {
         color: black;
         text-align: center;
@@ -67,7 +65,18 @@
     float: right;
     font-size: 1.2rem;
     text-align: center;
-    transform: translateY(-3px);
+}
+
+@include Phone {
+    .exp__host-details-container {
+        flex-direction: column;
+    }
+    .product__display-grid__host-image {
+        margin: 10px 0px;
+    }
+    .exp__host-desc-container {
+        padding-left: 0px;
+    }
 }
 @include Tablet{
     .AvailabilityPage{

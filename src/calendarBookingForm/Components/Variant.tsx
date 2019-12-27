@@ -74,7 +74,7 @@ export class Variant extends Component<IVariantProps, IVariantState> {
 
   /** renders */
   render() {
-    const name = this.props.variant.name;
+    const name = (this.props.variant.name === "Default") ? "Guest" : this.props.variant.name; 
 
     return (
       <div className="Variant">
