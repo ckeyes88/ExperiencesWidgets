@@ -10,17 +10,11 @@
 }
 .FormField-Label{
     position: absolute;
-    transition: all 200ms;
     opacity: 0.5;
     z-index: 2;
     left: 15%;
 }
-.FormField-Input:focus + .FormField-Label,
-.FormField-Input:valid + .FormField-Label{
-    font-size: 75%;
-    transform: translate3d(0, -70%, 0);
-    opacity: 1;
-}
+
 .FormField-Input::placeholder{
     color: transparent;
 }
@@ -53,7 +47,7 @@ input.FormField-Input:valid::placeholder{
     }
     .FormField-RenderInput input{
         border: 2px solid lightgray;
-        padding: .5rem 0 .5rem .2rem;
+        padding: .5rem;
         width: 20rem;
         margin: .7rem;
     }
