@@ -8,6 +8,8 @@
     .TimeSlotsHeader{
         font-weight: normal;
         font-size: .75rem;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #dfdfdf;
     }
 }
 @include Tablet{

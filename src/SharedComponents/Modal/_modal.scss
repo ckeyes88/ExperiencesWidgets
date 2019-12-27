@@ -13,7 +13,7 @@
     right: 50%;
     height: 100%;
     transform: translate(50%,-50%);
-    overflow: hidden;
+    overflow-y: scroll;
     background-color: #fff;
 }
 @include Tablet{

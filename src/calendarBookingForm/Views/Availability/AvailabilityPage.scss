@@ -18,12 +18,13 @@
     overflow: auto;
 }
 .MobileView-Header {
-   padding: 1rem;
+    padding: 1rem;
+    color: black;
     font-weight: bold;
     background-color: #ffffff;
     transform: translateX(-20px);
     width: 109%;
-    & p{
+    & p {
         margin-left: 1rem;
     }
 }
