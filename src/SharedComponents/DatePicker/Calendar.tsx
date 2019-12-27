@@ -16,6 +16,8 @@ type CalendarProps = {
     month: number;
     /** the currently displayed year */
     year: number;
+    /** Determine if we hide calendar */
+    hideCalendar?: boolean;
     /** function to determine if a specific date has been selected */
     isDateSelected(date: Date): boolean;
     /** function to determine if a specific date is highlighted */
@@ -69,7 +71,8 @@ export class Calendar extends Component<CalendarProps> {
     /** render */
     render({ month, calendarRef, year, isDateSelected, isDateEnabled, isDateHovered, isDateFocused, isDateInRange, isDateHighlighted, onDateFocused, onDateHovered, onDateSelected, onChangeYear, disabled, locale }: CalendarProps) {
         return (
-            <div ref={calendarRef} className="CalendarContainer">
+            /** Hide calendar view if a date has been selected */
+            <div ref={calendarRef} className={`CalendarContainer ${!!this.props.hideCalendar ? "hidden" : ""}`}>
                 <CalendarHeader
                     month={month}
                     year={year}

@@ -136,9 +136,22 @@ export class AvailabilityPage extends Component<IAvailabilityPageProps, IAvailab
       <div className="AvailabilityPage">
         <div className="AvailabilityPage-DatePickerContainer">
           <div className="MobileView-Header">
-            <p>{this.props.event.name} <button id="MobileView-CloseBtn" onClick={this.handleCloseModal}>&times;</button></p>
+            <p>
+              {/* Back button only for when time slot selected */ }
+              {!!this.props.selectedTimeslot && 
+                <button
+                  className="BackButton"
+                  title="Previous Month"
+                  onClick={this.props.onClickBack}
+                >&#8592;
+                </button>}
+              {/* If a date has been selected then select quantity view will appear */ }
+              {!!this.props.selectedTimeslot ? "Select quantity" : this.props.event.name} 
+              <button id="MobileView-CloseBtn" onClick={this.handleCloseModal}>&times;</button>
+            </p>
           </div>
           <DatePicker
+            hideCalendar={!!this.props.selectedTimeslot}
             type={DatePickerType.SingleDay}
             date={this.props.selectedDate}
             onDateSelected={this.props.onDateSelect}
