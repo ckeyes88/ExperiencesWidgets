@@ -72,7 +72,7 @@ export class Calendar extends Component<CalendarProps> {
     render({ month, calendarRef, year, isDateSelected, isDateEnabled, isDateHovered, isDateFocused, isDateInRange, isDateHighlighted, onDateFocused, onDateHovered, onDateSelected, onChangeYear, disabled, locale }: CalendarProps) {
         return (
             /** Hide calendar view if a date has been selected */
-            <div ref={calendarRef} className={`CalendarContainer ${!!this.props.hideCalendar ? "hidden" : ""}`}>
+            <div ref={calendarRef} className={`CalendarContainer ${this.props.hideCalendar ? "isHidden" : ""}`}>
                 <CalendarHeader
                     month={month}
                     year={year}

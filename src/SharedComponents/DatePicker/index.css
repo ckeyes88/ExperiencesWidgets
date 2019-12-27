@@ -261,7 +261,7 @@
   outline: none;
 }
 @media only screen and (min-width: 320px) and (max-width: 767px) {
-  .CalendarContainer.hidden {
+  .CalendarContainer.isHidden {
     display: none;
   }
 }
