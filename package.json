@@ -40,7 +40,8 @@
     "moment-timezone": "^0.5.26",
     "monk": "^7.0.0",
     "preact": "8.5.2",
-    "rollup-plugin-json": "^4.0.0"
+    "rollup-plugin-json": "^4.0.0",
+    "shopify-buy": "^2.8.1"
   },
   "devDependencies": {
     "@helpfulhuman/tslint-rules": "1.0.0",

@@ -1,24 +1,26 @@
 import { h, Component } from "../../../../node_modules/preact";
-import { Modal } from "../../../SharedComponents/Modal/Modal";
 import { AvailabilityPage } from "../Availability/AvailabilityPage";
-import { OrderDetailsPage } from "../OrderDetails/OrderDetailsPage";
+import { AddToCartArgs, CreateOrderArgs, getEvent, getShopDetails, getFirstAvailability, createOrder, addToCart } from "../../../Utils/api";
+import { Availability } from "../../../typings/Availability";
 import { ConfirmPage } from "../Confirmation/ConfirmPage";
-import NotFound from "../404/NotFound";
-import { ModalStateEnum } from "../../types";
-import "./CalendarWidgetMain.scss";
-import { getEvent, getShopDetails, getFirstAvailability, createOrder, CreateOrderArgs, AddToCartArgs, addToCart } from "../../../Utils/api";
+import { CustomerInputData } from "../../../typings/CustomerInput";
 import { EventDBO, EventVariantDBO, PaymentType } from "../../../typings/Event";
+import { FormFieldValueInput } from "../../../typings/FormFieldValueInput";
+import { FirstAvailability } from "../../../typings/FirstAvailability";
+import { Loading } from "../../../SharedComponents/loading/Loading";
+import { Modal } from "../../../SharedComponents/Modal/Modal";
+import { ModalStateEnum } from "../../types";
+import { NotFound } from "../404/NotFound";
+import { OrderDetailsPage } from "../OrderDetails/OrderDetailsPage";
+import { OrderLineItemInputData } from "../../../typings/OrderLineItemInput";
+import { OrderInputData } from "../../../typings/CreateOrderInput";
 import { ShopDetails } from "../../../typings/ShopDetails";
 import { getFirstDayAvailabilities } from "../../../Utils/helpers";
-import { FirstAvailability } from "../../../typings/FirstAvailability";
-import { unionAvailability } from "../../../Utils/mergeAvailability";
-import { Availability } from "../../../typings/Availability";
-import { OrderLineItemInputData } from "../../../typings/OrderLineItemInput";
-import { CustomerInputData } from "../../../typings/CustomerInput";
-import { FormFieldValueInput } from "../../../typings/FormFieldValueInput";
-import { OrderInputData } from "../../../typings/CreateOrderInput";
-import { Loading } from "../../../SharedComponents/loading/Loading";
 import { format } from "date-fns";
+import { unionAvailability } from "../../../Utils/mergeAvailability";
+import { sbClient } from "../../../shopifyBuy";
+import "./CalendarWidgetMain.scss";
+import { LineItem } from "shopify-buy";
 
 /** 32 days expressed in seconds, used to fetch new availability */
 const TIMESPAN_IN_SECONDS = 32 * 24 * 60 * 60;
@@ -122,13 +124,10 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
         availability,
         firstAvailable: (firstAvailable[0] && new Date(firstAvailable[0].startsAt)),
         loading: false,
-      });
-
-
+      });      
     } catch (err) {
       this.setState({
         error: err,
-
         loading: false,
       });
     }
@@ -271,33 +270,60 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
         };
       });
 
-      // Define order object
-      const order: AddToCartArgs = {
-        variants: shopifyVariants,
-        timeslot: selectedTimeslot,
-        quantities,
-      };
+      if (this.props.enableBuySdk) {
+        const checkout = await sbClient.checkout.create();
+        const checkoutId = checkout.id; // ID from a previous checkout.create call
 
-      //add the order to the cart
-      try {
-        await addToCart(order, { enableBuySdk: this.props.enableBuySdk });
-        window.location.href = "/cart";
-      } catch (e) {
-        this.setState({ loading: false });
-        console.error(e);
+        const lineItems = [
+          { variantId: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yNTYwMjIzNTk3Ng==', quantity: 5 },
+          // Line items can also have additional custom attributes
+          {
+            variantId: 'Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0VmFyaWFudC8yNTYwMjIzNjA0MA==',
+            quantity: 2,
+            customAttributes: { 'key': 'attributeKey', 'value': 'attributeValue' }
+          }
+        ];
+
+        try {
+          await sbClient.checkout.addLineItems(checkoutId, lineItems).then((checkout) => {
+            console.log(checkout); // Checkout with two additional line items
+            console.log(checkout.lineItems) // Line items on the checkout
+          });
+        }
+        catch (err) {
+          console.error("error adding line item:::", err);
+        }
       }
-      //the order is not prepay, so it should be created in our system
+      else {
+        // Define order object
+        const order: AddToCartArgs = {
+          variants: shopifyVariants,
+          timeslot: selectedTimeslot,
+          quantities,
+        };
+
+        //add the order to the cart
+        try {
+          await addToCart(order, { enableBuySdk: this.props.enableBuySdk });
+          window.location.href = "/cart";
+        }
+        catch (e) {
+          this.setState({ loading: false });
+          console.error(e);
+        }
+      }
     } 
+    // The order is *NOT* prepay, so it should be created in our system
     else {
       const { customerInfo, lineItems } = this.state;
       const { baseUrl, shopUrl } = this.props;
-
+      
       //set up the order creation arguments
       const order: OrderInputData = {
         customer: customerInfo,
         lineItems,
       };
-      
+
       const orderArgs: CreateOrderArgs = {
         order,
         baseUrl,

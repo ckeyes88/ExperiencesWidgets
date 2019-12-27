@@ -1,14 +1,14 @@
-import { Variants } from "../typings/Variant";
-import { Quantities } from "../typings/Quantities";
-import { FormField } from "../typings/CustomForm";
-import { OrderInputData } from "../typings/CreateOrderInput";
-import { CustomScripts } from "../typings/CustomScripts";
-import { Cart } from "../typings/Cart";
-import { SchedulerProduct } from "../typings/SchedulerProduct";
-import { FirstAvailability } from "../typings/FirstAvailability";
 import { Availability } from "../typings/Availability";
-import { FormAttendee } from "../typings/FormAttendee";
+import { Cart } from "../typings/Cart";
+import { CustomScripts } from "../typings/CustomScripts";
 import { EventDBO } from "../typings/Event";
+import { FirstAvailability } from "../typings/FirstAvailability";
+import { FormField } from "../typings/CustomForm";
+import { FormAttendee } from "../typings/FormAttendee";
+import { OrderInputData } from "../typings/CreateOrderInput";
+import { Quantities } from "../typings/Quantities";
+import { SchedulerProduct } from "../typings/SchedulerProduct";
+import { Variants } from "../typings/Variant";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -145,7 +145,7 @@ function handleResponse<Response>(response: HttpResponse<Response>) {
 /**
  * Generic function for creating XHR calls and handling the responses.
  */
-function sendJSON<RequestBody, ResponseBody>(method: HttpMethod, url: string, body?: RequestBody): Promise<HttpResponse<ResponseBody>> {
+export function sendJSON<RequestBody, ResponseBody>(method: HttpMethod, url: string, body?: RequestBody): Promise<HttpResponse<ResponseBody>> {
   return new Promise((accept, reject) => {
     // create the requeset object
     const xhr = new XMLHttpRequest();
@@ -251,30 +251,41 @@ export async function addToCart(
     { enableBuySdk }: AddToCartOptions,
 ): Promise<void> {
 
-  const When: string = timeslot.formattedTimeslot.when;
-  let requests: AddToCartRequestBody[] = [];
+  if (enableBuySdk) {
 
+  }
+
+  // Extract "When" string from timeslot
+  const When: string = timeslot.formattedTimeslot.when;
+  // Store request bodies in array to shoot off sequentially later
+  const requests: AddToCartRequestBody[] = [];
+
+  // If attendees exist, each will become separate body
   if (attendees && attendees.length) {
     for (let attendee of attendees) {
       let properties: IHashTable<string> = {
         When,
         Name: `${attendee.firstName} ${attendee.lastName}`,
         Email: attendee.email,
-      }
+      };
 
       if (Array.isArray(attendee.fields)) {
         for (let field of attendee.fields) {
           properties[field.label] = field.value;
         }
       }
+
       requests.push({
         id: attendee.variantId.toString(),
         quantity: 1,
         properties,
       });
     }
-  } else {
+  } 
+  // Otherwise, each variant will be a body
+  else {
     let properties: IHashTable<string> = { When };
+    
     if (Array.isArray(fields)) {
       for (let field of fields) {
         properties[field.label] = field.value;
@@ -291,6 +302,7 @@ export async function addToCart(
   }
 
   const cartUrl = shopUrl ? `${shopUrl}/cart/add.js` : "/cart/add.js";
+  
   for (let request of requests) {
     let error: Error | null = null;
     let count = 0;

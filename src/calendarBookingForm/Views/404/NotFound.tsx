@@ -5,7 +5,7 @@ export interface INotFoundProps {
   navigateTo(state: ModalStateEnum): void;
 }
 
-export default class NotFound extends Component<INotFoundProps> {
+export class NotFound extends Component<INotFoundProps> {
   onClick = () => {
     this.props.navigateTo(ModalStateEnum.Availability);
   }
