@@ -123,6 +123,7 @@ export class VariantList extends Component<IVariantListMainProps, IVariantListMa
   renderVariant = (variant: EventVariantDBO): JSX.Element => {
     return (
       <Variant
+        variantTimeSlot={this.props.variantTimeSlot}
         currentlySelectedTotal={this.totalQuantity}
         moneyFormat={this.props.moneyFormat}
         variant={variant}

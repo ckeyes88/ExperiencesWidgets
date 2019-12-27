@@ -2,10 +2,13 @@ import { h, Component } from "preact";
 import { formatCurrency } from "../../Utils/helpers"
 import "./Variant.scss";
 import { EventVariantDBO } from "../../typings/Event";
+import { Availability } from "../../typings/Availability";
 
 export interface IVariantProps {
   /** creating variant to connect to shopify event detials for selected date */
   variant: EventVariantDBO;
+  /** creating variant time slot to hold the availabilty details of selected date */
+  variantTimeSlot: Availability;
   /** setting the money format to a string */
   moneyFormat: string;
   quantity: number;
@@ -37,7 +40,10 @@ export class Variant extends Component<IVariantProps, IVariantState> {
   }
 
   renderQtySelector() {
-    const { quantity, maxLimit, currentlySelectedTotal } = this.props;
+    const { quantity, maxLimit, currentlySelectedTotal, variantTimeSlot } = this.props;
+    const unitsLeft = variantTimeSlot.unitsLeft || 0;
+    let spaceLeft = unitsLeft - this.props.currentlySelectedTotal;
+
     if (quantity === 0) {
       return (
         <button
@@ -59,12 +65,13 @@ export class Variant extends Component<IVariantProps, IVariantState> {
             <span>
               {quantity}
             </span>
-            <button
+            {/* If there is space left that is greater than 0, can be increased */}
+            {(spaceLeft > 0) && <button
               className="Variant-QtyBtn"
               onClick={this.handleIncrQty}
               disabled={maxLimit && currentlySelectedTotal >= maxLimit}
             >&#43;
-            </button>
+            </button>}
           </div>
         </div>
       );
