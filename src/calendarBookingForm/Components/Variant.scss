@@ -23,7 +23,8 @@
 #Variant-Details{
     grid-area: box1;
 }
-.Variant-Age{
+.Variant-Age {
+    padding-right: 10px;
     font-size: 15px;
     display: block;
 }
@@ -34,7 +35,7 @@
 }
 .Variant-QtyContainer{
     grid-area: box2;
-    width: 6.5rem;
+    width: 100%;
     align-content: center;
     text-align: center;
 }
@@ -53,8 +54,7 @@
       }
 }
 @include Tablet{
-    .Variant-Age{
+    .Variant-Age {
         display: inline;
-        padding: 5px;
     }
 }
