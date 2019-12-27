@@ -19,9 +19,10 @@
     }
 }
 
-.TimeSlots-NotAvailable{
+.TimeSlots-NotAvailable {
     text-align: center;
-    & p{
+    height: 100%;
+    & p {
         font-size: 12px;
         margin: 10px;
     }
@@ -59,7 +60,7 @@
 }
 
 @include Tablet{
-    .TimeSlots-NotAvailable{
+    .TimeSlots-NotAvailable {
         padding-top: 4rem;
     }
     .TimeSlot-DateSelected{
@@ -67,7 +68,7 @@
     }
 }
 @include Laptop{
-    .TimeSlots-NotAvailable{
+    .TimeSlots-NotAvailable {
         padding-top: 5rem;
     }
     .TimeSlot-DateSelected{
