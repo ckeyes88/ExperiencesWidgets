@@ -72,10 +72,10 @@
 }
 
 .CustomOrderDetails-SubmitBtn{
-    display:block;
+    display: block;
+    padding: 1rem;
     text-align: center;
-    transform: translateY(-3rem);
-    & button{
+    & button {
         background-color: $color-primary-blue;
         border: none;
         border-radius: 3px;

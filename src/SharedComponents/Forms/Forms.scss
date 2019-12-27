@@ -48,7 +48,7 @@ input.FormField-Input:valid::placeholder{
 
 @include Tablet{
     .FormField-Label{
-        padding-top: 1.3rem;
+        padding: 0px;
         left: 6%;
     }
     .FormField-RenderInput input{
