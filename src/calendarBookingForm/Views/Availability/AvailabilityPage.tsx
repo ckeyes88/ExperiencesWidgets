@@ -142,6 +142,7 @@ export class AvailabilityPage extends Component<IAvailabilityPageProps, IAvailab
                 <button
                   className="BackButton"
                   title="Previous Month"
+                  style={{ float: "left" }}
                   onClick={this.props.onClickBack}
                 >&#8592;
                 </button>}

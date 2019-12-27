@@ -19,13 +19,15 @@
 }
 .MobileView-Header {
     padding: 1rem;
-    color: black;
     font-weight: bold;
     background-color: #ffffff;
     transform: translateX(-20px);
-    width: 109%;
+    position: inherit;
+    right: -20px;
     & p {
-        margin-left: 1rem;
+        color: black;
+        text-align: center;
+        width: 100%;
     }
 }
 
@@ -65,11 +67,11 @@
     float: right;
     font-size: 1.2rem;
     text-align: center;
-    margin-right: 1rem;
     transform: translateY(-3px);
 }
 @include Tablet{
     .AvailabilityPage{
+        height: 100%;
         flex-flow: row;
     }
     .AvailabilityPage-DatePickerContainer {
