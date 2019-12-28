@@ -90,8 +90,15 @@
         }
     }
 }
-@include Tablet{
-    .customer-info-FinalizeOrder button, #customer-info-EventName{
+
+@include Phone {
+    .customer-order-details {
+        text-align: center;
+    }
+}
+
+@include Tablet {
+    .customer-info-FinalizeOrder button, #customer-info-EventName {
         display: none;
     }
     .customer-info-FinalizeOrder{

@@ -40,6 +40,12 @@ input.FormField-Input:valid::placeholder{
     overflow: auto;
 }
 
+@include Phone {
+    .CustomForm-Container{
+        text-align: center;
+    }
+}
+
 @include Tablet{
     .FormField-Label{
         padding: 0px;
