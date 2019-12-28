@@ -25,13 +25,16 @@ export class VariantHeader extends Component<IVariantHeaderProps, IVariantHeader
     const { variantSelectedDate } = this.props;
     const startsAt = this.props.variantTimeSlot.startsAt;
     const unitsLeft = this.props.variantTimeSlot.unitsLeft || 0;
+    let spaceLeft = unitsLeft - this.props.currentlySelectedTotal
     return (
       <div>
         <div className="VariantHeader-Container">
           <button onClick={this.props.onClickBack} className="VariantHeader-BackBtn">Back</button>
-          <span className="VariantHeader-DateSelected">{format(new Date(variantSelectedDate), "EEEE MMMM d, yyyy")}</span>
-          <p><span id="VariantHeader-StartTime">{format(new Date(startsAt), "h:mma")}</span>
-            <span id="VariantHeader-SpotsAvaliable"> | {unitsLeft - this.props.currentlySelectedTotal} spots Left</span></p>
+          <div className="VariantHeader-MobileContainer">
+            <span className="VariantHeader-DateSelected">{format(new Date(variantSelectedDate), "EEEE MMMM d, yyyy")}</span>
+            <p><span id="VariantHeader-StartTime">{format(new Date(startsAt), "h:mma")}</span></p>
+            <p><span id="VariantHeader-SpotsAvaliable"> {spaceLeft} spots left</span></p>
+          </div>
         </div>
       </div>
     );

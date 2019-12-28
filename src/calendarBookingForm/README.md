@@ -85,6 +85,9 @@ In the case of a non-prepay event, a confirmation message will display upon comp
 ### Work Needed
 In order to make this widget production ready, work is needed in the following areas...
 
+### Javscript SDKs
+
+
 #### Styling/Responsiveness
 Much fine-tuning is still needed for the various components at both desktop and mobile sizes.
 

@@ -26,7 +26,8 @@ export class ConfirmPage extends Component<IConfirmPageProps> {
     return (
       <div className="ConfirmPage">
         <h1>We've saved you a spot!</h1>
-        <p>A confirmation email has been sent to {customerInfo.email}.</p>
+        <p className="ConfirmPage-Email">A confirmation email has been sent to <span>{customerInfo.email}</span>.</p>
+        <p className="ConfirmPage-Email"> You will receive an email reminder the day before your scheduled time.</p>  
         <button className="ConfirmPage-Btn" onClick={closeModal}>Close</button>
       </div>
     );

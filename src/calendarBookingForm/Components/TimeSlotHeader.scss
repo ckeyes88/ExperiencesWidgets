@@ -5,9 +5,11 @@
     margin-bottom: 2rem;
 }
 @include Phone{
-    .TimeSlotsHeader{
+    .TimeSlotsHeader {
         font-weight: normal;
         font-size: .75rem;
+        margin-bottom: 0px;
+        border-bottom: 1px solid #dfdfdf;
     }
 }
 @include Tablet{

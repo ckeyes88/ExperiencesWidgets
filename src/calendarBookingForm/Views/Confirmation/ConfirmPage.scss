@@ -1,8 +1,9 @@
-.ConfirmPage{
+.ConfirmPage {
     text-align: center;
     padding: 2rem;
 }
-.ConfirmPage-Btn{
+
+.ConfirmPage-Btn {
     margin-top: 1rem;
     background-color: $color-primary-blue;
     border: none;
@@ -11,8 +12,21 @@
     text-align: center;
     width: 5rem;
     padding: 7px;
-    font-size: 10px;
-    &:hover{
+    font-size: 15px;
+    &:hover {
       cursor: pointer;
     }
+}
+@media only screen and (min-width: 320px) and (max-width: 767px) {
+  .ConfirmPage {
+    word-wrap: break-word;
+  }
+
+  .ConfirmPage-Email {
+    padding: 10px 0px;
+  }
+
+  .ConfirmPage-Email span {
+    color: #007ace;
+  }
 }

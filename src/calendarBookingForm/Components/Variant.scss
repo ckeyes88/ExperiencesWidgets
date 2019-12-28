@@ -1,4 +1,4 @@
-.Variant-Grid{
+.Variant-Grid {
     margin-top: 2rem;
     display: grid;
     grid-template-columns:  repeat(auto-fit, minmax(10rem, 1fr));
@@ -15,7 +15,7 @@
     text-align: center;
     width: 5rem;
     padding: 7px;
-    font-size: 10px;
+    font-size: 15px;
     &:hover{
         cursor: pointer;
     }
@@ -23,7 +23,8 @@
 #Variant-Details{
     grid-area: box1;
 }
-.Variant-Age{
+.Variant-Age {
+    padding-right: 10px;
     font-size: 15px;
     display: block;
 }
@@ -34,25 +35,39 @@
 }
 .Variant-QtyContainer{
     grid-area: box2;
-    width: 6.5rem;
+    width: 100%;
     align-content: center;
     text-align: center;
 }
 .Variant-QtyBtn{
-    border-radius: 25px;
-    width: 1rem;
+    border-radius: 50%;
+    width: 1.4rem;
+    vertical-align: middle;
     border: 1px solid $color-gray;
     background-color: white;
     text-align: center;
     margin: 0 .5rem 0 .5rem;
-    padding: 3px;
+    line-height: 1.4rem;
+    padding: 0px;
     &:hover{
         cursor: pointer;
       }
 }
-@include Tablet{
-    .Variant-Age{
+@include Tablet {
+    .Variant-Age {
         display: inline;
-        padding: 5px;
+    }
+}
+
+@include Phone {
+    .Variant-Grid {
+        padding: 1.5rem 2rem;
+        margin-top: 0px;
+        border-bottom: 1px solid #dfdfdf;
+    }
+
+    .VariantListTotal-Grid {
+        padding: 1.5rem 2rem;
+        margin-top: 0px;
     }
 }

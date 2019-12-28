@@ -1,16 +1,17 @@
 @include Tablet{
-    .CustomerInfo-Name{
+    .CustomerInfo-Name {
         display: flex;
         flex-direction: row;
         justify-content: center;
-       
+        & label {
+            padding: 0px;
+        }
     }
     .CustomerInfo-Email{
         display: flex;
         justify-content: center;
-        margin-top: -2.5rem;
-        & label{
-            margin-left: -1.3rem;
+        & label {
+            padding: 0px;
         }
     }
 }

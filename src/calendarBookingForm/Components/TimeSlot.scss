@@ -1,45 +1,61 @@
 
-.TimeSlot-AvailableGrid{
-    margin-top: 2rem;
+.TimeSlot-AvailableGrid {
+    margin-top: 1rem;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-    grid-template-areas: 
-    "box1 . box2";
+    grid-template-areas: "box1 . box2";
     overflow: auto;
-
 }
-.TimeSlot-TimeAvailable{
+
+.TimeSlot-TimeAvailable {
     grid-area: box1;
     font-size: 15px;
     color: $color-primary-blue;
     display: block;
 }
-.TimeSlot-SpotAvailable{
+
+.TimeSlot-SpotAvailable {
     font-size: 12px;
     margin-top: 1px;
     font-weight: 500;
 }
-.TimeSlot-SelectBtn{
+
+.TimeSlot-SelectBtn {
     grid-area: box2;
-    margin-top: -3px; 
     background-color: $color-primary-blue;
     border: none;
-    border-radius: 3px 3px 3px 3px;
+    border-radius: 3px;
     color: $color-white;
     text-align: center;
     width: 5rem;
     padding: 7px;
-    font-size: 10px;
+    font-size: 15px;
     &:hover{
       cursor: pointer;
     }
 
 }
-@include Tablet{
-    .TimeSlot-TimeAvailable{
+
+@include Phone {
+    .TimeSlot-SelectBtn {
+        max-height: 35px;
+    }
+
+    .TimeSlot-AvailableGrid {
+        padding: 10px 0px;
+        margin-top: 0px;
+        border-bottom: 1px solid #dfdfdf;
+    }
+    .TimeSlotsHeader {
+        padding-bottom: 1rem;
+    }
+}
+
+@include Tablet {
+    .TimeSlot-TimeAvailable {
         display: inline;
     }
-    .TimeSlot-SpotAvailable::before{
+    .TimeSlot-SpotAvailable::before {
         content: " | "
     }
 }
