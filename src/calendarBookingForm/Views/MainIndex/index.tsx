@@ -1,24 +1,24 @@
 import { h, Component } from "../../../../node_modules/preact";
-import { Modal } from "../../../SharedComponents/Modal/Modal";
 import { AvailabilityPage } from "../Availability/AvailabilityPage";
-import { OrderDetailsPage } from "../OrderDetails/OrderDetailsPage";
+import { AddToCartArgs, CreateOrderArgs, getEvent, getShopDetails, getFirstAvailability, createOrder, addToCart } from "../../../Utils/api";
+import { Availability } from "../../../typings/Availability";
 import { ConfirmPage } from "../Confirmation/ConfirmPage";
-import NotFound from "../404/NotFound";
-import { ModalStateEnum } from "../../types";
-import "./CalendarWidgetMain.scss";
-import { getEvent, getShopDetails, getFirstAvailability, createOrder, CreateOrderArgs, AddToCartArgs, addToCart } from "../../../Utils/api";
+import { CustomerInputData } from "../../../typings/CustomerInput";
 import { EventDBO, EventVariantDBO, PaymentType } from "../../../typings/Event";
+import { FormFieldValueInput } from "../../../typings/FormFieldValueInput";
+import { FirstAvailability } from "../../../typings/FirstAvailability";
+import { Loading } from "../../../SharedComponents/loading/Loading";
+import { Modal } from "../../../SharedComponents/Modal/Modal";
+import { ModalStateEnum } from "../../types";
+import { NotFound } from "../404/NotFound";
+import { OrderDetailsPage } from "../OrderDetails/OrderDetailsPage";
+import { OrderLineItemInputData } from "../../../typings/OrderLineItemInput";
+import { OrderInputData } from "../../../typings/CreateOrderInput";
 import { ShopDetails } from "../../../typings/ShopDetails";
 import { getFirstDayAvailabilities } from "../../../Utils/helpers";
-import { FirstAvailability } from "../../../typings/FirstAvailability";
-import { unionAvailability } from "../../../Utils/mergeAvailability";
-import { Availability } from "../../../typings/Availability";
-import { OrderLineItemInputData } from "../../../typings/OrderLineItemInput";
-import { CustomerInputData } from "../../../typings/CustomerInput";
-import { FormFieldValueInput } from "../../../typings/FormFieldValueInput";
-import { OrderInputData } from "../../../typings/CreateOrderInput";
-import { Loading } from "../../../SharedComponents/loading/Loading";
 import { format } from "date-fns";
+import { unionAvailability } from "../../../Utils/mergeAvailability";
+import "./CalendarWidgetMain.scss";
 
 /** 32 days expressed in seconds, used to fetch new availability */
 const TIMESPAN_IN_SECONDS = 32 * 24 * 60 * 60;
@@ -41,16 +41,25 @@ const INITIAL_STATE: ICalendarWidgetMainState = {
   fetchedMonths: {},
   selectedDate: new Date(),
   selectedTimeslot: null,
-  quantities: {},
+  quantitiesMap: {},
   lineItems: [],
   customerInfo: null,
 };
 
+export type VariantInput = {
+  id: number;
+  name: string;
+  title: string;
+  price: number;
+};
+
 export interface ICalendarWidgetMainProps {
-  /** The shopify url of this shop */
-  shopUrl: string;
   /** The base URL */
   baseUrl: string;
+  /** Flag denoting whether buy sdk should be used */
+  enableBuySdk: boolean;
+  /** The shopify url of this shop */
+  shopUrl: string;
   /** The shopify ID for this product (event) */
   shopifyProductId: number;
 }
@@ -81,7 +90,7 @@ export interface ICalendarWidgetMainState {
   /** Tracks months for which availability has been fetched to prevent overfetching */
   fetchedMonths: { [year: number]: number[] };
   /** An object containing the number of spots a user has selected for each event variant */
-  quantities: { [variantId: number]: number };
+  quantitiesMap: { [variantId: number]: number };
   /** Array of line item objects, used to create the order upon confirmation */
   lineItems: OrderLineItemInputData[];
   /** Name and email address of the purchaser collected when booking for a non-prepay event */
@@ -94,8 +103,7 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
   constructor(props: ICalendarWidgetMainProps) {
     super(props);
 
-    this.state = INITIAL_STATE;
-
+    this.state = INITIAL_STATE;        
   }
 
   /** Fetch shop, event, and availability data and set the state */
@@ -121,13 +129,10 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
         availability,
         firstAvailable: (firstAvailable[0] && new Date(firstAvailable[0].startsAt)),
         loading: false,
-      });
-
-
+      });      
     } catch (err) {
       this.setState({
         error: err,
-
         loading: false,
       });
     }
@@ -227,7 +232,7 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
       now: new Date(),
       selectedDate: new Date(),
       selectedTimeslot: null,
-      quantities: {},
+      quantitiesMap: {},
       lineItems: [],
       customerInfo: null,
     });
@@ -244,52 +249,76 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
     this.handleDateSelect(this.state.firstAvailable);
   }
 
+  /**
+   * Redirects client to checkout URL (ie: cart page if within realm of Shopify). Takes 
+   * in optional url (ie: when using Buy SDK) to manually set checkout URL.
+   */
+  private handleNavigateToCheckout = (url?: string) => {
+    window.location.href = url || "/cart";
+  }
+
   /** Sets up the order and either sends confirmation email OR adds the order to the cart */
-  handleConfirmOrder = async () => {
+  private handleConfirmOrder = async () => {
     //set loading to true
     this.setLoading();
     this.navigateTo(ModalStateEnum.ConfirmPage);
 
+    const paymentType = this.state.event.paymentType;
 
     //if the event payment type is prepay, order will be added to cart
-    if (this.state.event.paymentType === PaymentType.Prepay) {
-      const { event } = this.state;
-      const { variants } = event;
+    if (paymentType === PaymentType.Prepay) {
+      const { event, quantitiesMap, selectedTimeslot } = this.state;
+      const { name: eventName, variants } = event;
 
       //set up arguments for adding to cart
-      const shopifyVariants = variants.map(function (v) {
-        return {
+      const shopifyVariants: VariantInput[] = [];
+      
+      // Manually loop to populate formatted shopify variants & avoid fat arrow
+      for (let i = 0; i < variants.length; i++) {
+        const v = variants[i];
+        shopifyVariants.push({
           id: v.shopifyVariantId,
-          name: `${event.name} - ${v.name}`,
+          name: `${eventName} - ${v.name}`,
           title: v.name,
           price: v.price,
-        };
-      });
+        });
+      }
+      
+      // Define order object
       const order: AddToCartArgs = {
         variants: shopifyVariants,
-        timeslot: this.state.selectedTimeslot,
-        quantities: this.state.quantities,
+        timeslot: selectedTimeslot,
+        quantities: quantitiesMap,
       };
 
       //add the order to the cart
       try {
-        await addToCart(order);
-        window.location.href = "/cart";
-      } catch (e) {
+        await addToCart(order, { 
+          event,
+          enableBuySdk: this.props.enableBuySdk,
+          onCartAdd: this.handleNavigateToCheckout,
+        });
+      }
+      catch (e) {
         this.setState({ loading: false });
         console.error(e);
       }
-      //the order is not prepay, so it should be created in our system
-    } else {
+    } 
+    // The order is *NOT* prepay, so it should be created in our system
+    else {
+      const { customerInfo, lineItems } = this.state;
+      const { baseUrl, shopUrl } = this.props;
+      
       //set up the order creation arguments
       const order: OrderInputData = {
-        customer: this.state.customerInfo,
-        lineItems: this.state.lineItems,
+        customer: customerInfo,
+        lineItems,
       };
+
       const orderArgs: CreateOrderArgs = {
         order,
-        baseUrl: this.props.baseUrl,
-        shopId: this.props.shopUrl,
+        baseUrl,
+        shopId: shopUrl,
       };
 
       //create the order
@@ -321,15 +350,15 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
     //Set the state with the new timeslot and the zero quantities
     this.setState({
       selectedTimeslot: timeslot,
-      quantities,
+      quantitiesMap: quantities,
     });
   }
 
   /** Triggered when the user increments or decrements the quantity for a single variant */
   handleChangeQuantity = (dir: number, variantId: number) => {
-    let newQuantities = this.state.quantities;
+    let newQuantities = this.state.quantitiesMap;
     newQuantities[variantId] += dir;
-    this.setState({ quantities: newQuantities });
+    this.setState({ quantitiesMap: newQuantities });
   }
 
   /** Triggered upon clicking the back button displayed on the date picker when a timeslot is selected
@@ -446,7 +475,7 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
             onClickBack={this.handleClickBack}
             onDateSelect={this.handleDateSelect}
             onSelectTimeslot={this.handleSelectTimeSlot}
-            quantities={this.state.quantities}
+            quantities={this.state.quantitiesMap}
             onChangeQuantity={this.handleChangeQuantity}
             onConfirm={this.handleConfirmVariants}
             closeModal={this.closeModal}
@@ -459,7 +488,7 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
         return (
           // This view renders forms to collect user and attendee data if applicable
           <OrderDetailsPage
-            quantities={this.state.quantities}
+            quantities={this.state.quantitiesMap}
             selectedDate={this.state.selectedDate}
             selectedTimeslot={this.state.selectedTimeslot}
             event={this.state.event}

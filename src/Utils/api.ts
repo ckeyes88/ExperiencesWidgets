@@ -1,14 +1,16 @@
-import { Variants } from "../typings/Variant";
-import { Quantities } from "../typings/Quantities";
-import { FormField } from "../typings/CustomForm";
-import { OrderInputData } from "../typings/CreateOrderInput";
-import { CustomScripts } from "../typings/CustomScripts";
-import { Cart } from "../typings/Cart";
-import { SchedulerProduct } from "../typings/SchedulerProduct";
-import { FirstAvailability } from "../typings/FirstAvailability";
 import { Availability } from "../typings/Availability";
-import { FormAttendee } from "../typings/FormAttendee";
+import { Cart } from "../typings/Cart";
+import { CustomScripts } from "../typings/CustomScripts";
 import { EventDBO } from "../typings/Event";
+import { FirstAvailability } from "../typings/FirstAvailability";
+import { FormField } from "../typings/CustomForm";
+import { FormAttendee } from "../typings/FormAttendee";
+import { OrderInputData } from "../typings/CreateOrderInput";
+import { Quantities } from "../typings/Quantities";
+import { SchedulerProduct } from "../typings/SchedulerProduct";
+import { Variants } from "../typings/Variant";
+import { sbClient } from "../shopifyBuy";
+import { LineItem } from "shopify-buy";
 
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -105,6 +107,26 @@ export type AddToCartArgs = {
   attendees?: FormAttendee[];
 };
 
+export enum DisableRedirect {
+  /** Disable auto-nav logic for Buy SDK stuff */
+  BuySdk,
+  /** Disable auto-nav logic for default Shopify stuff */
+  ShopifyCart,
+  /** Don't disable any auto-nav logic */
+  None,
+}
+
+export type AddToCartOptions = {
+  /** Flag denoting whether buy sdk should be used over default add to cart logic */
+  enableBuySdk?: boolean;
+  /** The original event DBO object */
+  event: EventDBO;
+  /** Prevent auto-navigation to checkout URL */
+  disableRedirect?: DisableRedirect;
+  /** Callback to invoke when items have been added to cart */
+  onCartAdd?(url?: string): void;
+} | undefined;
+
 type AttendeeProperties = {
   firstName: string,
   lastName: string,
@@ -120,11 +142,35 @@ type AddToCartRequestBody = {
 
 type AddToCartResponse = {};
 
-// type GetCartArgs = {};
-
 type GetCartRequestBody = {};
 
 type GetCartResponse = Cart;
+
+/** Key = variant name & value = SDK GID */
+export type SdkVariantMap = {
+  [key: string]: string | number;
+};
+
+export type SdkCart = ShopifyBuy.Cart & {
+  /** The checkout URL provided by Shopify -- formerly called `checkoutUrl` */
+  webUrl: string;
+};
+
+export type ShopifyAttribute = {
+  /** Key or name of the attribute */
+  key: string;
+  /** Value of the attribute */
+  value?: string;
+};
+
+export type SdkLineItemInput = {
+  /** Shopify product variant ID */
+  variantId: string | number;
+  /** Number of variants selected by customer */
+  quantity: number;
+  /** Array of shopify attributes for a particular variant */
+  customAttributes?: ShopifyAttribute[];
+};
 
 /**
  * Generic function for mapping the responses from `sendJSON` and throw error if error present.
@@ -140,7 +186,7 @@ function handleResponse<Response>(response: HttpResponse<Response>) {
 /**
  * Generic function for creating XHR calls and handling the responses.
  */
-function sendJSON<RequestBody, ResponseBody>(method: HttpMethod, url: string, body?: RequestBody): Promise<HttpResponse<ResponseBody>> {
+export function sendJSON<RequestBody, ResponseBody>(method: HttpMethod, url: string, body?: RequestBody): Promise<HttpResponse<ResponseBody>> {
   return new Promise((accept, reject) => {
     // create the requeset object
     const xhr = new XMLHttpRequest();
@@ -236,71 +282,180 @@ export async function getShopDetails({ baseUrl, shopId }: APIArguments): Promise
   return handleResponse<GetShopDetailsResponse>(res);
 }
 
-
 /**
  * Adds the an event product to the cart with the selected quantity
  * and the date/time of the event.
  */
-export async function addToCart({ variants, timeslot, quantities, fields, attendees, shopUrl }: AddToCartArgs): Promise<void> {
-
+export async function addToCart(
+  { timeslot, quantities, fields, attendees, shopUrl }: AddToCartArgs,
+  { 
+    enableBuySdk, 
+    event: { handle, variants: eventVariants },
+    disableRedirect = DisableRedirect.None,
+    onCartAdd, 
+  }: AddToCartOptions,
+): Promise<void> {
+  // Extract "When" string from timeslot
   const When: string = timeslot.formattedTimeslot.when;
-  let requests: AddToCartRequestBody[] = [];
+  
+  /**
+   * If client is *not* in Shopify-land, we'll need to utilize the Shopify Buy SDK to add
+   * items to cart & navigate to checkout.
+   */
+  if (enableBuySdk) {
+    try {
+      // Create an SDK cart
+      const sdkCart = await sbClient.checkout.create();
+      // Fetch product so we have a source of those dang GIDs
+      const sdkProduct = await sbClient.product.fetchByHandle(handle);
+      // Key = variant name/title & value = variant GID
+      const sdkVariantMap: SdkVariantMap = {};
+      // List of gql variants
+      const sdkVariants = sdkProduct.variants;
 
-  if (attendees && attendees.length) {
-    for (let attendee of attendees) {
-      let properties: IHashTable<string> = {
-        When,
-        Name: `${attendee.firstName} ${attendee.lastName}`,
-        Email: attendee.email,
+      // Populate variant map to fetch variant GIDs (Shopify's GraphQL IDs for the variants)
+      for (let i = 0; i < sdkVariants.length; i++) {
+        const sdkVariant = sdkVariants[i];
+        sdkVariantMap[sdkVariant.title] = sdkVariant.id;
       }
 
-      if (Array.isArray(attendee.fields)) {
-        for (let field of attendee.fields) {
+      // Populate formatted SDK/Shopify-approved line items list
+      const sdkLineItems: SdkLineItemInput[] = [];
+
+      // For per-attendee events
+      if (Array.isArray(attendees) && attendees.length > 0) {
+        for (const attendee of attendees) {
+          const customAttributes: ShopifyAttribute[] = [
+            { key: "When", value: When },
+            { key: "Name", value: `${attendee.firstName} ${attendee.lastName}` },
+            { key: "Email", value: attendee.email },
+          ];
+
+          if (Array.isArray(attendee.fields)) {
+            for (let field of attendee.fields) {
+              customAttributes.push({
+                key: field.label,
+                value: field.value,
+              }); 
+            }
+          }
+        }
+
+
+        // TODO: Find out how to get variant GID from attendee variant ID
+
+
+      }
+      // For all other events
+      else {
+        // Store custom attributes ()
+        const customAttributes: ShopifyAttribute[] = [];
+
+        if (Array.isArray(fields)) {
+          for (const field of fields) {
+            customAttributes.push({
+              key: field.label,
+              value: field.value,
+            });
+          }
+        }
+
+        for (let j = 0; j < eventVariants.length; j++) {
+          const v = eventVariants[j];
+          sdkLineItems.push({
+            variantId: sdkVariantMap[v.name],
+            quantity: quantities[v.shopifyVariantId],
+            customAttributes,
+          });
+        }
+      }
+
+      await sbClient.checkout.addLineItems(sdkCart.id, sdkLineItems as unknown as LineItem[]);
+
+      // Navigate to checkout URL
+      if (onCartAdd && disableRedirect !== DisableRedirect.BuySdk) {
+        onCartAdd((sdkCart as unknown as SdkCart).webUrl);
+      }
+    }
+    catch (err) {
+      console.error(`There was an error utilizing the Shopify Buy SDK: ${err}`);
+    }
+  }
+  /**
+   * The following logic should be the default (ie: most cases), where the client is in
+   * Shopify-land and the Buy SDK will *not* be utilized.
+   */ 
+  else {
+    // Store request bodies in array to shoot off sequentially later
+    const requests: AddToCartRequestBody[] = [];
+
+    // If attendees exist, each will become separate line items
+    if (Array.isArray(attendees) && attendees.length > 0) {
+      for (let attendee of attendees) {
+        const properties: IHashTable<string> = {
+          When,
+          Name: `${attendee.firstName} ${attendee.lastName}`,
+          Email: attendee.email,
+        };
+
+        if (Array.isArray(attendee.fields)) {
+          for (let field of attendee.fields) {
+            properties[field.label] = field.value;
+          }
+        }
+
+        requests.push({
+          id: attendee.variantId.toString(),
+          quantity: 1,
+          properties,
+        });
+      }
+    }
+    // Otherwise, each variant will be its own line item
+    else {
+      const properties: IHashTable<string> = { When };
+
+      if (Array.isArray(fields)) {
+        for (let field of fields) {
           properties[field.label] = field.value;
         }
       }
-      requests.push({
-        id: attendee.variantId.toString(),
-        quantity: 1,
-        properties,
-      });
-    }
-  } else {
-    let properties: IHashTable<string> = { When };
-    if (Array.isArray(fields)) {
-      for (let field of fields) {
-        properties[field.label] = field.value;
+
+      for (let variantId in quantities) {
+        requests.push({
+          id: variantId,
+          quantity: quantities[variantId],
+          properties,
+        });
       }
     }
 
-    for (let variantId in quantities) {
-      requests.push({
-        id: variantId,
-        quantity: quantities[variantId],
-        properties,
-      });
-    }
-  }
+    const cartUrl = shopUrl ? `${shopUrl}/cart/add.js` : "/cart/add.js";
 
-  const cartUrl = shopUrl ? `${shopUrl}/cart/add.js` : "/cart/add.js";
-  for (let request of requests) {
-    let error: Error | null = null;
-    let count = 0;
-    do {
-      try {
-        await sendJSON<AddToCartRequestBody, AddToCartResponse>("POST", cartUrl, request);
-        error = null;
-      } catch (err) {
-        error = err;
+    for (let request of requests) {
+      let error: Error | null = null;
+      let count = 0;
+      do {
+        try {
+          await sendJSON<AddToCartRequestBody, AddToCartResponse>("POST", cartUrl, request);
+          error = null;
+        } catch (err) {
+          error = err;
+        }
+        count++;
+      } while (error && count < 3);
+
+      if (error) {
+        console.error("Failed to add an item to the cart after multiple attempts.", request);
+        throw error;
       }
-      count++;
-    } while (error && count < 3);
+    } 
 
-    if (error) {
-      console.error("Failed to add an item to the cart after multiple attempts.", request);
-      throw error;
+    // Invoke callback (typically to navigate us to checkout URL)
+    if (onCartAdd && disableRedirect !== DisableRedirect.ShopifyCart) {
+      onCartAdd();
     }
-  }
+  }  
 }
 
 /**

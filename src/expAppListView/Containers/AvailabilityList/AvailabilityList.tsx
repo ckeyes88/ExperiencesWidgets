@@ -2,7 +2,7 @@ import { h, Component } from "preact";
 import { fetchProductsWithAvailability } from "../../../Utils/api";
 import { Availability } from "../../../typings/Availability";
 import { AvailabilityListItem } from "../../Components/AvailabilityListItem/AvailabilityListItem";
-import { diffDays, Months } from "../../../Utils/Constants";
+import { diffDays, Months } from "../../../Utils/constants";
 
 export interface IAvailabilityListProps {
   startDate: Date;

@@ -40,13 +40,15 @@
     "moment-timezone": "^0.5.26",
     "monk": "^7.0.0",
     "preact": "8.5.2",
-    "rollup-plugin-json": "^4.0.0"
+    "rollup-plugin-json": "^4.0.0",
+    "shopify-buy": "^2.8.1"
   },
   "devDependencies": {
     "@helpfulhuman/tslint-rules": "1.0.0",
     "@types/bugsnag": "2.5.28",
     "@types/jest": "24.0.18",
     "@types/moment-timezone": "^0.5.12",
+    "@types/shopify-buy": "^1.4.3",
     "browser-sync": "2.26.7",
     "jest": "24.9.0",
     "node-sass": "^4.12.0",
