@@ -338,7 +338,6 @@ export async function addToCart(
             { key: "Email", value: attendee.email },
           ];
 
-          /** If event has additional details forms, add  */
           if (Array.isArray(attendee.fields)) {
             for (let field of attendee.fields) {
               customAttributes.push({
