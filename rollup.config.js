@@ -37,9 +37,6 @@ export default [{
           'node_modules/preact/dist/preact.js': ['h', 'render', 'Component', 'cloneElement', 'options'],
         },
       }),
-      uglify({
-        sourcemap: true
-      }),
     ],
   },
   {
@@ -73,9 +70,6 @@ export default [{
           'node_modules/preact/dist/preact.js': ['h', 'render', 'Component', 'cloneElement', 'options'],
         },
       }),
-      uglify({
-        sourcemap: true
-      }),
     ],
   },
   {
@@ -108,9 +102,6 @@ export default [{
         namedExports: {
           'node_modules/preact/dist/preact.js': ['h', 'render', 'Component', 'cloneElement', 'options'],
         },
-      }),
-      uglify({
-        sourcemap: true
       }),
     ],
   }

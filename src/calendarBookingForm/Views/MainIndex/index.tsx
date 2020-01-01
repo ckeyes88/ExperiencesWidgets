@@ -56,8 +56,8 @@ export type VariantInput = {
 export interface ICalendarWidgetMainProps {
   /** The base URL */
   baseUrl: string;
-  /** Flag denoting whether buy sdk should be used */
-  enableBuySdk: boolean;
+  /** Optional storefront access token, which if present will enable the Shopify buy SDK */
+  storefrontAccessToken?: string;
   /** The shopify url of this shop */
   shopUrl: string;
   /** The shopify ID for this product (event) */
@@ -289,13 +289,14 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
         variants: shopifyVariants,
         timeslot: selectedTimeslot,
         quantities: quantitiesMap,
+        shopUrl: this.props.shopUrl,
       };
 
       //add the order to the cart
       try {
         await addToCart(order, { 
           event,
-          enableBuySdk: this.props.enableBuySdk,
+          storefrontAccessToken: this.props.storefrontAccessToken,
           onCartAdd: this.handleNavigateToCheckout,
         });
       }
