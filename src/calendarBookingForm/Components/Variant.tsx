@@ -43,6 +43,7 @@ export class Variant extends Component<IVariantProps, IVariantState> {
     const { quantity, maxLimit, currentlySelectedTotal, variantTimeSlot } = this.props;
     const unitsLeft = variantTimeSlot.unitsLeft || 0;
     let spaceLeft = unitsLeft - this.props.currentlySelectedTotal;
+    let zeroSpacesLeft = spaceLeft === 0 ? "disabled" : "";
 
     if (quantity === 0) {
       return (
@@ -66,12 +67,12 @@ export class Variant extends Component<IVariantProps, IVariantState> {
               {quantity}
             </span>
             {/* If there is space left that is greater than 0, can be increased */}
-            {(spaceLeft > 0) && <button
-              className="Variant-QtyBtn"
+            <button
+              className={`Variant-QtyBtn ${zeroSpacesLeft}`}
               onClick={this.handleIncrQty}
-              disabled={maxLimit && currentlySelectedTotal >= maxLimit}
+              disabled={spaceLeft === 0}
             >&#43;
-            </button>}
+            </button>
           </div>
         </div>
       );
