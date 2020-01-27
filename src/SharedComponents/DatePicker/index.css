@@ -148,7 +148,6 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  margin-right: 10px;
   font-weight: bold;
   font-size: small;
   text-align: center;
@@ -158,6 +157,7 @@
 .CalendarContainer>.Calendar>.body {
   display: -ms-grid;
   display: grid;
+  justify-items: center;
   -ms-grid-rows: auto;
   -ms-grid-columns: repeat(7, 1fr);
   grid-template: auto / repeat(7, 1fr);
@@ -278,6 +278,8 @@
 @media only screen and (min-width: 768px){
   .CalendarContainer{
     height: 100%;
+    padding-left: 0px;
+    padding-right: 0px;
   }
 }
 @media only screen and (min-width: 1024px) and (max-width: 1280px){
