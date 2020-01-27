@@ -38,8 +38,8 @@ export class TimeSlotList extends Component<ITimeSlotListMainProps, ITimeSlotLis
     if (!timeslots || !Array.isArray(timeslots) || !timeslots.length) {
       return (
         <div className="TimeSlots">
-          <span className="TimeSlot-DateSelected">{format(new Date(this.props.selectedDate), "EEEE MMMM d, yyyy")}</span>
           <div className="TimeSlots-NotAvailable">
+            <span className="TimeSlot-DateSelected">{format(new Date(this.props.selectedDate), "EEEE MMMM d, yyyy")}</span>
             <p>Nothing is available today</p>
             <button onClick={this.props.onSelectFirstAvailability} className="TimeSlots-NextAvailableBtn">Go to next available</button>
           </div>
