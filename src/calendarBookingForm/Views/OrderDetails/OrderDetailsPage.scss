@@ -92,6 +92,9 @@
 }
 
 @include Phone {
+    .customer-info {
+        padding: 1rem 0rem;
+    }
     .customer-order-details {
         text-align: center;
     }

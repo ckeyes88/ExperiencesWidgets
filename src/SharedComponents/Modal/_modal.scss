@@ -6,11 +6,8 @@
     z-index: 2000;
     position: fixed;
     padding: 10% 0%;
-    &__ModalContentBoxOrderDetails {
-        max-width: 800px;
+    &__ModalContentBoxOrderDetails, &__ModalContentBox {
         box-shadow: -2px 2px 32px -8px #7e7e7e;
-        max-height: unset;
-        height: none;
         position: relative;
         overflow-y: scroll;
         overflow-x: hidden;
@@ -18,25 +15,21 @@
         margin: 0 auto;
         background-color: #ffffff;
         display: flex;
-        flex-direction: column;    
+        flex-direction: column;
+        .Modal-ModalMainContentBox {
+            flex: 1;
+            background-color: #fff;
+          }
+    }
+    &__ModalContentBoxOrderDetails {
+        max-width: 800px;
+        max-height: unset;
+        height: auto;  
     }
     &__ModalContentBox {
       max-width: 800px;
-      box-shadow: -2px 2px 32px -8px #7e7e7e;
       max-height: 500px;
       height: 100%;
-      position: relative;
-      overflow-y: scroll;
-      overflow-x: hidden;
-      border-radius: 5px;
-      margin: 0 auto;
-      background-color: #ffffff;
-      display: flex;
-      flex-direction: column;
-      .Modal-ModalMainContentBox {
-        flex: 1;
-        background-color: #fff;
-      }
     }
   }
 

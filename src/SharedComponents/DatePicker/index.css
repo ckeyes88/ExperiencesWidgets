@@ -11,6 +11,9 @@
   /* border-width: 1px; */
   /* border-style: solid;
   border-color: lightgray; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background-color: transparent;
   width: 90%;
   height: 100%;
@@ -264,6 +267,12 @@
 @media only screen and (min-width: 320px) and (max-width: 767px) {
   .CalendarContainer.isHidden {
     display: none;
+  }
+  .CalendarContainer {
+    flex-direction: unset;
+    height: unset;
+    justify-content: unset;
+    display: block;
   }
 }
 @media only screen and (min-width: 768px){
