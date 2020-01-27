@@ -13,6 +13,7 @@
   border-color: lightgray; */
   background-color: transparent;
   width: 90%;
+  height: 100%;
   margin: 0 auto;
   padding: 10%;
 }
@@ -276,9 +277,9 @@
   }
 }
 @media only screen and (min-width : 1281px){
-  .CalendarContainer{
+  /* .CalendarContainer{
     height: 30rem;
-  }
+  } */
   .head{
     transform: translateX(-7px);
   }
