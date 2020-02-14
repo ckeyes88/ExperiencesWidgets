@@ -51,6 +51,14 @@
     }
   }
 
+  @include Large-Laptop{
+    .Modal {
+        &__ModalContentBox {
+            max-width: 1000px;
+        }
+    }
+  }
+
   @include Phone {
     .Modal {
         top: 0;
