@@ -1,4 +1,4 @@
-import { h, Component } from "preact";
+ import { h, Component } from "preact";
 import { fetchProductsWithAvailability } from "../../../Utils/api";
 import { Availability } from "../../../typings/Availability";
 import { AvailabilityListItem } from "../../Components/AvailabilityListItem/AvailabilityListItem";
