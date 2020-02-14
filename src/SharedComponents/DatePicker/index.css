@@ -11,10 +11,14 @@
   /* border-width: 1px; */
   /* border-style: solid;
   border-color: lightgray; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background-color: transparent;
   width: 90%;
+  height: 100%;
   margin: 0 auto;
-  padding: 10%;
+  padding: 10% 0;
 }
 .MonthDisplay-Year{
   font-size: 1rem;
@@ -144,7 +148,6 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  margin-right: 10px;
   font-weight: bold;
   font-size: small;
   text-align: center;
@@ -154,6 +157,7 @@
 .CalendarContainer>.Calendar>.body {
   display: -ms-grid;
   display: grid;
+  justify-items: center;
   -ms-grid-rows: auto;
   -ms-grid-columns: repeat(7, 1fr);
   grid-template: auto / repeat(7, 1fr);
@@ -264,6 +268,12 @@
   .CalendarContainer.isHidden {
     display: none;
   }
+  .CalendarContainer {
+    flex-direction: unset;
+    height: unset;
+    justify-content: unset;
+    display: block;
+  }
 }
 @media only screen and (min-width: 768px){
   .CalendarContainer{
@@ -276,9 +286,9 @@
   }
 }
 @media only screen and (min-width : 1281px){
-  .CalendarContainer{
+  /* .CalendarContainer{
     height: 30rem;
-  }
+  } */
   .head{
     transform: translateX(-7px);
   }

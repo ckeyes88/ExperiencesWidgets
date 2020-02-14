@@ -2,7 +2,6 @@
     text-align: center;
     font-size: .7rem;
     display: block;
-    margin: -.5rem 0 3rem 0;
 }
 
 .TimeSlots-NextAvailableBtn{
@@ -22,6 +21,10 @@
 .TimeSlots-NotAvailable {
     text-align: center;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     & p {
         font-size: 12px;
         margin: 10px;
@@ -30,8 +33,16 @@
 .SelectedDateContainer {
     position: relative;
     height: 100%;
-    padding: 1rem;
-    overflow: auto;
+    padding: 2rem;
+    overflow-y: scroll;
+}
+
+.SelectedDateContainer > .TimeSlots {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: center;
 }
 
 .template-product {
@@ -59,28 +70,4 @@
     }
 }
 
-@include Tablet{
-    .TimeSlots-NotAvailable {
-        padding-top: 4rem;
-    }
-    .TimeSlot-DateSelected{
-        transform: translateY(7rem);
-    }
-}
-@include Laptop{
-    .TimeSlots-NotAvailable {
-        padding-top: 5rem;
-    }
-    .TimeSlot-DateSelected{
-        transform: translateY(8rem);
-    }
-}
-@include Large-Laptop{
-    .TimeSlots-NotAvailable{
-        padding-top: 7rem;
-    }
-    .TimeSlot-DateSelected{
-        transform: translateY(10rem);
-    }
-}
 

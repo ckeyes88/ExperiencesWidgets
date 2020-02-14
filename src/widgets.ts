@@ -14,5 +14,5 @@ function loadExpAppWidget(keyAttribute: string, scriptPath: string): void {
   }
 }
 
-loadExpAppWidget("[data-expapp-gallery]", "http://localhost:8888/dist/expappListView.js");
-loadExpAppWidget("[data-expapp-calendar-booking-form]", "http://localhost:8888/dist/calendarBookingForm.js");
+loadExpAppWidget("[data-expapp-gallery]", "https://widgets.ngrok.io/dist/expappListView.js");
+loadExpAppWidget("[data-expapp-calendar-booking-form]", "https://widgets.ngrok.io/dist/calendarBookingForm.js");

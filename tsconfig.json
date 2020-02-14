@@ -20,12 +20,6 @@
   "include": [
     "src/**/*.ts",
     "src/**/*.tsx",
-    "src/calendarBookingForm/Components/Calendar.jsx",
-    "src/calendarBookingForm/Components/Calendar-widget/DatePicker.jsx",
-    "src/calendarBookingForm/Components/Calendar-widget/lib/index.jsx",
-    "src/calendarBookingForm/Components/Calendar-widget/lib/CalendarHeader.jsx",
-    "src/calendarBookingForm/Components/Calendar-widget/lib/CalendarDay.jsx",
-    "src/calendarBookingForm/Components/Calendar-widget/lib/Calendar.jsx"
   ],
   "exclude": [
     "node_modules"
