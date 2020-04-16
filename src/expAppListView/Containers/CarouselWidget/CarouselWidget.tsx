@@ -1,120 +1,164 @@
 import { h, Component } from "preact";
 import { AvailabilityList } from "../AvailabilityList/AvailabilityList";
-import { Filters, SortByTypes } from "../../Components/Filters/Filters";
+import { Filters, SortKey } from "../../Components/Filters/Filters";
 import { Button } from "../../Components/Button/Button";
 
 // @ts-ignore
 declare const EXPERIENCES_APP_HOST: string;
 
+export type WidgetView = "ListView" | "CalendarView";
+
 export interface ICarouselWidgetProps {
   perLoad?: number;
-  numMonth?: number;
+  /** The default # of months to display */
+  numMonths?: number;
   shopUrl: string;
   baseUrl: string;
 }
 
 export interface ICarouselWidgetState {
+  /** The minimum number of months to show on a given page */
+  monthsPerPage: number;
+  /** A set containing product IDs */
+  productsSet: Set<number>;
+  /** The start date */
   startDate: Date;
-  productsSet: any;
-  sortBy: SortByTypes;
-  monthDisplayNum: number;
-  viewType: ViewType;
+  /** Determines how to sort the returned product list */
+  sortBy: SortKey;
+  /** Expresses whether we're looking at the list or calendar view */
+  viewType: WidgetView;
 }
 
-enum ViewType {
-  ListView,
-  CalendarView,
-}
+/**
+ * A carousel widget
+ */
 export class CarouselWidget extends Component<ICarouselWidgetProps, ICarouselWidgetState> {
+  /** Defined default props */
   public static defaultProps: Partial<ICarouselWidgetProps> = {
     perLoad: 3,
-    numMonth: 3,
+    numMonths: 3,
   };
 
   constructor(props: ICarouselWidgetProps) {
     super(props);
-    this.loadMore = this.loadMore.bind(this);
+
+    this.handleIncrementMonthsToDisplay = this.handleIncrementMonthsToDisplay.bind(this);
+
+    // Define default state
     this.state = {
-      monthDisplayNum: props.numMonth,
+      monthsPerPage: props.numMonths,
       startDate: new Date(),
       productsSet: new Set(),
-      sortBy: "date",
-      viewType: ViewType.ListView,
+      sortBy: "Date",
+      viewType: "ListView",
     };
   }
 
-  productQuantityChange = (id: number) => {
-    const { productsSet } = this.state;
-    this.setState({ productsSet: productsSet.add(id) });
+  /**
+   * 
+   */
+  private handleProductQuantityChange = (id: number) => {
+    this.setState({ 
+      productsSet: this.state.productsSet.add(id), 
+    });
   }
 
-  onSortChange = (e: any) => {
-    this.setState({ sortBy: e.target.value });
+  /**
+   * Increment the months per page, thereby loading more products.
+   */
+  private handleIncrementMonthsToDisplay = () => {
+    this.setState({
+      monthsPerPage: this.state.monthsPerPage + 1,
+    });
   }
 
-  private renderMonths(n: number) {
-    let res = [];
-    var today = new Date();
+  /**
+   * Update the sort by value in state.
+   */
+  private handleSortChange = (e: MouseEvent) => {
+    this.setState({ 
+      sortBy: (e.target as HTMLSelectElement).value as SortKey, 
+    });
+  }
+
+  /**
+   * Render number (`numMonthsToDisplay`) of months starting from current date.
+   */
+  private renderMonths(numMonthsToDisplay: number) {
+    const res: JSX.Element[] = [];
+    const today = new Date();
+    const {
+      baseUrl,
+      shopUrl,
+      perLoad,
+    } = this.props;
 
     var myToday = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
-    res.push(
+    
+    res.push((
       <AvailabilityList
-        {...this.props}
         startDate={myToday}
-        perLoad={this.props.perLoad}
-        productQuantityChange={this.productQuantityChange}
+        perLoad={perLoad}
+        onProductQuantityChange={this.handleProductQuantityChange}
         sortBy={this.state.sortBy}
-        baseUrl={this.props.baseUrl}
-        shopUrl={this.props.shopUrl}
+        baseUrl={baseUrl}
+        shopUrl={shopUrl}
       />
-    );
+    ));
 
-    for (let i = 1; i < n; i++) {
+    for (let i = 1; i < numMonthsToDisplay; i++) {
       let startDate = new Date();
       var anotherToday = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate(), 0, 0, 0);
       anotherToday.setMonth(anotherToday.getMonth() + i, 1);
-      res.push(
+      res.push((
         <AvailabilityList
-          {...this.props}
           startDate={anotherToday}
-          perLoad={this.props.perLoad}
-          productQuantityChange={this.productQuantityChange}
+          perLoad={perLoad}
+          onProductQuantityChange={this.handleProductQuantityChange}
           sortBy={this.state.sortBy}
-          baseUrl={this.props.baseUrl}
-          shopUrl={this.props.shopUrl}
+          baseUrl={baseUrl}
+          shopUrl={shopUrl}
         />
-      );
+      ));
     }
+
     return res;
   }
 
-  loadMore = () => {
-    let { monthDisplayNum } = this.state;
-    monthDisplayNum++;
-    this.setState({ monthDisplayNum });
-  }
-
+  /**
+   * Render the carousel widget.
+   */
   public render() {
-    const { productsSet, sortBy, monthDisplayNum, viewType } = this.state;
+    const { productsSet, sortBy, monthsPerPage: monthDisplayNum, viewType } = this.state;
     console.log("PRODUCT SET: ", productsSet);
+    
     switch(viewType) {
-      case ViewType.ListView: 
+      case "ListView": 
         return (
           <div className="CarouselWidget">
-            <Filters productsQuantity={productsSet.size} onSortChange={this.onSortChange} sortBy={sortBy} />
+            <Filters 
+              productsQuantity={productsSet.size} 
+              onSortChange={this.handleSortChange} 
+              sortBy={sortBy} 
+            />
             {this.renderMonths(monthDisplayNum)}
             <Button
               className="CarouselWidget-LoadMore"
-              label={"Load More"}
-              action={this.loadMore}
+              action={this.handleIncrementMonthsToDisplay}
+              label="Load More"
             />
           </div>
         );
-      case ViewType.CalendarView: 
-          return (
-            <h1>Calendar</h1>
-          );
+
+      // TODO: 
+      case "CalendarView": 
+        return (
+          <h1>Calendar</h1>
+        );
+
+      default: 
+        console.error("Unrecognized widget view.");
+        return;
     }
-    
   }
 }

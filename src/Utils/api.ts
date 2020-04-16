@@ -15,7 +15,7 @@ import {AssetDBO} from "@helpfulhuman/expapp-shared-libs";
 import {OPRMProductSchema} from "@helpfulhuman/oprm-sdk";
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
-type EventAvailability = EventDBO & {
+export type EventAvailability = EventDBO & {
   imageLinks: AssetDBO[];
   availabilityProducts: ProductsAvailability[];
 };
@@ -478,15 +478,31 @@ export async function getCart(shopUrl?: string): Promise<GetCartResponse> {
   return handleResponse<GetCartResponse>(res);
 }
 
+type FetchProductsWithAvailabilityPayload = {
+  /** Start date of availabilities */
+  startsAt: Date | string; 
+  /** End date of availabilities */
+  endsAt: Date | string
+};
+
 /**
  * Fetches the products with availability between two given dates.
  */
 export async function fetchProductsWithAvailability(baseUrl: string, shop: string, startsAt: Date | string, endsAt: Date | string): Promise<EventAvailability[]> {
-  new Date(endsAt).setHours(23, 59, 59, 999);
-  let res = await sendJSON<{startsAt: Date | string; endsAt: Date | string}, EventAvailability[]>("POST", `${baseUrl}/rest/productsAvailability?shop=${shop}`, { startsAt, endsAt });
+  // Clone incoming end date so we keep things pure
+  const endDateClone = new Date(endsAt);
+  // Set end date hours to end of day
+  endDateClone.setHours(23, 59, 59, 999);
+  // Make call for the good stuff
+  const res = await sendJSON<FetchProductsWithAvailabilityPayload, EventAvailability[]>(
+    "POST", 
+    `${baseUrl}/rest/productsAvailability?shop=${shop}`, 
+    { startsAt, endsAt: endDateClone },
+  );
+  // If error, throw
   if (res.error) {
     throw new Error(`(${res.error.errorType}) ${res.error.errorMessage}`);
-  } else {
-    return res.body;
-  }
+  } 
+  // Return the good stuff
+  return res.body;
 }
