@@ -8,9 +8,13 @@ import { SortKey } from "../../Components/Filters/Filters";
 export interface IAvailabilityListProps {
   /** The start date of the availability range */
   startDate: Date;
-  perLoad: number;
+  /** Number of timeslots to display under each month, per load */
+  timeslotsPerLoad: number;
+  /** Determines how to sort the returned product list */
   sortBy: SortKey;
+  /** Base URL of the app API (eg: coolshop.myshopify.com/api) */
   baseUrl: string;
+  /** The URL of the shop (eg: coolshop.myshopify.com) */
   shopUrl: string;
   /** Handler to update product quantity */
   onProductQuantityChange(id: number): void;
@@ -57,7 +61,7 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
   /**
    * Fetch timeslots on component mount.
    */
-  public async componentWillMount() {
+  public async componentWillMount() {    
     const end = new Date(this.startDate.getFullYear(), this.startDate.getMonth() + 1, 0);
     await this.handleFetchTimeslots(this.startDate, end);
   }
@@ -113,7 +117,7 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
    */
   private handleFormatAvailabilities(productsWithAvailability: EventAvailability[]) {
     const availabilities: Availability[][] = [];
-    console.log("productsWithAvailability:::", productsWithAvailability);
+    // console.log("productsWithAvailability:::", productsWithAvailability);
     
     // For every day from now till a month later, create an array to store the day's availabilities
     for (let i = 0; i <= this.state.maxDays; i++) {
@@ -123,14 +127,44 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
     // Some sort of lookup
     const products: any = {};
 
+    for (let i = 0; i < productsWithAvailability.length; i++) {
+      const product = productsWithAvailability[i]; 
+
+      products[product._id] = product;
+
+      const availabilityProducts = product.availabilityProducts;
+
+      if (!Array.isArray(availabilityProducts) || availabilityProducts.length === 0) {
+        continue;
+      }
+
+
+
+      for (let j = 0; j < availabilityProducts.length; j++) {
+        const availabilityProduct = availabilityProducts[j];
+        const availableTimeslots = availabilityProduct.availableTimeslots;
+
+        for (let k = 0; k < availableTimeslots.length; k++) {
+          // availabilities.push()
+          availableTimeslots[k].productId
+          // console.log(availableTimeslots[k].startsAt);
+        }
+      }
+
+    }    
+
     productsWithAvailability.forEach(productWithAvail => {
       products[productWithAvail._id] = productWithAvail;
       const { availabilityProducts } = productWithAvail;
       if (availabilityProducts && Array.isArray(availabilityProducts) && availabilityProducts.length) {
+        
         availabilityProducts.forEach(p => {
-          const { availableTimeslots } = p;
+          const { availableTimeslots } = p;          
           availableTimeslots.reduce((acc: any[], avail: any, i: number) => {
             //const idx: number = diffDays(this.props.startDate, avail.startsAt);
+            if (i >= availabilities.length) {
+              return acc;
+            }
 
             acc[i].push({ ...avail, productId: productWithAvail._id });
             return acc;
@@ -140,6 +174,8 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
       }
     });
 
+    // console.log("availabilities after...", availabilities);
+
     let sortedItems: any[] = [];
 
     availabilities.map((day: Availability[]) => {
@@ -148,6 +184,8 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
       });
     });
 
+    // console.log("sorted...", sortedItems);
+    
     this.setState({
       availabilities,
       products,
@@ -162,8 +200,10 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
    */
   handleShowMore = () => {
     const { sortedItems, displayNum } = this.state;
-    const { perLoad } = this.props;
-    const num = displayNum + perLoad > sortedItems.length ? sortedItems.length : displayNum + perLoad;
+    const { timeslotsPerLoad: perLoad } = this.props;
+    const num = displayNum + perLoad > sortedItems.length 
+      ? sortedItems.length 
+      : displayNum + perLoad;
     this.setState({ displayNum: num });
   }
 
@@ -192,9 +232,15 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
     let res: any[] = [];
     const { sortedItems, displayNum } = this.state;
     if (!sortedItems || !sortedItems.length) { return <h5>No events for this month.</h5>; }
-    console.log("sorted items::", sortedItems);
+    // console.log("sorted items::", sortedItems);
     for (let i = 0; i < displayNum; i++) {
-      res.push(<AvailabilityListItem shopUrl={this.props.shopUrl} item={sortedItems[i]} index={i} />);
+      res.push((
+        <AvailabilityListItem
+          shopUrl={this.props.shopUrl}
+          item={sortedItems[i]}
+          index={i}
+        />
+      ));
     }
 
     return res;

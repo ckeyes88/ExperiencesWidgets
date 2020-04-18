@@ -20,7 +20,10 @@ export interface ImageLink {
 }
 export class AvailabilityListItem extends Component<IAvailabilityListItemProps> {
   public render() {
-    const { item, shopUrl } = this.props;
+    const { item, shopUrl, index } = this.props;
+
+    if (index === 0) { console.log(item) }
+
     if (!item) {
       return;
     }
@@ -57,6 +60,8 @@ export class AvailabilityListItem extends Component<IAvailabilityListItemProps> 
           <h3 className="Item-DescTitle">{item.name}</h3>
           <p className="Item-DescCost">{item.ticketCost ? `${cost}` : "Free"}</p>
         </div>
+
+        <div>{item.startsAt}</div>
 
         <ButtonLink
           className="Item-GoTo"

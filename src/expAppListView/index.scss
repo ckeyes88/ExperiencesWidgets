@@ -6,11 +6,11 @@
 @import "./Components/Button/Button.scss";
 //Containers
 @import "./Containers/AvailabilityList/AvailabilityList.scss";
-@import "./Containers/CarouselWidget/CarouselWidget.scss";
+@import "./Containers/EventsListWidget/EventsListWidget.scss";
 
 //Global styles
 //main wrapper classname:
-.CarouselWidget {
+.EventsListWidget {
 
   //doesn't import this font, it set in design but I beleive we need to choose something from this list:
   //https://help.shopify.com/en/themes/development/fonts/library
