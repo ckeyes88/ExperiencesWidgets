@@ -59,6 +59,7 @@ type LookupEvent = {
 };
 
 type EventLookup = {
+  /** Key = event ID & value = object containing useful info */
   [key: string]: LookupEvent;
 };
 
@@ -80,7 +81,7 @@ export type MonthAvailabilityListProps = {
 export type MonthAvailabilityListState = {
   /** The number of timeslots currently displaying for this month */
   displayingTimeslotsCount: number;
-  /** kdjf */
+  /** The timeslot objects that inform each list item */
   timeslotsToRender: ExtendedAvailability[];
 };
 
@@ -89,12 +90,16 @@ export type MonthAvailabilityListState = {
  * the current month.
  */
 export class MonthAvailabilityList extends Component<MonthAvailabilityListProps, MonthAvailabilityListState> {
+  constructor(props: MonthAvailabilityListProps) {
+    super(props);
 
-  /** Set default state */
-  state: MonthAvailabilityListState = {
-    displayingTimeslotsCount: INITIAL_NUM_MONTHS_TO_DISPLAY,
-    timeslotsToRender: [],
-  };
+    const { isLoading, error, data } = props;
+    
+    this.state = {
+      displayingTimeslotsCount: INITIAL_NUM_MONTHS_TO_DISPLAY,
+      timeslotsToRender: this.handleParseTimeslots(isLoading, error, data),
+    };
+  }
 
   /** Lookup that stores useful info for a particular event ID */
   private eventLookup: EventLookup = {};
@@ -103,19 +108,32 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
    * When data is done loading (or hasn't errored), take the data, format it, and 
    * store it in state for render consumption.
    */
-  public componentWillReceiveProps({ isLoading, error, monthName, data }: MonthAvailabilityListProps) {
-    // If data is loaded
+  public componentWillReceiveProps({ isLoading, error, data }: MonthAvailabilityListProps) {
+    this.setState({ 
+      timeslotsToRender: this.handleParseTimeslots(isLoading, error, data),
+    });
+  }
+
+  /**
+   * Take in data/load states/errors and try to pull out the timeslots for list
+   * rendering.
+   */
+  private handleParseTimeslots = (
+    isLoading: boolean, 
+    error: string, 
+    data: EventAvailability[],
+  ): ExtendedAvailability[] => {
+    // Only do work if we have data to parse
     if (!isLoading && !error) {
-      console.log(`received data...${monthName}`, data);
       // Store availabilities to render later
       let timeslotsToRender: ExtendedAvailability[] = [];
       // Loop over data set & update state with timeslots
       for (let i = 0; i < data.length; i++) {
-        const { 
+        const {
           _id,
-          availabilityProducts, 
+          availabilityProducts,
           handle,
-          images, 
+          images,
           imageLinks,
           name,
         } = data[i];
@@ -139,8 +157,10 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
         }
       }
 
-      this.setState({ timeslotsToRender });
+      return timeslotsToRender;
     }
+    // Return default empty list
+    return [];
   }
 
   /**
@@ -150,7 +170,6 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
     const { displayingTimeslotsCount, timeslotsToRender } = this.state;
     const { timeslotsPerLoad } = this.props;
     const maxNumberOfTimeslots = timeslotsToRender.length;
-    console.log(displayingTimeslotsCount, maxNumberOfTimeslots, timeslotsPerLoad);
     const newDisplayCount = Math.min(maxNumberOfTimeslots, displayingTimeslotsCount + timeslotsPerLoad);
     this.setState({ displayingTimeslotsCount: newDisplayCount }, () => console.log(this.state.displayingTimeslotsCount));
   }
@@ -186,7 +205,7 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
     const { displayingTimeslotsCount, timeslotsToRender } = this.state;
     const timeslotElements: JSX.Element[] = [];
     const timeslotsClone = deepClone(timeslotsToRender);
-
+    
     // Sort our timeslots by ascending start date/time
     timeslotsClone.sort(sortTimeslotsAscending);
 

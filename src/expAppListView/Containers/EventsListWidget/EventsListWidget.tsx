@@ -94,10 +94,9 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
   public async componentWillMount() {
     // Pull good stuff from state
     const { monthsToRender } = this.state;
-
+    // Look over each initial month to render & fetch data for it 
     for (let i = 0; i < monthsToRender.length; i++) {
       const month = monthsToRender[i];
-      
       await this.handleFetchAvailabilities(month, i === 0);
     }
   }
@@ -135,17 +134,20 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
 
       // Pull good stuff out of state
       const { monthsToRender, monthsDataLookup, totalProductsCount } = this.state;
+      // Full name of current month
+      const monthName = Months[month];
       // Clone current lookup so we don't accidentally mutate anything in state
       const currentLookup = deepClone<MonthsDataLookup>(monthsDataLookup);
       // Set up default partial to update state later
       const newMonthData: Partial<MonthData> = {};
       // Make sure we have existing data if it exists
-      const currentMonthData = currentLookup[`${Months[month]}`] 
-        ? currentLookup[`${Months[month]}`]
+      const currentMonthData = currentLookup[monthName] 
+        ? currentLookup[monthName]
         : newMonthData;
 
       currentMonthData.isLoading = false;
       currentMonthData.data = productsWithAvailabilities;
+      currentLookup[monthName] = currentMonthData as MonthData;
 
       const newState: Partial<EventsListWidgetState> = {
         monthsDataLookup: currentLookup,
@@ -159,7 +161,7 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
         newState.monthsToRender = newMonthsToRender;
       }
 
-      this.setState(newState as EventsListWidgetState);
+      this.setState(newState as EventsListWidgetState, () => console.log("new state after show more...", this.state));
     }
     // Throw error if fetch fails
     catch (err) {
@@ -217,6 +219,10 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
     const monthKeys = Object.keys(monthsDataLookup);
     /** Contain all the elements we'll render out later */
     const monthsToRender: JSX.Element[] = [];
+
+    // console.log("rendering the months defined in state...", this.state.monthsDataLookup);
+    
+
     // Look over months & create a `MonthAvailabilityList` for each
     for (let i = 0; i < monthKeys.length; i++) {
       const monthName = monthKeys[i];
