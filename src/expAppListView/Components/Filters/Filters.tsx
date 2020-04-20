@@ -4,9 +4,11 @@ export type SortKey = "Date" | "Name";
 
 export interface IFiltersProps {
   /** Total number of products */
-  productsQuantity: number;
+  // productsQuantity: number;
   /** What basis to sort the product list by */
   sortBy: SortKey;
+  /** Total # of unique products */
+  totalProducts: number;
   /** Sort by change handler */
   onSortChange(event: MouseEvent): void;
 }
@@ -21,13 +23,17 @@ export class Filters extends Component<IFiltersProps> {
    * Render the filter bar.
    */
   public render({
-    productsQuantity,
+    totalProducts,
     sortBy,
     onSortChange,
   }: IFiltersProps) {
-    const productWord = productsQuantity === 1
+    const productWord = totalProducts === 1
       ? "product"
       : "products";
+
+    const totalMsg = totalProducts === undefined
+      ? "Loading"
+      : `${totalProducts} ${productWord}`;
 
     return (
       <div className="Filters">
@@ -46,7 +52,7 @@ export class Filters extends Component<IFiltersProps> {
           </div>
 
           <div>
-            {`${productsQuantity} ${productWord}`}
+            {totalMsg}
           </div>
         </div>
       </div>

@@ -7,9 +7,9 @@ type Data = {
   galleryShopUrl?: string;
   /** Base URL of the app API (eg: coolshop.myshopify.com/api) */
   galleryBaseUrl?: string;
-  /**  */
+  /** The default # of months to display */
   galleryMonthsPerPage: string;
-  /**  */
+  /** Number of timeslots to display under each month, per load */
   galleryTimeslotsPerMonth: string;
 };
 
@@ -35,7 +35,7 @@ mountComponent({
     return { 
       baseUrl: galleryBaseUrl, 
       shopUrl: galleryShopUrl, 
-      monthPerPage: galleryMonthsPerPage ? Number.parseInt(galleryMonthsPerPage) : undefined,
+      monthsPerPage: galleryMonthsPerPage ? Number.parseInt(galleryMonthsPerPage) : undefined,
       timeslotsPerLoad: galleryTimeslotsPerMonth ? Number.parseInt(galleryTimeslotsPerMonth) : undefined,
     };
   },

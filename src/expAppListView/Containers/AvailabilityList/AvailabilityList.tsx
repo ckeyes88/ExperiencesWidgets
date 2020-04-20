@@ -124,6 +124,9 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
       availabilities.push([]);
     }
 
+    const { onProductQuantityChange } = this.props;
+    const lookup: any = {};
+
     // Some sort of lookup
     const products: any = {};
 
@@ -138,20 +141,28 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
         continue;
       }
 
-
-
       for (let j = 0; j < availabilityProducts.length; j++) {
         const availabilityProduct = availabilityProducts[j];
         const availableTimeslots = availabilityProduct.availableTimeslots;
-
+ 
         for (let k = 0; k < availableTimeslots.length; k++) {
+          const { productId, startsAt } = availableTimeslots[k];
+          const timeslotKey = `${productId}${KEY_DIVIDER}${startsAt}${KEY_DIVIDER}${product.name}`;
           // availabilities.push()
-          availableTimeslots[k].productId
+          // availableTimeslots[k].productId
           // console.log(availableTimeslots[k].startsAt);
+          lookup[timeslotKey] = {
+            productId,
+            startsAt,
+            name: product.name,
+            handle: product.handle,
+          };
         }
       }
-
     }    
+
+    console.log("lookup...", lookup, Object.keys(lookup).length);
+    
 
     productsWithAvailability.forEach(productWithAvail => {
       products[productWithAvail._id] = productWithAvail;
@@ -192,7 +203,6 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
       sortedItems: this.handleSortByDate(sortedItems),
       loaded: true,
     });
-
   }
 
   /**
@@ -263,14 +273,20 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
    */
   public render() {
     const { loaded, errorMsg } = this.state;
-
+    
     if (errorMsg) { return null; }
-
-    // TODO: Make this only appear once
-    if (!loaded) { return <div className="Container">loading...</div>; }
-
+    
     const { startDate } = this.props;
     const monthName = Months[startDate.getMonth()];
+
+    // TODO: Make this only appear once
+    if (!loaded) { 
+      return (
+        <div className="Container">
+          Loading availabilities for {monthName}
+        </div>
+      ); 
+    }
 
     return (
       <div className="Container AvailabilityList">
