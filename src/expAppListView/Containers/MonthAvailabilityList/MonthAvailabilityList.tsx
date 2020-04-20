@@ -1,7 +1,7 @@
 import { h, Component } from "preact";
 import { Availability } from "../../../typings/Availability";
 import { EventAvailability } from "../../../Utils/api";
-import { MonthAvailabilityItem } from "../../Components/AvailabilityListItem/MonthAvailabilityItem";
+import { MonthAvailabilityItem } from "../../Components/MonthAvailabilityItem/MonthAvailabilityItem";
 import { AssetDBO, EventAssetLinkDBO } from "@helpfulhuman/expapp-shared-libs";
 import { deepClone } from "../../../Utils/clone";
 
@@ -35,6 +35,13 @@ export function findFeaturedImageUrl(images: EventAssetLinkDBO[], imageLinks: As
   return imageLinks.length > 0
     ? imageLinks[0].url
     : DEFAULT_EVENT_FEATURED_IMAGE;
+}
+
+/**
+ * Sorts timeslots in ascending order.
+ */
+export function sortTimeslotsAscending(a: ExtendedAvailability, b: ExtendedAvailability) {
+  return (new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime());
 }
 
 export type ExtendedAvailability = Availability & {
@@ -162,15 +169,17 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
    * Render a timeslot rows up to the `displayingTimeslotsCount` limit.
    */
   private renderTimeslots = () => {
-    const timeslotElements: JSX.Element[] = [];
     const { displayingTimeslotsCount, timeslotsToRender } = this.state;
+    const timeslotElements: JSX.Element[] = [];
+    const timeslotsClone = deepClone(timeslotsToRender);
+    timeslotsClone.sort(sortTimeslotsAscending);
 
     for (let i = 0; i < displayingTimeslotsCount; i++) {
       const { 
         id, 
         startsAt, 
         formattedTimeslot: { date }, 
-      } = timeslotsToRender[i];
+      } = timeslotsClone[i];
 
       if (!id) {
         console.error(`There was an error rendering availabilities for ${this.props.monthName}`);

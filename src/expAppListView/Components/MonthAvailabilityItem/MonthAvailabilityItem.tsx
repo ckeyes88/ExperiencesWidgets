@@ -2,19 +2,6 @@ import { h, Component } from "preact";
 import { ButtonLink } from "../Button/ButtonLink";
 // import { formatCurrency } from "../../../Utils/helpers";
 
-// export type Image = {
-//   id: string;
-//   featured: boolean;
-// };
-
-// export type ImageLink = {
-//   _id: string;
-//   url: string;
-//   mimeType: string;
-//   bucketKey: string;
-//   bucket: string;
-// };
-
 export type MonthAvailabilityItemProps = {
   /** URL to hosted featured image */
   featuredImage: string;

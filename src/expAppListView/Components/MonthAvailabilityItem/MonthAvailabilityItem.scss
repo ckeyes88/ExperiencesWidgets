@@ -1,4 +1,4 @@
-.Item {
+.MonthAvailabilityItem {
   border-bottom: rem(1) solid $gray;
   display: flex;
   flex-direction: row;
@@ -10,19 +10,20 @@
     background: rgb(249, 250, 251);
   }
 
-  .Item-Photo {
+  .MonthAvailabilityItem-Photo {
     width: rem(80);
     height: rem(80);
     border-radius: rem(5);
     background-size: cover;
     position: relative;
+
     @media (max-width: $mobile) {
       width: rem(60);
       height: rem(60);
     }
   }
 
-  .Item-Date {
+  .MonthAvailabilityItem-Date {
     position: absolute;
     line-height: 1.25;
     top: 0;
@@ -39,16 +40,18 @@
     letter-spacing: rem(1);
   }
 
-  .Item-Desc {
+  .MonthAvailabilityItem-Desc {
     padding-left: rem(20);
-    .Item-DescTitle {
+
+    .MonthAvailabilityItem-DescTitle {
       color: $dark-blue;
       font-size: rem(18);
       font-weight: 600;
       line-height: rem(24);
       margin: 0;
     }
-    .Item-DescCost {
+
+    .MonthAvailabilityItem-DescCost {
       margin: 0;
       color: #637381;
       font-size: rem(14);
@@ -56,8 +59,9 @@
     }
   }
 
-  .Item-GoTo {
+  .MonthAvailabilityItem-GoTo {
     margin-left: auto;
+    
     @media (max-width: $mobile) {
       margin-top: rem(15);
       //magic
