@@ -1,8 +1,8 @@
 import { h, Component } from "preact";
 import { Availability } from "../../../typings/Availability";
+import { AssetDBO, EventAssetLinkDBO } from "@helpfulhuman/expapp-shared-libs";
 import { EventAvailability } from "../../../Utils/api";
 import { MonthAvailabilityItem } from "../../Components/MonthAvailabilityItem/MonthAvailabilityItem";
-import { AssetDBO, EventAssetLinkDBO } from "@helpfulhuman/expapp-shared-libs";
 import { deepClone } from "../../../Utils/clone";
 
 // Initial number of months to display in list
@@ -85,7 +85,8 @@ export type MonthAvailabilityListState = {
 };
 
 /**
- * dfjdslkjf
+ * The `MonthAvailabilityList` takes in a data set and renders out a timeslot list for 
+ * the current month.
  */
 export class MonthAvailabilityList extends Component<MonthAvailabilityListProps, MonthAvailabilityListState> {
 
@@ -95,7 +96,7 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
     timeslotsToRender: [],
   };
 
-  /** dfjlksajf */
+  /** Lookup that stores useful info for a particular event ID */
   private eventLookup: EventLookup = {};
 
   /**
@@ -103,11 +104,12 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
    * store it in state for render consumption.
    */
   public componentWillReceiveProps({ isLoading, error, monthName, data }: MonthAvailabilityListProps) {
+    // If data is loaded
     if (!isLoading && !error) {
       console.log(`received data...${monthName}`, data);
-
+      // Store availabilities to render later
       let timeslotsToRender: ExtendedAvailability[] = [];
-
+      // Loop over data set & update state with timeslots
       for (let i = 0; i < data.length; i++) {
         const { 
           _id,
@@ -117,7 +119,7 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
           imageLinks,
           name,
         } = data[i];
-
+        // Update event lookup so we can refer to these properties conveniently later
         if (!this.eventLookup.hasOwnProperty(_id)) {
           this.eventLookup[_id] = {
             featureImage: findFeaturedImageUrl(images, imageLinks),
@@ -125,7 +127,7 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
             name,
           };
         }
-
+        // Loop over timeslots to attach the event ID
         for (let j = 0; j < availabilityProducts.length; j++) {
           const timeslots = deepClone(availabilityProducts[j].availableTimeslots) as ExtendedAvailability[];
 
@@ -142,28 +144,40 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
   }
 
   /**
-   * 
+   * Add next month to list & fetch data for it.
    */
-  // handleShowMore = () => {
-  //   const { sortedItems, displayingTimeslotsCount } = this.state;
-  //   const { timeslotsPerLoad } = this.props;
-  //   const num = displayingTimeslotsCount + timeslotsPerLoad > sortedItems.length
-  //     ? sortedItems.length
-  //     : displayingTimeslotsCount + timeslotsPerLoad;
-  //   this.setState({ displayNum: num });
-  // }
+  private handleShowMore = () => {
+    const { displayingTimeslotsCount, timeslotsToRender } = this.state;
+    const { timeslotsPerLoad } = this.props;
+    const maxNumberOfTimeslots = timeslotsToRender.length;
+    console.log(displayingTimeslotsCount, maxNumberOfTimeslots, timeslotsPerLoad);
+    const newDisplayCount = Math.min(maxNumberOfTimeslots, displayingTimeslotsCount + timeslotsPerLoad);
+    this.setState({ displayingTimeslotsCount: newDisplayCount }, () => console.log(this.state.displayingTimeslotsCount));
+  }
 
-  // /**
-  //  * 
-  //  */
-  // private renderShowMoreButton(monthName: string) {
-  //   const { sortedItems, displayingTimeslotsCount } = this.state;
-  //   return sortedItems.length > displayingTimeslotsCount ? (
-  //     <div onClick={this.handleShowMore} className="AvailabilityList-ShowMore">
-  //       More events in {monthName}
-  //     </div>
-  //   ) : null;
-  // }
+  /**
+   * Render the load more months button.
+   */
+  private renderShowMoreButton() {
+    const { error, isLoading, monthName } = this.props;
+    const {  displayingTimeslotsCount, timeslotsToRender } = this.state;
+    // Only show button if we have timeslots left to load
+    if (displayingTimeslotsCount < timeslotsToRender.length) {
+      // Define classes
+      let classes = "AvailabilityList-ShowMore";
+      // Disable button if still loading or we errored out
+      if (error || isLoading) { classes += " asDisabled"; }
+      // Render the button
+      return (
+        <div
+          className={classes}
+          onClick={this.handleShowMore}
+        >
+          More events in {monthName}
+        </div>
+      );
+    }
+  }
 
   /**
    * Render a timeslot rows up to the `displayingTimeslotsCount` limit.
@@ -172,8 +186,11 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
     const { displayingTimeslotsCount, timeslotsToRender } = this.state;
     const timeslotElements: JSX.Element[] = [];
     const timeslotsClone = deepClone(timeslotsToRender);
+
+    // Sort our timeslots by ascending start date/time
     timeslotsClone.sort(sortTimeslotsAscending);
 
+    // Display only the limit of timeslots specified
     for (let i = 0; i < displayingTimeslotsCount; i++) {
       const { 
         id, 
@@ -181,11 +198,13 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
         formattedTimeslot: { date }, 
       } = timeslotsClone[i];
 
+      // If we don't have the ID we can't derive requisite props for `MonthAvailabilityItem`
       if (!id) {
         console.error(`There was an error rendering availabilities for ${this.props.monthName}`);
         return;
       }
 
+      // Add elements to array for rendering
       timeslotElements.push((
         <MonthAvailabilityItem
           featuredImage={this.eventLookup[id].featureImage}
@@ -206,7 +225,7 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
    */
   public render() {
     const { isLoading, error, monthName } = this.props;
-    // console.log(`received data...${monthName}`, this.props.productsWithAvailabilities);
+    
     // TODO: style
     if (isLoading) {
       return (
@@ -232,6 +251,7 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
         </p>
         <div className="MonthAvailabilityList-Timeslots">
           {this.renderTimeslots()}
+          {this.renderShowMoreButton()}
         </div>
       </div>
     );

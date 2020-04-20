@@ -3,8 +3,6 @@ import { h, Component } from "preact";
 export type SortKey = "Date" | "Name";
 
 export interface IFiltersProps {
-  /** Total number of products */
-  // productsQuantity: number;
   /** What basis to sort the product list by */
   sortBy: SortKey;
   /** Total # of unique products */

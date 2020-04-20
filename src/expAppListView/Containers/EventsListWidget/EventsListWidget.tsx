@@ -1,14 +1,13 @@
 import { h, Component } from "preact";
-// import { AvailabilityList } from "../AvailabilityList/AvailabilityList";
-import { Filters, SortKey } from "../../Components/Filters/Filters";
 import { Button } from "../../Components/Button/Button";
-import { Months } from "../../../Utils/Constants";
 import { EventAvailability, fetchProductsWithAvailability } from "../../../Utils/api";
-import { deepClone } from "../../../Utils/clone";
+import { Filters, SortKey } from "../../Components/Filters/Filters";
+import { Months } from "../../../Utils/Constants";
 import { MonthAvailabilityList } from "../MonthAvailabilityList/MonthAvailabilityList";
+import { deepClone } from "../../../Utils/clone";
 
 // @ts-ignore
-declare const EXPERIENCES_APP_HOST: string;
+// declare const EXPERIENCES_APP_HOST: string;
 
 export const KEY_DIVIDER = ">>>";
 
@@ -28,7 +27,7 @@ export type MonthsDataLookup = {
   [key: string]: MonthData;
 };
 
-export interface IEventsListWidgetProps {
+export type EventsListWidgetProps = {
   /** Base URL of the app API (eg: coolshop.myshopify.com/api) */
   baseUrl: string;
   /** The URL of the shop (eg: coolshop.myshopify.com) */
@@ -37,9 +36,9 @@ export interface IEventsListWidgetProps {
   monthsPerPage?: number;
   /** Number of timeslots to display under each month, per load (set by customer in widget data attr) */
   timeslotsPerLoad?: number;
-}
+};
 
-export interface IEventsListWidgetState {
+export type EventsListWidgetState = {
   /** Lookup that contains data/load states/etc for each month */
   monthsDataLookup: MonthsDataLookup;
   /** The minimum number of months to show on a given page */
@@ -50,14 +49,14 @@ export interface IEventsListWidgetState {
   totalProductsCount?: number;
   /** Expresses whether we're looking at the list or calendar view */
   viewType: WidgetView;
-}
+};
 
 /**
  * The `EventsListWidget` may take two forms: 1) a list view, or 2) a calendar view showing
  * a customer's present and upcoming events with a provide time frame. 
  */
-export class EventsListWidget extends Component<IEventsListWidgetProps, IEventsListWidgetState> {
-  constructor(props: IEventsListWidgetProps) {
+export class EventsListWidget extends Component<EventsListWidgetProps, EventsListWidgetState> {
+  constructor(props: EventsListWidgetProps) {
     super(props);
 
     const monthsPerPage = props.monthsPerPage || 3;
@@ -86,59 +85,90 @@ export class EventsListWidget extends Component<IEventsListWidgetProps, IEventsL
     };
   }
 
+  /** Additional timeslots that are revealed per month */
+  private timeslotsPerLoad: number = this.props.timeslotsPerLoad || 3;
+
   /** 
    * Fetch all data for months up front so we can count result set. 
    */
-  public async componentWillMount() {    
-    // Pull URLs from props
-    const { baseUrl, shopUrl } = this.props;
+  public async componentWillMount() {
     // Pull good stuff from state
     const { monthsToRender } = this.state;
 
     for (let i = 0; i < monthsToRender.length; i++) {
       const month = monthsToRender[i];
-      // Create new date object represent a start date
-      const startDate = new Date();
-      // We only want to show availabilities from current date in first month, but from first day of month in all following months
-      const date = i === 0 ? startDate.getDate() : 1;
-      // Set hours to start of day
-      startDate.setHours(0, 0, 0);
-      // Set the month
-      startDate.setMonth(month, date);
-      // Establish end date to cap our query range
-      const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
-      // Store returned products here
-      let productsWithAvailabilities: EventAvailability[] | undefined;
-      // Attempt to fetch products with availabilities
-      try {
-        productsWithAvailabilities = await fetchProductsWithAvailability(
-          baseUrl,
-          shopUrl,
-          startDate,
-          endDate,
-        );
-
-        const { monthsDataLookup, totalProductsCount } = this.state;
-        const currentLookup = deepClone<MonthsDataLookup>(monthsDataLookup);
-        const currentMonthData = currentLookup[`${Months[month]}`];
-
-        currentMonthData.isLoading = false;
-        currentMonthData.data = productsWithAvailabilities;
-
-        this.setState({ 
-          monthsDataLookup: currentLookup, 
-          totalProductsCount: Math.max(this.handleCountTotalTimeslots(currentLookup), totalProductsCount || 0), 
-        });
-      }
-      // Throw error if fetch fails
-      catch (err) {
-        console.error(err);
-      }
+      
+      await this.handleFetchAvailabilities(month, i === 0);
     }
   }
 
   /**
-   * TODO: Should this return total unique events, products, or timeslots?
+   * Fetch availabilities for given range/month & store in state.
+   */
+  private handleFetchAvailabilities = async (month: number, isFirstMonth: boolean, shouldInsert?: boolean) => {
+    // Pull URLs from props
+    const { baseUrl, shopUrl } = this.props;
+    // Create new date object represent a start date
+    const startDate = new Date();
+    // We only want to show availabilities from current date in first month, but from first day of month in all following months
+    const date = isFirstMonth ? startDate.getDate() : 1;
+    // Set hours to start of day
+    startDate.setHours(0, 0, 0);
+    // Set the month
+    startDate.setMonth(month, date);
+    // Establish end date to cap our query range
+    const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
+
+    // Store returned products here
+    let productsWithAvailabilities: EventAvailability[] | undefined;
+
+    // Attempt to fetch products with availabilities
+    try {
+      productsWithAvailabilities = await fetchProductsWithAvailability(
+        baseUrl,
+        shopUrl,
+        startDate,
+        endDate,
+      );
+
+      console.log("new result...", Months[month]);
+
+      // Pull good stuff out of state
+      const { monthsToRender, monthsDataLookup, totalProductsCount } = this.state;
+      // Clone current lookup so we don't accidentally mutate anything in state
+      const currentLookup = deepClone<MonthsDataLookup>(monthsDataLookup);
+      // Set up default partial to update state later
+      const newMonthData: Partial<MonthData> = {};
+      // Make sure we have existing data if it exists
+      const currentMonthData = currentLookup[`${Months[month]}`] 
+        ? currentLookup[`${Months[month]}`]
+        : newMonthData;
+
+      currentMonthData.isLoading = false;
+      currentMonthData.data = productsWithAvailabilities;
+
+      const newState: Partial<EventsListWidgetState> = {
+        monthsDataLookup: currentLookup,
+        totalProductsCount: Math.max(this.handleCountTotalTimeslots(currentLookup), totalProductsCount || 0),
+      };
+
+      // If we need to, add the provided month to the months to render list (useful for "show more")
+      if (shouldInsert) {
+        const newMonthsToRender = deepClone(monthsToRender);
+        newMonthsToRender.push(month);
+        newState.monthsToRender = newMonthsToRender;
+      }
+
+      this.setState(newState as EventsListWidgetState);
+    }
+    // Throw error if fetch fails
+    catch (err) {
+      console.error(err);
+    }
+  }
+
+  /**
+   * Returns total number of unique products.
    */
   private handleCountTotalTimeslots(lookup: MonthsDataLookup) {
     const monthKeys = Object.keys(lookup);
@@ -161,10 +191,11 @@ export class EventsListWidget extends Component<IEventsListWidgetProps, IEventsL
   /**
    * Increment the months per page, thereby loading more products.
    */
-  private handleIncrementMonthsToDisplay = () => {
-    // this.setState({
-    //   monthsPerPage: this.state.monthsPerPage + 1,
-    // });
+  private handleIncrementMonthsToDisplay = async () => {
+    const date = new Date();
+    const monthsToRender = this.state.monthsToRender;
+    date.setMonth(monthsToRender[monthsToRender.length - 1] + 1);
+    await this.handleFetchAvailabilities(date.getMonth(), false, true);
   }
 
   /**
@@ -186,25 +217,21 @@ export class EventsListWidget extends Component<IEventsListWidgetProps, IEventsL
     const monthKeys = Object.keys(monthsDataLookup);
     /** Contain all the elements we'll render out later */
     const monthsToRender: JSX.Element[] = [];
-
-    // console.log("keys...", monthKeys);
-    
+    // Look over months & create a `MonthAvailabilityList` for each
     for (let i = 0; i < monthKeys.length; i++) {
       const monthName = monthKeys[i];
-      const monthData = monthsDataLookup[monthName];
-
-      console.log(`rendering in loop with for ${monthName}`, monthData.data);
-      
+      const monthData = monthsDataLookup[monthName];   
+      // Add to list   
       monthsToRender.push((
         <MonthAvailabilityList
           {...monthData}
           monthName={monthName}
           shopUrl={this.props.shopUrl}
-          timeslotsPerLoad={this.props.timeslotsPerLoad}
+          timeslotsPerLoad={this.timeslotsPerLoad}
         />
       ));
     }
-
+    // Render the elements
     return monthsToRender;
   }
 
