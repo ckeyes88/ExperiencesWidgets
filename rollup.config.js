@@ -5,9 +5,9 @@ import typescript from "rollup-plugin-typescript3";
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
 import json from "rollup-plugin-json";
-import {
-  uglify
-} from 'rollup-plugin-uglify';
+// import {
+//   uglify
+// } from 'rollup-plugin-uglify';
 
 export default [{
     input: "src/widgets.ts",
