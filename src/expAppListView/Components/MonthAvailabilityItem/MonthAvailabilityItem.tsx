@@ -40,28 +40,29 @@ export class MonthAvailabilityItem extends Component<MonthAvailabilityItemProps>
 
     return (
       <div className="Container MonthAvailabilityItem">
-        <div
-          className="MonthAvailabilityItem-Photo"
-          style={{ backgroundImage: `url("${featuredImage}")` }}
-        >
-          <div className="MonthAvailabilityItem-Date">
-            {formattedDate}
+        <div className="MonthAvailabilityItem-Left">
+          <div
+            className="MonthAvailabilityItem-Photo"
+            style={{ backgroundImage: `url("${featuredImage}")` }}
+          >
+            <span className="MonthAvailabilityItem-Date">
+              {formattedDate}
+            </span>
+          </div>
+          <div className="MonthAvailabilityItem-Desc">
+            <h3 className="MonthAvailabilityItem-DescTitle">
+              {name}
+            </h3>
+            {/* <p className="MonthAvailabilityItem-DescCost">{item.ticketCost ? `${cost}` : "Free"}</p> */}
           </div>
         </div>
-
-        <div className="MonthAvailabilityItem-Desc">
-          <h3 className="MonthAvailabilityItem-DescTitle">{name}</h3>
-          {/* <p className="MonthAvailabilityItem-DescCost">{item.ticketCost ? `${cost}` : "Free"}</p> */}
+        <div className="MonthAvailabilityItem-Right">
+          <ButtonLink
+            className="MonthAvailabilityItem-GoTo"
+            label={"Details"}
+            href={`https://${shopUrl}/products/${handle}?select=${new Date(startsAt).getTime() / 1000}`}
+          />
         </div>
-
-        <div>{startsAt}</div>
-
-        <ButtonLink
-          className="MonthAvailabilityItem-GoTo"
-          label={"Details"}
-          href={`https://${shopUrl}/products/${handle}?select=${new Date(startsAt).getTime() / 1000}`}
-        />
-
       </div>
     );
   }
