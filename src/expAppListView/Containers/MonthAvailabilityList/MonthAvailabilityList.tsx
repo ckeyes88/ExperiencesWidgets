@@ -1,42 +1,14 @@
 import { h, Component } from "preact";
 import { Availability } from "../../../typings/Availability";
-import { AssetDBO, EventAssetLinkDBO } from "@helpfulhuman/expapp-shared-libs";
 import { EventAvailability } from "../../../Utils/api";
+import { EventLookup } from "../EventsListWidget/EventsListWidget";
 import { MonthAvailabilityItem } from "../../Components/MonthAvailabilityItem/MonthAvailabilityItem";
 import { deepClone } from "../../../Utils/clone";
+import { findFeaturedImageUrl } from "../../../Utils/helpers";
 // import { Loading } from "../../../SharedComponents/loading/Loading";
 
 // Initial number of months to display in list
 const INITIAL_NUM_MONTHS_TO_DISPLAY = 3;
-
-// URL to default featured image (same as what's used in admin UI)
-const DEFAULT_EVENT_FEATURED_IMAGE = "https://s3-us-west-2.amazonaws.com/shopify-experiences-app/image_upload_illustration.png";
-
-/**
- * Finds the featured image URL with provided resources. If one cannot be found, defaults
- * to a default URL.
- */
-export function findFeaturedImageUrl(images: EventAssetLinkDBO[], imageLinks: AssetDBO[]): string {
-  let featuredId;
-
-  for (let i = 0; i < images.length; i++) {
-    const { id, featured } = images[i];
-    if (featured) {
-      featuredId = id.toString();
-      break;
-    }
-  }
-
-  for (let j = 0; j < imageLinks.length; j++) {
-    if (imageLinks[j]._id.toString() === featuredId) {
-      return imageLinks[j].url;
-    }
-  }
-
-  return imageLinks.length > 0
-    ? imageLinks[0].url
-    : DEFAULT_EVENT_FEATURED_IMAGE;
-}
 
 /**
  * Sorts timeslots in ascending order.
@@ -50,25 +22,13 @@ export type ExtendedAvailability = Availability & {
   id: string;
 };
 
-type LookupEvent = {
-  /** Featured image URL */
-  featureImage: string;
-  /** Name of the event */
-  name: string;
-  /** Handle to Shopify product */
-  handle: string;
-};
-
-type EventLookup = {
-  /** Key = event ID & value = object containing useful info */
-  [key: string]: LookupEvent;
-};
-
 export type MonthAvailabilityListProps = {
   /** The month's `productsWithAvailabilities` */
   data?: EventAvailability[];
   /** Whether the fetch failed for this month */
   error?: string;
+  /** Lookup that stores useful info for a particular event ID */
+  eventLookup: EventLookup;
   /** Whether this month's data is still loading */
   isLoading: boolean;
   /** The full month name */
@@ -103,10 +63,7 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
       timeslotsToRender: this.handleParseTimeslots(isLoading, error, data),
     };
   }
-
-  /** Lookup that stores useful info for a particular event ID */
-  private eventLookup: EventLookup = {};
-
+  
   /**
    * When data is done loading (or hasn't errored), take the data, format it, and 
    * store it in state for render consumption.
@@ -128,6 +85,7 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
   ): ExtendedAvailability[] => {
     // Only do work if we have data to parse
     if (!isLoading && !error) {
+      const eventLookup = this.props.eventLookup;
       // Store availabilities to render later
       let timeslotsToRender: ExtendedAvailability[] = [];
       // Loop over data set & update state with timeslots
@@ -140,9 +98,9 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
           imageLinks,
           name,
         } = data[i];
-        // Update event lookup so we can refer to these properties conveniently later
-        if (!this.eventLookup.hasOwnProperty(_id)) {
-          this.eventLookup[_id] = {
+        // Update event lookup if they don't already exist (they should)
+        if (!eventLookup.hasOwnProperty(_id)) {
+          eventLookup[_id] = {
             featureImage: findFeaturedImageUrl(images, imageLinks),
             handle,
             name,
@@ -206,6 +164,7 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
    */
   private renderTimeslots = () => {
     const { displayingTimeslotsCount, timeslotsToRender } = this.state;
+    const { eventLookup, monthName, shopUrl } = this.props;
     const timeslotElements: JSX.Element[] = [];
     const timeslotsClone = deepClone(timeslotsToRender);
     
@@ -222,19 +181,19 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
 
       // If we don't have the ID we can't derive requisite props for `MonthAvailabilityItem`
       if (!id) {
-        console.error(`There was an error rendering availabilities for ${this.props.monthName}`);
+        console.error(`There was an error rendering availabilities for ${monthName}`);
         return;
       }
 
       // Add elements to array for rendering
       timeslotElements.push((
         <MonthAvailabilityItem
-          featuredImage={this.eventLookup[id].featureImage}
+          featuredImage={eventLookup[id].featureImage}
           formattedDate={date}
-          handle={this.eventLookup[id].handle}
-          name={this.eventLookup[id].name}
+          handle={eventLookup[id].handle}
+          name={eventLookup[id].name}
           startsAt={startsAt}
-          shopUrl={this.props.shopUrl}
+          shopUrl={shopUrl}
         />
       ));
     }

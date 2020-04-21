@@ -1,11 +1,11 @@
 import { h, Component } from "preact";
 import { Button } from "../../Components/Button/Button";
 import { EventAvailability, fetchProductsWithAvailability } from "../../../Utils/api";
-import { Filters, SortKey } from "../../Components/Filters/Filters";
+import { Filters, SortKey, FilterBy } from "../../Components/Filters/Filters";
 import { Months } from "../../../Utils/Constants";
 import { MonthAvailabilityList } from "../MonthAvailabilityList/MonthAvailabilityList";
 import { deepClone } from "../../../Utils/clone";
-import { keyify, unkeyify } from "../../../Utils/helpers";
+import { keyify, unkeyify, findFeaturedImageUrl } from "../../../Utils/helpers";
 
 // @ts-ignore
 // declare const EXPERIENCES_APP_HOST: string;
@@ -13,6 +13,20 @@ import { keyify, unkeyify } from "../../../Utils/helpers";
 export const KEY_DIVIDER = ">>>";
 
 export type WidgetView = "ListView" | "CalendarView";
+
+type LookupEvent = {
+  /** Featured image URL */
+  featureImage: string;
+  /** Name of the event */
+  name: string;
+  /** Handle to Shopify product */
+  handle: string;
+};
+
+export type EventLookup = {
+  /** Key = event ID & value = object containing useful info */
+  [key: string]: LookupEvent;
+};
 
 export type MonthData = {
   /** If true, month's data is still loading */
@@ -42,8 +56,10 @@ export type EventsListWidgetProps = {
 export type EventsListWidgetState = {
   /** Lookup that contains data/load states/etc for each month */
   monthsDataLookup: MonthsDataLookup;
-  /** Array of month (with year) keys that'll we'll use to r */
+  /** Array of month (with year) keys that'll we'll use to loop over */
   monthsToRender: string[];
+  /** Whether we should show all events or filter based on event name */
+  filterBy: FilterBy;
   /** Determines how to sort the returned product list */
   sortBy: SortKey;
   /** Total number of unique products */
@@ -81,6 +97,7 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
 
     // Define default state
     this.state = {
+      filterBy: "All",
       monthsDataLookup,
       monthsToRender,
       sortBy: "Date",
@@ -90,6 +107,9 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
 
   /** Additional timeslots that are revealed per month */
   private timeslotsPerLoad: number = this.props.timeslotsPerLoad || 3;
+
+  /** Lookup that stores useful info for a particular event ID */
+  private eventLookup: EventLookup = {};
 
   /** 
    * Fetch all data for months up front so we can count result set. 
@@ -185,7 +205,6 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
    */
   private handleCountTotalTimeslots(lookup: MonthsDataLookup) {
     const monthKeys = Object.keys(lookup);
-    const idSet: Set<string> = new Set();
 
     for (let i = 0; i < monthKeys.length; i++) {
       const monthData = lookup[monthKeys[i]];
@@ -193,12 +212,17 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
       if (!monthData.isLoading) {
         const data = monthData.data;
         for (let j = 0; j < data.length; j++) {
-          idSet.add(data[j]._id);
+          const { _id, name, handle, images, imageLinks } = data[j];
+          this.eventLookup[_id] = {
+            featureImage: findFeaturedImageUrl(images, imageLinks),
+            name, 
+            handle, 
+          };
         }
       }
     }    
 
-    return idSet.size;
+    return Object.keys(this.eventLookup).length;
   }
 
   /**
@@ -230,6 +254,15 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
   }
 
   /**
+   * 
+   */
+  private handleEventFilterChange = (e: MouseEvent) => {
+    this.setState({
+      filterBy: (e.target as HTMLSelectElement).value as FilterBy,
+    });
+  }
+
+  /**
    * Render number (`numMonthsToDisplay`) of months starting from current date.
    */
   private renderMonths() {
@@ -248,6 +281,7 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
       monthsToRender.push((
         <MonthAvailabilityList
           {...monthData}
+          eventLookup={this.eventLookup}
           monthName={monthName}
           shopUrl={this.props.shopUrl}
           timeslotsPerLoad={this.timeslotsPerLoad}
@@ -262,7 +296,7 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
    * Render the carousel widget.
    */
   public render() {    
-    const { sortBy, totalProductsCount, viewType } = this.state;
+    const { filterBy, sortBy, totalProductsCount, viewType } = this.state;
     
     switch(viewType) {
       // Display the list view widget
@@ -270,9 +304,11 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
         return (
           <div className="EventsListWidget">
             <Filters 
+              eventLookup={this.eventLookup}
+              filterBy={filterBy}
+              sortBy={sortBy} 
               totalProducts={totalProductsCount} 
               onSortChange={this.handleSortChange} 
-              sortBy={sortBy} 
             />
             {this.renderMonths()}
             <Button

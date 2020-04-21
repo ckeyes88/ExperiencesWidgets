@@ -1,5 +1,7 @@
 import { FirstAvailability } from "../typings/FirstAvailability";
 import { Availability } from "../typings/Availability";
+import { EventAssetLinkDBO } from "../typings/Event";
+import { AssetDBO } from "@helpfulhuman/expapp-shared-libs";
 
 /**
 * Takes in shopify money_format property along with a float value
@@ -292,4 +294,33 @@ export function keyify(...args: (string | number)[]) {
  */
 export function unkeyify(keyStr: string) {
   return keyStr.split(KEY_SEPARATOR);
+}
+
+// URL to default featured image (same as what's used in admin UI)
+const DEFAULT_EVENT_FEATURED_IMAGE = "https://s3-us-west-2.amazonaws.com/shopify-experiences-app/image_upload_illustration.png";
+
+/**
+ * Finds the featured image URL with provided resources. If one cannot be found, defaults
+ * to a default URL.
+ */
+export function findFeaturedImageUrl(images: EventAssetLinkDBO[], imageLinks: AssetDBO[]): string {
+  let featuredId;
+
+  for (let i = 0; i < images.length; i++) {
+    const { id, featured } = images[i];
+    if (featured) {
+      featuredId = id.toString();
+      break;
+    }
+  }
+
+  for (let j = 0; j < imageLinks.length; j++) {
+    if (imageLinks[j]._id.toString() === featuredId) {
+      return imageLinks[j].url;
+    }
+  }
+
+  return imageLinks.length > 0
+    ? imageLinks[0].url
+    : DEFAULT_EVENT_FEATURED_IMAGE;
 }
