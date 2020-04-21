@@ -5,6 +5,7 @@ import { Filters, SortKey } from "../../Components/Filters/Filters";
 import { Months } from "../../../Utils/Constants";
 import { MonthAvailabilityList } from "../MonthAvailabilityList/MonthAvailabilityList";
 import { deepClone } from "../../../Utils/clone";
+import { keyify, unkeyify } from "../../../Utils/helpers";
 
 // @ts-ignore
 // declare const EXPERIENCES_APP_HOST: string;
@@ -41,8 +42,8 @@ export type EventsListWidgetProps = {
 export type EventsListWidgetState = {
   /** Lookup that contains data/load states/etc for each month */
   monthsDataLookup: MonthsDataLookup;
-  /** The minimum number of months to show on a given page */
-  monthsToRender: number[];
+  /** Array of month (with year) keys that'll we'll use to r */
+  monthsToRender: string[];
   /** Determines how to sort the returned product list */
   sortBy: SortKey;
   /** Total number of unique products */
@@ -60,7 +61,7 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
     super(props);
 
     const monthsPerPage = props.monthsPerPage || 3;
-    const monthsToRender: number[] = [];
+    const monthsToRender: string[] = [];
     const monthsDataLookup: MonthsDataLookup = {};
 
     for (let i = 0; i < monthsPerPage; i++) {
@@ -70,8 +71,10 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
       startDate.setHours(0, 0, 0);
       // Define the current month value
       const currentMonth = startDate.getMonth() + i;
+      // Grab the full year
+      const currentYear = startDate.getFullYear();
       // Default array of month values that are rendered to the page
-      monthsToRender.push(currentMonth);
+      monthsToRender.push(keyify(currentMonth, currentYear));
       // Default all months as still loading data
       monthsDataLookup[`${Months[currentMonth]}`] = { isLoading: true };
     }
@@ -96,25 +99,33 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
     const { monthsToRender } = this.state;
     // Look over each initial month to render & fetch data for it 
     for (let i = 0; i < monthsToRender.length; i++) {
-      const month = monthsToRender[i];
-      await this.handleFetchAvailabilities(month, i === 0);
+      const [month, year] = unkeyify(monthsToRender[i]);
+      await this.handleFetchAvailabilities(Number.parseInt(month), Number.parseInt(year), i === 0);
     }
   }
 
   /**
    * Fetch availabilities for given range/month & store in state.
    */
-  private handleFetchAvailabilities = async (month: number, isFirstMonth: boolean, shouldInsert?: boolean) => {
+  private handleFetchAvailabilities = async (
+    month: number, 
+    year: number, 
+    isFirstMonth: boolean, 
+    shouldInsert?: boolean,
+  ) => {
     // Pull URLs from props
     const { baseUrl, shopUrl } = this.props;
     // Create new date object represent a start date
-    const startDate = new Date();
+    const startDate = new Date(
+      year,
+      month, 
+    );
     // We only want to show availabilities from current date in first month, but from first day of month in all following months
     const date = isFirstMonth ? startDate.getDate() : 1;
+    // Set the month
+    startDate.setDate(date);
     // Set hours to start of day
     startDate.setHours(0, 0, 0);
-    // Set the month
-    startDate.setMonth(month, date);
     // Establish end date to cap our query range
     const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
 
@@ -157,7 +168,7 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
       // If we need to, add the provided month to the months to render list (useful for "show more")
       if (shouldInsert) {
         const newMonthsToRender = deepClone(monthsToRender);
-        newMonthsToRender.push(month);
+        newMonthsToRender.push(keyify(month, year));
         newState.monthsToRender = newMonthsToRender;
       }
 
@@ -196,8 +207,17 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
   private handleIncrementMonthsToDisplay = async () => {
     const date = new Date();
     const monthsToRender = this.state.monthsToRender;
-    date.setMonth(monthsToRender[monthsToRender.length - 1] + 1);
-    await this.handleFetchAvailabilities(date.getMonth(), false, true);
+    const [m, y] = unkeyify(monthsToRender[monthsToRender.length - 1]);
+    const month = Number.parseInt(m); 
+    const year = Number.parseInt(y);
+    // Increment the month
+    date.setMonth(month + 1);
+    // If we spill over to next year, increment year
+    if (month === 11) {
+      date.setFullYear(year + 1);
+    }
+    // Call for availabilities
+    await this.handleFetchAvailabilities(date.getMonth(), date.getFullYear(), false, true);
   }
 
   /**
@@ -218,10 +238,7 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
     /** Grab full month names */
     const monthKeys = Object.keys(monthsDataLookup);
     /** Contain all the elements we'll render out later */
-    const monthsToRender: JSX.Element[] = [];
-
-    // console.log("rendering the months defined in state...", this.state.monthsDataLookup);
-    
+    const monthsToRender: JSX.Element[] = [];    
 
     // Look over months & create a `MonthAvailabilityList` for each
     for (let i = 0; i < monthKeys.length; i++) {

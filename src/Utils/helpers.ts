@@ -272,3 +272,24 @@ export function singular(word: string, amount?: number): string {
   }
   return word;
 }
+
+const KEY_SEPARATOR = "::";
+
+/**
+ * Takes any # of string/numbers and strings them together. Separates the
+ * values with the separator. 
+ * 
+ * @param args Any string/number to be keyified
+ */
+export function keyify(...args: (string | number)[]) {
+  return args.join(KEY_SEPARATOR);
+}
+
+/**
+ * Takes in a keyified string to split up.
+ * 
+ * @param keyStr The string to split up into array of values.
+ */
+export function unkeyify(keyStr: string) {
+  return keyStr.split(KEY_SEPARATOR);
+}
