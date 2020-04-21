@@ -4,6 +4,7 @@ import { AssetDBO, EventAssetLinkDBO } from "@helpfulhuman/expapp-shared-libs";
 import { EventAvailability } from "../../../Utils/api";
 import { MonthAvailabilityItem } from "../../Components/MonthAvailabilityItem/MonthAvailabilityItem";
 import { deepClone } from "../../../Utils/clone";
+// import { Loading } from "../../../SharedComponents/loading/Loading";
 
 // Initial number of months to display in list
 const INITIAL_NUM_MONTHS_TO_DISPLAY = 3;
@@ -185,7 +186,7 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
     // Only show button if we have timeslots left to load
     if (displayingTimeslotsCount < timeslotsToRender.length) {
       // Define classes
-      let classes = "AvailabilityList-ShowMore";
+      let classes = "MonthAvailabilityList-ShowMore";
       // Disable button if still loading or we errored out
       if (error || isLoading) { classes += " asDisabled"; }
       // Render the button
@@ -247,27 +248,26 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
   public render() {
     const { isLoading, error, monthName } = this.props;
     
-    // TODO: style
     if (isLoading) {
       return (
-        <div className="Container">
+        <div className="MonthAvailabilityList-EmptyContainer">
+          {/* <Loading /> */}
           Loading availabilities for {monthName}
         </div>
       ); 
     }
     
-    // TODO: style
     if (error) {
       return (
-        <div className="Container">
+        <div className="MonthAvailabilityList-EmptyContainer">
           There was an error fetching availabilities for {monthName}
         </div>
       ); 
     }
   
     return (
-      <div className="Container AvailabilityList">
-        <p className="AvailabilityList-MonthName">
+      <div className="Container MonthAvailabilityList">
+        <p className="MonthAvailabilityList-MonthName">
           {monthName}
         </p>
         <div className="MonthAvailabilityList-Timeslots">
