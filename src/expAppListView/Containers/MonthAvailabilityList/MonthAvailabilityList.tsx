@@ -96,7 +96,9 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
     const { isLoading, error, data } = props;
     
     this.state = {
+      // Establish how many timeslots we're showing for the current month
       displayingTimeslotsCount: INITIAL_NUM_MONTHS_TO_DISPLAY,
+      // Parse data to pull out timeslots
       timeslotsToRender: this.handleParseTimeslots(isLoading, error, data),
     };
   }
@@ -192,7 +194,7 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
           className={classes}
           onClick={this.handleShowMore}
         >
-          More events in {monthName}
+          More in {monthName}
         </div>
       );
     }

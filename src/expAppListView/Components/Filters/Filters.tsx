@@ -21,22 +21,22 @@ export class Filters extends Component<IFiltersProps> {
    * Render the filter bar.
    */
   public render({
-    totalProducts,
-    sortBy,
-    onSortChange,
+    // totalProducts,
+    // sortBy,
+    // onSortChange,
   }: IFiltersProps) {
-    const productWord = totalProducts === 1
-      ? "product"
-      : "products";
+    // const productWord = totalProducts === 1
+    //   ? "product"
+    //   : "products";
 
-    const totalMsg = totalProducts === undefined
-      ? "Loading"
-      : `${totalProducts} ${productWord}`;
+    // const totalMsg = totalProducts === undefined
+    //   ? "Loading"
+    //   : `${totalProducts} ${productWord}`;
 
     return (
       <div className="Filters">
         <div className="Container Filters-Container">
-          <div>
+          {/* <div className="Filters-SortBy">
             Sort by:
             <select 
               className="Filters-SortBy" 
@@ -47,11 +47,11 @@ export class Filters extends Component<IFiltersProps> {
               <option value="Date">Date</option>
               <option value="Name">Name</option>
             </select>
-          </div>
+          </div> */}
 
-          <div>
+          {/* <div>
             {totalMsg}
-          </div>
+          </div> */}
         </div>
       </div>
     );

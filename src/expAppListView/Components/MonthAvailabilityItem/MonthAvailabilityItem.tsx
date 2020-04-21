@@ -58,7 +58,7 @@ export class MonthAvailabilityItem extends Component<MonthAvailabilityItemProps>
 
         <ButtonLink
           className="MonthAvailabilityItem-GoTo"
-          label={"Event Details"}
+          label={"Details"}
           href={`https://${shopUrl}/products/${handle}?select=${new Date(startsAt).getTime() / 1000}`}
         />
 
