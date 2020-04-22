@@ -6,8 +6,11 @@
   & > select {
     background-color: transparent;
     border: 0;
-    margin-left: rem(7);
     font-size: rem(16);
     -webkit-appearance: none;
+
+    &.withLabel {
+      margin-left: rem(7);
+    }
   }
 }
