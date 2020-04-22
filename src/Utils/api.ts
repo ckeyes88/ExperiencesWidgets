@@ -11,6 +11,8 @@ import { SchedulerProduct } from "../typings/SchedulerProduct";
 import { Variants } from "../typings/Variant";
 import { sbClient } from "../shopifyBuy";
 import { LineItem } from "shopify-buy";
+import Client from "shopify-buy";
+
 import {AssetDBO} from "@helpfulhuman/expapp-shared-libs";
 import {OPRMProductSchema} from "@helpfulhuman/oprm-sdk";
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
@@ -127,8 +129,8 @@ export enum DisableRedirect {
 }
 
 export type AddToCartOptions = {
-  /** Flag denoting whether buy sdk should be used over default add to cart logic */
-  enableBuySdk?: boolean;
+  /** Storefront access token, which, if present, will denote the use of the buy sdk over default add to cart logic */
+  storefrontAccessToken?: string;
   /** The original event DBO object */
   event: EventDBO;
   /** Prevent auto-navigation to checkout URL */
@@ -293,14 +295,14 @@ export async function getShopDetails({ baseUrl, shopId }: APIArguments): Promise
 }
 
 /**
- * Adds the an event product to the cart with the selected quantity
+ * Adds the event product to the cart with the selected quantity
  * and the date/time of the event.
  */
 export async function addToCart(
   { timeslot, quantities, fields, attendees, shopUrl }: AddToCartArgs,
   { 
-    enableBuySdk, 
-    event: { handle, variants: eventVariants },
+    storefrontAccessToken, 
+    event: { handle, variants: eventVariants, shopifyProductId },
     disableRedirect = DisableRedirect.None,
     onCartAdd, 
   }: AddToCartOptions,
@@ -312,8 +314,14 @@ export async function addToCart(
    * If client is *not* in Shopify-land, we'll need to utilize the Shopify Buy SDK to add
    * items to cart & navigate to checkout.
    */
-  if (enableBuySdk) {
+  if (storefrontAccessToken) {
     try {
+      /** If store access token is provided, generate a client from Shopify buy SDK to add items to cart */
+      const sbClient = Client.buildClient({
+        domain: shopUrl,
+        storefrontAccessToken: storefrontAccessToken,
+      });
+
       // Create an SDK cart
       const sdkCart = await sbClient.checkout.create();
       // Fetch product so we have a source of those dang GIDs
@@ -322,7 +330,7 @@ export async function addToCart(
       const sdkVariantMap: SdkVariantMap = {};
       // List of gql variants
       const sdkVariants = sdkProduct.variants;
-
+      
       // Populate variant map to fetch variant GIDs (Shopify's GraphQL IDs for the variants)
       for (let i = 0; i < sdkVariants.length; i++) {
         const sdkVariant = sdkVariants[i];
@@ -349,13 +357,15 @@ export async function addToCart(
               }); 
             }
           }
+
+          sdkLineItems.push({
+            variantId: attendee.variantId.toString(),
+            quantity: 1,
+            customAttributes,
+          });
         }
-
-
-        // TODO: Find out how to get variant GID from attendee variant ID
-
-
       }
+
       // For all other events
       else {
         // Store custom attributes ()
