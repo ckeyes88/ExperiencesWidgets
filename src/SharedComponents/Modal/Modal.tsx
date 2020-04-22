@@ -5,6 +5,8 @@ import "./_modal.scss";
 type ModalProps = {
     /** sets the prop if the mobal should be visiable or not */
     showModal: boolean;
+    /** sets the prop if the mobal is at the order details portion */
+    orderDetails: string;
     /** method to will trigger when to close the modal view */
     closeModal(): void;
 };
@@ -38,11 +40,17 @@ export class Modal extends Component<ModalProps, ModalState> {
     /** rendering the modal container */
     render() {
         if (this.props.showModal) {
-            const { children } = this.props;
+            const { children, orderDetails } = this.props;
+            let orderModal = (orderDetails === "OrderDetails") ? true : false;
+
             return (
-                <div className="Modal">
-                    <div ref={this.modal} className="Modal-ModalContentBox">
-                        {children}
+                <div>
+                    <div class="Modal">
+                        <div ref={this.modal} class={`Modal__ModalContentBox${!!orderModal ? "OrderDetails" : ""}`}>
+                            <div class="Modal-ModalMainContentBox">
+                                {children}
+                            </div>
+                        </div>
                     </div>
                 </div>
             );

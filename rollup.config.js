@@ -40,11 +40,11 @@ export default [{
     ],
   },
   {
-    input: 'src/expappListView/index.tsx',
+    input: 'src/expAppListView/index.tsx',
     output: {
-      file: "./dist/expappListView.js",
+      file: "./dist/expAppListView.js",
       format: 'iife',
-      name: 'expappListView',
+      name: 'expAppListView',
     },
     treeshake: true,
     plugins: [

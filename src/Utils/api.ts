@@ -13,7 +13,18 @@ import { sbClient } from "../shopifyBuy";
 import { LineItem } from "shopify-buy";
 import Client from "shopify-buy";
 
+import {AssetDBO} from "@helpfulhuman/expapp-shared-libs";
+import {OPRMProductSchema} from "@helpfulhuman/oprm-sdk";
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
+
+type EventAvailability = EventDBO & {
+  imageLinks: AssetDBO[];
+  availabilityProducts: ProductsAvailability[];
+};
+
+type ProductsAvailability = OPRMProductSchema & {
+  availableTimeslots: Availability[];
+};
 
 export type IHashTable<T> = {
   [key: string]: T;
@@ -480,9 +491,9 @@ export async function getCart(shopUrl?: string): Promise<GetCartResponse> {
 /**
  * Fetches the products with availability between two given dates.
  */
-export async function fetchProductsWithAvailability(baseUrl: string, shop: any, startsAt: Date, endsAt: Date): Promise<any> {
-  endsAt.setHours(23, 59, 59, 999);
-  let res = await sendJSON<any, any[]>("POST", `${baseUrl}/rest/productsAvailability?shop=${shop}`, { startsAt, endsAt });
+export async function fetchProductsWithAvailability(baseUrl: string, shop: string, startsAt: Date | string, endsAt: Date | string): Promise<EventAvailability[]> {
+  new Date(endsAt).setHours(23, 59, 59, 999);
+  let res = await sendJSON<{startsAt: Date | string; endsAt: Date | string}, EventAvailability[]>("POST", `${baseUrl}/rest/productsAvailability?shop=${shop}`, { startsAt, endsAt });
   if (res.error) {
     throw new Error(`(${res.error.errorType}) ${res.error.errorMessage}`);
   } else {

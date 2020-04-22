@@ -25,7 +25,7 @@ export class TimeSlot extends Component<ITimeSlotProps, ITimeSlotState> {
     const { unitsLeft, startsAt, timezone } = timeslot;
     const adjustedStartTimes = moment(startsAt).tz(timezone).format("h:mma");
     return (
-      <div>
+      <div className="Timeslot-Container">
         <div className="TimeSlot-AvailableGrid">
           <p><span className="TimeSlot-TimeAvailable">{adjustedStartTimes}</span>
             <span className="TimeSlot-SpotAvailable">{unitsLeft} spots left</span></p>

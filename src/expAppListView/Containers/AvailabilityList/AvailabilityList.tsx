@@ -1,8 +1,8 @@
-import { h, Component } from "preact";
+ import { h, Component } from "preact";
 import { fetchProductsWithAvailability } from "../../../Utils/api";
 import { Availability } from "../../../typings/Availability";
 import { AvailabilityListItem } from "../../Components/AvailabilityListItem/AvailabilityListItem";
-import { diffDays, Months } from "../../../Utils/constants";
+import { /*diffDays,*/ Months } from "../../../Utils/constants";
 
 export interface IAvailabilityListProps {
   startDate: Date;
@@ -38,8 +38,6 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
       maxDays,
       error: false,
     };
-
-    this.showMore = this.showMore.bind(this);
   }
 
   public async componentWillMount() {
@@ -57,6 +55,8 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
         start,
         end,
       );
+
+      console.log(productsWithAvailability);
       this.formatAvailabilities(productsWithAvailability);
     } catch (e) {
       this.setState({ error: true });
@@ -77,9 +77,10 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
       if (availabilityProducts && Array.isArray(availabilityProducts) && availabilityProducts.length) {
         availabilityProducts.forEach(p => {
           const { availableTimeslots } = p;
-          availableTimeslots.reduce((acc: any[], avail: any) => {
-            const idx: number = diffDays(this.props.startDate, avail.startsAt);
-            acc[idx].push({ ...avail, productId: productWithAvail.id });
+          availableTimeslots.reduce((acc: any[], avail: any, i: number) => {
+            //const idx: number = diffDays(this.props.startDate, avail.startsAt);
+
+            acc[i].push({ ...avail, productId: productWithAvail.id });
             return acc;
           }, availabilities);
 
@@ -104,7 +105,7 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
 
   }
 
-  showMore() {
+  showMore = () => {
     const { sortedItems, displayNum } = this.state;
     const { perLoad } = this.props;
     const num = displayNum + perLoad > sortedItems.length ? sortedItems.length : displayNum + perLoad;
@@ -138,10 +139,11 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
     });
   }
 
-  private renderItems() {
+  private renderItems = () => {
     let res: any[] = [];
     const { sortedItems, displayNum } = this.state;
     if (!sortedItems || !sortedItems.length) { return <h5>No events for this month.</h5>; }
+    console.log(sortedItems);
     for (let i = 0; i < displayNum; i++) {
       res.push(<AvailabilityListItem shopUrl={this.props.shopUrl} item={sortedItems[i]} index={i} />);
     }
@@ -162,7 +164,7 @@ export class AvailabilityList extends Component<IAvailabilityListProps, IAvailab
     const { loaded, error } = this.state;
 
     if (error) { return null; }
-
+    // TODO: Make this only appear once
     if (!loaded) { return <div className="Container">loading...</div>; }
 
     const { startDate } = this.props;

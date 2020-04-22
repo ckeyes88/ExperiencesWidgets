@@ -14,7 +14,7 @@ mountComponent({
     }
 
     if (!data.calendarBookingFormProductId) {
-      throw new Error("You must specify a product id for this widget to work");
+      throw new Error("You must specify a product id for this widget to work.");
     }
     
     if (!data.calendarBookingFormProductId) {
