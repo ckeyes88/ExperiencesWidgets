@@ -19,7 +19,7 @@ export class Select extends Component<SelectProps> {
    */
   private renderOption({ label, value }: OptionDefinition) {
     return (
-      <option value={value}>
+      <option key={value} value={value}>
         {label}
       </option>
     );

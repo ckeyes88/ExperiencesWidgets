@@ -161,8 +161,6 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
         endDate,
       );
 
-      console.log("new result...", Months[month]);
-
       // Pull good stuff out of state
       const { monthsToRender, monthsDataLookup, totalProductsCount } = this.state;
       // Full name of current month
@@ -192,7 +190,7 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
         newState.monthsToRender = newMonthsToRender;
       }
 
-      this.setState(newState as EventsListWidgetState, () => console.log("new state after show more...", this.state));
+      this.setState(newState as EventsListWidgetState);
     }
     // Throw error if fetch fails
     catch (err) {
@@ -205,23 +203,28 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
    */
   private handleCountTotalTimeslots(lookup: MonthsDataLookup) {
     const monthKeys = Object.keys(lookup);
-
+    // Loop over the month values
     for (let i = 0; i < monthKeys.length; i++) {
       const monthData = lookup[monthKeys[i]];
-
+      // Make sure we're not loading still & actually have data
       if (!monthData.isLoading) {
         const data = monthData.data;
         for (let j = 0; j < data.length; j++) {
-          const { _id, name, handle, images, imageLinks } = data[j];
-          this.eventLookup[_id] = {
-            featureImage: findFeaturedImageUrl(images, imageLinks),
-            name, 
-            handle, 
-          };
+          const { _id, name, handle, images, imageLinks, shopifyProductId } = data[j];
+          // console.log(name, _id, shopifyProductId);
+          
+          // Only add to our lookup if it's not a draft
+          if (!!shopifyProductId) {            
+            this.eventLookup[_id] = {
+              featureImage: findFeaturedImageUrl(images, imageLinks),
+              name, 
+              handle, 
+            };
+          }
         }
       }
     }    
-
+        
     return Object.keys(this.eventLookup).length;
   }
 
@@ -254,9 +257,9 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
   }
 
   /**
-   * 
+   * Update the filter by value in state.
    */
-  private handleEventFilterChange = (e: MouseEvent) => {
+  private handleEventFilterChange = (e: MouseEvent) => {    
     this.setState({
       filterBy: (e.target as HTMLSelectElement).value as FilterBy,
     });
@@ -266,15 +269,15 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
    * Render number (`numMonthsToDisplay`) of months starting from current date.
    */
   private renderMonths() {
-    /** Make ref to state lookup */
-    const monthsDataLookup = this.state.monthsDataLookup;
+    /** Grab stuff from state */
+    const { filterBy, monthsDataLookup } = this.state;
     /** Grab full month names */
     const monthKeys = Object.keys(monthsDataLookup);
     /** Contain all the elements we'll render out later */
     const monthsToRender: JSX.Element[] = [];    
 
     // Look over months & create a `MonthAvailabilityList` for each
-    for (let i = 0; i < monthKeys.length; i++) {
+    for (let i = 0; i < monthKeys.length; i++) {      
       const monthName = monthKeys[i];
       const monthData = monthsDataLookup[monthName];   
       // Add to list   
@@ -282,6 +285,7 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
         <MonthAvailabilityList
           {...monthData}
           eventLookup={this.eventLookup}
+          filterBy={filterBy}
           monthName={monthName}
           shopUrl={this.props.shopUrl}
           timeslotsPerLoad={this.timeslotsPerLoad}
@@ -296,8 +300,7 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
    * Render the carousel widget.
    */
   public render() {    
-    const { filterBy, sortBy, totalProductsCount, viewType } = this.state;
-    
+    const { filterBy, sortBy, totalProductsCount, viewType } = this.state;    
     switch(viewType) {
       // Display the list view widget
       case "ListView": 
@@ -308,6 +311,7 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
               filterBy={filterBy}
               sortBy={sortBy} 
               totalProducts={totalProductsCount} 
+              onFilterChange={this.handleEventFilterChange}
               onSortChange={this.handleSortChange} 
             />
             {this.renderMonths()}

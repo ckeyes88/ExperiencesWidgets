@@ -5,6 +5,7 @@ import { EventLookup } from "../EventsListWidget/EventsListWidget";
 import { MonthAvailabilityItem } from "../../Components/MonthAvailabilityItem/MonthAvailabilityItem";
 import { deepClone } from "../../../Utils/clone";
 import { findFeaturedImageUrl } from "../../../Utils/helpers";
+import { FilterBy } from "../../Components/Filters/Filters";
 // import { Loading } from "../../../SharedComponents/loading/Loading";
 
 // Initial number of months to display in list
@@ -13,8 +14,77 @@ const INITIAL_NUM_MONTHS_TO_DISPLAY = 3;
 /**
  * Sorts timeslots in ascending order.
  */
-export function sortTimeslotsAscending(a: ExtendedAvailability, b: ExtendedAvailability) {
+function sortTimeslotsAscending(a: ExtendedAvailability, b: ExtendedAvailability) {
   return (new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime());
+}
+
+type ParseTimeslotArgs = {
+  /** Load flag */
+  isLoading: boolean;
+  /** Error message */
+  error: string;
+  /** Data from fetch query */
+  data: EventAvailability[];
+  /** Event lookup */
+  eventLookup: EventLookup;
+  /** Filter value */
+  filterBy?: FilterBy;
+};
+
+/**
+ * Take in data/load states/errors and try to pull out the timeslots for list
+ * rendering.
+ */
+function parseTimeslots({
+  isLoading,
+  error,
+  data,
+  eventLookup,
+  filterBy,
+}: ParseTimeslotArgs): ExtendedAvailability[] {
+  // Only do work if we have data to parse
+  if (!isLoading && !error) {
+    // Store availabilities to render later
+    let timeslotsToRender: ExtendedAvailability[] = [];
+    // Loop over data set & update state with timeslots
+    for (let i = 0; i < data.length; i++) {
+      const {
+        _id,
+        availabilityProducts,
+        handle,
+        images,
+        imageLinks,
+        name,
+        shopifyProductId,
+      } = data[i];
+      // If we're filtering for a specific event, then skip over everything else
+      if (filterBy !== "All" && filterBy !== _id) {
+        continue;
+      }
+      // Update event lookup if they don't already exist (they should) + ensure not a draft
+      if (!eventLookup.hasOwnProperty(_id) && shopifyProductId) {
+        eventLookup[_id] = {
+          featureImage: findFeaturedImageUrl(images, imageLinks),
+          handle,
+          name,
+        };
+      }
+      // Loop over timeslots to attach the event ID
+      for (let j = 0; j < availabilityProducts.length; j++) {
+        const timeslots = deepClone(availabilityProducts[j].availableTimeslots) as ExtendedAvailability[];
+        // Loop over inner timeslots to add event ID (so each timeslot can utilize event lookup)
+        for (let k = 0; k < timeslots.length; k++) {
+          timeslots[k].id = _id;
+        }
+        // Add it to the list
+        timeslotsToRender = timeslotsToRender.concat(timeslots);
+      }
+    }
+    // Return event timeslots
+    return timeslotsToRender;
+  }
+  // Return default empty list
+  return [];
 }
 
 export type ExtendedAvailability = Availability & {
@@ -29,6 +99,8 @@ export type MonthAvailabilityListProps = {
   error?: string;
   /** Lookup that stores useful info for a particular event ID */
   eventLookup: EventLookup;
+  /** How to filter the render set */
+  filterBy: FilterBy;
   /** Whether this month's data is still loading */
   isLoading: boolean;
   /** The full month name */
@@ -54,13 +126,13 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
   constructor(props: MonthAvailabilityListProps) {
     super(props);
 
-    const { isLoading, error, data } = props;
+    const { isLoading, error, data, eventLookup, filterBy } = props;
     
     this.state = {
       // Establish how many timeslots we're showing for the current month
       displayingTimeslotsCount: INITIAL_NUM_MONTHS_TO_DISPLAY,
       // Parse data to pull out timeslots
-      timeslotsToRender: this.handleParseTimeslots(isLoading, error, data),
+      timeslotsToRender: parseTimeslots({ isLoading, error, data, eventLookup, filterBy }),
     };
   }
   
@@ -68,60 +140,10 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
    * When data is done loading (or hasn't errored), take the data, format it, and 
    * store it in state for render consumption.
    */
-  public componentWillReceiveProps({ isLoading, error, data }: MonthAvailabilityListProps) {
+  public componentWillReceiveProps({ isLoading, error, data, filterBy, eventLookup }: MonthAvailabilityListProps) {
     this.setState({ 
-      timeslotsToRender: this.handleParseTimeslots(isLoading, error, data),
+      timeslotsToRender: parseTimeslots({ isLoading, error, data, eventLookup, filterBy }),
     });
-  }
-
-  /**
-   * Take in data/load states/errors and try to pull out the timeslots for list
-   * rendering.
-   */
-  private handleParseTimeslots = (
-    isLoading: boolean, 
-    error: string, 
-    data: EventAvailability[],
-  ): ExtendedAvailability[] => {
-    // Only do work if we have data to parse
-    if (!isLoading && !error) {
-      const eventLookup = this.props.eventLookup;
-      // Store availabilities to render later
-      let timeslotsToRender: ExtendedAvailability[] = [];
-      // Loop over data set & update state with timeslots
-      for (let i = 0; i < data.length; i++) {
-        const {
-          _id,
-          availabilityProducts,
-          handle,
-          images,
-          imageLinks,
-          name,
-        } = data[i];
-        // Update event lookup if they don't already exist (they should)
-        if (!eventLookup.hasOwnProperty(_id)) {
-          eventLookup[_id] = {
-            featureImage: findFeaturedImageUrl(images, imageLinks),
-            handle,
-            name,
-          };
-        }
-        // Loop over timeslots to attach the event ID
-        for (let j = 0; j < availabilityProducts.length; j++) {
-          const timeslots = deepClone(availabilityProducts[j].availableTimeslots) as ExtendedAvailability[];
-
-          for (let k = 0; k < timeslots.length; k++) {
-            timeslots[k].id = _id;
-          }
-
-          timeslotsToRender = timeslotsToRender.concat(timeslots);
-        }
-      }
-
-      return timeslotsToRender;
-    }
-    // Return default empty list
-    return [];
   }
 
   /**
@@ -132,7 +154,7 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
     const { timeslotsPerLoad } = this.props;
     const maxNumberOfTimeslots = timeslotsToRender.length;
     const newDisplayCount = Math.min(maxNumberOfTimeslots, displayingTimeslotsCount + timeslotsPerLoad);
-    this.setState({ displayingTimeslotsCount: newDisplayCount }, () => console.log(this.state.displayingTimeslotsCount));
+    this.setState({ displayingTimeslotsCount: newDisplayCount });
   }
 
   /**

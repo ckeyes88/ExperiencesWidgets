@@ -5,7 +5,10 @@ import { Select, OptionDefinition } from "../Select/Select";
 function createFilterOptionsFromSet(lookup: EventLookup): OptionDefinition[] {
   const ids = Object.keys(lookup);
   const options: OptionDefinition[] = [{ label: "All Products", value: "All" }];
-
+  // console.log("received lookup", lookup);
+  
+  // console.log("ids...", ids, options);
+  
   for (let i = 0; i < ids.length; i++) {
     const id = ids[i];
     options.push({
