@@ -1,5 +1,7 @@
 import { FirstAvailability } from "../typings/FirstAvailability";
 import { Availability } from "../typings/Availability";
+import { EventAssetLinkDBO } from "../typings/Event";
+import { AssetDBO } from "@helpfulhuman/expapp-shared-libs";
 
 /**
 * Takes in shopify money_format property along with a float value
@@ -271,4 +273,54 @@ export function singular(word: string, amount?: number): string {
     }
   }
   return word;
+}
+
+const KEY_SEPARATOR = "::";
+
+/**
+ * Takes any # of string/numbers and strings them together. Separates the
+ * values with the separator. 
+ * 
+ * @param args Any string/number to be keyified
+ */
+export function keyify(...args: (string | number)[]) {
+  return args.join(KEY_SEPARATOR);
+}
+
+/**
+ * Takes in a keyified string to split up.
+ * 
+ * @param keyStr The string to split up into array of values.
+ */
+export function unkeyify(keyStr: string) {
+  return keyStr.split(KEY_SEPARATOR);
+}
+
+// URL to default featured image (same as what's used in admin UI)
+const DEFAULT_EVENT_FEATURED_IMAGE = "https://s3-us-west-2.amazonaws.com/shopify-experiences-app/image_upload_illustration.png";
+
+/**
+ * Finds the featured image URL with provided resources. If one cannot be found, defaults
+ * to a default URL.
+ */
+export function findFeaturedImageUrl(images: EventAssetLinkDBO[], imageLinks: AssetDBO[]): string {
+  let featuredId;
+
+  for (let i = 0; i < images.length; i++) {
+    const { id, featured } = images[i];
+    if (featured) {
+      featuredId = id.toString();
+      break;
+    }
+  }
+
+  for (let j = 0; j < imageLinks.length; j++) {
+    if (imageLinks[j]._id.toString() === featuredId) {
+      return imageLinks[j].url;
+    }
+  }
+
+  return imageLinks.length > 0
+    ? imageLinks[0].url
+    : DEFAULT_EVENT_FEATURED_IMAGE;
 }

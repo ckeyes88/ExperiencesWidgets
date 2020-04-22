@@ -1,0 +1,53 @@
+.MonthAvailabilityList-EmptyContainer {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin: rem(30) 0;
+
+  & .Loading-Spinner {
+    height: 1rem;
+    width: 1rem;
+  }
+
+  & .Loading-Spinner div {
+    box-sizing: border-box;
+    position: absolute;
+    width: 1rem;
+    height: 1rem;
+    margin: 0 auto;
+    border: .2rem solid rgb(59, 102, 219);
+    border-radius: 50%;
+    animation: loading-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: rgb(59, 102, 219) transparent transparent transparent;
+  }
+}
+
+.MonthAvailabilityList {
+  padding-top: rem(30);
+
+  .MonthAvailabilityList-MonthName {
+    color: #919eab;
+    font-size: rem(12);
+    font-weight: 600;
+    line-height: rem(24);
+    letter-spacing: rem(1);
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+    border-bottom: rem(1) solid $gray;
+  }
+
+  .MonthAvailabilityList-ShowMore {
+    color: #4a90e2;
+    cursor: pointer;
+    font-size: rem(16);
+    padding: rem(20);
+    text-align: center;
+
+    &.asDisabled {
+      color: #666;
+      cursor: default;
+      pointer-events: none;
+    }
+  }
+}

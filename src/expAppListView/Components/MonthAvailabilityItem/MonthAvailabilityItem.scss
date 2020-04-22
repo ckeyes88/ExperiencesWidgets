@@ -1,0 +1,77 @@
+.MonthAvailabilityItem {
+  border-bottom: 1px solid $gray;
+  display: flex;
+  padding: rem(20);
+  width: 100%;
+
+  &:nth-child(odd) {
+    background: #f9fafb;
+  }
+
+  & > .MonthAvailabilityItem-Left {
+    display: flex;
+    width: 80%;
+  }
+
+  & > .MonthAvailabilityItem-Right {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+    width: 20%;
+  }
+}
+
+.MonthAvailabilityItem-Photo {
+  background-size: cover;
+  border-radius: 5px;
+  height: rem(80);
+  margin-right: rem(30);
+  width: rem(80);
+  position: relative;
+
+  @media (max-width: $mobile) {
+    width: rem(60);
+    height: rem(60);
+  }
+
+  & > .MonthAvailabilityItem-Date {
+    align-items: center;
+    background-color: rgba(33, 43, 54, 0.75);
+    border-top-left-radius: 5px;
+    color: #fff;
+    display: flex;
+    font-size: rem(10);
+    font-weight: 600;  
+    justify-content: center;
+    line-height: 1.25;
+    letter-spacing: 1px;
+    padding: rem(5);
+    height: rem(32);
+    width: rem(28);
+    text-align: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.MonthAvailabilityItem-Desc {
+  align-items: center;
+  display: flex;  
+  height: 100%;
+
+  & > .MonthAvailabilityItem-DescTitle {
+    color: $dark-blue;
+    font-size: rem(18);
+    font-weight: 600;
+    line-height: rem(24);
+    margin: 0;
+  }
+
+  & > .MonthAvailabilityItem-DescCost {
+    color: #637381;
+    font-size: rem(14);
+    font-weight: 500;
+    margin: 0;
+  }
+}

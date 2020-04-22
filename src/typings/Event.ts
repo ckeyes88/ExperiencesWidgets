@@ -1,7 +1,7 @@
 import { IObjectID } from "monk";
 
 export type EventDBO = {
-  _id: IObjectID;
+  _id: string;
   archivedAt: null | Date;
   bookingCutoffMs?: string;
   taxStatus: TaxStatus;

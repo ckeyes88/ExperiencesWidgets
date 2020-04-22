@@ -1,16 +1,17 @@
 @import "./mixins";
 @import "./vars";
 //Components
-@import "./Components/AvailabilityListItem/AvailabilityListItem.scss";
+@import "./Components/MonthAvailabilityItem/MonthAvailabilityItem.scss";
 @import "./Components/Filters/Filters.scss";
 @import "./Components/Button/Button.scss";
+@import "./Components/Select/Select.scss";
 //Containers
-@import "./Containers/AvailabilityList/AvailabilityList.scss";
-@import "./Containers/CarouselWidget/CarouselWidget.scss";
+@import "./Containers/MonthAvailabilityList/MonthAvailabilityList.scss";
+@import "./Containers/EventsListWidget/EventsListWidget.scss";
 
 //Global styles
 //main wrapper classname:
-.CarouselWidget {
+.EventsListWidget {
 
   //doesn't import this font, it set in design but I beleive we need to choose something from this list:
   //https://help.shopify.com/en/themes/development/fonts/library

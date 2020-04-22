@@ -1,0 +1,16 @@
+.Select {
+  & > .Select-Label {
+    font-size: rem(12);
+  }
+
+  & > select {
+    background-color: transparent;
+    border: 0;
+    font-size: rem(16);
+    -webkit-appearance: none;
+
+    &.withLabel {
+      margin-left: rem(7);
+    }
+  }
+}
