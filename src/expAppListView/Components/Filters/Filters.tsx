@@ -4,7 +4,7 @@ import { Select, OptionDefinition } from "../Select/Select";
 
 function createFilterOptionsFromSet(lookup: EventLookup): OptionDefinition[] {
   const ids = Object.keys(lookup);
-  const options: OptionDefinition[] = [{ label: "All", value: "All" }];
+  const options: OptionDefinition[] = [{ label: "All Products", value: "All" }];
 
   for (let i = 0; i < ids.length; i++) {
     const id = ids[i];
@@ -64,14 +64,12 @@ export class Filters extends Component<FiltersProps> {
     return (
       <div className="Filters">
         <div className="Container Filters-Container">
-          <div className="Filters-Dropdown">
-            Filter by:
-            <Select 
-              options={createFilterOptionsFromSet(eventLookup)}
-              onSelectOption={onFilterChange}
-              value={filterBy}
-            />
-          </div>
+          <Select
+            label="FILTER BY"
+            options={createFilterOptionsFromSet(eventLookup)}
+            onSelectOption={onFilterChange}
+            value={filterBy}
+          />
           {/* <div className="Filters-SortBy">
             Sort by:
             <select 
