@@ -8,7 +8,10 @@ import json from "rollup-plugin-json";
 import {
   uglify
 } from 'rollup-plugin-uglify';
+import dotenv from "dotenv";
 
+dotenv.config();
+console.log(process.env);
 export default [{
     input: "src/widgets.ts",
     output: {
@@ -18,6 +21,10 @@ export default [{
     },
     treeshake: true,
     plugins: [
+      replace({
+        __NODE_ENV__: process.env.NODE_ENV,
+        __BASE_URL__: process.env.BASE_WIDGET_URL
+      }),
       babel({
         exclude: [
           'node_modules/!(' +

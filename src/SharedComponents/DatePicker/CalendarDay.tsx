@@ -19,7 +19,7 @@ type CalendarDayProps = {
     /** the function to fire when a date has been unhovered */
     onUnHover(): void;
     /** the function to fire when a date has been focused */
-    onFocus: any;
+    onFocus(date: Date): void;
     /** determine if a date is selected */
     isSelected: boolean;
     /** determine if a date is disabled */

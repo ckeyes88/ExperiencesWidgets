@@ -9,7 +9,7 @@ import { OrderInputData } from "../typings/CreateOrderInput";
 import { Quantities } from "../typings/Quantities";
 import { SchedulerProduct } from "../typings/SchedulerProduct";
 import { Variants } from "../typings/Variant";
-import { sbClient } from "../shopifyBuy";
+import { getShopifyBuyClient } from "../shopifyBuy";
 import { LineItem } from "shopify-buy";
 import Client from "shopify-buy";
 
@@ -129,7 +129,7 @@ export enum DisableRedirect {
 }
 
 export type AddToCartOptions = {
-  /** Storefront access token, which, if present, will denote the use of the buy sdk over default add to cart logic */
+  /** Access token for store front buy access */
   storefrontAccessToken?: string;
   /** The original event DBO object */
   event: EventDBO;
@@ -301,10 +301,10 @@ export async function getShopDetails({ baseUrl, shopId }: APIArguments): Promise
 export async function addToCart(
   { timeslot, quantities, fields, attendees, shopUrl }: AddToCartArgs,
   { 
-    storefrontAccessToken, 
-    event: { handle, variants: eventVariants, shopifyProductId },
+    event: { handle, variants: eventVariants },
     disableRedirect = DisableRedirect.None,
     onCartAdd, 
+    storefrontAccessToken,
   }: AddToCartOptions,
 ): Promise<void> {
   // Extract "When" string from timeslot

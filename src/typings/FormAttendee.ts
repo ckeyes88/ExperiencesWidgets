@@ -1,4 +1,5 @@
-import { FormField } from "./CustomForm"
+import { FormField } from "./CustomForm";
+
 export enum PaymentType {
   Free = "free",
   Reservation = "reservation",

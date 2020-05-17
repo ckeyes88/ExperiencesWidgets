@@ -1,10 +1,6 @@
 import { h, Component } from "preact";
 
-export interface IQuanityProps { }
-
-export interface IQuanityState { }
-
-export class Quanity extends Component<IQuanityProps, IQuanityState>{
+export class Quantity extends Component{
     render() {
         return (
             <div>

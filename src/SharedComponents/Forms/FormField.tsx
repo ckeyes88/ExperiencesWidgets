@@ -1,5 +1,4 @@
-import { h, Component } from "preact";
-import { EventHandler } from "../../types";
+import { h, Component, JSX } from "preact";
 import "./Forms.scss";
 
 export interface IFormFieldProps {
@@ -62,11 +61,12 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
   /** Sets the local state to current value of the field
    * Passes the value and the field's id into the designated method passed in as a prop
    */
-  onChange = (ev: EventHandler) => {
+  // tslint:disable-next-line: no-any
+  onChange = (ev: any) => {
     this.setState({
-      value: ev.target.value,
+      value: (ev.target as HTMLInputElement).value,
     });
-    this.props.onFieldChange(ev.target.id, this.state.value);
+    this.props.onFieldChange((ev.target as HTMLInputElement).id, this.state.value);
   }
 
   /** If the field is a select, this method renders it */

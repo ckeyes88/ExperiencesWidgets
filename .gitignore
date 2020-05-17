@@ -8,4 +8,10 @@ test/
 .rp2_cache
 .idea/
 .rpt2_cache/
+*.tfvars
+# Local .terraform directories
+**/.terraform/*
 
+# .tfstate files
+*.tfstate
+*.tfstate.*

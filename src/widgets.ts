@@ -14,9 +14,6 @@ function loadExpAppWidget(keyAttribute: string, scriptPath: string): void {
     document.body.appendChild(script);    
   }
 }
-
-loadExpAppWidget("[data-expapp-gallery]", "/dist/expAppListView.js");
-loadExpAppWidget("[data-expapp-calendar-booking-form]", "/dist/calendarBookingForm.js");
-
-// loadExpAppWidget("[data-expapp-gallery]", "https://widgets.ngrok.io/dist/expAppListView.js");
-// loadExpAppWidget("[data-expapp-calendar-booking-form]", "https://widgets.ngrok.io/dist/calendarBookingForm.js");
+const baseUrl = "__BASE_URL__/__NODE_ENV__";
+loadExpAppWidget("[data-expapp-gallery]", `${baseUrl}/expappListView.js`);
+loadExpAppWidget("[data-expapp-calendar-booking-form]", `${baseUrl}/calendarBookingForm.js`);

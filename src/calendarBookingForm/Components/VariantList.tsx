@@ -1,4 +1,4 @@
-import { h, Component } from "preact";
+import { h, Component, JSX } from "preact";
 import { Variant } from "./Variant";
 import { VariantHeader } from "./VariantHeader";
 import "./VariantList.scss";

@@ -1,4 +1,4 @@
-import {h, Component} from 'preact';
+import {h, Component} from "preact";
 
 export interface IAvailabilityListProps {
     action: any;
@@ -11,7 +11,7 @@ export class Button extends Component<IAvailabilityListProps> {
     public render() {
         const {action, label, style, className} = this.props;
         const styles = {...style};
-        const classes = className ? `Button ${className}` : `Button`;
+        const classes = className ? `Button ${className}` : "Button";
         return (
             <div style={styles} onClick={action} className={classes}>
                 {label}
