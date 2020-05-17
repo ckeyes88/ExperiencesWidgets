@@ -80,7 +80,7 @@ export enum PaymentType {
   Free = "free",
   Reservation = "reservation",
   Prepay = "prepay",
-};
+}
 
 export type EventVariantDBO = {
   shopifyProductId?: number,

@@ -7,10 +7,8 @@ export interface ITimeSlotHeaderProps {
     selectedDate: Date | null;
 }
 
-export interface ITimeSlotHeaderState { }
-
 /** exports the header with selected date format and details */
-export class TimeSlotHeader extends Component<ITimeSlotHeaderProps, ITimeSlotHeaderState> {
+export class TimeSlotHeader extends Component<ITimeSlotHeaderProps> {
     /** renders */
     render() {
         const { selectedDate } = this.props;

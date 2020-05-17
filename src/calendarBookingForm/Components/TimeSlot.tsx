@@ -11,10 +11,8 @@ export interface ITimeSlotProps {
   onSelectTimeSlot(timeslot: Availability): void;
 }
 
-export interface ITimeSlotState { }
-
 /** exports a single component with time and spots avaiables */
-export class TimeSlot extends Component<ITimeSlotProps, ITimeSlotState> {
+export class TimeSlot extends Component<ITimeSlotProps> {
   /** holds details of selected availabity props */
   onSelectTimeSlot = () => {
     this.props.onSelectTimeSlot(this.props.timeslot);

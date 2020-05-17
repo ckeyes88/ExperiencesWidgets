@@ -7,8 +7,6 @@ export interface ICustomerInfoFormProps {
   handleChange(fieldName: string, value: string): void;
 }
 
-
-export interface ICustomerInfoFormState { }
 /** component that displays the first 3 form fields */
 export class CustomerInfoForm extends Component<ICustomerInfoFormProps> {
   /** rendering 3 form fields for first name, last name, and email */

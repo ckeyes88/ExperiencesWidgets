@@ -1,5 +1,5 @@
 import { h, Component } from "preact";
-import { formatCurrency } from "../../Utils/helpers"
+import { formatCurrency } from "../../Utils/helpers";
 import "./Variant.scss";
 import { EventVariantDBO } from "../../typings/Event";
 import { Availability } from "../../typings/Availability";
@@ -16,10 +16,9 @@ export interface IVariantProps {
   currentlySelectedTotal: number;
   maxLimit: number;
 }
-export interface IVariantState { }
 
 /** exports the variant class */
-export class Variant extends Component<IVariantProps, IVariantState> {
+export class Variant extends Component<IVariantProps> {
 
   constructor(props: IVariantProps) {
     super(props);

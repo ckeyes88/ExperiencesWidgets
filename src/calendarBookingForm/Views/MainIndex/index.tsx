@@ -529,7 +529,8 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
           <Modal 
             orderDetails={this.state.modalState}
             showModal={this.state.showModal} 
-            closeModal={this.closeModal}>
+            closeModal={this.closeModal}
+          >
             {this.renderModalContent()}
           </Modal>
         </div>

@@ -23,7 +23,7 @@ let monthNameCache: { [locale: string]: string[] } = {};
 let dayNameCache: { [locale: string]: DayTemplate[] } = {};
 
 // Constructs a className from a set of prop keys.
-export const getClassName = (props: { [key: string]: any }) => {
+export const getClassName = (props: { [key: string]: unknown }) => {
   return Object.keys(props).filter((key) => props[key]).join(" ");
 };
 

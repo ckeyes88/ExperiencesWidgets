@@ -110,7 +110,7 @@ export class Calendar extends Component<CalendarProps> {
                                     onUnHover={this.props.onDateUnHovered}
                                     onFocus={onDateFocused}
                                 />
-                            )
+                            );
                         })}
                     </div>
                 </div>

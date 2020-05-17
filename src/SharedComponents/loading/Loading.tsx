@@ -10,10 +10,10 @@ export class Loading extends Component {
       <div>
         {this.props.children}
         <div class="Loading-Spinner">
-          <div></div>
-          <div></div>
-          <div></div>
-          <div></div>
+          <div />
+          <div />
+          <div />
+          <div />
         </div>
       </div>
     );

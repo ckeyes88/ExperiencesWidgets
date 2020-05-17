@@ -15,17 +15,16 @@ export interface IVariantHeaderProps {
   currentlySelectedTotal: number;
 }
 
-export interface IVariantHeaderState { }
 
 /** export the variant header to show the selected date time and remaining spots */
-export class VariantHeader extends Component<IVariantHeaderProps, IVariantHeaderState> {
+export class VariantHeader extends Component<IVariantHeaderProps> {
 
   /** renders */
   render() {
     const { variantSelectedDate } = this.props;
     const startsAt = this.props.variantTimeSlot.startsAt;
     const unitsLeft = this.props.variantTimeSlot.unitsLeft || 0;
-    let spaceLeft = unitsLeft - this.props.currentlySelectedTotal
+    let spaceLeft = unitsLeft - this.props.currentlySelectedTotal;
     return (
       <div>
         <div className="VariantHeader-Container">

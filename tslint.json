@@ -1,3 +1,8 @@
 {
-  "extends": "@helpfulhuman/tslint-rules"
+  "extends": "@helpfulhuman/tslint-rules",
+  "rules": {
+    "completed-docs": false,
+    "no-any": false
+  }
+  
 }

@@ -20,10 +20,3 @@ export enum OrderDetailsFormType {
 //   title: string;
 //   price: number;
 // };
-
-export interface EventHandler extends Event {
-  target: EventTarget & {
-    value: any;
-    id: any;
-  };
-}
