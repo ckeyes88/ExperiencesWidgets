@@ -25,7 +25,28 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
       - run: npm install
-      - run: npm run build
-      - run: ./scripts/deploy
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_ENV: development
+          BASE_WIDGET_URL: https://widgets.experiencesapp.services
+          BASE_API_URL: https://dev-v2-api.experiencesapp.services
+      - run: npm run build
+        env:
+            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+            NODE_ENV: development
+            BASE_WIDGET_URL: https://widgets.experiencesapp.services
+            BASE_API_URL: https://dev-v2-api.experiencesapp.services
+      - name: Install Terraform
+        env:
+              TERRAFORM_VERSION: "0.12.25"
+        run: |
+          tf_version=$TERRAFORM_VERSION
+          wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
+          unzip terraform_"$tf_version"_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
+      - run: ./scripts/deploy.sh
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_ENV: development
+          BASE_WIDGET_URL: https://widgets.experiencesapp.services
+          BASE_API_URL: https://dev-v2-api.experiencesapp.services

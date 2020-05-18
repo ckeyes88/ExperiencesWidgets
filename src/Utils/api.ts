@@ -9,7 +9,6 @@ import { OrderInputData } from "../typings/CreateOrderInput";
 import { Quantities } from "../typings/Quantities";
 import { SchedulerProduct } from "../typings/SchedulerProduct";
 import { Variants } from "../typings/Variant";
-import { getShopifyBuyClient } from "../shopifyBuy";
 import { LineItem } from "shopify-buy";
 import Client from "shopify-buy";
 
