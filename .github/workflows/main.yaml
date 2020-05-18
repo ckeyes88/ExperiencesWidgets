@@ -27,9 +27,6 @@ jobs:
       - run: npm install
         env:
           NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-          NODE_ENV: development
-          BASE_WIDGET_URL: https://widgets.experiencesapp.services
-          BASE_API_URL: https://dev-v2-api.experiencesapp.services
       - run: npm run build
         env:
           NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
