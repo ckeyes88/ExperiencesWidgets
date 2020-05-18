@@ -5,9 +5,6 @@ import typescript from "rollup-plugin-typescript3";
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
 import json from "rollup-plugin-json";
-import {
-  uglify
-} from 'rollup-plugin-uglify';
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -23,6 +20,7 @@ export default [{
     plugins: [
       replace({
         __NODE_ENV__: process.env.NODE_ENV,
+        __ENV_NAME__: process.env.ENV_NAME,
         __BASE_URL__: process.env.BASE_WIDGET_URL
       }),
       babel({
@@ -56,7 +54,7 @@ export default [{
     treeshake: true,
     plugins: [
       replace({
-        'process.env.NODE_ENV': JSON.stringify('production'),
+        'process.env.NODE_ENV': process.env.NODE_ENV,
       }),
       scss(),
       babel({

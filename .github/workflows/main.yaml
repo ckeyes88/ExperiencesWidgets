@@ -28,14 +28,14 @@ jobs:
           NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm run build
         env:
-          ENV_NAME: "dev"
+          ENV_NAME: dev
           NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           NODE_ENV: development
           BASE_WIDGET_URL: https://widgets.experiencesapp.services
           BASE_API_URL: https://dev-v2-api.experiencesapp.services
       - name: Install Terraform
         env:
-              TERRAFORM_VERSION: "0.12.25"
+          TERRAFORM_VERSION: "0.12.25"
         run: |
           tf_version=$TERRAFORM_VERSION
           wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
