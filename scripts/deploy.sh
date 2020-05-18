@@ -9,7 +9,7 @@ fi
 
 AWS_ACCESS_KEY_ID="$AWS_ACCESS_KEY_ID"
 AWS_SECRET_ACCESS_KEY="$AWS_SECRET_ACCESS_KEY"
-ENV_NAME="dev"
+ENV_NAME="$ENV_NAME"
 
 printf "\\033[34mProvisioning AWS resources...\\033[39m\\n"
 terraform init -var="access_key=${AWS_ACCESS_KEY_ID}" \
