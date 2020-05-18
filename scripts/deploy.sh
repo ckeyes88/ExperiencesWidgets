@@ -19,8 +19,8 @@ printf "\\033[34mDeploying the application...\\033[39m\\n"
 terraform workspace select "$ENV_NAME" || terraform workspace new "$ENV_NAME"
 
 # terraform plan
-terraform apply  -var="access_key=${AWS_ACCESS_KEY_ID}" \
-  -var="secret_key=${AWS_SECRET_ACCESS_KEY}" \
+terraform apply  -var="aws_access_key=${AWS_ACCESS_KEY_ID}" \
+  -var="aws_secret_key=${AWS_SECRET_ACCESS_KEY}" \
   -var="environment=${ENV_NAME}" --auto-approve
 
 echo "Deployed"
