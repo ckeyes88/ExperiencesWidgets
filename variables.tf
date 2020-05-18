@@ -8,16 +8,6 @@ variable "aws_secret_key" {
   description = "The secret key for the AWS account you wish to deploy to."
 }
 
-variable "s3_bucket" {
-  type = "string"
-  description = "The s3 bucket where assets will be stored"
-}
-
-variable "aws_region" {
-  type        = "string"
-  default     = "us-west-2"
-  description = "The availability zone that we will be deploying to."
-}
 variable "environment" {
   type = "string"
   description = "The environment where this is being deployed to. Will nest the public assets under `/"

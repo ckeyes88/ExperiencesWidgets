@@ -1,4 +1,4 @@
-import { h, Component } from "preact";
+import { h, Component, JSX } from "preact";
 import { Availability } from "../../../typings/Availability";
 import { EventAvailability } from "../../../Utils/api";
 import { EventLookup } from "../EventsListWidget/EventsListWidget";

@@ -7,6 +7,7 @@
 # Create a new TF file with the assets that need to be uploaded.
 
 SRC="dist"
+S3_BUCKET="event-list-widget-beta"
 TF_FILE="assets.tf"
 COUNT=0
 
@@ -26,7 +27,7 @@ esac
 
 cat >> $TF_FILE << EOM
 resource "aws_s3_bucket_object" "file_$COUNT" {
-  bucket = "\${var.s3_bucket}"
+  bucket = "${S3_BUCKET}"
   key = "public/\${var.environment}${path#$SRC}"
   acl = "public-read"
   source = "\${path.module}/$path"

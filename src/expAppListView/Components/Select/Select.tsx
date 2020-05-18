@@ -17,7 +17,7 @@ export type SelectProps = {
   /** The currently selected value */
   value: string;
   /** The select handler */
-  onSelectOption(event: MouseEvent): void;
+  onSelectOption(event: unknown): void;
 };
 
 /**

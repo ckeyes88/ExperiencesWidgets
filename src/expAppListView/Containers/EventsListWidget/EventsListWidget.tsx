@@ -1,4 +1,4 @@
-import { h, Component } from "preact";
+import { h, Component, JSX } from "preact";
 import { Button } from "../../Components/Button/Button";
 import { EventAvailability, fetchProductsWithAvailability } from "../../../Utils/api";
 import { Filters, SortKey, FilterBy } from "../../Components/Filters/Filters";

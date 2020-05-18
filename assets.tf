@@ -1,5 +1,5 @@
 resource "aws_s3_bucket_object" "file_0" {
-  bucket = "${var.s3_bucket}"
+  bucket = "event-list-widget-beta"
   key = "public/${var.environment}/expAppListView.js"
   acl = "public-read"
   source = "${path.module}/dist/expAppListView.js"
@@ -8,7 +8,7 @@ resource "aws_s3_bucket_object" "file_0" {
 }
 
 resource "aws_s3_bucket_object" "file_1" {
-  bucket = "${var.s3_bucket}"
+  bucket = "event-list-widget-beta"
   key = "public/${var.environment}/calendarBookingForm.css"
   acl = "public-read"
   source = "${path.module}/dist/calendarBookingForm.css"
@@ -17,7 +17,7 @@ resource "aws_s3_bucket_object" "file_1" {
 }
 
 resource "aws_s3_bucket_object" "file_2" {
-  bucket = "${var.s3_bucket}"
+  bucket = "event-list-widget-beta"
   key = "public/${var.environment}/calendarBookingForm.js"
   acl = "public-read"
   source = "${path.module}/dist/calendarBookingForm.js"
@@ -26,7 +26,7 @@ resource "aws_s3_bucket_object" "file_2" {
 }
 
 resource "aws_s3_bucket_object" "file_3" {
-  bucket = "${var.s3_bucket}"
+  bucket = "event-list-widget-beta"
   key = "public/${var.environment}/widgets.js"
   acl = "public-read"
   source = "${path.module}/dist/widgets.js"
@@ -35,7 +35,7 @@ resource "aws_s3_bucket_object" "file_3" {
 }
 
 resource "aws_s3_bucket_object" "file_4" {
-  bucket = "${var.s3_bucket}"
+  bucket = "event-list-widget-beta"
   key = "public/${var.environment}/expAppListView.css"
   acl = "public-read"
   source = "${path.module}/dist/expAppListView.css"
