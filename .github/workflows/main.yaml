@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-          registry-url: //registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}
+          registry-url: https://registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
