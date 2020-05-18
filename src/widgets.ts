@@ -14,6 +14,6 @@ function loadExpAppWidget(keyAttribute: string, scriptPath: string): void {
     document.body.appendChild(script);    
   }
 }
-const baseUrl = "__BASE_URL__/__NODE_ENV__";
-loadExpAppWidget("[data-expapp-gallery]", `${baseUrl}/expappListView.js`);
+const baseUrl = "__BASE_URL__/__ENV_NAME__";
+loadExpAppWidget("[data-expapp-gallery]", `${baseUrl}/expAppListView.js`);
 loadExpAppWidget("[data-expapp-calendar-booking-form]", `${baseUrl}/calendarBookingForm.js`);

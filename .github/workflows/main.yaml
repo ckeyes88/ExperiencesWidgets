@@ -28,6 +28,7 @@ jobs:
           NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm run build
         env:
+          ENV_NAME: "dev"
           NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           NODE_ENV: development
           BASE_WIDGET_URL: https://widgets.experiencesapp.services
@@ -42,6 +43,7 @@ jobs:
           sudo mv terraform /usr/local/bin/
       - run: ./scripts/deploy.sh
         env:
+          ENV_NAME: "dev"
           NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           NODE_ENV: development
           BASE_WIDGET_URL: https://widgets.experiencesapp.services
