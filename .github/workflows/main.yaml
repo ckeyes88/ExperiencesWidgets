@@ -33,6 +33,8 @@ jobs:
           NODE_ENV: development
           BASE_WIDGET_URL: https://widgets.experiencesapp.services
           BASE_API_URL: https://dev-v2-api.experiencesapp.services
+      - name: Build Terraform Asset File
+        run: ./scripts/prep_assets.sh
       - name: Install Terraform
         env:
           TERRAFORM_VERSION: "0.12.25"
