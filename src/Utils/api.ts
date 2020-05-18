@@ -449,7 +449,7 @@ export async function addToCart(
       }
     }
 
-    const cartUrl = shopUrl ? `${shopUrl}/cart/add.js` : "/cart/add.js";
+    const cartUrl = shopUrl ? `https://${shopUrl}/cart/add.js` : "/cart/add.js";
 
     for (let request of requests) {
       let error: Error | null = null;
