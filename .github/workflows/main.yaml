@@ -26,16 +26,16 @@ jobs:
           aws-region: us-west-2
       - run: npm install
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           NODE_ENV: development
           BASE_WIDGET_URL: https://widgets.experiencesapp.services
           BASE_API_URL: https://dev-v2-api.experiencesapp.services
       - run: npm run build
         env:
-            NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-            NODE_ENV: development
-            BASE_WIDGET_URL: https://widgets.experiencesapp.services
-            BASE_API_URL: https://dev-v2-api.experiencesapp.services
+          NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_ENV: development
+          BASE_WIDGET_URL: https://widgets.experiencesapp.services
+          BASE_API_URL: https://dev-v2-api.experiencesapp.services
       - name: Install Terraform
         env:
               TERRAFORM_VERSION: "0.12.25"
@@ -46,7 +46,7 @@ jobs:
           sudo mv terraform /usr/local/bin/
       - run: ./scripts/deploy.sh
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
           NODE_ENV: development
           BASE_WIDGET_URL: https://widgets.experiencesapp.services
           BASE_API_URL: https://dev-v2-api.experiencesapp.services
