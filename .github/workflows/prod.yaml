@@ -1,0 +1,49 @@
+name: CI-Development
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: SetupNode
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+      - run: npm install
+        env:
+          NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - run: npm run build
+        env:
+          ENV_NAME: prod
+          NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_ENV: production
+          BASE_WIDGET_URL: https://widgets.experiencesapp.services
+          BASE_API_URL: https://prod-v2-api.experiencesapp.services
+      - name: Build Terraform Asset File
+        run: ./scripts/prep_assets.sh
+      - name: Install Terraform
+        env:
+          TERRAFORM_VERSION: "0.12.25"
+        run: |
+          tf_version=$TERRAFORM_VERSION
+          wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
+          unzip terraform_"$tf_version"_linux_amd64.zip
+          sudo mv terraform /usr/local/bin/
+      - run: ./scripts/deploy.sh
+        env:
+          ENV_NAME: "prod"
+          NPM_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_ENV: production
+          BASE_WIDGET_URL: https://widgets.experiencesapp.services
+          BASE_API_URL: https://prod-v2-api.experiencesapp.services
