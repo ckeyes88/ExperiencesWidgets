@@ -195,6 +195,11 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
 
     // Display only the limit of timeslots specified
     for (let i = 0; i < displayingTimeslotsCount; i++) {
+      if(!timeslotsClone[i]) {
+        // At this point we're trying to display more time slots than are available and should just break out of the loop
+        break;
+      }
+
       const { 
         id, 
         startsAt, 
