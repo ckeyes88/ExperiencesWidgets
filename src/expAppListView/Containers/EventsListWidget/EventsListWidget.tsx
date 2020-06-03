@@ -135,13 +135,14 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
   ) => {
     // Pull URLs from props
     const { baseUrl, shopUrl } = this.props;
+    const now = new Date();
     // Create new date object represent a start date
     const startDate = new Date(
       year,
       month, 
     );
     // We only want to show availabilities from current date in first month, but from first day of month in all following months
-    const date = isFirstMonth ? startDate.getDate() : 1;
+    const date = isFirstMonth ? now.getDate() : 1;
     // Set the month
     startDate.setDate(date);
     // Set hours to start of day
