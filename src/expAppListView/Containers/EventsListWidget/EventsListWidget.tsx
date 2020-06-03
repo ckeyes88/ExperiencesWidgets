@@ -148,7 +148,7 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
     // Set hours to start of day
     startDate.setHours(0, 0, 0);
     // Establish end date to cap our query range
-    const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
+    const endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 7, 0);
 
     // Store returned products here
     let productsWithAvailabilities: EventAvailability[] | undefined;
