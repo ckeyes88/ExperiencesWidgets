@@ -211,18 +211,21 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
         console.error(`There was an error rendering availabilities for ${monthName}`);
         return;
       }
-
-      // Add elements to array for rendering
-      timeslotElements.push((
-        <MonthAvailabilityItem
-          featuredImage={eventLookup[id].featureImage}
-          formattedDate={date}
-          handle={eventLookup[id].handle}
-          name={eventLookup[id].name}
-          startsAt={startsAt}
-          shopUrl={shopUrl}
-        />
-      ));
+      const now = new Date();
+      // Only add the time slot if the startsAt is in the future
+      if (startsAt.getTime() >= now.getTime()) {
+        // Add elements to array for rendering
+        timeslotElements.push((
+          <MonthAvailabilityItem
+            featuredImage={eventLookup[id].featureImage}
+            formattedDate={date}
+            handle={eventLookup[id].handle}
+            name={eventLookup[id].name}
+            startsAt={startsAt}
+            shopUrl={shopUrl}
+          />
+        ));
+      }
     }
 
     return timeslotElements;
