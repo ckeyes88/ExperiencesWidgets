@@ -213,7 +213,7 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
       }
       const now = new Date();
       // Only add the time slot if the startsAt is in the future
-      if (startsAt.getTime() >= now.getTime()) {
+      if (new Date(startsAt).getTime() >= now.getTime()) {
         // Add elements to array for rendering
         timeslotElements.push((
           <MonthAvailabilityItem
