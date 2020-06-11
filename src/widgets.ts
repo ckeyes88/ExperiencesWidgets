@@ -10,8 +10,13 @@ function loadExpAppWidget(keyAttribute: string, scriptPath: string): void {
   
   if (mountPoints.length > 0) {
     let script = document.createElement("script");
+    let styles = document.createElement("link");
+    styles.rel = "stylesheet";
+    styles.href = scriptPath.replace(".js", ".css");
+
     script.src = scriptPath;    
-    document.body.appendChild(script);    
+    document.head.appendChild(styles);
+    document.body.appendChild(script);
   }
 }
 const baseUrl = "__BASE_URL__/public/__ENV_NAME__";
