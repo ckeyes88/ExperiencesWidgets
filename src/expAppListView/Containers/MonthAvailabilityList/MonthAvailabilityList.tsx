@@ -214,13 +214,17 @@ export class MonthAvailabilityList extends Component<MonthAvailabilityListProps,
       const now = new Date();
       // Only add the time slot if the startsAt is in the future
       if (new Date(startsAt).getTime() >= now.getTime()) {
+        const event = eventLookup[id];
+        if (!event) {
+          continue;
+        }
         // Add elements to array for rendering
         timeslotElements.push((
           <MonthAvailabilityItem
-            featuredImage={eventLookup[id].featureImage}
+            featuredImage={event.featureImage}
             formattedDate={date}
-            handle={eventLookup[id].handle}
-            name={eventLookup[id].name}
+            handle={event.handle}
+            name={event.name}
             startsAt={startsAt}
             shopUrl={shopUrl}
           />
