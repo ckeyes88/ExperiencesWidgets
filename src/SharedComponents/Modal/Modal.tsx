@@ -45,7 +45,7 @@ export class Modal extends Component<ModalProps, ModalState> {
 
             return (
                 <div>
-                    <div class="Modal">
+                    <div class="Exp__App_Modal">
                         <div ref={this.modal} class={`Modal__ModalContentBox${!!orderModal ? "OrderDetails" : ""}`}>
                             <div class="Modal-ModalMainContentBox">
                                 {children}
