@@ -1,6 +1,7 @@
 
 import { h, Component, createRef } from "preact";
 import "./_modal.scss";
+import { Portal } from "../../calendarBookingForm/Components/Portal";
 
 type ModalProps = {
     /** sets the prop if the mobal should be visiable or not */
@@ -44,15 +45,17 @@ export class Modal extends Component<ModalProps, ModalState> {
             let orderModal = (orderDetails === "OrderDetails") ? true : false;
 
             return (
-                <div>
-                    <div class="Modal">
-                        <div ref={this.modal} class={`Modal__ModalContentBox${!!orderModal ? "OrderDetails" : ""}`}>
-                            <div class="Modal-ModalMainContentBox">
-                                {children}
+                <Portal>
+                    <div>
+                        <div class="Exp__App_Modal">
+                            <div ref={this.modal} class={`Exp__App_Modal__ModalContentBox${!!orderModal ? "OrderDetails" : ""}`}>
+                                <div class="Modal-ModalMainContentBox">
+                                    {children}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </Portal>
             );
         } else {
             return null;
