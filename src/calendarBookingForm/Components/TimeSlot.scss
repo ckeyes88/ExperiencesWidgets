@@ -3,8 +3,11 @@
     margin-top: 1rem;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
-    grid-template-areas: "box1 . box2";
+    grid-template-areas: "box1 box2";
     overflow: auto;
+    align-items: center;
+    justify-items: center;
+
 }
 
 .TimeSlot-TimeAvailable {
@@ -15,7 +18,7 @@
 }
 
 .TimeSlot-SpotAvailable {
-    font-size: 12px;
+    font-size: 1rem;
     margin-top: 1px;
     font-weight: 500;
 }

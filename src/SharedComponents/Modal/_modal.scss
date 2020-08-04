@@ -8,8 +8,11 @@
     z-index: 2000;
     position: fixed;
     padding: 10% 0%;
+    overflow-y: scroll;
     &__ModalContentBoxOrderDetails, &__ModalContentBox {
-        box-shadow: -2px 2px 32px -8px #7e7e7e;
+        -webkit-box-shadow: 0px 0px 25px -1px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 0px 25px -1px rgba(0,0,0,0.75);
+        box-shadow: 0px 0px 25px -1px rgba(0,0,0,0.75);
         position: relative;
         overflow-y: scroll;
         overflow-x: hidden;
@@ -41,7 +44,6 @@
   }
   ::-webkit-scrollbar-thumb {
     border-radius: 4px;
-    background-color: rgba(0, 0, 0, .5);
     -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
   }
 
@@ -62,14 +64,13 @@
   }
 
   @include Phone {
-    .Modal {
+    .Exp__App_Modal {
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
         z-index: 2000;
         position: fixed;
-        background-color: rgba(0,0,0,.7);
         padding: 0px;
         &__ModalContentBox, &__ModalContentBoxOrderDetails {
           width: 100vw;

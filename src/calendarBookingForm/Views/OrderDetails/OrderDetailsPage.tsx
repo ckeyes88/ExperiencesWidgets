@@ -229,8 +229,11 @@ export class OrderDetailsPage extends Component<IOrderDetailsPageProps, IOrderDe
       return (
         <div className="CustomOrderDetials">
           <div className="CustomOrderDetails-Header">
-            <span className="CustomOrderDetails-Ticket">Ticket {currentLineItemIndex + 1} of {this.variants.length}</span>
-            <span className="CustomOrderDetails-VariantName">{variant.name}</span>
+            <p>
+              <span className="CustomOrderDetails-Ticket">Ticket {currentLineItemIndex + 1} of {this.variants.length}</span>
+              <span className="CustomOrderDetails-VariantName">{variant.name}</span>
+              </p>
+              <button id="MobileView-OrderDetails-CloseBtn" onClick={this.props.closeModal}>&times;</button>
           </div>
           <form id="customer-order-details" onSubmit={this.handleSubmitCustomForm}>
             <CustomForm

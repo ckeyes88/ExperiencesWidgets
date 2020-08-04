@@ -1,6 +1,5 @@
 .TimeSlot-DateSelected{
     text-align: center;
-    font-size: .7rem;
     display: block;
 }
 
@@ -25,15 +24,16 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    font-family: sans-serif;
     & p {
-        font-size: 12px;
+        font-size: .8rem;
         margin: 10px;
+        opacity: .8;
     }
 }
 .SelectedDateContainer {
     position: relative;
     height: 100%;
-    padding: 2rem;
     overflow-y: scroll;
 }
 
@@ -50,6 +50,10 @@
 }
 
 @media only screen and (min-width: 320px) and (max-width: 767px) {
+    .AvailabilityPage-TimeSlotContainer {
+        margin: 1rem 0 1rem 0;
+    }
+
     .TimeSlot-DateSelected {
         margin: 0px;
         padding-bottom: 10px;

@@ -2,6 +2,10 @@
    text-align: center;
 }
 
+.VariantHeader-Container>p {
+    margin: 0;
+}
+
 .VariantHeader-BackBtn {
     border: none;
     background: none;
@@ -10,13 +14,15 @@
     display: block;
     margin: 0 auto;
     font-weight: 600;
+    cursor: pointer;
 }
 .VariantHeader-DateSelected {
-    font-weight: bold;
     text-align: center;
-    font-size: 1rem;
     display: block;
     margin: 1rem 0 .5rem 0;
+}
+.VariantHeader-Container>span {
+    margin: 0 0 .5rem 0;
 }
 #VariantHeader-StartTime {
     font-size: 15px;
