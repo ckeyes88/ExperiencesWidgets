@@ -1,12 +1,11 @@
 .VariantContainer{
     padding: 2rem;
     overflow: auto;
-    height: 100%;
 }
 .VariantListTotal-Grid{
     margin-top: 2rem;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    grid-template-columns: 1fr 1fr;
     grid-template-areas: 
     "box1 . box2";
 }
@@ -15,16 +14,16 @@
     font-size: 15px;
 }
 .VariantListTotal-ConfirmBtn{
+    margin: .1rem 0 .1rem 0;
     grid-area: box2;
-    margin-top: -3px; 
     background-color: $color-primary-blue;
     border: none;
     border-radius: 3px;
     color: $color-white;
     text-align: center;
     width: 5rem;
-    padding: 7px;
     font-size: 15px;
+    padding: .5rem;
     &:hover{
       cursor: pointer;
     }
@@ -38,7 +37,13 @@
     .VariantContainer{ 
       padding: 0rem;
     }
-    .Variant-Grid {
-        padding: 2rem;
-    }
   }
+
+@media only screen and (min-width: 767px){
+    .VariantListTotal-ConfirmBtn {
+        height: 2rem;
+    }
+    .Variant-AddBtn {
+        height: 2rem;
+    }
+}

@@ -3,6 +3,8 @@
     display: flex;
     flex-flow: row wrap;
     width: 100%;
+    color: black;
+    font-family: sans-serif;
 }
 
 .AvailabilityPage-DatePickerContainer{
@@ -10,6 +12,7 @@
     width: 100%;
     background-color: rgb(238, 238, 238); 
     overflow: hidden;
+    font-size: 1.3rem;
 }
 .AvailabilityPage-TimeSlotContainer {
     position: relative;
@@ -19,11 +22,11 @@
 }
 .MobileView-Header {
     padding: 1rem;
-    font-weight: bold;
     background-color: #ffffff;
     position: inherit;
     & p {
         color: black;
+        font-size: 2rem;
         text-align: center;
         width: 100%;
     }
@@ -65,6 +68,21 @@
     float: right;
     font-size: 1.2rem;
     text-align: center;
+    margin-top: -1.5rem;
+}
+
+#MobileView-OrderDetails-CloseBtn {
+    border-radius: 25px;
+    border: none;
+    background-color: $color-primary-blue;
+    color: #ffffff;
+    height: 1.5rem;
+    width: 1.5rem;
+    line-height: 1.5rem;
+    float: right;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-top: -8rem;
 }
 
 @include Phone {
