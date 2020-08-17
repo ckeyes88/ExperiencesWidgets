@@ -521,8 +521,7 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
         <div className="CalendarWidgetMain">
           <button
             onClick={this.openModal}
-            className={`CalendarWidgetMain-OpenModalButton
-            ${this.state.loading ? "-isLoading" : ""}`}
+            className={`CalendarWidgetMain-OpenModalButton ${this.state.loading ? "-isLoading" : ""}`}
           >
             {label}
           </button>

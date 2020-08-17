@@ -2,11 +2,11 @@
 
 [class^="CalendarWidgetMain-OpenModalButton"]{
     background: $color-primary-blue;
+    width: 100%;
     border: none;
     border-radius: 3px;
     color: white;
     text-align: center;
-    width: 11rem;
     padding: 7px;
     font-size: 1rem;
     &:hover{
