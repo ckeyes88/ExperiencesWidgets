@@ -3,29 +3,23 @@
     grid-template-columns:  1fr 1fr;
     align-items: center;
     grid-template-areas: 
-    "box1 . box2";
+    "box1 box2 box3";
 }
 .Variant-AddBtn{
-    grid-area: box2;
+    grid-area: box3;
     margin-top: -3px;
     background: $color-white $color-gradient-gray;
     border: 1px solid $color-gray;
     border-radius: 3px;
     text-align: center;
     width: 6rem;
-    margin: 15% 0 15% 0;
+    margin: 10% 0 10% 0;
     font-size: 15px;
     padding: .5rem;
     height: 2rem;
     &:hover{
         cursor: pointer;
     }
-}
-#Variant-Details{
-    grid-area: box1;
-}
-#Variant-Details>span{
-    margin: .2rem 0;
 }
 .Variant-Age {
     padding-right: 10px;
@@ -36,7 +30,7 @@
     color: #696969;
 }
 .Variant-QtyContainer{
-    grid-area: box2;
+    grid-area: box3;
     width: 100%;
     align-content: center;
     text-align: center;
