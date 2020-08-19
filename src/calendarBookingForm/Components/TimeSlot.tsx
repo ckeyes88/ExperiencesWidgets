@@ -1,8 +1,9 @@
-import { h, Component } from "preact";
-import moment from "moment-timezone";
-import "./TimeSlot.scss";
-import { Availability } from "../../typings/Availability";
+import './TimeSlot.scss';
 
+import moment from 'moment-timezone';
+import { Component, h } from 'preact';
+
+import { Availability } from '../../typings/Availability';
 
 export interface ITimeSlotProps {
   /** the currently selected date */
@@ -16,7 +17,7 @@ export class TimeSlot extends Component<ITimeSlotProps> {
   /** holds details of selected availabity props */
   onSelectTimeSlot = () => {
     this.props.onSelectTimeSlot(this.props.timeslot);
-  }
+  };
   /**rendering */
   render() {
     const { timeslot } = this.props;
@@ -25,9 +26,20 @@ export class TimeSlot extends Component<ITimeSlotProps> {
     return (
       <div className="Timeslot-Container">
         <div className="TimeSlot-AvailableGrid">
-          <p><span className="TimeSlot-TimeAvailable">{adjustedStartTimes}</span>
-            <span className="TimeSlot-SpotAvailable">{unitsLeft} spots left</span></p>
-          <button onClick={this.onSelectTimeSlot} className="TimeSlot-SelectBtn">Select</button>
+          <p>
+            <span className="TimeSlot-TimeAvailable">
+              {adjustedStartTimes}&nbsp;
+            </span>
+            <span className="TimeSlot-SpotAvailable">
+              &nbsp;{unitsLeft} spot{unitsLeft > 1 && "s"} left
+            </span>
+          </p>
+          <button
+            onClick={this.onSelectTimeSlot}
+            className="TimeSlot-SelectBtn"
+          >
+            Select
+          </button>
         </div>
       </div>
     );

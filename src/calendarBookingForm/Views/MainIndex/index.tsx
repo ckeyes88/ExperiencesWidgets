@@ -1,24 +1,34 @@
-import { h, Component } from "../../../../node_modules/preact";
-import { AvailabilityPage } from "../Availability/AvailabilityPage";
-import { AddToCartArgs, CreateOrderArgs, getEvent, getShopDetails, getFirstAvailability, createOrder, addToCart } from "../../../Utils/api";
-import { Availability } from "../../../typings/Availability";
-import { ConfirmPage } from "../Confirmation/ConfirmPage";
-import { CustomerInputData } from "../../../typings/CustomerInput";
-import { EventDBO, EventVariantDBO, PaymentType } from "../../../typings/Event";
-import { FormFieldValueInput } from "../../../typings/FormFieldValueInput";
-import { FirstAvailability } from "../../../typings/FirstAvailability";
-import { Loading } from "../../../SharedComponents/loading/Loading";
-import { Modal } from "../../../SharedComponents/Modal/Modal";
-import { ModalStateEnum } from "../../types";
-import { NotFound } from "../404/NotFound";
-import { OrderDetailsPage } from "../OrderDetails/OrderDetailsPage";
-import { OrderLineItemInputData } from "../../../typings/OrderLineItemInput";
-import { OrderInputData } from "../../../typings/CreateOrderInput";
-import { ShopDetails } from "../../../typings/ShopDetails";
-import { getFirstDayAvailabilities } from "../../../Utils/helpers";
-import { format } from "date-fns";
-import { unionAvailability } from "../../../Utils/mergeAvailability";
-import "./CalendarWidgetMain.scss";
+import './CalendarWidgetMain.scss';
+
+import { format } from 'date-fns';
+
+import { Component, h } from '../../../../node_modules/preact';
+import { Loading } from '../../../SharedComponents/loading/Loading';
+import { Modal } from '../../../SharedComponents/Modal/Modal';
+import { Availability } from '../../../typings/Availability';
+import { OrderInputData } from '../../../typings/CreateOrderInput';
+import { CustomerInputData } from '../../../typings/CustomerInput';
+import { EventDBO, EventVariantDBO, PaymentType } from '../../../typings/Event';
+import { FirstAvailability } from '../../../typings/FirstAvailability';
+import { FormFieldValueInput } from '../../../typings/FormFieldValueInput';
+import { OrderLineItemInputData } from '../../../typings/OrderLineItemInput';
+import { ShopDetails } from '../../../typings/ShopDetails';
+import {
+  addToCart,
+  AddToCartArgs,
+  createOrder,
+  CreateOrderArgs,
+  getEvent,
+  getFirstAvailability,
+  getShopDetails
+} from '../../../Utils/api';
+import { getFirstDayAvailabilities } from '../../../Utils/helpers';
+import { unionAvailability } from '../../../Utils/mergeAvailability';
+import { ModalStateEnum } from '../../types';
+import { NotFound } from '../404/NotFound';
+import { AvailabilityPage } from '../Availability/AvailabilityPage';
+import { ConfirmPage } from '../Confirmation/ConfirmPage';
+import { OrderDetailsPage } from '../OrderDetails/OrderDetailsPage';
 
 /** 32 days expressed in seconds, used to fetch new availability */
 const TIMESPAN_IN_SECONDS = 32 * 24 * 60 * 60;
@@ -98,12 +108,14 @@ export interface ICalendarWidgetMainState {
 }
 
 /** This is the root component of the app, it stores all of the state as the user completes their order */
-export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICalendarWidgetMainState> {
-
+export class CalendarWidgetMain extends Component<
+  ICalendarWidgetMainProps,
+  ICalendarWidgetMainState
+> {
   constructor(props: ICalendarWidgetMainProps) {
     super(props);
 
-    this.state = INITIAL_STATE;        
+    this.state = INITIAL_STATE;
   }
 
   /** Fetch shop, event, and availability data and set the state */
@@ -114,22 +126,33 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
       //fetch the shop
       const shop = await getShopDetails({ baseUrl, shopId: shopUrl });
       //fetch the event
-      const response = await getEvent({ baseUrl, shopId: shopUrl, shopifyProductId });
+      const response = await getEvent({
+        baseUrl,
+        shopId: shopUrl,
+        shopifyProductId,
+      });
       //get availability for the current month and the next
-      const availability = await this.fetchRangeOfAvailability(this.state.now, TIMESPAN_IN_SECONDS * 2);
+      const availability = await this.fetchRangeOfAvailability(
+        this.state.now,
+        TIMESPAN_IN_SECONDS * 2
+      );
       //add next month to the fetched month state
-      this.addFetchedMonth(this.state.now.getMonth() + 1, this.state.now.getFullYear());
+      this.addFetchedMonth(
+        this.state.now.getMonth() + 1,
+        this.state.now.getFullYear()
+      );
       //capture the first day with availability
       const firstAvailable = getFirstDayAvailabilities(availability);
       //set state with the fetched values
       this.setState({
         shop,
-        event: (response && response.data),
+        event: response && response.data,
         error: "",
         availability,
-        firstAvailable: (firstAvailable[0] && new Date(firstAvailable[0].startsAt)),
+        firstAvailable:
+          firstAvailable[0] && new Date(firstAvailable[0].startsAt),
         loading: false,
-      });      
+      });
     } catch (err) {
       this.setState({
         error: err,
@@ -170,10 +193,19 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
   /**
    * Fetchs a chunk of availability based on the currently set timespan in seconds
    */
-  fetchRangeOfAvailability = async (date: Date, timespanInSeconds = TIMESPAN_IN_SECONDS) => {
+  fetchRangeOfAvailability = async (
+    date: Date,
+    timespanInSeconds = TIMESPAN_IN_SECONDS
+  ) => {
     const { baseUrl, shopUrl, shopifyProductId } = this.props;
-    return getFirstAvailability({ baseUrl, shopId: shopUrl, productId: shopifyProductId, startingFrom: date, timespanInSeconds });
-  }
+    return getFirstAvailability({
+      baseUrl,
+      shopId: shopUrl,
+      productId: shopifyProductId,
+      startingFrom: date,
+      timespanInSeconds,
+    });
+  };
 
   /**
    * On navigation to a new month or year, this method is called to fetch more availability and add it to the current availability in state.
@@ -186,19 +218,23 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
 
     //check to see whether the month has already been fetched. if not, fetch it.
     if (!this.monthWasFetched(month, year)) {
-
       let fetchedAvailability: FirstAvailability = {};
 
       //if the current date is mid-month, only fetch beginning from the current date
       if (this.state.now.getTime() >= date.getTime()) {
-        fetchedAvailability = await this.fetchRangeOfAvailability(this.state.now);
+        fetchedAvailability = await this.fetchRangeOfAvailability(
+          this.state.now
+        );
         //else fetch from the date passed in (i.e. the first of the month)
       } else {
         fetchedAvailability = await this.fetchRangeOfAvailability(date);
       }
 
       //merge the fetched availability with the previously fetched availability in state
-      const newAvailability = unionAvailability(this.state.availability, fetchedAvailability);
+      const newAvailability = unionAvailability(
+        this.state.availability,
+        fetchedAvailability
+      );
 
       this.setState({
         availability: newAvailability,
@@ -207,20 +243,20 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
       //remember that this month has already been fetched
       this.addFetchedMonth(month, year);
     }
-  }
+  };
 
   /** Sets the top-level loading state to true */
   setLoading = () => {
     //calls out to api
-    this.setState({ loading: true });
-  }
+    this.setState({ loading: true, showModal: true });
+  };
 
   /** Sets the showModal state slice to true, displaying the modal */
   openModal = () => {
     this.setState({
       showModal: true,
     });
-  }
+  };
 
   /** Sets the showModal state slice to false, and returns the component to its initial state */
   closeModal = () => {
@@ -236,26 +272,26 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
       lineItems: [],
       customerInfo: null,
     });
-  }
+  };
 
   /** Pass in a valid modal state to dictate the modal's current content */
   navigateTo = (modalState: ModalStateEnum) => {
     this.setState({
       modalState,
     });
-  }
+  };
   /** On click fires the first available event */
   handleSelectFirstAvailability = () => {
     this.handleDateSelect(this.state.firstAvailable);
-  }
+  };
 
   /**
-   * Redirects client to checkout URL (ie: cart page if within realm of Shopify). Takes 
+   * Redirects client to checkout URL (ie: cart page if within realm of Shopify). Takes
    * in optional url (ie: when using Buy SDK) to manually set checkout URL.
    */
   private handleNavigateToCheckout = (url?: string) => {
     window.location.href = url || "/cart";
-  }
+  };
 
   /** Sets up the order and either sends confirmation email OR adds the order to the cart */
   private handleConfirmOrder = async () => {
@@ -272,7 +308,7 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
 
       //set up arguments for adding to cart
       const shopifyVariants: VariantInput[] = [];
-      
+
       // Manually loop to populate formatted shopify variants & avoid fat arrow
       for (let i = 0; i < variants.length; i++) {
         const v = variants[i];
@@ -283,7 +319,7 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
           price: v.price,
         });
       }
-      
+
       // Define order object
       const order: AddToCartArgs = {
         variants: shopifyVariants,
@@ -294,22 +330,21 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
 
       //add the order to the cart
       try {
-        await addToCart(order, { 
+        await addToCart(order, {
           event,
           storefrontAccessToken: this.props.storefrontAccessToken,
           onCartAdd: this.handleNavigateToCheckout,
         });
-      }
-      catch (e) {
+      } catch (e) {
         this.setState({ loading: false });
         console.error(e);
       }
-    } 
+    }
     // The order is *NOT* prepay, so it should be created in our system
     else {
       const { customerInfo, lineItems } = this.state;
       const { baseUrl, shopUrl } = this.props;
-      
+
       //set up the order creation arguments
       const order: OrderInputData = {
         customer: customerInfo,
@@ -328,7 +363,7 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
       //reset loading to false and navigate to the confirmation page
       this.setState({ loading: false });
     }
-  }
+  };
 
   /** makes sure to set state to selected date */
   handleDateSelect = (date: Date) => {
@@ -336,7 +371,7 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
       selectedDate: date,
       selectedTimeslot: null,
     });
-  }
+  };
 
   /** Called when the user selects a timeslot
    * Stores the timeslot in state and sets the initial quantities per variant to zero
@@ -353,35 +388,36 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
       selectedTimeslot: timeslot,
       quantitiesMap: quantities,
     });
-  }
+  };
 
   /** Triggered when the user increments or decrements the quantity for a single variant */
   handleChangeQuantity = (dir: number, variantId: number) => {
     let newQuantities = this.state.quantitiesMap;
     newQuantities[variantId] += dir;
     this.setState({ quantitiesMap: newQuantities });
-  }
+  };
 
   /** Triggered upon clicking the back button displayed on the date picker when a timeslot is selected
    * Deselects the timeslot by setting the timeslot to null in state
-  */
+   */
   handleClickBack = () => {
     this.setState({
       selectedTimeslot: null,
     });
-  }
+  };
   /** Triggered upon clicking the back button in the conformation view will display the selected time slot */
   handleConfirmationClickBack = () => {
     this.navigateTo(ModalStateEnum.Availability);
-  }
+  };
 
   /** Creates an order line item  */
-  handleAddLineItem = (variant: EventVariantDBO, customFormFieldValues?: FormFieldValueInput[]) => {
-
+  handleAddLineItem = (
+    variant: EventVariantDBO,
+    customFormFieldValues?: FormFieldValueInput[]
+  ) => {
     const { event, selectedTimeslot } = this.state;
 
     const eventId = event._id.toString();
-
 
     const newLineItem = {
       eventId,
@@ -400,7 +436,7 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
     this.setState({
       lineItems: newLineItems,
     });
-  }
+  };
 
   /** If an event is not prepay, this is triggered when the user enters their name and email
    * This happens in the OrderDetailsPage view
@@ -409,19 +445,20 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
     this.setState({
       customerInfo: customer,
     });
-  }
+  };
 
   /** This is triggered when the user confirms their desired date, timeslot, and variant quantities */
   handleConfirmVariants = () => {
-
     //TODO: add state validation
 
     const { event } = this.state;
 
     // If the event has a custom form, redirect to the OrderDetailsPage view
-    if (event.customOrderDetails.fields &&
+    if (
+      event.customOrderDetails.fields &&
       Array.isArray(event.customOrderDetails.fields) &&
-      event.customOrderDetails.fields.length) {
+      event.customOrderDetails.fields.length
+    ) {
       this.navigateTo(ModalStateEnum.OrderDetails);
       // If the event is not prepay, also redirect to the OrderDetailsPage view
     } else if (event.paymentType !== PaymentType.Prepay) {
@@ -430,19 +467,23 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
     } else {
       this.handleConfirmOrder();
     }
-  }
+  };
 
   /** Determine content of the loading view */
   renderLoading = () => {
-
     const { lineItems } = this.state;
 
     if (this.state.modalState === ModalStateEnum.ConfirmPage) {
       return (
         <div className="Loading-Container">
           <Loading>
-            <span className="Loading-ReserveSpot">Reserving {lineItems.length} spot{lineItems.length > 1 && "s"} for </span>
-            <span className="Loading-ReserveDate">{format(new Date(lineItems[0].startsAt), "EEEE MMMM d, yyyy")} at {format(new Date(lineItems[0].startsAt), "h:mma")}</span>
+            <span className="Loading-ReserveSpot">
+              Reserving {lineItems.length} spot{lineItems.length > 1 && "s"} for{" "}
+            </span>
+            <span className="Loading-ReserveDate">
+              {format(new Date(lineItems[0].startsAt), "EEEE MMMM d, yyyy")} at{" "}
+              {format(new Date(lineItems[0].startsAt), "h:mma")}
+            </span>
           </Loading>
         </div>
       );
@@ -452,14 +493,12 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
         <span>Loading...</span>
       </Loading>
     );
-  }
+  };
 
   /** Switch case statement to render the appropriate view in the modal */
   renderModalContent = () => {
     if (this.state.loading) {
-      return (
-        this.renderLoading()
-      );
+      return this.renderLoading();
     }
     switch (this.state.modalState) {
       case ModalStateEnum.Availability:
@@ -467,7 +506,7 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
           // This view is the date picker where the user can select a date, timeslot, and set variant quantities
           <AvailabilityPage
             availability={this.state.availability}
-            moneyFormat={(this.state.shop && this.state.shop.moneyFormat)}
+            moneyFormat={this.state.shop && this.state.shop.moneyFormat}
             event={this.state.event}
             navigateTo={this.navigateTo}
             setNewAvailability={this.setNewAvailability}
@@ -511,7 +550,7 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
       default:
         <NotFound navigateTo={this.navigateTo} />;
     }
-  }
+  };
 
   /** Main render method - renders the display button, and the modal if open */
   public render() {
@@ -521,13 +560,15 @@ export class CalendarWidgetMain extends Component<ICalendarWidgetMainProps, ICal
         <div className="CalendarWidgetMain">
           <button
             onClick={this.openModal}
-            className={`CalendarWidgetMain-OpenModalButton ${this.state.loading ? "-isLoading" : ""}`}
+            className={`CalendarWidgetMain-OpenModalButton ${
+              this.state.loading ? "-isLoading" : ""
+            }`}
           >
             {label}
           </button>
-          <Modal 
+          <Modal
             orderDetails={this.state.modalState}
-            showModal={this.state.showModal} 
+            showModal={this.state.showModal}
             closeModal={this.closeModal}
           >
             {this.renderModalContent()}

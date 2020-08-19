@@ -1,9 +1,10 @@
 .Variant-Grid {
     display: grid;
-    grid-template-columns:  1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
     grid-template-areas: 
     "box1 box2 box3";
+    height: 3.5rem;
 }
 .Variant-AddBtn{
     grid-area: box3;
@@ -13,7 +14,6 @@
     border-radius: 3px;
     text-align: center;
     width: 6rem;
-    margin: 10% 0 10% 0;
     font-size: 15px;
     padding: .5rem;
     height: 2rem;
