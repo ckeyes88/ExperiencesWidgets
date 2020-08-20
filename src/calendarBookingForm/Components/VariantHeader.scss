@@ -27,11 +27,11 @@
 #VariantHeader-StartTime {
     font-size: 15px;
     color: $color-primary-blue;
+    display: block;
 }
-#VariantHeader-SpotsAvaliable {
+#VariantHeader-SpotsAvailable {
     font-size: 12px;
-    margin-top: 1px;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 @include Phone { 
@@ -46,5 +46,15 @@
 
     .VariantHeader-DateSelected {
         margin: 0px;
+    }
+}
+
+@include Tablet {
+    #VariantHeader-StartTime {
+        display: inline;
+    }
+    #VariantHeader-StartTime::after {
+        color: black;
+        content: "\00a0\00a0|\00a0\00a0"
     }
 }

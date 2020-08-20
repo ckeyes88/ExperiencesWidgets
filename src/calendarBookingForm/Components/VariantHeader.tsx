@@ -39,12 +39,9 @@ export class VariantHeader extends Component<IVariantHeaderProps> {
             </span>
             <p>
               <span id="VariantHeader-StartTime">
-                {format(new Date(startsAt), "h:mma")}
+                {format(new Date(startsAt), "h:mma").toLowerCase()}
               </span>
-            </p>
-            <p>
-              <span id="VariantHeader-SpotsAvaliable">
-                {" "}
+              <span id="VariantHeader-SpotsAvailable">
                 {spaceLeft} spot{spaceLeft !== 1 && "s"} left
               </span>
             </p>
