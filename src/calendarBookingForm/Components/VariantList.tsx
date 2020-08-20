@@ -1,10 +1,11 @@
-import { h, Component, JSX } from "preact";
-import { Variant } from "./Variant";
-import { VariantHeader } from "./VariantHeader";
-import "./VariantList.scss";
-import { Availability } from "../../typings/Availability";
-import { EventVariantDBO, EventDBO } from "../../typings/Event";
+import './VariantList.scss';
 
+import { Component, h, JSX } from 'preact';
+
+import { Availability } from '../../typings/Availability';
+import { EventDBO, EventVariantDBO } from '../../typings/Event';
+import { Variant } from './Variant';
+import { VariantHeader } from './VariantHeader';
 
 export interface IVariantListMainProps {
   /**passing in the entire event, may render some other props unnecessary */
@@ -37,7 +38,10 @@ export interface IVariantListMainState {
 }
 
 /** exports variant list class */
-export class VariantList extends Component<IVariantListMainProps, IVariantListMainState> {
+export class VariantList extends Component<
+  IVariantListMainProps,
+  IVariantListMainState
+> {
   constructor(props: IVariantListMainProps) {
     super(props);
     this.state = {
@@ -50,7 +54,7 @@ export class VariantList extends Component<IVariantListMainProps, IVariantListMa
     const { quantities } = this.props;
     return Object.entries(quantities).reduce(
       (sum, [variantId, quantity]) => sum + quantity,
-      0,
+      0
     );
   }
 
@@ -58,10 +62,12 @@ export class VariantList extends Component<IVariantListMainProps, IVariantListMa
   get totalAmount() {
     const total = Object.entries(this.props.quantities).reduce(
       (sum, [variantId, quantity]: [string, number]) => {
-        const variant = this.props.variants.find(v => v.shopifyVariantId === +variantId);
+        const variant = this.props.variants.find(
+          (v) => v.shopifyVariantId === +variantId
+        );
         return sum + variant.price * quantity;
       },
-      0,
+      0
     );
     /** Convert the total to a string, add a dollar sign, and add commas if > 999 */
     return `$${total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
@@ -72,17 +78,24 @@ export class VariantList extends Component<IVariantListMainProps, IVariantListMa
     const { minLimit, maxLimit } = this.props;
     if (minLimit && !maxLimit) {
       return (
-        <p className="VariantListTotal-QtyMessage">Minimum purchase quantity of {minLimit} per order.</p>
+        <p className="VariantListTotal-QtyMessage">
+          Minimum purchase quantity of {minLimit} per order.
+        </p>
       );
     }
     if (!minLimit && maxLimit) {
       return (
-        <p className="VariantListTotal-QtyMessage">Maximum purchase quantity of {maxLimit} per order.</p>
+        <p className="VariantListTotal-QtyMessage">
+          Maximum purchase quantity of {maxLimit} per order.
+        </p>
       );
     }
     if (minLimit && maxLimit) {
       return (
-        <p className="VariantListTotal-QtyMessage">Minimum purchase quantity of {minLimit} with a maximum limit of {maxLimit} per order.</p>
+        <p className="VariantListTotal-QtyMessage">
+          Minimum purchase quantity of {minLimit} with a maximum limit of{" "}
+          {maxLimit} per order.
+        </p>
       );
     }
     return;
@@ -90,7 +103,13 @@ export class VariantList extends Component<IVariantListMainProps, IVariantListMa
 
   /** diplays variant header and mapping out the variants */
   renderVariants = () => {
-    const { variants, variantSelectedDate, variantTimeSlot, onConfirmSelection, minLimit } = this.props;
+    const {
+      variants,
+      variantSelectedDate,
+      variantTimeSlot,
+      onConfirmSelection,
+      minLimit,
+    } = this.props;
     return (
       <div>
         <VariantHeader
@@ -100,24 +119,27 @@ export class VariantList extends Component<IVariantListMainProps, IVariantListMa
           onClickBack={this.onClickBack}
         />
         {variants.map(this.renderVariant)}
-        {
-          this.totalQuantity > 0 &&
+        {this.totalQuantity > 0 && (
           <div className="VariantListTotal">
             <div className="VariantListTotal-Grid">
-              <p className="VariantListTotal-GrandTotal">Total: {this.totalAmount}</p>
-              <button
-                className="VariantListTotal-ConfirmBtn"
-                onClick={onConfirmSelection}
-                disabled={this.totalQuantity < minLimit}
-              >Confirm
-              </button>
+              <p className="VariantListTotal-Label">Total</p>
+              <p className="VariantListTotal-Value">{this.totalAmount}</p>
+              <span className="VariantListTotal-Action">
+                <button
+                  className="VariantListTotal-ConfirmBtn"
+                  onClick={onConfirmSelection}
+                  disabled={this.totalQuantity < minLimit}
+                >
+                  Confirm
+                </button>
+              </span>
             </div>
           </div>
-        }
+        )}
         {this.renderLimitMessage()}
       </div>
     );
-  }
+  };
 
   /** rendering a single variant */
   renderVariant = (variant: EventVariantDBO): JSX.Element => {
@@ -132,18 +154,14 @@ export class VariantList extends Component<IVariantListMainProps, IVariantListMa
         maxLimit={this.props.maxLimit}
       />
     );
-  }
+  };
   /** allows the page to go back once the button is clicked */
   onClickBack = () => {
     this.props.onClickBack();
-  }
+  };
 
   /** rendering */
   render() {
-    return (
-      <div className="VariantContainer">
-        {this.renderVariants()}
-      </div>
-    );
+    return <div className="VariantContainer">{this.renderVariants()}</div>;
   }
 }

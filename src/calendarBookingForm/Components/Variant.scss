@@ -1,13 +1,10 @@
 .Variant-Grid {
     display: grid;
-    grid-template-columns: 3fr 3fr 4fr;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: center;
     grid-template-areas: 
     "box1 box2 box3";
     height: 3.5rem;
-}
-.VariantListTotal-Grid{
-    align-items: center;
 }
 .Variant-Age, .Variant-Price {
     display: flex;
@@ -15,7 +12,7 @@
 }
 .Variant-QtySelector {
     display: flex;
-    justify-content: flex-end; 
+    justify-content: center;
 }
 .Variant-AddBtn{
     grid-area: box3;
