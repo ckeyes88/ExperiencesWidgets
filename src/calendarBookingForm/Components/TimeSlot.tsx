@@ -28,9 +28,9 @@ export class TimeSlot extends Component<ITimeSlotProps> {
         <div className="TimeSlot-AvailableGrid">
           <p className="TimeSlot-Details">
             <span className="TimeSlot-TimeAvailable">{adjustedStartTimes}</span>
-            <span className="TimeSlot-SpotAvailable">
-              {unitsLeft} spot{unitsLeft > 1 && "s"} left
-            </span>
+            <div className="TimeSlot-SpotAvailable">
+              {unitsLeft} spot{unitsLeft !== 1 && "s"} left
+            </div>
           </p>
           <div className="TimeSlot-Action">
             <button

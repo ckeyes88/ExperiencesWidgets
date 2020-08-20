@@ -45,7 +45,7 @@ export class VariantHeader extends Component<IVariantHeaderProps> {
             <p>
               <span id="VariantHeader-SpotsAvaliable">
                 {" "}
-                {spaceLeft} spot{spaceLeft > 1 && "s"} left
+                {spaceLeft} spot{spaceLeft !== 1 && "s"} left
               </span>
             </p>
           </div>
