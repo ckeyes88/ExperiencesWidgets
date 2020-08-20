@@ -69,7 +69,7 @@ export class Variant extends Component<IVariantProps> {
             <button className="Variant-QtyBtn" onClick={this.handleDecrQty}>
               &#8722;
             </button>
-            <span>{quantity}</span>
+            <span className="Variant-Qty">{quantity}</span>
             {/* If there is space left that is greater than 0, can be increased */}
             <button
               className={`Variant-QtyBtn ${zeroSpacesLeft}`}
@@ -97,7 +97,9 @@ export class Variant extends Component<IVariantProps> {
             className="Variant-Price"
             dangerouslySetInnerHTML={this.setInnerPriceHTML()}
           />
-          {this.renderQtySelector()}
+          <span className="Variant-QtySelector">
+            {this.renderQtySelector()}
+          </span>
         </div>
       </div>
     );

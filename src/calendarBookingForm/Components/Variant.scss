@@ -1,10 +1,21 @@
 .Variant-Grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 3fr 3fr 4fr;
     align-items: center;
     grid-template-areas: 
     "box1 box2 box3";
     height: 3.5rem;
+}
+.VariantListTotal-Grid{
+    align-items: center;
+}
+.Variant-Age, .Variant-Price {
+    display: flex;
+    justify-content: flex-start;
+}
+.Variant-QtySelector {
+    display: flex;
+    justify-content: flex-end; 
 }
 .Variant-AddBtn{
     grid-area: box3;
@@ -31,9 +42,6 @@
 }
 .Variant-QtyContainer{
     grid-area: box3;
-    width: 100%;
-    align-content: center;
-    text-align: center;
 }
 .Variant-QtyBtn{
     border-radius: 50%;
@@ -42,7 +50,6 @@
     border: 1px solid $color-gray;
     background-color: white;
     text-align: center;
-    margin: 0 .5rem 0 .5rem;
     line-height: 1.4rem;
     padding: 0px;
     &.disabled {
@@ -51,6 +58,9 @@
     &:hover{
         cursor: pointer;
       }
+}
+.Variant-Qty {
+    padding: 0 1rem;
 }
 @include Tablet {
     .Variant-Age {
@@ -69,6 +79,5 @@
     .VariantListTotal-Grid {
         padding: 1.5rem 2rem;
         margin-top: 0px;
-        align-items: center;
     }
 }
