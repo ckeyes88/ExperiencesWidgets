@@ -24,22 +24,22 @@ export class TimeSlot extends Component<ITimeSlotProps> {
     const { unitsLeft, startsAt, timezone } = timeslot;
     const adjustedStartTimes = moment(startsAt).tz(timezone).format("h:mma");
     return (
-      <div className="Timeslot-Container">
+      <div className="TimeSlot-Container">
         <div className="TimeSlot-AvailableGrid">
-          <p>
-            <span className="TimeSlot-TimeAvailable">
-              {adjustedStartTimes}&nbsp;
-            </span>
+          <p className="TimeSlot-Details">
+            <span className="TimeSlot-TimeAvailable">{adjustedStartTimes}</span>
             <span className="TimeSlot-SpotAvailable">
-              &nbsp;{unitsLeft} spot{unitsLeft > 1 && "s"} left
+              {unitsLeft} spot{unitsLeft > 1 && "s"} left
             </span>
           </p>
-          <button
-            onClick={this.onSelectTimeSlot}
-            className="TimeSlot-SelectBtn"
-          >
-            Select
-          </button>
+          <div className="TimeSlot-Action">
+            <button
+              onClick={this.onSelectTimeSlot}
+              className="TimeSlot-SelectBtn"
+            >
+              Select
+            </button>
+          </div>
         </div>
       </div>
     );
