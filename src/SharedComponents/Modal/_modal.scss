@@ -1,7 +1,9 @@
 
 .Exp__App_Modal {
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
+    margin-left: -50vw;
+    margin-top: -45vh;
     width: 100vw;
     height: 90vh;
     opacity: 1;
