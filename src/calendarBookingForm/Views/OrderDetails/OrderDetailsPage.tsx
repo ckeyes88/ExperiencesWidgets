@@ -206,31 +206,33 @@ export class OrderDetailsPage extends Component<
   renderCustomerInfoForm = () => {
     return (
       <form
-        className="customer-info"
-        id="customer-info"
+        className="CustomerInfo"
+        id="CustomerInfo"
         onSubmit={this.handleSubmitCustomerInfoForm}
       >
-        <span className="customer-info-FinalizeOrder">
-          <button onClick={this.props.onClickBack} id="customer-info-BackBtn">
+        <p className="CustomerInfo-FinalizeOrder">
+          <button onClick={this.props.onClickBack} id="CustomerInfo-BackBtn">
             &#8592;
           </button>
-          <span className="customer-info-Header">Finalize your order</span>
-          <button onClick={this.props.closeModal} id="customer-info-CloseBtn">
+          <span className="CustomerInfo-Header">Finalize your order</span>
+          <button onClick={this.props.closeModal} id="CustomerInfo-CloseBtn">
             &#215;
           </button>
-        </span>
-        <div className="customer-info-EventDetails">
+        </p>
+        <div className="CustomerInfo-EventDetails">
           <span>
-            <span className="customer-info-EventName">
+            <span className="CustomerInfo-EventName">
               {this.props.event.name}
             </span>
             <br />
-            {format(
-              new Date(this.props.selectedTimeslot.startsAt),
-              "EEEE MMMM d, yyyy"
-            )}
+            <span className="CustomerInfo-DeteSelected">
+              {format(
+                new Date(this.props.selectedTimeslot.startsAt),
+                "EEEE MMMM d, yyyy"
+              )}
+            </span>
             <p>
-              <span className="customer-info-StartTime">
+              <span className="CustomerInfo-StartTime">
                 {format(
                   new Date(this.props.selectedTimeslot.startsAt),
                   "h:mma"
@@ -241,10 +243,10 @@ export class OrderDetailsPage extends Component<
           </span>
         </div>
         <CustomerInfoForm
-          key="customer-info"
+          key="CustomerInfo"
           handleChange={this.handleCustomerFormChange}
         />
-        <button className="customer-info-SubmitBtn" type="submit">
+        <button className="CustomerInfo-SubmitBtn" type="submit">
           Submit
         </button>
       </form>
@@ -286,10 +288,7 @@ export class OrderDetailsPage extends Component<
               &times;
             </button>
           </div>
-          <form
-            id="customer-order-details"
-            onSubmit={this.handleSubmitCustomForm}
-          >
+          <form id="CustomOrder-Details" onSubmit={this.handleSubmitCustomForm}>
             <CustomForm
               key={currentLineItemIndex}
               fields={fields}
@@ -312,10 +311,7 @@ export class OrderDetailsPage extends Component<
               {variant.name}
             </span>
           </div>
-          <form
-            id="customer-order-details"
-            onSubmit={this.handleSubmitCustomForm}
-          >
+          <form id="CustomOrder-Details" onSubmit={this.handleSubmitCustomForm}>
             <CustomForm
               key={currentLineItemIndex}
               fields={customOrderDetails.fields}
@@ -355,7 +351,7 @@ export class OrderDetailsPage extends Component<
     const names = Object.keys(variantsByName);
     return names.map(function (name, index: number) {
       return (
-        <span className="orderDetails-EventDetails" key={name}>
+        <span className="OrderDetails-EventDetails" key={name}>
           {variantsByName[name]} {name} {index + 1 !== names.length && "| "}
         </span>
       );
