@@ -4,9 +4,18 @@
     padding: 2rem 4rem;
 }    
 
+.CustomerInfo-Email, .CustomerInfo-Name {
+    box-sizing: border-box;
+}
+
+@include Phone {
+    .CustomerInfo-Email {
+        margin-top: 0;  
+    }
+}
+
 @include Tablet{
     .CustomerInfo-Email, .CustomerInfo-Name {
-        box-sizing: border-box;
         display: flex;
         justify-content: stretch;
         & label {
@@ -14,6 +23,7 @@
         }
     }
 }
+
 @include Large-Laptop{
   
 }

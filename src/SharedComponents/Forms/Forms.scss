@@ -1,15 +1,16 @@
 .FormField-RenderInput{
     position: relative;
     width: 100%;
-    margin: 1rem;
+    padding: 1rem;
     text-align: left;
+    box-sizing: border-box;
 }
 .FormField-Input{
     border: none;
     border-bottom: 2px solid lightgray;
     outline: none;
-    box-sizing: border-box;
 }
+
 .FormField-Label{
     opacity: 0.5;
     z-index: 2;
