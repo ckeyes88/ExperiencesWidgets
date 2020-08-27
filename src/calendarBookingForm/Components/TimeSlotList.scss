@@ -1,6 +1,11 @@
 .TimeSlot-DateSelected{
     text-align: center;
     display: block;
+    font-size: 1.1rem;
+}
+
+.TimeSlotsHeader-Container {
+    padding: 0 1.5rem;
 }
 
 .TimeSlots-NextAvailableBtn{
@@ -34,7 +39,7 @@
 .SelectedDateContainer {
     position: relative;
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .SelectedDateContainer > .TimeSlots {
@@ -51,7 +56,7 @@
 
 @media only screen and (min-width: 320px) and (max-width: 767px) {
     .AvailabilityPage-TimeSlotContainer {
-        margin: 1rem 0 1rem 0;
+        margin: 1rem 0;
     }
 
     .TimeSlot-DateSelected {

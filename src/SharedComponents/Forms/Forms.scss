@@ -1,19 +1,19 @@
 .FormField-RenderInput{
     position: relative;
-    margin: 1rem 0 1.5rem 0;
+    width: 100%;
+    padding: 0.5rem 1.5rem;
+    text-align: left;
+    box-sizing: border-box;
 }
 .FormField-Input{
     border: none;
     border-bottom: 2px solid lightgray;
-    width: 70%;
     outline: none;
 }
+
 .FormField-Label{
-    position: absolute;
     opacity: 0.5;
     z-index: 2;
-    left: 15%;
-    margin: 1.2rem;
 }
 
 .FormField-Input::placeholder{
@@ -30,7 +30,6 @@ input.FormField-Input:valid::placeholder{
 .FormField-RenderSelect select{
     border: none;
     border-bottom: 2px solid lightgray;
-    width: 70%;
     padding: 1rem 0 .3rem 0;
     margin: 0 auto;
     outline: none;
@@ -46,33 +45,36 @@ input.FormField-Input:valid::placeholder{
     .CustomForm-Container{
         text-align: center;
     }
+    .FormField-RenderInput {
+        display: flex;
+        flex-flow: column;
+        padding: 1rem 0;
+        
+        input {
+            height: 1.5rem;
+        }
+    }
+    
 }
 
 @include Tablet{
     .FormField-Label{
         padding: 0px;
-        left: 6%;
+        left: 1rem;
         margin: 0;
     }
     .FormField-RenderInput input{
         border: 2px solid lightgray;
         padding: .5rem;
-        width: 20rem;
-        margin: 1rem;
+        width: 100%;
     }
     input[type=email]{      
-        width: 42rem;
+        width: 100%;
     }
     .FormField-Container{
         width: 50%;
         text-align: center;
         margin: 0 auto;
-        & input[type=email]{
-            width: 20rem;
-        }
-        & select{
-            width: 20rem;
-        }
         & label{
             left: 10%;
         }

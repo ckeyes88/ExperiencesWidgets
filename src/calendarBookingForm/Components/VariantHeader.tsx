@@ -1,8 +1,9 @@
-import { h, Component } from "preact";
-import { format } from "date-fns";
+import './VariantHeader.scss';
 
-import "./VariantHeader.scss";
-import { Availability } from "../../typings/Availability";
+import { format } from 'date-fns';
+import { Component, h } from 'preact';
+
+import { Availability } from '../../typings/Availability';
 
 export interface IVariantHeaderProps {
   /** creating the variant selected date to date formant when selected or null when not */
@@ -15,10 +16,8 @@ export interface IVariantHeaderProps {
   currentlySelectedTotal: number;
 }
 
-
 /** export the variant header to show the selected date time and remaining spots */
 export class VariantHeader extends Component<IVariantHeaderProps> {
-
   /** renders */
   render() {
     const { variantSelectedDate } = this.props;
@@ -28,11 +27,24 @@ export class VariantHeader extends Component<IVariantHeaderProps> {
     return (
       <div>
         <div className="VariantHeader-Container">
-          <button onClick={this.props.onClickBack} className="VariantHeader-BackBtn">Back</button>
+          <button
+            onClick={this.props.onClickBack}
+            className="VariantHeader-BackBtn"
+          >
+            Back
+          </button>
           <div className="VariantHeader-MobileContainer">
-            <span className="VariantHeader-DateSelected">{format(new Date(variantSelectedDate), "EEEE MMMM d, yyyy")}</span>
-            <p><span id="VariantHeader-StartTime">{format(new Date(startsAt), "h:mma")}</span></p>
-            <p><span id="VariantHeader-SpotsAvaliable"> {spaceLeft} spots left</span></p>
+            <span className="VariantHeader-DateSelected">
+              {format(new Date(variantSelectedDate), "EEEE MMMM d, yyyy")}
+            </span>
+            <p>
+              <span id="VariantHeader-StartTime">
+                {format(new Date(startsAt), "h:mma").toLowerCase()}
+              </span>
+              <span id="VariantHeader-SpotsAvailable">
+                {spaceLeft} spot{spaceLeft !== 1 && "s"} left
+              </span>
+            </p>
           </div>
         </div>
       </div>

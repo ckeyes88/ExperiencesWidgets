@@ -1,6 +1,8 @@
-import { h, Component } from "preact";
-import { FormField } from "../../SharedComponents/Forms/FormField";
-import "./CustomerInfoForm.scss";
+import './CustomerInfoForm.scss';
+
+import { Component, h } from 'preact';
+
+import { FormField } from '../../SharedComponents/Forms/FormField';
 
 export interface ICustomerInfoFormProps {
   /** this function gets called everytime one of the form values changes */

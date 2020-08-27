@@ -1,5 +1,6 @@
 .VariantHeader-Container {
    text-align: center;
+   padding: 0 1.5rem;
 }
 
 .VariantHeader-Container>p {
@@ -13,11 +14,13 @@
     text-decoration: underline;
     display: block;
     margin: 0 auto;
+    line-height: 1rem;
     font-weight: 600;
     cursor: pointer;
 }
 .VariantHeader-DateSelected {
     text-align: center;
+    font-size: 1.1rem;
     display: block;
     margin: 1rem 0 .5rem 0;
 }
@@ -27,11 +30,11 @@
 #VariantHeader-StartTime {
     font-size: 15px;
     color: $color-primary-blue;
+    display: block;
 }
-#VariantHeader-SpotsAvaliable {
+#VariantHeader-SpotsAvailable {
     font-size: 12px;
-    margin-top: 1px;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 @include Phone { 
@@ -41,10 +44,23 @@
 
     .VariantHeader-MobileContainer {
         padding: 1rem;
-        background-color: #F5F5F5;
     }
 
     .VariantHeader-DateSelected {
         margin: 0px;
+    }
+
+    .VariantHeader-Container {
+        background-color: #F5F5F5;
+    }
+}
+
+@include Tablet {
+    #VariantHeader-StartTime {
+        display: inline;
+    }
+    #VariantHeader-SpotsAvailable::before {
+        color: black;
+        content: "\00a0\00a0|\00a0\00a0"
     }
 }

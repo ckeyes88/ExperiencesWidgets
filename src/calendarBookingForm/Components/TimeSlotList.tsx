@@ -1,10 +1,11 @@
-import { h, Component, JSX } from "preact";
+import './TimeSlotList.scss';
 
-import { TimeSlot } from "./TimeSlot";
-import { TimeSlotHeader } from "./TimeSlotHeader";
-import "./TimeSlotList.scss";
-import { Availability } from "../../typings/Availability";
-import { format } from "date-fns";
+import { format } from 'date-fns';
+import { Component, h, JSX } from 'preact';
+
+import { Availability } from '../../typings/Availability';
+import { TimeSlot } from './TimeSlot';
+import { TimeSlotHeader } from './TimeSlotHeader';
 
 export interface ITimeSlotListMainProps {
   /** creating time slots to hold an array of needed detail for selected date availability */
@@ -21,7 +22,10 @@ export interface ITimeSlotListMainState {
   loading: boolean;
 }
 /** exports time slot list and renders time slot availabitity details */
-export class TimeSlotList extends Component<ITimeSlotListMainProps, ITimeSlotListMainState> {
+export class TimeSlotList extends Component<
+  ITimeSlotListMainProps,
+  ITimeSlotListMainState
+> {
   constructor(props: ITimeSlotListMainProps) {
     super(props);
     this.state = {
@@ -39,37 +43,47 @@ export class TimeSlotList extends Component<ITimeSlotListMainProps, ITimeSlotLis
       return (
         <div className="TimeSlots">
           <div className="TimeSlots-NotAvailable">
-            <span className="TimeSlot-DateSelected">{format(new Date(this.props.selectedDate), "EEEE MMMM d, yyyy")}</span>
+            <span className="TimeSlot-DateSelected">
+              {format(new Date(this.props.selectedDate), "EEEE MMMM d, yyyy")}
+            </span>
             <p>Nothing is available today</p>
-            <button onClick={this.props.onSelectFirstAvailability} className="TimeSlots-NextAvailableBtn">Go to next available</button>
+            <button
+              onClick={this.props.onSelectFirstAvailability}
+              className="TimeSlots-NextAvailableBtn"
+            >
+              Go to next available
+            </button>
           </div>
         </div>
       );
     } else {
       return (
-        <div>
+        <div className="TimeSlotsHeader-Container">
           <TimeSlotHeader selectedDate={selectedDate} />
           {timeslots.map(this.renderTimeslot)}
         </div>
       );
     }
-  }
+  };
 
   /**
-   * This function is used to iterate over the list of 
-   * availability and return a timeslot component for 
+   * This function is used to iterate over the list of
+   * availability and return a timeslot component for
    * each one
    */
   renderTimeslot = (timeslot: Availability): JSX.Element => {
-    return <TimeSlot timeslot={timeslot} onSelectTimeSlot={this.props.onSelectTimeSlot} />;
-  }
+    return (
+      <TimeSlot
+        timeslot={timeslot}
+        onSelectTimeSlot={this.props.onSelectTimeSlot}
+      />
+    );
+  };
 
   /** render */
   render() {
     return (
-      <div className="SelectedDateContainer">
-        {this.renderTimeSlots()}
-      </div>
+      <div className="SelectedDateContainer">{this.renderTimeSlots()}</div>
     );
   }
 }

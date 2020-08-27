@@ -1,20 +1,29 @@
-@include Tablet{
-    .CustomerInfo-Name {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        & label {
-            padding: 0px;
-        }
+.CustomerInfo-Grid {
+    display: flex;
+    flex-flow: column;
+    padding: 2rem 4rem;
+}    
+
+.CustomerInfo-Email, .CustomerInfo-Name {
+    box-sizing: border-box;
+}
+
+@include Phone {
+    .CustomerInfo-Email {
+        margin-top: 0;  
     }
-    .CustomerInfo-Email{
+}
+
+@include Tablet{
+    .CustomerInfo-Email, .CustomerInfo-Name {
         display: flex;
-        justify-content: center;
+        justify-content: stretch;
         & label {
             padding: 0px;
         }
     }
 }
+
 @include Large-Laptop{
   
 }
