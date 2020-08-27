@@ -149,8 +149,7 @@ export class CalendarWidgetMain extends Component<
         event: response && response.data,
         error: "",
         availability,
-        firstAvailable:
-          firstAvailable[0] && new Date(firstAvailable[0].startsAt),
+        firstAvailable: firstAvailable[0] && new Date(firstAvailable[0].startsAt),
         loading: false,
       });
     } catch (err) {
@@ -222,9 +221,7 @@ export class CalendarWidgetMain extends Component<
 
       //if the current date is mid-month, only fetch beginning from the current date
       if (this.state.now.getTime() >= date.getTime()) {
-        fetchedAvailability = await this.fetchRangeOfAvailability(
-          this.state.now
-        );
+        fetchedAvailability = await this.fetchRangeOfAvailability(this.state.now);
         //else fetch from the date passed in (i.e. the first of the month)
       } else {
         fetchedAvailability = await this.fetchRangeOfAvailability(date);
@@ -248,7 +245,7 @@ export class CalendarWidgetMain extends Component<
   /** Sets the top-level loading state to true */
   setLoading = () => {
     //calls out to api
-    this.setState({ loading: true, showModal: true });
+    this.setState({ loading: true });
   };
 
   /** Sets the showModal state slice to true, displaying the modal */
