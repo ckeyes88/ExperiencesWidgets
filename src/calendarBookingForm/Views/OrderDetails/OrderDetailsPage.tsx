@@ -214,7 +214,7 @@ export class OrderDetailsPage extends Component<
           <button onClick={this.props.onClickBack} id="CustomerInfo-BackBtn">
             &#8592;
           </button>
-          <span className="CustomerInfo-Header">Finalize your order</span>
+          <span className="CustomerInfo-Header">Finalize your reservation</span>
           <button onClick={this.props.closeModal} id="CustomerInfo-CloseBtn">
             &#215;
           </button>
@@ -231,7 +231,7 @@ export class OrderDetailsPage extends Component<
                 "EEEE MMMM d, yyyy"
               )}
             </span>
-            <p>
+            <p className="CustomerInfo-VariantDetails">
               <span className="CustomerInfo-StartTime">
                 {format(
                   new Date(this.props.selectedTimeslot.startsAt),
@@ -352,7 +352,7 @@ export class OrderDetailsPage extends Component<
     return names.map(function (name, index: number) {
       return (
         <span className="OrderDetails-EventDetails" key={name}>
-          {variantsByName[name]} {name} {index + 1 !== names.length && "| "}
+          {variantsByName[name]} {name}
         </span>
       );
     });

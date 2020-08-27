@@ -1,5 +1,6 @@
 .VariantHeader-Container {
    text-align: center;
+   padding: 0 1.5rem;
 }
 
 .VariantHeader-Container>p {
@@ -55,7 +56,7 @@
     #VariantHeader-StartTime {
         display: inline;
     }
-    #VariantHeader-StartTime::after {
+    #VariantHeader-SpotsAvailable::before {
         color: black;
         content: "\00a0\00a0|\00a0\00a0"
     }

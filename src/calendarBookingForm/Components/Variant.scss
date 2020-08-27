@@ -10,9 +10,9 @@
     display: flex;
     justify-content: flex-start;
 }
-.Variant-QtySelector {
+.Variant-QtySelector, .VariantListTotal-Action {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
 }
 .Variant-AddBtn{
     grid-area: box3;
@@ -57,7 +57,9 @@
       }
 }
 .Variant-Qty {
-    padding: 0 1rem;
+    display: inline-block;
+    width: 3rem;
+    text-align: center;
 }
 @include Tablet {
     .Variant-Age {

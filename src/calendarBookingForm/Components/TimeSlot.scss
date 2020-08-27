@@ -72,8 +72,7 @@
     .TimeSlot-TimeAvailable {
         display: inline;
     }
-    .TimeSlot-TimeAvailable::after {
-        color: black;
+    .TimeSlot-SpotAvailable::before {
         content: "\00a0\00a0|\00a0\00a0"
     }
 }

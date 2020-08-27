@@ -103,8 +103,9 @@
     .CustomerInfo {
         padding: 1rem 0rem;
     }
-    .customer-order-details {
-        text-align: center;
+    .CustomerInfo-VariantDetails {
+        display: flex;
+        flex-flow: column;
     }
 }
 
@@ -137,8 +138,7 @@
     .CustomerInfo-StartTime {
         display: inline;
     }
-    .CustomerInfo-StartTime::after {
-        color: black;
+    .OrderDetails-EventDetails::before {
         content: "\00a0\00a0|\00a0\00a0"
     }
 }
