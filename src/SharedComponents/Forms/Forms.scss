@@ -48,7 +48,13 @@ input.FormField-Input:valid::placeholder{
     .FormField-RenderInput {
         display: flex;
         flex-flow: column;
+        padding: 1rem 0;
+        
+        input {
+            height: 1.5rem;
+        }
     }
+    
 }
 
 @include Tablet{

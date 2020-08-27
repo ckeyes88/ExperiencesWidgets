@@ -118,7 +118,7 @@ export class VariantList extends Component<
           variantTimeSlot={variantTimeSlot}
           onClickBack={this.onClickBack}
         />
-        {variants.map(this.renderVariant)}
+        <div className="VariantContent">{variants.map(this.renderVariant)}</div>
         {this.totalQuantity > 0 && (
           <div className="VariantListTotal">
             <div className="VariantListTotal-Grid">
