@@ -1,15 +1,14 @@
+.CustomerInfo-Grid {
+    display: flex;
+    flex-flow: column;
+    padding: 2rem 4rem;
+}    
+
 @include Tablet{
-    .CustomerInfo-Name {
+    .CustomerInfo-Email, .CustomerInfo-Name {
+        box-sizing: border-box;
         display: flex;
-        flex-direction: row;
-        justify-content: center;
-        & label {
-            padding: 0px;
-        }
-    }
-    .CustomerInfo-Email{
-        display: flex;
-        justify-content: center;
+        justify-content: stretch;
         & label {
             padding: 0px;
         }

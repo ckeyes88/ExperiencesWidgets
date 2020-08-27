@@ -1,5 +1,6 @@
-import { h, Component, JSX } from "preact";
-import "./Forms.scss";
+import './Forms.scss';
+
+import { Component, h, JSX } from 'preact';
 
 export interface IFormFieldProps {
   /** Designate what type of an input this is */
@@ -42,9 +43,12 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
     const { options } = this.props;
 
     if (options && options[0] && options[0] !== this.state.value) {
-      this.setState({
-        value: options[0],
-      }, this.setDefaultSelect);
+      this.setState(
+        {
+          value: options[0],
+        },
+        this.setDefaultSelect
+      );
     }
   }
 
@@ -56,7 +60,7 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
     if (options && options[0]) {
       this.props.onFieldChange(id, options[0]);
     }
-  }
+  };
 
   /** Sets the local state to current value of the field
    * Passes the value and the field's id into the designated method passed in as a prop
@@ -66,19 +70,21 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
     this.setState({
       value: (ev.target as HTMLInputElement).value,
     });
-    this.props.onFieldChange((ev.target as HTMLInputElement).id, this.state.value);
-  }
+    this.props.onFieldChange(
+      (ev.target as HTMLInputElement).id,
+      this.state.value
+    );
+  };
 
   /** If the field is a select, this method renders it */
   renderSelect() {
     const { id, label, options } = this.props;
     return (
       <div className="FormField-RenderSelect">
-        <label className="FormField-SelectLabel" for={id}>{label}</label>
-        <select
-          id={id}
-          onChange={this.onChange}
-        >
+        <label className="FormField-SelectLabel" for={id}>
+          {label}
+        </label>
+        <select id={id} onChange={this.onChange}>
           {options.map(this.renderOption)}
         </select>
       </div>
@@ -87,8 +93,16 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
 
   /** This renders a single option within a select */
   renderOption = (option: string, i: number): JSX.Element => {
-    return <option key={`${option}-${i}`} selected={this.state.value === option} value={option}>{option}</option>;
-  }
+    return (
+      <option
+        key={`${option}-${i}`}
+        selected={this.state.value === option}
+        value={option}
+      >
+        {option}
+      </option>
+    );
+  };
 
   /** If the field is a text, email, or phone input, this renders it */
   renderInput() {
@@ -96,6 +110,9 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
 
     return (
       <div className="FormField-RenderInput">
+        <label className="FormField-Label" for={id}>
+          {label}
+        </label>
         <input
           className="FormField-Input"
           required={required}
@@ -105,7 +122,6 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
           type={type.toLowerCase()}
           value={this.state.value}
         />
-        <label className="FormField-Label" for={id}>{label}</label>
       </div>
     );
   }

@@ -1,14 +1,21 @@
-import { h, Component } from "preact";
-import { Availability } from "../../../typings/Availability";
-import { EventDBO, PaymentType, EventVariantDBO, OrderDetailsFormType, FormFieldType } from "../../../typings/Event";
-import { CustomerInputData } from "../../../typings/CustomerInput";
-import { CustomForm } from "../../../SharedComponents/Forms/CustomForm";
-import { CustomerInfoForm } from "../../Components/CustomerInfoForm";
-import { FormFieldValueInput } from "../../../typings/FormFieldValueInput";
-import "./OrderDetailsPage.scss";
-import { format } from "date-fns";
-import { plural } from "../../../Utils/helpers";
+import './OrderDetailsPage.scss';
 
+import { format } from 'date-fns';
+import { Component, h } from 'preact';
+
+import { CustomForm } from '../../../SharedComponents/Forms/CustomForm';
+import { Availability } from '../../../typings/Availability';
+import { CustomerInputData } from '../../../typings/CustomerInput';
+import {
+  EventDBO,
+  EventVariantDBO,
+  FormFieldType,
+  OrderDetailsFormType,
+  PaymentType
+} from '../../../typings/Event';
+import { FormFieldValueInput } from '../../../typings/FormFieldValueInput';
+import { plural } from '../../../Utils/helpers';
+import { CustomerInfoForm } from '../../Components/CustomerInfoForm';
 
 export interface IOrderDetailsPageProps {
   /** Quantities by event variant */
@@ -22,7 +29,10 @@ export interface IOrderDetailsPageProps {
   /** This is the customer info, if it is needed and has been inputted */
   customerInfo: CustomerInputData;
   /** Method passed in and triggered upon submission of a custom form, passes values up to the top level */
-  onAddCustomFormValues(variant: EventVariantDBO, newCustomFormFieldValues?: FormFieldValueInput[]): void;
+  onAddCustomFormValues(
+    variant: EventVariantDBO,
+    newCustomFormFieldValues?: FormFieldValueInput[]
+  ): void;
   /** Method passed in and triggered upon submission of customer info, passes values up to the top level */
   onAddCustomerInfo(customerInfo: CustomerInputData): void;
   /** Method passed in to trigger upon confirmation of order */
@@ -50,21 +60,22 @@ export interface IOrderDetailsPageState {
 }
 
 /**
- * This componenent is the higher order top level component that collects all 
+ * This componenent is the higher order top level component that collects all
  * the additional order details as set up by the merchant for the event and either
  * redirects to the cart page for prepay, or creates the free/reservation order.
- * 
+ *
  * Includes
  * Order details (name, email)
  * per attendee details (meaning display the custom form for each ticket)
- * - or - 
+ * - or -
  * per order details (meaning display the custom form once for the order)
- * 
+ *
  */
-export class OrderDetailsPage extends Component<IOrderDetailsPageProps, IOrderDetailsPageState> {
-
+export class OrderDetailsPage extends Component<
+  IOrderDetailsPageProps,
+  IOrderDetailsPageState
+> {
   constructor(props: IOrderDetailsPageProps) {
-
     super(props);
 
     this.state = {
@@ -85,7 +96,11 @@ export class OrderDetailsPage extends Component<IOrderDetailsPageProps, IOrderDe
     Object.keys(quantities).forEach(function (k) {
       const variant = parseInt(k);
       for (let i = 0; i < quantities[variant]; i++) {
-        variants.push(event.variants.find(function (v) { return v.shopifyVariantId === variant; }));
+        variants.push(
+          event.variants.find(function (v) {
+            return v.shopifyVariantId === variant;
+          })
+        );
       }
     });
     return variants;
@@ -98,7 +113,7 @@ export class OrderDetailsPage extends Component<IOrderDetailsPageProps, IOrderDe
       ...this.state.customerInfo,
     };
     this.props.onAddCustomerInfo(newCustomer);
-  }
+  };
 
   /** Passes current custom form values up to main level to be stored as a line item */
   onAddLineItem = () => {
@@ -121,7 +136,7 @@ export class OrderDetailsPage extends Component<IOrderDetailsPageProps, IOrderDe
       currentCustomFormValues: [],
       currentLineItemIndex: newLineItemIndex,
     });
-  }
+  };
 
   /** Passed down to the customer form and triggered on changes to store the values in state */
   handleCustomerFormChange = (fieldName: string, fieldValue: string) => {
@@ -131,7 +146,7 @@ export class OrderDetailsPage extends Component<IOrderDetailsPageProps, IOrderDe
         [fieldName]: fieldValue,
       },
     });
-  }
+  };
 
   /** Passed down to the custom form and triggered on changes to store the values in state */
   handleCustomFormChange = (fieldLabelIndex: string, fieldValue: string) => {
@@ -148,7 +163,7 @@ export class OrderDetailsPage extends Component<IOrderDetailsPageProps, IOrderDe
     this.setState({
       currentCustomFormValues,
     });
-  }
+  };
 
   /** Triggered on submission of a custom form */
   handleSubmitCustomForm = (ev: Event) => {
@@ -156,10 +171,14 @@ export class OrderDetailsPage extends Component<IOrderDetailsPageProps, IOrderDe
     //Pass the values up to create a new line item
     this.onAddLineItem();
     //If the form is only per order, or if this is the final attendee, call onConfirmOrder
-    if (this.props.event.customOrderDetails.formType === OrderDetailsFormType.PerOrder || this.state.currentLineItemIndex >= this.variants.length) {
+    if (
+      this.props.event.customOrderDetails.formType ===
+        OrderDetailsFormType.PerOrder ||
+      this.state.currentLineItemIndex >= this.variants.length
+    ) {
       this.props.onConfirmOrder();
     }
-  }
+  };
 
   /** Triggered on submission of a customer info form */
   handleSubmitCustomerInfoForm = (ev: Event) => {
@@ -167,47 +186,70 @@ export class OrderDetailsPage extends Component<IOrderDetailsPageProps, IOrderDe
     //Pass the values up to store on the main level
     this.onAddCustomerInfo();
     //If the merchant has required custom forms, return
-    if (this.props.event.customOrderDetails.fields &&
+    if (
+      this.props.event.customOrderDetails.fields &&
       Array.isArray(this.props.event.customOrderDetails.fields) &&
       this.props.event.customOrderDetails.fields.length &&
-      this.state.currentLineItemIndex < this.variants.length) {
+      this.state.currentLineItemIndex < this.variants.length
+    ) {
       return;
       //Otherwise, create a line item for each attendee, then trigger method to confirm the order
     } else {
-      this.variants.forEach(v => {
+      this.variants.forEach((v) => {
         this.props.onAddCustomFormValues(v);
       });
       this.props.onConfirmOrder();
     }
-  }
+  };
 
   /** Renders a customer info form if the event is not prepay */
   renderCustomerInfoForm = () => {
     return (
-      <form className="customer-info" id="customer-info" onSubmit={this.handleSubmitCustomerInfoForm}>
+      <form
+        className="customer-info"
+        id="customer-info"
+        onSubmit={this.handleSubmitCustomerInfoForm}
+      >
         <span className="customer-info-FinalizeOrder">
-          <button onClick={this.props.onClickBack} id="customer-info-BackBtn">&#8592;</button>
+          <button onClick={this.props.onClickBack} id="customer-info-BackBtn">
+            &#8592;
+          </button>
           <span className="customer-info-Header">Finalize your order</span>
-          <button onClick={this.props.closeModal} id="customer-info-CloseBtn">&#215;</button>
+          <button onClick={this.props.closeModal} id="customer-info-CloseBtn">
+            &#215;
+          </button>
         </span>
         <div className="customer-info-EventDetails">
           <span>
-            <span id="customer-info-EventName">{this.props.event.name}</span>
-            <br />
-            {format(new Date(this.props.selectedTimeslot.startsAt), "EEEE MMMM d, yyyy")}
-            <br />
-            <span className="orderDetails-EventDetails">
-              {format(new Date(this.props.selectedTimeslot.startsAt), "h:mma")}
+            <span className="customer-info-EventName">
+              {this.props.event.name}
             </span>
             <br />
-            {this.renderVariantDetails()}
+            {format(
+              new Date(this.props.selectedTimeslot.startsAt),
+              "EEEE MMMM d, yyyy"
+            )}
+            <p>
+              <span className="customer-info-StartTime">
+                {format(
+                  new Date(this.props.selectedTimeslot.startsAt),
+                  "h:mma"
+                ).toLowerCase()}
+              </span>
+              {this.renderVariantDetails()}
+            </p>
           </span>
         </div>
-        <CustomerInfoForm key="customer-info" handleChange={this.handleCustomerFormChange} />
-        <button className="customer-info-SubmitBtn" type="submit">Submit</button>
+        <CustomerInfoForm
+          key="customer-info"
+          handleChange={this.handleCustomerFormChange}
+        />
+        <button className="customer-info-SubmitBtn" type="submit">
+          Submit
+        </button>
       </form>
     );
-  }
+  };
 
   /** Renders a custom order form as set up by the merchant
    * This form is either per attendee or per order
@@ -230,12 +272,24 @@ export class OrderDetailsPage extends Component<IOrderDetailsPageProps, IOrderDe
         <div className="CustomOrderDetials">
           <div className="CustomOrderDetails-Header">
             <p>
-              <span className="CustomOrderDetails-Ticket">Ticket {currentLineItemIndex + 1} of {this.variants.length}</span>
-              <span className="CustomOrderDetails-VariantName">{variant.name}</span>
-              </p>
-              <button id="MobileView-OrderDetails-CloseBtn" onClick={this.props.closeModal}>&times;</button>
+              <span className="CustomOrderDetails-Ticket">
+                Ticket {currentLineItemIndex + 1} of {this.variants.length}
+              </span>
+              <span className="CustomOrderDetails-VariantName">
+                {variant.name}
+              </span>
+            </p>
+            <button
+              id="MobileView-OrderDetails-CloseBtn"
+              onClick={this.props.closeModal}
+            >
+              &times;
+            </button>
           </div>
-          <form id="customer-order-details" onSubmit={this.handleSubmitCustomForm}>
+          <form
+            id="customer-order-details"
+            onSubmit={this.handleSubmitCustomForm}
+          >
             <CustomForm
               key={currentLineItemIndex}
               fields={fields}
@@ -246,7 +300,6 @@ export class OrderDetailsPage extends Component<IOrderDetailsPageProps, IOrderDe
             <span className="CustomOrderDetails-SubmitBtn">
               <button type="submit">Submit</button>
             </span>
-
           </form>
         </div>
       );
@@ -255,9 +308,14 @@ export class OrderDetailsPage extends Component<IOrderDetailsPageProps, IOrderDe
       return (
         <div className="CustomOrderDetails">
           <div className="CustomOrderDetails-Header">
-            <span className="CustomOrderDetails-VariantName">{variant.name}</span>
+            <span className="CustomOrderDetails-VariantName">
+              {variant.name}
+            </span>
           </div>
-          <form id="customer-order-details" onSubmit={this.handleSubmitCustomForm}>
+          <form
+            id="customer-order-details"
+            onSubmit={this.handleSubmitCustomForm}
+          >
             <CustomForm
               key={currentLineItemIndex}
               fields={customOrderDetails.fields}
@@ -272,7 +330,7 @@ export class OrderDetailsPage extends Component<IOrderDetailsPageProps, IOrderDe
         </div>
       );
     }
-  }
+  };
   /**renders the differnt variant name and quanity depeanding on what has be selected by the user */
   renderVariantDetails = () => {
     let variantsByName: { [name: string]: number } = {};
@@ -285,8 +343,10 @@ export class OrderDetailsPage extends Component<IOrderDetailsPageProps, IOrderDe
         continue;
       }
       let variantName = "";
-      if (this.variants.find(variant => variant.shopifyVariantId === id)) {
-        variantName = this.variants.find(variant => variant.shopifyVariantId === id).name;
+      if (this.variants.find((variant) => variant.shopifyVariantId === id)) {
+        variantName = this.variants.find(
+          (variant) => variant.shopifyVariantId === id
+        ).name;
       }
       variantName = plural(variantName, quantities[id]);
       variantsByName[variantName] = quantities[id];
@@ -300,19 +360,25 @@ export class OrderDetailsPage extends Component<IOrderDetailsPageProps, IOrderDe
         </span>
       );
     });
-  }
+  };
   /** rendering */
   public render() {
-    if (!this.props.customerInfo && this.props.event.paymentType !== PaymentType.Prepay) {
+    if (
+      !this.props.customerInfo &&
+      this.props.event.paymentType !== PaymentType.Prepay
+    ) {
       return this.renderCustomerInfoForm();
     }
 
-    if (this.props.event.customOrderDetails.fields &&
+    if (
+      this.props.event.customOrderDetails.fields &&
       Array.isArray(this.props.event.customOrderDetails.fields) &&
       this.props.event.customOrderDetails.fields.length &&
-      this.state.currentLineItemIndex < this.variants.length) {
-
-      return this.renderCustomOrderDetails(this.variants[this.state.currentLineItemIndex]);
+      this.state.currentLineItemIndex < this.variants.length
+    ) {
+      return this.renderCustomOrderDetails(
+        this.variants[this.state.currentLineItemIndex]
+      );
     }
   }
 }
