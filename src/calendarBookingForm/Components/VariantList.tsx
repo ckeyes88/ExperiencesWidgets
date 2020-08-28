@@ -78,24 +78,24 @@ export class VariantList extends Component<
     const { minLimit, maxLimit } = this.props;
     if (minLimit && !maxLimit) {
       return (
-        <p className="VariantListTotal-QtyMessage">
+        <span className="VariantListTotal-QtyMessage">
           Minimum purchase quantity of {minLimit} per order.
-        </p>
+        </span>
       );
     }
     if (!minLimit && maxLimit) {
       return (
-        <p className="VariantListTotal-QtyMessage">
+        <span className="VariantListTotal-QtyMessage">
           Maximum purchase quantity of {maxLimit} per order.
-        </p>
+        </span>
       );
     }
     if (minLimit && maxLimit) {
       return (
-        <p className="VariantListTotal-QtyMessage">
-          Minimum purchase quantity of {minLimit} with a maximum limit of{" "}
-          {maxLimit} per order.
-        </p>
+        <span className="VariantListTotal-QtyMessage">
+          Minimum purchase quantity of {minLimit} with a maximum limit of {maxLimit}{" "}
+          per order.
+        </span>
       );
     }
     return;
@@ -122,8 +122,8 @@ export class VariantList extends Component<
         {this.totalQuantity > 0 && (
           <div className="VariantListTotal">
             <div className="VariantListTotal-Grid">
-              <p className="VariantListTotal-Label">Total</p>
-              <p className="VariantListTotal-Value">{this.totalAmount}</p>
+              <span className="VariantListTotal-Label">Total</span>
+              <span className="VariantListTotal-Value">{this.totalAmount}</span>
               <span className="VariantListTotal-Action">
                 <button
                   className="VariantListTotal-ConfirmBtn"

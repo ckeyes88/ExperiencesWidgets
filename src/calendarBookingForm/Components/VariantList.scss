@@ -2,13 +2,6 @@
     padding: 2rem 1.5rem;
     overflow: auto;
 }
-.VariantListTotal-Grid{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-areas: 
-    "box1 box2 box3";
-    align-items: center;
-}
 .VariantListTotal-Label, .VariantListTotal-Value {
     display: flex;
     justify-content: flex-start;
