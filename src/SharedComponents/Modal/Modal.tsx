@@ -44,8 +44,7 @@ export class Modal extends Component<ModalProps, ModalState> {
       return;
     }
 
-    this.modal.current.css("position", "absolute");
-    this.modal.current.css("top", document.body.scrollHeight + "px");
+    this.modal.current.style.top = window.scrollY + "px";
   };
 
   /** On click, check if click was outside modal and close if so */
