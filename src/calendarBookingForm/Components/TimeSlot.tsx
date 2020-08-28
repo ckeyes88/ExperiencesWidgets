@@ -26,17 +26,14 @@ export class TimeSlot extends Component<ITimeSlotProps> {
     return (
       <div className="TimeSlot-Container">
         <div className="TimeSlot-AvailableGrid">
-          <p className="TimeSlot-Details">
+          <div className="TimeSlot-Details">
             <span className="TimeSlot-TimeAvailable">{adjustedStartTimes}</span>
             <div className="TimeSlot-SpotAvailable">
               {unitsLeft} spot{unitsLeft !== 1 && "s"} left
             </div>
-          </p>
+          </div>
           <div className="TimeSlot-Action">
-            <button
-              onClick={this.onSelectTimeSlot}
-              className="TimeSlot-SelectBtn"
-            >
+            <button onClick={this.onSelectTimeSlot} className="TimeSlot-SelectBtn">
               Select
             </button>
           </div>

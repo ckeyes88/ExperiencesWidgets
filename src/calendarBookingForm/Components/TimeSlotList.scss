@@ -5,7 +5,13 @@
 }
 
 .TimeSlotsHeader-Container {
+    max-height: 100%;
+}
+
+.TimeSlots-Container {
     padding: 0 1.5rem;
+    max-height: 100%;
+    overflow-y: auto;
 }
 
 .TimeSlots-NextAvailableBtn{
@@ -39,8 +45,9 @@
 .SelectedDateContainer {
     position: relative;
     height: 100%;
-    overflow-y: auto;
-}
+    display: flex;
+    flex-flow: column;
+}   
 
 .SelectedDateContainer > .TimeSlots {
     display: flex;
