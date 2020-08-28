@@ -60,7 +60,9 @@ export class TimeSlotList extends Component<
       return (
         <div className="TimeSlotsHeader-Container">
           <TimeSlotHeader selectedDate={selectedDate} />
-          {timeslots.map(this.renderTimeslot)}
+          <div className="TimeSlots-Container">
+            {timeslots.map(this.renderTimeslot)}
+          </div>
         </div>
       );
     }
@@ -73,17 +75,12 @@ export class TimeSlotList extends Component<
    */
   renderTimeslot = (timeslot: Availability): JSX.Element => {
     return (
-      <TimeSlot
-        timeslot={timeslot}
-        onSelectTimeSlot={this.props.onSelectTimeSlot}
-      />
+      <TimeSlot timeslot={timeslot} onSelectTimeSlot={this.props.onSelectTimeSlot} />
     );
   };
 
   /** render */
   render() {
-    return (
-      <div className="SelectedDateContainer">{this.renderTimeSlots()}</div>
-    );
+    return <div className="SelectedDateContainer">{this.renderTimeSlots()}</div>;
   }
 }

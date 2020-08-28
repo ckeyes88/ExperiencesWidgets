@@ -282,12 +282,6 @@
   }
 }
 @media only screen and (min-width : 1281px){
-  /* .CalendarContainer{
-    height: 30rem;
-  } */
-  .head{
-    transform: translateX(-7px);
-  }
   .CalendarDay{
     background-color: #333;
   }

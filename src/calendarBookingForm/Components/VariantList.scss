@@ -2,13 +2,6 @@
     padding: 2rem 1.5rem;
     overflow: auto;
 }
-.VariantListTotal-Grid{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-areas: 
-    "box1 box2 box3";
-    align-items: center;
-}
 .VariantListTotal-Label, .VariantListTotal-Value {
     display: flex;
     justify-content: flex-start;
@@ -32,11 +25,16 @@
     &:hover{
       cursor: pointer;
     }
+    &.asDisabled {
+        background-color: $color-gray;
+        color: $color-white;
+    }
 }
 .VariantListTotal-QtyMessage{
     padding-top: 1rem;
     font-size: .7rem;
     color: rgb(119, 119, 119);
+    text-align: center;
 }
 @include Phone {
   .VariantContainer { 
@@ -45,12 +43,4 @@
   .VariantContent, .VariantListTotal {
       padding: 0 2rem;
   }
-}
-@include Tablet{
-    .VariantListTotal-ConfirmBtn {
-        height: 2rem;
-    }
-    .Variant-AddBtn {
-        height: 2rem;
-    }
 }
