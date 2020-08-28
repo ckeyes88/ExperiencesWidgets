@@ -25,6 +25,10 @@
     &:hover{
       cursor: pointer;
     }
+    &.asDisabled {
+        background-color: $color-gray;
+        color: $color-white;
+    }
 }
 .VariantListTotal-QtyMessage{
     padding-top: 1rem;

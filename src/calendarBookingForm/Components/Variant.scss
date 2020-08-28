@@ -27,6 +27,9 @@
     &:hover{
         cursor: pointer;
     }
+    &.asDisabled{
+        opacity: .5;
+    }
 }
 .Variant-Age {
     padding-right: 10px;
@@ -48,8 +51,8 @@
     text-align: center;
     line-height: 1.4rem;
     padding: 0px;
-    &.disabled {
-        opacity: .3;
+    &.asDisabled {
+        opacity: .5;
     }
     &:hover{
         cursor: pointer;

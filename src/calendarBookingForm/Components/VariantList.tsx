@@ -110,6 +110,9 @@ export class VariantList extends Component<
       onConfirmSelection,
       minLimit,
     } = this.props;
+
+    const isDisabled = this.totalQuantity < minLimit;
+
     return (
       <div>
         <VariantHeader
@@ -126,9 +129,11 @@ export class VariantList extends Component<
               <span className="VariantListTotal-Value">{this.totalAmount}</span>
               <span className="VariantListTotal-Action">
                 <button
-                  className="VariantListTotal-ConfirmBtn"
+                  className={`VariantListTotal-ConfirmBtn${
+                    isDisabled ? " asDisabled" : ""
+                  }`}
                   onClick={onConfirmSelection}
-                  disabled={this.totalQuantity < minLimit}
+                  disabled={isDisabled}
                 >
                   Confirm
                 </button>
