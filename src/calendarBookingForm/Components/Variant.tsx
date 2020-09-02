@@ -45,7 +45,6 @@ export class Variant extends Component<IVariantProps> {
     const {
       quantity,
       maxLimit,
-      currentlySelectedTotal,
       variantTimeSlot,
     } = this.props;
     const unitsLeft = variantTimeSlot.unitsLeft || 0;
