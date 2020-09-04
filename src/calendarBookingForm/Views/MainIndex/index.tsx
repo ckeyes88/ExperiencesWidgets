@@ -29,6 +29,7 @@ import { NotFound } from '../404/NotFound';
 import { AvailabilityPage } from '../Availability/AvailabilityPage';
 import { ConfirmPage } from '../Confirmation/ConfirmPage';
 import { OrderDetailsPage } from '../OrderDetails/OrderDetailsPage';
+import React from 'preact/compat';
 
 /** 32 days expressed in seconds, used to fetch new availability */
 const TIMESPAN_IN_SECONDS = 32 * 24 * 60 * 60;
@@ -469,25 +470,25 @@ export class CalendarWidgetMain extends Component<
   renderLoading = () => {
     const { lineItems } = this.state;
 
-    if (this.state.modalState === ModalStateEnum.ConfirmPage && Array.isArray(lineItems) && lineItems.length > 1) {
-      return (
-        <div className="Loading-Container">
-          <Loading>
-            <span className="Loading-ReserveSpot">
-              Reserving {lineItems.length} spot{lineItems.length > 1 && "s"} for{" "}
-            </span>
-            <span className="Loading-ReserveDate">
-              {format(new Date(lineItems[0].startsAt), "EEEE MMMM d, yyyy")} at{" "}
-              {format(new Date(lineItems[0].startsAt), "h:mma")}
-            </span>
-          </Loading>
-        </div>
-      );
-    }
     return (
-      <Loading>
-        <span>Loading...</span>
-      </Loading>
+      <div className="Loading-Container">
+        <Loading>
+          {(this.state.modalState === ModalStateEnum.ConfirmPage && Array.isArray(lineItems) && lineItems[0]) ? 
+          (
+            <React.Fragment>
+              <span className="Loading-ReserveSpot">
+                Reserving {lineItems.length} spot{lineItems.length > 1 && "s"} for{" "}
+              </span>
+              <span className="Loading-ReserveDate">
+                {format(new Date(lineItems[0].startsAt), "EEEE MMMM d, yyyy")} at{" "}
+                {format(new Date(lineItems[0].startsAt), "h:mma")}
+              </span>
+            </React.Fragment>
+          ) : (
+            <span className="Loading-ReserveDate">Loading...</span>
+          )}
+        </Loading>
+      </div>
     );
   };
 
