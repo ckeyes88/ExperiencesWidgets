@@ -110,7 +110,10 @@ export class OrderDetailsPage extends Component<
   }
 
   componentDidUpdate = (prevProps: IOrderDetailsPageProps, prevState: IOrderDetailsPageState) => {
-    if (prevProps.lineItems !== this.props.lineItems && prevState.currentCustomFormValues !== this.state.currentCustomFormValues) {
+    // Make sure line items have been updated before confirming order
+    if (prevProps.lineItems !== this.props.lineItems && 
+      prevState.currentCustomFormValues !== this.state.currentCustomFormValues
+    ) {
       //If the form is only per order, or if this is the final attendee, call onConfirmOrder
       if (
         this.props.event.customOrderDetails.formType ===
@@ -120,6 +123,7 @@ export class OrderDetailsPage extends Component<
         this.props.onConfirmOrder();
       }
     }
+    // Make sure both customer info and input values have all been updated before confirming
     if (prevProps.customerInfo !== this.props.customerInfo) {
       //If the merchant has required custom forms, return
       if (

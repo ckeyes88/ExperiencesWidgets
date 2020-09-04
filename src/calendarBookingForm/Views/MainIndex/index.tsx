@@ -292,7 +292,6 @@ export class CalendarWidgetMain extends Component<
 
   /** Sets up the order and either sends confirmation email OR adds the order to the cart */
   private handleConfirmOrder = async () => {
-    console.log("Confirm Order");
     //set loading to true
     this.setLoading();
     this.navigateTo(ModalStateEnum.ConfirmPage);

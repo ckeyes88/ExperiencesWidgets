@@ -72,7 +72,7 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
     });
     this.props.onFieldChange(
       (ev.target as HTMLInputElement).id,
-      this.state.value
+      (ev.target as HTMLInputElement).value
     );
   };
 
