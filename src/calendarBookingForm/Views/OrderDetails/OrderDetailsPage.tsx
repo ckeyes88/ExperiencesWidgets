@@ -123,7 +123,7 @@ export class OrderDetailsPage extends Component<
         this.props.onConfirmOrder();
       }
     }
-    // Make sure both customer info and input values have all been updated before confirming
+    // Make custom info has all been updated before confirming
     if (prevProps.customerInfo !== this.props.customerInfo) {
       //If the merchant has required custom forms, return
       if (

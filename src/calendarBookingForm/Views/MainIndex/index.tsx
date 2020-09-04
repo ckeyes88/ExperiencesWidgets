@@ -412,6 +412,7 @@ export class CalendarWidgetMain extends Component<
     variant: EventVariantDBO,
     customFormFieldValues?: FormFieldValueInput[]
   ) => {
+    console.log("Add line item")
     const { event, selectedTimeslot } = this.state;
 
     const eventId = event._id.toString();
@@ -469,6 +470,7 @@ export class CalendarWidgetMain extends Component<
   /** Determine content of the loading view */
   renderLoading = () => {
     const { lineItems } = this.state;
+    console.log(lineItems);
 
     return (
       <div className="Loading-Container">
