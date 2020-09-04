@@ -72,6 +72,7 @@ export class Modal extends Component<ModalProps, ModalState> {
                 class={`Exp__App_Modal__ModalContentBox${
                   !!orderModal ? "OrderDetails" : ""
                 }`}
+                style={{top: `${window.scrollY}px`}}
               >
                 <div class="Modal-ModalMainContentBox">{children}</div>
               </div>

@@ -6,6 +6,8 @@
 
 .TimeSlotsHeader-Container {
     max-height: 100%;
+    display: flex;
+    flex-flow: column;
 }
 
 .TimeSlots-Container {

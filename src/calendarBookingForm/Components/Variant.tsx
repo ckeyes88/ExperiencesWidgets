@@ -45,12 +45,12 @@ export class Variant extends Component<IVariantProps> {
     const {
       quantity,
       maxLimit,
-      currentlySelectedTotal,
       variantTimeSlot,
     } = this.props;
+
     const unitsLeft = variantTimeSlot.unitsLeft || 0;
     let spaceLeft = unitsLeft - this.props.currentlySelectedTotal;
-    const isDisabled = spaceLeft === 0 || quantity >= maxLimit;
+    const isDisabled = spaceLeft === 0 || (quantity >= maxLimit && maxLimit > 0);
 
     if (quantity === 0) {
       return (

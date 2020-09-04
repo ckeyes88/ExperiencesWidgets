@@ -291,7 +291,7 @@ export class CalendarWidgetMain extends Component<
   };
 
   /** Sets up the order and either sends confirmation email OR adds the order to the cart */
-  private handleConfirmOrder = async () => {
+  private handleConfirmOrder = async (customerInfo?: CustomerInputData) => {
     //set loading to true
     this.setLoading();
     this.navigateTo(ModalStateEnum.ConfirmPage);
@@ -336,30 +336,31 @@ export class CalendarWidgetMain extends Component<
         this.setState({ loading: false });
         console.error(e);
       }
-    }
     // The order is *NOT* prepay, so it should be created in our system
-    else {
-      const { customerInfo, lineItems } = this.state;
-      const { baseUrl, shopUrl } = this.props;
-
-      //set up the order creation arguments
-      const order: OrderInputData = {
-        customer: customerInfo,
-        lineItems,
-      };
-
-      const orderArgs: CreateOrderArgs = {
-        order,
-        baseUrl,
-        shopId: shopUrl,
-      };
-
-      //create the order
-      await createOrder(orderArgs);
-
-      //reset loading to false and navigate to the confirmation page
-      this.setState({ loading: false });
-    }
+    } else {
+      this.setState({ customerInfo }, async () => {
+        const { customerInfo, lineItems } = this.state;
+        const { baseUrl, shopUrl } = this.props;
+  
+        //set up the order creation arguments
+        const order: OrderInputData = {
+          customer: customerInfo,
+          lineItems,
+        };
+  
+        const orderArgs: CreateOrderArgs = {
+          order,
+          baseUrl,
+          shopId: shopUrl,
+        };
+  
+        //create the order
+        await createOrder(orderArgs);
+  
+        //reset loading to false and navigate to the confirmation page
+        this.setState({ loading: false });
+      });
+    };
   };
 
   /** makes sure to set state to selected date */
@@ -530,7 +531,6 @@ export class CalendarWidgetMain extends Component<
             selectedTimeslot={this.state.selectedTimeslot}
             event={this.state.event}
             onAddCustomFormValues={this.handleAddLineItem}
-            onAddCustomerInfo={this.handleAddCustomerInfo}
             customerInfo={this.state.customerInfo}
             onConfirmOrder={this.handleConfirmOrder}
             onClickBack={this.handleClickBack}
