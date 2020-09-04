@@ -52,8 +52,6 @@ export class Variant extends Component<IVariantProps> {
     let spaceLeft = unitsLeft - this.props.currentlySelectedTotal;
     const isDisabled = spaceLeft === 0 || (quantity >= maxLimit && maxLimit > 0);
 
-    console.log(unitsLeft, this.props.currentlySelectedTotal, quantity, maxLimit);
-
     if (quantity === 0) {
       return (
         <button
