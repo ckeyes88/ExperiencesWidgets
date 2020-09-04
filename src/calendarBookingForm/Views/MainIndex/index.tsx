@@ -531,7 +531,6 @@ export class CalendarWidgetMain extends Component<
             selectedTimeslot={this.state.selectedTimeslot}
             event={this.state.event}
             onAddCustomFormValues={this.handleAddLineItem}
-            onAddCustomerInfo={this.handleAddCustomerInfo}
             customerInfo={this.state.customerInfo}
             onConfirmOrder={this.handleConfirmOrder}
             onClickBack={this.handleClickBack}
