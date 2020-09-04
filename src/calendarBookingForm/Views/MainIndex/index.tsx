@@ -291,7 +291,8 @@ export class CalendarWidgetMain extends Component<
   };
 
   /** Sets up the order and either sends confirmation email OR adds the order to the cart */
-  private handleConfirmOrder = async (customerInfo?: CustomerInputData) => {
+  private handleConfirmOrder = async () => {
+    console.log("Confirm Order");
     //set loading to true
     this.setLoading();
     this.navigateTo(ModalStateEnum.ConfirmPage);
@@ -338,29 +339,27 @@ export class CalendarWidgetMain extends Component<
       }
     // The order is *NOT* prepay, so it should be created in our system
     } else {
-      this.setState({ customerInfo }, async () => {
-        const { customerInfo, lineItems } = this.state;
-        const { baseUrl, shopUrl } = this.props;
-  
-        //set up the order creation arguments
-        const order: OrderInputData = {
-          customer: customerInfo,
-          lineItems,
-        };
-  
-        const orderArgs: CreateOrderArgs = {
-          order,
-          baseUrl,
-          shopId: shopUrl,
-        };
-  
-        //create the order
-        await createOrder(orderArgs);
-  
-        //reset loading to false and navigate to the confirmation page
-        this.setState({ loading: false });
-      });
-    };
+      const { customerInfo, lineItems } = this.state;
+      const { baseUrl, shopUrl } = this.props;
+
+      //set up the order creation arguments
+      const order: OrderInputData = {
+        customer: customerInfo,
+        lineItems,
+      };
+
+      const orderArgs: CreateOrderArgs = {
+        order,
+        baseUrl,
+        shopId: shopUrl,
+      };
+
+      //create the order
+      await createOrder(orderArgs);
+
+      //reset loading to false and navigate to the confirmation page
+      this.setState({ loading: false });
+    }
   };
 
   /** makes sure to set state to selected date */
@@ -471,7 +470,7 @@ export class CalendarWidgetMain extends Component<
   renderLoading = () => {
     const { lineItems } = this.state;
 
-    if (this.state.modalState === ModalStateEnum.ConfirmPage) {
+    if (this.state.modalState === ModalStateEnum.ConfirmPage && Array.isArray(lineItems) && lineItems.length > 1) {
       return (
         <div className="Loading-Container">
           <Loading>
@@ -531,7 +530,9 @@ export class CalendarWidgetMain extends Component<
             selectedTimeslot={this.state.selectedTimeslot}
             event={this.state.event}
             onAddCustomFormValues={this.handleAddLineItem}
+            onAddCustomerInfo={this.handleAddCustomerInfo}
             customerInfo={this.state.customerInfo}
+            lineItems={this.state.lineItems}
             onConfirmOrder={this.handleConfirmOrder}
             onClickBack={this.handleClickBack}
             closeModal={this.closeModal}
