@@ -213,11 +213,11 @@ export class OrderDetailsPage extends Component<
         onSubmit={this.handleSubmitCustomerInfoForm}
       >
         <p className="CustomerInfo-FinalizeOrder">
-          <button onClick={this.props.onClickBack} id="CustomerInfo-BackBtn">
+          <button type="button" onClick={this.props.onClickBack} id="CustomerInfo-BackBtn">
             &#8592;
           </button>
           <span className="CustomerInfo-Header">Finalize your reservation</span>
-          <button onClick={this.props.closeModal} id="CustomerInfo-CloseBtn">
+          <button type="button" onClick={this.props.closeModal} id="CustomerInfo-CloseBtn">
             &#215;
           </button>
         </p>
@@ -286,6 +286,7 @@ export class OrderDetailsPage extends Component<
             <button
               id="MobileView-OrderDetails-CloseBtn"
               onClick={this.props.closeModal}
+              type="button" 
             >
               &times;
             </button>
@@ -366,8 +367,7 @@ export class OrderDetailsPage extends Component<
 
     if (
       !customerInfo &&
-      event.paymentType !== PaymentType.Prepay &&
-      event.customOrderDetails.formType === OrderDetailsFormType.None
+      event.paymentType !== PaymentType.Prepay
     ) {
       return this.renderCustomerInfoForm();
     }

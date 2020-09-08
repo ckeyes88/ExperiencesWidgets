@@ -30,6 +30,7 @@ import { AvailabilityPage } from '../Availability/AvailabilityPage';
 import { ConfirmPage } from '../Confirmation/ConfirmPage';
 import { OrderDetailsPage } from '../OrderDetails/OrderDetailsPage';
 import React from 'preact/compat';
+import { zhCN } from 'date-fns/esm/locale';
 
 /** 32 days expressed in seconds, used to fetch new availability */
 const TIMESPAN_IN_SECONDS = 32 * 24 * 60 * 60;
@@ -342,8 +343,6 @@ export class CalendarWidgetMain extends Component<
       const { customerInfo, lineItems } = this.state;
       const { baseUrl, shopUrl } = this.props;
 
-      console.log(customerInfo, lineItems);
-
       //set up the order creation arguments
       const order: OrderInputData = {
         customer: customerInfo,
@@ -356,6 +355,7 @@ export class CalendarWidgetMain extends Component<
         shopId: shopUrl,
       };
 
+      console.log("order", orderArgs);
       //create the order
       await createOrder(orderArgs);
 
@@ -386,7 +386,7 @@ export class CalendarWidgetMain extends Component<
     this.setState({
       selectedTimeslot: timeslot,
       quantitiesMap: quantities,
-    });
+    }, () => console.log(this.state.selectedTimeslot));
   };
 
   /** Triggered when the user increments or decrements the quantity for a single variant */
