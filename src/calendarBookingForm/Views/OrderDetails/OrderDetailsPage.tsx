@@ -123,7 +123,7 @@ export class OrderDetailsPage extends Component<
         this.props.onConfirmOrder();
       }
     }
-    // Make custom info has all been updated before confirming
+    // Make sure custom info has all been updated before confirming
     if (prevProps.customerInfo !== this.props.customerInfo) {
       //If the merchant has required custom forms, return
       if (
@@ -375,22 +375,27 @@ export class OrderDetailsPage extends Component<
   };
   /** rendering */
   public render() {
+    const { customerInfo, event } = this.props
+    const { currentLineItemIndex } = this.state
+
     if (
-      !this.props.customerInfo &&
-      this.props.event.paymentType !== PaymentType.Prepay
+      !customerInfo &&
+      event.paymentType !== PaymentType.Prepay &&
+      event.customOrderDetails.formType === OrderDetailsFormType.None
     ) {
       return this.renderCustomerInfoForm();
     }
 
     if (
-      this.props.event.customOrderDetails.fields &&
-      Array.isArray(this.props.event.customOrderDetails.fields) &&
-      this.props.event.customOrderDetails.fields.length &&
-      this.state.currentLineItemIndex < this.variants.length
+      event.customOrderDetails.fields &&
+      Array.isArray(event.customOrderDetails.fields) &&
+      event.customOrderDetails.fields.length &&
+      currentLineItemIndex < this.variants.length
     ) {
       return this.renderCustomOrderDetails(
-        this.variants[this.state.currentLineItemIndex]
+        this.variants[currentLineItemIndex]
       );
     }
   }
 }
+ 
