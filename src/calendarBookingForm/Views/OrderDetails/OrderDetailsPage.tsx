@@ -16,7 +16,6 @@ import {
 import { FormFieldValueInput } from '../../../typings/FormFieldValueInput';
 import { plural } from '../../../Utils/helpers';
 import { CustomerInfoForm } from '../../Components/CustomerInfoForm';
-import { OrderLineItemInputData } from '../../../typings/OrderLineItemInput';
 
 export interface IOrderDetailsPageProps {
   /** Quantities by event variant */
@@ -29,15 +28,13 @@ export interface IOrderDetailsPageProps {
   event: EventDBO;
   /** This is the customer info, if it is needed and has been inputted */
   customerInfo: CustomerInputData;
-  /** Items for this order */
-  lineItems:  OrderLineItemInputData[];
   /** Method passed in and triggered upon submission of a custom form, passes values up to the top level */
   onAddCustomFormValues(
     variant: EventVariantDBO,
     newCustomFormFieldValues?: FormFieldValueInput[]
-  ): void;
+  ): Promise<any>;
   /** Method passed in and triggered upon submission of customer info, passes values up to the top level */
-  onAddCustomerInfo(customerInfo: CustomerInputData): void;
+  onAddCustomerInfo(customerInfo: CustomerInputData): Promise<any>;
   /** Method passed in to trigger upon confirmation of order */
   onConfirmOrder(): void;
   /** Method passed in to trigger a click back */
@@ -109,51 +106,17 @@ export class OrderDetailsPage extends Component<
     return variants;
   }
 
-  componentDidUpdate = (prevProps: IOrderDetailsPageProps, prevState: IOrderDetailsPageState) => {
-    // Make sure line items have been updated before confirming order
-    if (prevProps.lineItems !== this.props.lineItems && 
-      prevState.currentCustomFormValues !== this.state.currentCustomFormValues
-    ) {
-      //If the form is only per order, or if this is the final attendee, call onConfirmOrder
-      if (
-        this.props.event.customOrderDetails.formType ===
-          OrderDetailsFormType.PerOrder ||
-        this.state.currentLineItemIndex >= this.variants.length
-      ) {
-        this.props.onConfirmOrder();
-      }
-    }
-    // Make sure custom info has all been updated before confirming
-    if (prevProps.customerInfo !== this.props.customerInfo) {
-      //If the merchant has required custom forms, return
-      if (
-        this.props.event.customOrderDetails.fields &&
-        Array.isArray(this.props.event.customOrderDetails.fields) &&
-        this.props.event.customOrderDetails.fields.length &&
-        this.state.currentLineItemIndex < this.variants.length
-      ) {
-        return;
-      //Otherwise, create a line item for each attendee, then trigger method to confirm the order
-      } else {
-        this.variants.forEach((v) => {
-          this.props.onAddCustomFormValues(v);
-        });
-        this.props.onConfirmOrder();
-      }
-    }
-  }
-
   /** Triggered when the customer info is submitted as passes the info up to the main level */
-  onAddCustomerInfo = () => {
+  onAddCustomerInfo = async () => {
     // might want to do some validation here and render an error if it doesn't work
     let newCustomer: CustomerInputData = {
       ...this.state.customerInfo,
     };
-    this.props.onAddCustomerInfo(newCustomer);
+    await this.props.onAddCustomerInfo(newCustomer);
   };
 
   /** Passes current custom form values up to main level to be stored as a line item */
-  onAddLineItem = () => {
+  onAddLineItem = async () => {
     // Establishes the current values stored in state
     let newCustomFormValues: FormFieldValueInput[] = [
       ...this.state.currentCustomFormValues,
@@ -163,9 +126,9 @@ export class OrderDetailsPage extends Component<
     const currentVariant = this.variants[this.state.currentLineItemIndex];
 
     // Pass the variant and the form values up to the top level
-    this.props.onAddCustomFormValues(currentVariant, newCustomFormValues);
+    await this.props.onAddCustomFormValues(currentVariant, newCustomFormValues);
 
-    // Increment the current line item index in state
+    // Increment the current line item index in stateR
     const newLineItemIndex = this.state.currentLineItemIndex + 1;
 
     // Reset the form values in state
@@ -202,20 +165,43 @@ export class OrderDetailsPage extends Component<
     });
   };
 
-  /** Triggered on submission of a custom form */
-  handleSubmitCustomForm = (ev: Event) => {
+   /** Triggered on submission of a custom form */
+   handleSubmitCustomForm = async (ev: Event) => {
     ev.preventDefault();
-
     //Pass the values up to create a new line item
-    this.onAddLineItem();
+    await this.onAddLineItem();
+    //If the form is only per order, or if this is the final attendee, call onConfirmOrder
+    if (
+      this.props.event.customOrderDetails.formType ===
+        OrderDetailsFormType.PerOrder ||
+      this.state.currentLineItemIndex >= this.variants.length
+    ) {
+      this.props.onConfirmOrder();
+    }
   };
 
   /** Triggered on submission of a customer info form */
-  handleSubmitCustomerInfoForm = (ev: Event) => {
+  handleSubmitCustomerInfoForm = async (ev: Event) => {
     ev.preventDefault();
 
     //Pass the values up to store on the main level
-    this.onAddCustomerInfo();
+    await this.onAddCustomerInfo();
+
+    //If the merchant has required custom forms, return
+    if (
+      this.props.event.customOrderDetails.fields &&
+      Array.isArray(this.props.event.customOrderDetails.fields) &&
+      this.props.event.customOrderDetails.fields.length &&
+      this.state.currentLineItemIndex < this.variants.length
+    ) {
+      return;
+    //Otherwise, create a line item for each attendee, then trigger method to confirm the order
+    } else {
+      this.variants.forEach(async (v) => {
+        await this.props.onAddCustomFormValues(v);
+      });
+      this.props.onConfirmOrder();
+    }
   };
 
   /** Renders a customer info form if the event is not prepay */

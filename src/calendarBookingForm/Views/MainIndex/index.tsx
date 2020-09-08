@@ -342,6 +342,8 @@ export class CalendarWidgetMain extends Component<
       const { customerInfo, lineItems } = this.state;
       const { baseUrl, shopUrl } = this.props;
 
+      console.log(customerInfo, lineItems);
+
       //set up the order creation arguments
       const order: OrderInputData = {
         customer: customerInfo,
@@ -430,18 +432,19 @@ export class CalendarWidgetMain extends Component<
 
     let newLineItems = this.state.lineItems;
     newLineItems.push(newLineItem);
-    this.setState({
+    
+    return new Promise((resolve) => this.setState({
       lineItems: newLineItems,
-    });
+    }, resolve));
   };
 
   /** If an event is not prepay, this is triggered when the user enters their name and email
    * This happens in the OrderDetailsPage view
    */
   handleAddCustomerInfo = (customer: CustomerInputData) => {
-    this.setState({
+    return new Promise((resolve) => this.setState({
       customerInfo: customer,
-    });
+    }, resolve));
   };
 
   /** This is triggered when the user confirms their desired date, timeslot, and variant quantities */
@@ -532,7 +535,6 @@ export class CalendarWidgetMain extends Component<
             onAddCustomFormValues={this.handleAddLineItem}
             onAddCustomerInfo={this.handleAddCustomerInfo}
             customerInfo={this.state.customerInfo}
-            lineItems={this.state.lineItems}
             onConfirmOrder={this.handleConfirmOrder}
             onClickBack={this.handleClickBack}
             closeModal={this.closeModal}
