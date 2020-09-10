@@ -29,6 +29,8 @@ import { NotFound } from '../404/NotFound';
 import { AvailabilityPage } from '../Availability/AvailabilityPage';
 import { ConfirmPage } from '../Confirmation/ConfirmPage';
 import { OrderDetailsPage } from '../OrderDetails/OrderDetailsPage';
+import React from 'preact/compat';
+import { nl } from 'date-fns/locale';
 
 /** 32 days expressed in seconds, used to fetch new availability */
 const TIMESPAN_IN_SECONDS = 32 * 24 * 60 * 60;
@@ -143,9 +145,18 @@ export class CalendarWidgetMain extends Component<
       );
       //capture the first day with availability
       const firstAvailable = getFirstDayAvailabilities(availability);
+
+      const customerInfo: CustomerInputData = response ? {
+        ...response.data.customOrderDetails.fields,
+        firstName: "",
+        lastName: "",
+        email: "",
+      } : null;
+
       //set state with the fetched values
       this.setState({
         shop,
+        customerInfo,
         event: response && response.data,
         error: "",
         availability,
@@ -245,7 +256,7 @@ export class CalendarWidgetMain extends Component<
   /** Sets the top-level loading state to true */
   setLoading = () => {
     //calls out to api
-    this.setState({ loading: true });
+    this.setState({ loading: true, error: "" });
   };
 
   /** Sets the showModal state slice to true, displaying the modal */
@@ -291,7 +302,7 @@ export class CalendarWidgetMain extends Component<
   };
 
   /** Sets up the order and either sends confirmation email OR adds the order to the cart */
-  private handleConfirmOrder = async (customerInfo?: CustomerInputData) => {
+  private handleConfirmOrder = async () => {
     //set loading to true
     this.setLoading();
     this.navigateTo(ModalStateEnum.ConfirmPage);
@@ -338,29 +349,36 @@ export class CalendarWidgetMain extends Component<
       }
     // The order is *NOT* prepay, so it should be created in our system
     } else {
-      this.setState({ customerInfo }, async () => {
-        const { customerInfo, lineItems } = this.state;
-        const { baseUrl, shopUrl } = this.props;
-  
-        //set up the order creation arguments
-        const order: OrderInputData = {
-          customer: customerInfo,
-          lineItems,
-        };
-  
-        const orderArgs: CreateOrderArgs = {
-          order,
-          baseUrl,
-          shopId: shopUrl,
-        };
-  
-        //create the order
+      const { customerInfo, lineItems } = this.state;
+      const { baseUrl, shopUrl } = this.props;
+
+      //set up the order creation arguments
+      const order: OrderInputData = {
+        customer: customerInfo,
+        lineItems,
+      };
+
+      const orderArgs: CreateOrderArgs = {
+        order,
+        baseUrl,
+        shopId: shopUrl,
+      };
+
+      //create the order
+      try {
         await createOrder(orderArgs);
-  
-        //reset loading to false and navigate to the confirmation page
-        this.setState({ loading: false });
-      });
-    };
+      } catch(error) {
+        this.setState({
+          error: "Invalid email address", 
+          modalState: ModalStateEnum.OrderDetails,
+          customerInfo: null,
+          lineItems: [],
+        });
+      }
+
+      //reset loading to false and navigate to the confirmation page
+      this.setState({ loading: false });
+    }
   };
 
   /** makes sure to set state to selected date */
@@ -431,18 +449,19 @@ export class CalendarWidgetMain extends Component<
 
     let newLineItems = this.state.lineItems;
     newLineItems.push(newLineItem);
-    this.setState({
+    
+    return new Promise((resolve) => this.setState({
       lineItems: newLineItems,
-    });
+    }, resolve));
   };
 
   /** If an event is not prepay, this is triggered when the user enters their name and email
    * This happens in the OrderDetailsPage view
    */
   handleAddCustomerInfo = (customer: CustomerInputData) => {
-    this.setState({
+    return new Promise((resolve) => this.setState({
       customerInfo: customer,
-    });
+    }, resolve));
   };
 
   /** This is triggered when the user confirms their desired date, timeslot, and variant quantities */
@@ -471,25 +490,25 @@ export class CalendarWidgetMain extends Component<
   renderLoading = () => {
     const { lineItems } = this.state;
 
-    if (this.state.modalState === ModalStateEnum.ConfirmPage) {
-      return (
-        <div className="Loading-Container">
-          <Loading>
-            <span className="Loading-ReserveSpot">
-              Reserving {lineItems.length} spot{lineItems.length > 1 && "s"} for{" "}
-            </span>
-            <span className="Loading-ReserveDate">
-              {format(new Date(lineItems[0].startsAt), "EEEE MMMM d, yyyy")} at{" "}
-              {format(new Date(lineItems[0].startsAt), "h:mma")}
-            </span>
-          </Loading>
-        </div>
-      );
-    }
     return (
-      <Loading>
-        <span>Loading...</span>
-      </Loading>
+      <div className="Loading-Container">
+        <Loading>
+          {(this.state.modalState === ModalStateEnum.ConfirmPage && Array.isArray(lineItems) && lineItems[0]) ? 
+          (
+            <React.Fragment>
+              <span className="Loading-ReserveSpot">
+                Reserving {lineItems.length} spot{lineItems.length > 1 && "s"} for{" "}
+              </span>
+              <span className="Loading-ReserveDate">
+                {format(new Date(lineItems[0].startsAt), "EEEE MMMM d, yyyy")} at{" "}
+                {format(new Date(lineItems[0].startsAt), "h:mma")}
+              </span>
+            </React.Fragment>
+          ) : (
+            <span className="Loading-ReserveDate">Loading...</span>
+          )}
+        </Loading>
+      </div>
     );
   };
 
@@ -530,7 +549,9 @@ export class CalendarWidgetMain extends Component<
             selectedDate={this.state.selectedDate}
             selectedTimeslot={this.state.selectedTimeslot}
             event={this.state.event}
+            error={this.state.error}
             onAddCustomFormValues={this.handleAddLineItem}
+            onAddCustomerInfo={this.handleAddCustomerInfo}
             customerInfo={this.state.customerInfo}
             onConfirmOrder={this.handleConfirmOrder}
             onClickBack={this.handleClickBack}

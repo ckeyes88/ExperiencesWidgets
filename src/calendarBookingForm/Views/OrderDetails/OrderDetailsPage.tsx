@@ -26,15 +26,19 @@ export interface IOrderDetailsPageProps {
   selectedTimeslot: Availability;
   /** This is the event for which the order is being created */
   event: EventDBO;
+  /** Any errors that should be displayed on the form */
+  error: string;
   /** This is the customer info, if it is needed and has been inputted */
   customerInfo: CustomerInputData;
   /** Method passed in and triggered upon submission of a custom form, passes values up to the top level */
   onAddCustomFormValues(
     variant: EventVariantDBO,
     newCustomFormFieldValues?: FormFieldValueInput[]
-  ): void;
+  ): Promise<any>;
+  /** Method passed in and triggered upon submission of customer info, passes values up to the top level */
+  onAddCustomerInfo(customerInfo: CustomerInputData): Promise<any>;
   /** Method passed in to trigger upon confirmation of order */
-  onConfirmOrder(customerInfo?: CustomerInputData): void;
+  onConfirmOrder(): void;
   /** Method passed in to trigger a click back */
   onClickBack(): void;
   /** Method passed in to trigger a close modal */
@@ -104,8 +108,17 @@ export class OrderDetailsPage extends Component<
     return variants;
   }
 
+  /** Triggered when the customer info is submitted as passes the info up to the main level */
+  onAddCustomerInfo = async () => {
+    // might want to do some validation here and render an error if it doesn't work
+    let newCustomer: CustomerInputData = {
+      ...this.state.customerInfo,
+    };
+    await this.props.onAddCustomerInfo(newCustomer);
+  };
+
   /** Passes current custom form values up to main level to be stored as a line item */
-  onAddLineItem = () => {
+  onAddLineItem = async () => {
     // Establishes the current values stored in state
     let newCustomFormValues: FormFieldValueInput[] = [
       ...this.state.currentCustomFormValues,
@@ -115,9 +128,9 @@ export class OrderDetailsPage extends Component<
     const currentVariant = this.variants[this.state.currentLineItemIndex];
 
     // Pass the variant and the form values up to the top level
-    this.props.onAddCustomFormValues(currentVariant, newCustomFormValues);
+    await this.props.onAddCustomFormValues(currentVariant, newCustomFormValues);
 
-    // Increment the current line item index in state
+    // Increment the current line item index in stateR
     const newLineItemIndex = this.state.currentLineItemIndex + 1;
 
     // Reset the form values in state
@@ -139,8 +152,10 @@ export class OrderDetailsPage extends Component<
 
   /** Passed down to the custom form and triggered on changes to store the values in state */
   handleCustomFormChange = (fieldLabelIndex: string, fieldValue: string) => {
+    const defaultForm: FormFieldValueInput[] = this.props.event.customOrderDetails.fields.map(field => ({ label: field.label, value: field.defaultValue }));
+
     //Copy the current values to a new array
-    let currentCustomFormValues = [].concat(this.state.currentCustomFormValues);
+    let currentCustomFormValues = defaultForm.concat(this.state.currentCustomFormValues);
     //fieldLabelIndex is the field label/name and its index position joined by a hyphen
     //Split the values apart here
     const [label, index] = fieldLabelIndex.split("-");
@@ -148,30 +163,35 @@ export class OrderDetailsPage extends Component<
     const newCustomFormValue = { label, value: fieldValue };
     //Index into the form values array using the index from the field ID
     currentCustomFormValues[parseInt(index)] = newCustomFormValue;
+
     //Set state with the updated value
     this.setState({
       currentCustomFormValues,
     });
   };
 
-  /** Triggered on submission of a custom form */
-  handleSubmitCustomForm = (ev: Event) => {
+   /** Triggered on submission of a custom form */
+   handleSubmitCustomForm = async (ev: Event) => {
     ev.preventDefault();
     //Pass the values up to create a new line item
-    this.onAddLineItem();
+    await this.onAddLineItem();
+
     //If the form is only per order, or if this is the final attendee, call onConfirmOrder
     if (
       this.props.event.customOrderDetails.formType ===
         OrderDetailsFormType.PerOrder ||
       this.state.currentLineItemIndex >= this.variants.length
     ) {
-      this.props.onConfirmOrder(this.state.customerInfo);
+      this.props.onConfirmOrder();
     }
   };
 
   /** Triggered on submission of a customer info form */
-  handleSubmitCustomerInfoForm = (ev: Event) => {
+  handleSubmitCustomerInfoForm = async (ev: Event) => {
     ev.preventDefault();
+
+    //Pass the values up to store on the main level
+    await this.onAddCustomerInfo();
 
     //If the merchant has required custom forms, return
     if (
@@ -183,10 +203,10 @@ export class OrderDetailsPage extends Component<
       return;
     //Otherwise, create a line item for each attendee, then trigger method to confirm the order
     } else {
-      this.variants.forEach((v) => {
-        this.props.onAddCustomFormValues(v);
+      this.variants.forEach(async (v) => {
+        await this.props.onAddCustomFormValues(v);
       });
-      this.props.onConfirmOrder(this.state.customerInfo);
+      this.props.onConfirmOrder();
     }
   };
 
@@ -199,11 +219,11 @@ export class OrderDetailsPage extends Component<
         onSubmit={this.handleSubmitCustomerInfoForm}
       >
         <p className="CustomerInfo-FinalizeOrder">
-          <button onClick={this.props.onClickBack} id="CustomerInfo-BackBtn">
+          <button type="button" onClick={this.props.onClickBack} id="CustomerInfo-BackBtn">
             &#8592;
           </button>
           <span className="CustomerInfo-Header">Finalize your reservation</span>
-          <button onClick={this.props.closeModal} id="CustomerInfo-CloseBtn">
+          <button type="button" onClick={this.props.closeModal} id="CustomerInfo-CloseBtn">
             &#215;
           </button>
         </p>
@@ -234,6 +254,7 @@ export class OrderDetailsPage extends Component<
           key="CustomerInfo"
           handleChange={this.handleCustomerFormChange}
         />
+        {this.props.error && <div className="CustomerInfo-ErrorMessage">{"* " + this.props.error}</div>}
         <button className="CustomerInfo-SubmitBtn" type="submit">
           Submit
         </button>
@@ -272,6 +293,7 @@ export class OrderDetailsPage extends Component<
             <button
               id="MobileView-OrderDetails-CloseBtn"
               onClick={this.props.closeModal}
+              type="button" 
             >
               &times;
             </button>
@@ -347,22 +369,25 @@ export class OrderDetailsPage extends Component<
   };
   /** rendering */
   public render() {
-    if (
-      !this.props.customerInfo &&
-      this.props.event.paymentType !== PaymentType.Prepay
+    const { customerInfo, event } = this.props
+    const { currentLineItemIndex } = this.state
+
+    if ((!customerInfo &&
+      event.paymentType !== PaymentType.Prepay)
     ) {
       return this.renderCustomerInfoForm();
     }
 
     if (
-      this.props.event.customOrderDetails.fields &&
-      Array.isArray(this.props.event.customOrderDetails.fields) &&
-      this.props.event.customOrderDetails.fields.length &&
-      this.state.currentLineItemIndex < this.variants.length
+      event.customOrderDetails.fields &&
+      Array.isArray(event.customOrderDetails.fields) &&
+      event.customOrderDetails.fields.length &&
+      currentLineItemIndex < this.variants.length
     ) {
       return this.renderCustomOrderDetails(
-        this.variants[this.state.currentLineItemIndex]
+        this.variants[currentLineItemIndex]
       );
     }
   }
 }
+ 

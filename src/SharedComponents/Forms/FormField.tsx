@@ -72,7 +72,7 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
     });
     this.props.onFieldChange(
       (ev.target as HTMLInputElement).id,
-      this.state.value
+      (ev.target as HTMLInputElement).value
     );
   };
 
@@ -107,7 +107,7 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
   /** If the field is a text, email, or phone input, this renders it */
   renderInput() {
     const { id, label, required, placeholder, type } = this.props;
-
+    
     return (
       <div className="FormField-RenderInput">
         <label className="FormField-Label" for={id}>
