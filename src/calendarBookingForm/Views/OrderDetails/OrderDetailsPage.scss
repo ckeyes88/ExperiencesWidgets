@@ -5,6 +5,9 @@
     background-color: white;
     font-family: sans-serif;
 }
+.CustomerInfo-ErrorMessage {
+    color: #c93131;
+}
 .CustomerInfo-SubmitBtn{
     background-color: $color-primary-blue;
     border: none;
@@ -14,7 +17,7 @@
     width: 6rem;
     padding: 7px;
     font-size: 15px;
-    transform: translateY(2rem);
+    margin-top: 1rem;
     &:hover{
       cursor: pointer;
     }
@@ -120,10 +123,6 @@
         background-color: white;
         padding: 0;
         margin-top: 0;
-    }
-
-    .CustomerInfo-SubmitBtn {
-        transform: translateY(-1rem);
     }
     .CustomOrderDetails-Header {
         background-color: #ffffff;
