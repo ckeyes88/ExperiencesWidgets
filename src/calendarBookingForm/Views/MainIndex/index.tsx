@@ -1,18 +1,18 @@
-import './CalendarWidgetMain.scss';
+import "./CalendarWidgetMain.scss";
 
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
-import { Component, h } from '../../../../node_modules/preact';
-import { Loading } from '../../../SharedComponents/loading/Loading';
-import { Modal } from '../../../SharedComponents/Modal/Modal';
-import { Availability } from '../../../typings/Availability';
-import { OrderInputData } from '../../../typings/CreateOrderInput';
-import { CustomerInputData } from '../../../typings/CustomerInput';
-import { EventDBO, EventVariantDBO, PaymentType } from '../../../typings/Event';
-import { FirstAvailability } from '../../../typings/FirstAvailability';
-import { FormFieldValueInput } from '../../../typings/FormFieldValueInput';
-import { OrderLineItemInputData } from '../../../typings/OrderLineItemInput';
-import { ShopDetails } from '../../../typings/ShopDetails';
+import { Component, h } from "../../../../node_modules/preact";
+import { Loading } from "../../../SharedComponents/loading/Loading";
+import { Modal } from "../../../SharedComponents/Modal/Modal";
+import { Availability } from "../../../typings/Availability";
+import { OrderInputData } from "../../../typings/CreateOrderInput";
+import { CustomerInputData } from "../../../typings/CustomerInput";
+import { EventDBO, EventVariantDBO, PaymentType } from "../../../typings/Event";
+import { FirstAvailability } from "../../../typings/FirstAvailability";
+import { FormFieldValueInput } from "../../../typings/FormFieldValueInput";
+import { OrderLineItemInputData } from "../../../typings/OrderLineItemInput";
+import { ShopDetails } from "../../../typings/ShopDetails";
 import {
   addToCart,
   AddToCartArgs,
@@ -20,17 +20,16 @@ import {
   CreateOrderArgs,
   getEvent,
   getFirstAvailability,
-  getShopDetails
-} from '../../../Utils/api';
-import { getFirstDayAvailabilities } from '../../../Utils/helpers';
-import { unionAvailability } from '../../../Utils/mergeAvailability';
-import { ModalStateEnum } from '../../types';
-import { NotFound } from '../404/NotFound';
-import { AvailabilityPage } from '../Availability/AvailabilityPage';
-import { ConfirmPage } from '../Confirmation/ConfirmPage';
-import { OrderDetailsPage } from '../OrderDetails/OrderDetailsPage';
-import React from 'preact/compat';
-import { nl } from 'date-fns/locale';
+  getShopDetails,
+} from "../../../Utils/api";
+import { getFirstDayAvailabilities } from "../../../Utils/helpers";
+import { unionAvailability } from "../../../Utils/mergeAvailability";
+import { ModalStateEnum } from "../../types";
+import { NotFound } from "../404/NotFound";
+import { AvailabilityPage } from "../Availability/AvailabilityPage";
+import { ConfirmPage } from "../Confirmation/ConfirmPage";
+import { OrderDetailsPage } from "../OrderDetails/OrderDetailsPage";
+import React from "preact/compat";
 
 /** 32 days expressed in seconds, used to fetch new availability */
 const TIMESPAN_IN_SECONDS = 32 * 24 * 60 * 60;
@@ -136,12 +135,12 @@ export class CalendarWidgetMain extends Component<
       //get availability for the current month and the next
       const availability = await this.fetchRangeOfAvailability(
         this.state.now,
-        TIMESPAN_IN_SECONDS * 2
+        TIMESPAN_IN_SECONDS * 2,
       );
       //add next month to the fetched month state
       this.addFetchedMonth(
         this.state.now.getMonth() + 1,
-        this.state.now.getFullYear()
+        this.state.now.getFullYear(),
       );
       //capture the first day with availability
       const firstAvailable = getFirstDayAvailabilities(availability);
@@ -205,7 +204,7 @@ export class CalendarWidgetMain extends Component<
    */
   fetchRangeOfAvailability = async (
     date: Date,
-    timespanInSeconds = TIMESPAN_IN_SECONDS
+    timespanInSeconds = TIMESPAN_IN_SECONDS,
   ) => {
     const { baseUrl, shopUrl, shopifyProductId } = this.props;
     return getFirstAvailability({
@@ -215,7 +214,7 @@ export class CalendarWidgetMain extends Component<
       startingFrom: date,
       timespanInSeconds,
     });
-  };
+  }
 
   /**
    * On navigation to a new month or year, this method is called to fetch more availability and add it to the current availability in state.
@@ -241,7 +240,7 @@ export class CalendarWidgetMain extends Component<
       //merge the fetched availability with the previously fetched availability in state
       const newAvailability = unionAvailability(
         this.state.availability,
-        fetchedAvailability
+        fetchedAvailability,
       );
 
       this.setState({
@@ -251,20 +250,20 @@ export class CalendarWidgetMain extends Component<
       //remember that this month has already been fetched
       this.addFetchedMonth(month, year);
     }
-  };
+  }
 
   /** Sets the top-level loading state to true */
   setLoading = () => {
     //calls out to api
     this.setState({ loading: true, error: "" });
-  };
+  }
 
   /** Sets the showModal state slice to true, displaying the modal */
   openModal = () => {
     this.setState({
       showModal: true,
     });
-  };
+  }
 
   /** Sets the showModal state slice to false, and returns the component to its initial state */
   closeModal = () => {
@@ -280,18 +279,18 @@ export class CalendarWidgetMain extends Component<
       lineItems: [],
       customerInfo: null,
     });
-  };
+  }
 
   /** Pass in a valid modal state to dictate the modal's current content */
   navigateTo = (modalState: ModalStateEnum) => {
     this.setState({
       modalState,
     });
-  };
+  }
   /** On click fires the first available event */
   handleSelectFirstAvailability = () => {
     this.handleDateSelect(this.state.firstAvailable);
-  };
+  }
 
   /**
    * Redirects client to checkout URL (ie: cart page if within realm of Shopify). Takes
@@ -299,7 +298,7 @@ export class CalendarWidgetMain extends Component<
    */
   private handleNavigateToCheckout = (url?: string) => {
     window.location.href = url || "/cart";
-  };
+  }
 
   /** Sets up the order and either sends confirmation email OR adds the order to the cart */
   private handleConfirmOrder = async () => {
@@ -379,7 +378,7 @@ export class CalendarWidgetMain extends Component<
       //reset loading to false and navigate to the confirmation page
       this.setState({ loading: false });
     }
-  };
+  }
 
   /** makes sure to set state to selected date */
   handleDateSelect = (date: Date) => {
@@ -387,7 +386,7 @@ export class CalendarWidgetMain extends Component<
       selectedDate: date,
       selectedTimeslot: null,
     });
-  };
+  }
 
   /** Called when the user selects a timeslot
    * Stores the timeslot in state and sets the initial quantities per variant to zero
@@ -404,14 +403,14 @@ export class CalendarWidgetMain extends Component<
       selectedTimeslot: timeslot,
       quantitiesMap: quantities,
     });
-  };
+  }
 
   /** Triggered when the user increments or decrements the quantity for a single variant */
   handleChangeQuantity = (dir: number, variantId: number) => {
     let newQuantities = this.state.quantitiesMap;
     newQuantities[variantId] += dir;
     this.setState({ quantitiesMap: newQuantities });
-  };
+  }
 
   /** Triggered upon clicking the back button displayed on the date picker when a timeslot is selected
    * Deselects the timeslot by setting the timeslot to null in state
@@ -420,16 +419,16 @@ export class CalendarWidgetMain extends Component<
     this.setState({
       selectedTimeslot: null,
     });
-  };
+  }
   /** Triggered upon clicking the back button in the conformation view will display the selected time slot */
   handleConfirmationClickBack = () => {
     this.navigateTo(ModalStateEnum.Availability);
-  };
+  }
 
   /** Creates an order line item  */
   handleAddLineItem = (
     variant: EventVariantDBO,
-    customFormFieldValues?: FormFieldValueInput[]
+    customFormFieldValues?: FormFieldValueInput[],
   ) => {
     const { event, selectedTimeslot } = this.state;
 
@@ -453,7 +452,7 @@ export class CalendarWidgetMain extends Component<
     return new Promise((resolve) => this.setState({
       lineItems: newLineItems,
     }, resolve));
-  };
+  }
 
   /** If an event is not prepay, this is triggered when the user enters their name and email
    * This happens in the OrderDetailsPage view
@@ -462,7 +461,7 @@ export class CalendarWidgetMain extends Component<
     return new Promise((resolve) => this.setState({
       customerInfo: customer,
     }, resolve));
-  };
+  }
 
   /** This is triggered when the user confirms their desired date, timeslot, and variant quantities */
   handleConfirmVariants = () => {
@@ -484,7 +483,7 @@ export class CalendarWidgetMain extends Component<
     } else {
       this.handleConfirmOrder();
     }
-  };
+  }
 
   /** Determine content of the loading view */
   renderLoading = () => {
@@ -510,7 +509,7 @@ export class CalendarWidgetMain extends Component<
         </Loading>
       </div>
     );
-  };
+  }
 
   /** Switch case statement to render the appropriate view in the modal */
   renderModalContent = () => {
@@ -568,7 +567,7 @@ export class CalendarWidgetMain extends Component<
       default:
         <NotFound navigateTo={this.navigateTo} />;
     }
-  };
+  }
 
   /** Main render method - renders the display button, and the modal if open */
   public render() {

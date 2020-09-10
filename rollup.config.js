@@ -8,7 +8,7 @@ import json from "rollup-plugin-json";
 import dotenv from "dotenv";
 
 dotenv.config();
-console.log(process.env);
+
 export default [{
     input: "src/widgets.ts",
     output: {
