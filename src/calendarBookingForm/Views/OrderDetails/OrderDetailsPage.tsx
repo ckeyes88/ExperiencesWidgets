@@ -152,8 +152,10 @@ export class OrderDetailsPage extends Component<
 
   /** Passed down to the custom form and triggered on changes to store the values in state */
   handleCustomFormChange = (fieldLabelIndex: string, fieldValue: string) => {
+    const defaultForm: FormFieldValueInput[] = this.props.event.customOrderDetails.fields.map(field => ({ label: field.label, value: field.defaultValue }));
+
     //Copy the current values to a new array
-    let currentCustomFormValues = [].concat(this.state.currentCustomFormValues);
+    let currentCustomFormValues = defaultForm.concat(this.state.currentCustomFormValues);
     //fieldLabelIndex is the field label/name and its index position joined by a hyphen
     //Split the values apart here
     const [label, index] = fieldLabelIndex.split("-");
@@ -161,6 +163,7 @@ export class OrderDetailsPage extends Component<
     const newCustomFormValue = { label, value: fieldValue };
     //Index into the form values array using the index from the field ID
     currentCustomFormValues[parseInt(index)] = newCustomFormValue;
+
     //Set state with the updated value
     this.setState({
       currentCustomFormValues,

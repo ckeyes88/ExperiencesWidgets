@@ -30,6 +30,7 @@ import { AvailabilityPage } from '../Availability/AvailabilityPage';
 import { ConfirmPage } from '../Confirmation/ConfirmPage';
 import { OrderDetailsPage } from '../OrderDetails/OrderDetailsPage';
 import React from 'preact/compat';
+import { nl } from 'date-fns/locale';
 
 /** 32 days expressed in seconds, used to fetch new availability */
 const TIMESPAN_IN_SECONDS = 32 * 24 * 60 * 60;
@@ -144,9 +145,18 @@ export class CalendarWidgetMain extends Component<
       );
       //capture the first day with availability
       const firstAvailable = getFirstDayAvailabilities(availability);
+
+      const customerInfo: CustomerInputData = response ? {
+        ...response.data.customOrderDetails.fields,
+        firstName: "",
+        lastName: "",
+        email: "",
+      } : null;
+
       //set state with the fetched values
       this.setState({
         shop,
+        customerInfo,
         event: response && response.data,
         error: "",
         availability,
