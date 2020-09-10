@@ -26,6 +26,8 @@ export interface IOrderDetailsPageProps {
   selectedTimeslot: Availability;
   /** This is the event for which the order is being created */
   event: EventDBO;
+  /** Any errors that should be displayed on the form */
+  error: string;
   /** This is the customer info, if it is needed and has been inputted */
   customerInfo: CustomerInputData;
   /** Method passed in and triggered upon submission of a custom form, passes values up to the top level */
@@ -170,6 +172,7 @@ export class OrderDetailsPage extends Component<
     ev.preventDefault();
     //Pass the values up to create a new line item
     await this.onAddLineItem();
+
     //If the form is only per order, or if this is the final attendee, call onConfirmOrder
     if (
       this.props.event.customOrderDetails.formType ===
@@ -248,6 +251,7 @@ export class OrderDetailsPage extends Component<
           key="CustomerInfo"
           handleChange={this.handleCustomerFormChange}
         />
+        {this.props.error && <div className="CustomerInfo-ErrorMessage">{"* " + this.props.error}</div>}
         <button className="CustomerInfo-SubmitBtn" type="submit">
           Submit
         </button>
@@ -365,9 +369,8 @@ export class OrderDetailsPage extends Component<
     const { customerInfo, event } = this.props
     const { currentLineItemIndex } = this.state
 
-    if (
-      !customerInfo &&
-      event.paymentType !== PaymentType.Prepay
+    if ((!customerInfo &&
+      event.paymentType !== PaymentType.Prepay)
     ) {
       return this.renderCustomerInfoForm();
     }

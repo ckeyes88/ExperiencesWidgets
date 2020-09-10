@@ -262,7 +262,7 @@ export async function getFirstAvailability({ baseUrl, shopId, productId, startin
  */
 export async function createOrder({ baseUrl, shopId, order }: CreateOrderArgs): Promise<CreateOrderResponse> {
   const res = await sendJSON<CreateOrderRequestBody, CreateOrderResponse>("POST", `${baseUrl}/rest/createOrder?shop=${shopId}`, { order });
-  console.log("res", res)
+
   return handleResponse<CreateOrderResponse>(res);
 }
 

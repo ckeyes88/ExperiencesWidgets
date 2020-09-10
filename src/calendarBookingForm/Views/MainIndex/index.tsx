@@ -30,7 +30,6 @@ import { AvailabilityPage } from '../Availability/AvailabilityPage';
 import { ConfirmPage } from '../Confirmation/ConfirmPage';
 import { OrderDetailsPage } from '../OrderDetails/OrderDetailsPage';
 import React from 'preact/compat';
-import { zhCN } from 'date-fns/esm/locale';
 
 /** 32 days expressed in seconds, used to fetch new availability */
 const TIMESPAN_IN_SECONDS = 32 * 24 * 60 * 60;
@@ -247,7 +246,7 @@ export class CalendarWidgetMain extends Component<
   /** Sets the top-level loading state to true */
   setLoading = () => {
     //calls out to api
-    this.setState({ loading: true });
+    this.setState({ loading: true, error: "" });
   };
 
   /** Sets the showModal state slice to true, displaying the modal */
@@ -355,9 +354,17 @@ export class CalendarWidgetMain extends Component<
         shopId: shopUrl,
       };
 
-      console.log("order", orderArgs);
       //create the order
-      await createOrder(orderArgs);
+      try {
+        await createOrder(orderArgs);
+      } catch(error) {
+        this.setState({
+          error: "Invalid email address", 
+          modalState: ModalStateEnum.OrderDetails,
+          customerInfo: null,
+          lineItems: [],
+        });
+      }
 
       //reset loading to false and navigate to the confirmation page
       this.setState({ loading: false });
@@ -386,7 +393,7 @@ export class CalendarWidgetMain extends Component<
     this.setState({
       selectedTimeslot: timeslot,
       quantitiesMap: quantities,
-    }, () => console.log(this.state.selectedTimeslot));
+    });
   };
 
   /** Triggered when the user increments or decrements the quantity for a single variant */
@@ -532,6 +539,7 @@ export class CalendarWidgetMain extends Component<
             selectedDate={this.state.selectedDate}
             selectedTimeslot={this.state.selectedTimeslot}
             event={this.state.event}
+            error={this.state.error}
             onAddCustomFormValues={this.handleAddLineItem}
             onAddCustomerInfo={this.handleAddCustomerInfo}
             customerInfo={this.state.customerInfo}
