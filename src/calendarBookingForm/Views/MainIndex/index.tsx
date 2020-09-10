@@ -145,17 +145,9 @@ export class CalendarWidgetMain extends Component<
       //capture the first day with availability
       const firstAvailable = getFirstDayAvailabilities(availability);
 
-      const customerInfo: CustomerInputData = response ? {
-        ...response.data.customOrderDetails.fields,
-        firstName: "",
-        lastName: "",
-        email: "",
-      } : null;
-
       //set state with the fetched values
       this.setState({
         shop,
-        customerInfo,
         event: response && response.data,
         error: "",
         availability,
