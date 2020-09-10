@@ -1,4 +1,4 @@
-.FormField-RenderInput{
+.FormField-RenderInput {
     position: relative;
     width: 100%;
     padding: 0.5rem 1.5rem;
@@ -27,13 +27,14 @@ input.FormField-Input:valid::placeholder{
     display: block;
     opacity: .5;
 }
+.FormField-RenderSelect {
+    text-align: left;
+    padding: 0.5rem 1.5rem;
+}
 .FormField-RenderSelect select{
-    border: none;
-    border-bottom: 2px solid lightgray;
-    padding: 1rem 0 .3rem 0;
-    margin: 0 auto;
-    outline: none;
-    opacity: .5;
+    padding: 0.5rem;
+    border: 2px solid lightgray;
+    width: 100%;
 }
 .CustomForm-Container{
     margin-bottom: 1rem;
@@ -55,7 +56,16 @@ input.FormField-Input:valid::placeholder{
             padding: 0;
         }
     }
+    .FormField-RenderSelect {
+        padding: 1rem 0;
     
+        select {
+            height: 1.5rem;
+            padding: 0;
+            border: none;
+            border-bottom: 2px solid lightgray;
+        }
+    }
 }
 
 @include Tablet{
@@ -64,7 +74,7 @@ input.FormField-Input:valid::placeholder{
         left: 1rem;
         margin: 0;
     }
-    .FormField-RenderInput input{
+    .FormField-RenderInput input, .FormField-RenderSelect select {
         border: 2px solid lightgray;
         padding: .5rem;
         width: 100%;
