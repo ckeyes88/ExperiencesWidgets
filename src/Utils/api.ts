@@ -368,7 +368,9 @@ export async function addToCart(
       // For all other events
       else {
         // Store custom attributes ()
-        const customAttributes: ShopifyAttribute[] = [];
+        const customAttributes: ShopifyAttribute[] = [
+          { key: "When", value: When },
+        ];
 
         if (Array.isArray(fields)) {
           for (const field of fields) {
