@@ -19,6 +19,7 @@ import {
   createOrder,
   CreateOrderArgs,
   getEvent,
+  getEventCustomLabels,
   getFirstAvailability,
   getShopDetails,
 } from "../../../Utils/api";
@@ -126,6 +127,10 @@ export class CalendarWidgetMain extends Component<
     try {
       //fetch the shop
       const shop = await getShopDetails({ baseUrl, shopId: shopUrl });
+
+      // fetch custom event labels
+      const labels = await getEventCustomLabels({ baseUrl, shopId: shopUrl, shopifyProductId });
+
       //fetch the event
       const response = await getEvent({
         baseUrl,
