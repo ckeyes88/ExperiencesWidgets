@@ -30,6 +30,7 @@ import { NotFound } from "../404/NotFound";
 import { AvailabilityPage } from "../Availability/AvailabilityPage";
 import { ConfirmPage } from "../Confirmation/ConfirmPage";
 import { OrderDetailsPage } from "../OrderDetails/OrderDetailsPage";
+import { AppDictionary, defineLanguageDictionary, LanguageCodes } from "../../../typings/Languages";
 import React from "preact/compat";
 
 /** 32 days expressed in seconds, used to fetch new availability */
@@ -56,6 +57,7 @@ const INITIAL_STATE: ICalendarWidgetMainState = {
   quantitiesMap: {},
   lineItems: [],
   customerInfo: null,
+  labels: {}
 };
 
 export type VariantInput = {
@@ -74,6 +76,8 @@ export interface ICalendarWidgetMainProps {
   shopUrl: string;
   /** The shopify ID for this product (event) */
   shopifyProductId: number;
+  /** The experience's language code */
+  languageCode: string;
 }
 
 export interface ICalendarWidgetMainState {
@@ -107,6 +111,8 @@ export interface ICalendarWidgetMainState {
   lineItems: OrderLineItemInputData[];
   /** Name and email address of the purchaser collected when booking for a non-prepay event */
   customerInfo: CustomerInputData | null;
+  /** Event custom labels set in admin experience interface */
+  labels: Partial<AppDictionary>;
 }
 
 /** This is the root component of the app, it stores all of the state as the user completes their order */
@@ -123,25 +129,27 @@ export class CalendarWidgetMain extends Component<
   /** Fetch shop, event, and availability data and set the state */
   async componentDidMount() {
     this.setLoading();
-    const { baseUrl, shopUrl, shopifyProductId } = this.props;
+    const { baseUrl, shopUrl, shopifyProductId, languageCode } = this.props;
+
     try {
-      //fetch the shop
-      const shop = await getShopDetails({ baseUrl, shopId: shopUrl });
+      // fetch everything in parallel to improve loading time
+      const [shop, labels, event, availability] = await Promise.all([
+        // fetch the shop
+        getShopDetails({ baseUrl, shopId: shopUrl }),
 
-      // fetch custom event labels
-      const labels = await getEventCustomLabels({ baseUrl, shopId: shopUrl, shopifyProductId });
+        // fetch custom event labels
+        getEventCustomLabels({ baseUrl, shopId: shopUrl, shopifyProductId }),
 
-      //fetch the event
-      const response = await getEvent({
-        baseUrl,
-        shopId: shopUrl,
-        shopifyProductId,
-      });
-      //get availability for the current month and the next
-      const availability = await this.fetchRangeOfAvailability(
-        this.state.now,
-        TIMESPAN_IN_SECONDS * 2,
-      );
+        // fetch the event
+        getEvent({ baseUrl, shopId: shopUrl, shopifyProductId }),
+
+        // get availability for the current month and the next
+        this.fetchRangeOfAvailability(
+          this.state.now,
+          TIMESPAN_IN_SECONDS * 2,
+        )
+      ]);
+
       //add next month to the fetched month state
       this.addFetchedMonth(
         this.state.now.getMonth() + 1,
@@ -149,11 +157,16 @@ export class CalendarWidgetMain extends Component<
       );
       //capture the first day with availability
       const firstAvailable = getFirstDayAvailabilities(availability);
+      
+      const labelsResolved = labels && labels.data ? 
+        { ...defineLanguageDictionary(languageCode as LanguageCodes), ...labels.data } : 
+        defineLanguageDictionary(languageCode as LanguageCodes);
 
       //set state with the fetched values
       this.setState({
         shop,
-        event: response && response.data,
+        event: event && event.data,
+        labels: labelsResolved,
         error: "",
         availability,
         firstAvailable: firstAvailable[0] && new Date(firstAvailable[0].startsAt),
