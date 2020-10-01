@@ -3,12 +3,12 @@
  */
 export type EventCustomLabels = {
     selectDatesLabel: string;
-    selectDateLabel: string;
+    selectDateLabel: string; //V
     quantityLabel: string;
-    bookButtonLabel: string;
+    bookButtonLabel: string; //V
     reserveButtonLabel: string;
-    totalLabel: string;
-    confirmVariantsLabel: string;
+    totalLabel: string; //V
+    confirmVariantsLabel: string; //V
     singularUnitLabel: string;
     pluralUnitLabel: string;
     firstNameLabel: string;
@@ -17,8 +17,8 @@ export type EventCustomLabels = {
     emailLabel: string;
     optionalFieldLabel: string;
     requiredWarningLabel: string;
-    showSlotsRemainingLabel: boolean;
-    slotsRemainingLabel: string;
+    showSlotsRemainingLabel: boolean; //V
+    slotsRemainingLabel: string; //V
     previousWeekAriaLabel: string;
     nextWeekAriaLabel: string;
     noUpcomingTimeSlotsLabel: string;
@@ -29,7 +29,7 @@ export type EventCustomLabels = {
     previousLabel: string;
     nextLabel: string;
     confirmReservationButtonLabel: string;
-    addLabel: string;
+    addLabel: string; //V
     savedSpotLabel: string;
     sentConfirmationLabel: string;
     emailReminderLabel: string;

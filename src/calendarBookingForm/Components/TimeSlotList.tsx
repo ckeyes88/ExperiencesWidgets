@@ -6,6 +6,7 @@ import { Component, h, JSX } from 'preact';
 import { Availability } from '../../typings/Availability';
 import { TimeSlot } from './TimeSlot';
 import { TimeSlotHeader } from './TimeSlotHeader';
+import { AppDictionary } from '../../typings/Languages';
 
 export interface ITimeSlotListMainProps {
   /** creating time slots to hold an array of needed detail for selected date availability */
@@ -16,6 +17,8 @@ export interface ITimeSlotListMainProps {
   onSelectTimeSlot(timeslot: Availability): void;
   /** handles the first selected availability on the calendar that has an event */
   onSelectFirstAvailability(): void;
+  /** Event custom labels set in admin experience interface */
+  labels: Partial<AppDictionary>;
 }
 export interface ITimeSlotListMainState {
   /** making loading either true or false depending on its state*/
@@ -75,7 +78,7 @@ export class TimeSlotList extends Component<
    */
   renderTimeslot = (timeslot: Availability): JSX.Element => {
     return (
-      <TimeSlot timeslot={timeslot} onSelectTimeSlot={this.props.onSelectTimeSlot} />
+      <TimeSlot labels={this.props.labels} timeslot={timeslot} onSelectTimeSlot={this.props.onSelectTimeSlot} />
     );
   };
 

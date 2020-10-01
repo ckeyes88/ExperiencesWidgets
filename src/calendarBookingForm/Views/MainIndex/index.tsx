@@ -531,6 +531,7 @@ export class CalendarWidgetMain extends Component<
         return (
           // This view is the date picker where the user can select a date, timeslot, and set variant quantities
           <AvailabilityPage
+            labels={this.state.labels}
             availability={this.state.availability}
             moneyFormat={this.state.shop && this.state.shop.moneyFormat}
             event={this.state.event}
@@ -581,7 +582,10 @@ export class CalendarWidgetMain extends Component<
 
   /** Main render method - renders the display button, and the modal if open */
   public render() {
-    const label = this.state.loading ? "Loading..." : "Reserve";
+    const { bookButtonLabel } = this.state.labels;
+
+    // TODO: should we keep Reserve or use Book as it is in admin panel?
+    const label = this.state.loading ? "Loading..." : (bookButtonLabel || "Reserve");
     return (
       <div>
         <div className="CalendarWidgetMain">

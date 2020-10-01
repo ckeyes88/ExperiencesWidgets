@@ -6,6 +6,7 @@ import { Availability } from '../../typings/Availability';
 import { EventDBO, EventVariantDBO } from '../../typings/Event';
 import { Variant } from './Variant';
 import { VariantHeader } from './VariantHeader';
+import { AppDictionary } from '../../typings/Languages';
 
 export interface IVariantListMainProps {
   /**passing in the entire event, may render some other props unnecessary */
@@ -30,6 +31,8 @@ export interface IVariantListMainProps {
   quantities: { [variantId: number]: number };
   /** Method passed in to handle changes in the desired quantity of a variant */
   onChangeQuantity(dir: number, variantId: number): void;
+  /** Event custom labels set in admin experience interface */
+  labels: Partial<AppDictionary>;
 }
 
 export interface IVariantListMainState {
@@ -109,6 +112,7 @@ export class VariantList extends Component<
       variantTimeSlot,
       onConfirmSelection,
       minLimit,
+      labels
     } = this.props;
 
     const isDisabled = this.totalQuantity < minLimit;
@@ -116,6 +120,7 @@ export class VariantList extends Component<
     return (
       <div>
         <VariantHeader
+          labels={labels}
           currentlySelectedTotal={this.totalQuantity}
           variantSelectedDate={variantSelectedDate}
           variantTimeSlot={variantTimeSlot}
@@ -125,7 +130,7 @@ export class VariantList extends Component<
         {this.totalQuantity > 0 && (
           <div className="VariantListTotal">
             <div className="VariantListTotal-Grid">
-              <span className="VariantListTotal-Label">Total</span>
+              <span className="VariantListTotal-Label">{labels.totalLabel}</span>
               <span className="VariantListTotal-Value">{this.totalAmount}</span>
               <span className="VariantListTotal-Action">
                 <button
@@ -135,7 +140,7 @@ export class VariantList extends Component<
                   onClick={onConfirmSelection}
                   disabled={isDisabled}
                 >
-                  Confirm
+                  {labels.confirmVariantsLabel}
                 </button>
               </span>
             </div>
@@ -150,6 +155,7 @@ export class VariantList extends Component<
   renderVariant = (variant: EventVariantDBO): JSX.Element => {
     return (
       <Variant
+        labels={this.props.labels}
         variantTimeSlot={this.props.variantTimeSlot}
         currentlySelectedTotal={this.totalQuantity}
         moneyFormat={this.props.moneyFormat}

@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 import { Component, h } from 'preact';
 
 import { Availability } from '../../typings/Availability';
+import { AppDictionary } from '../../typings/Languages';
 
 export interface IVariantHeaderProps {
   /** creating the variant selected date to date formant when selected or null when not */
@@ -14,13 +15,15 @@ export interface IVariantHeaderProps {
   onClickBack(): void;
   /** creating the currently selected todal to a number so it can be added up */
   currentlySelectedTotal: number;
+  /** Event custom labels set in admin experience interface */
+  labels: Partial<AppDictionary>;
 }
 
 /** export the variant header to show the selected date time and remaining spots */
 export class VariantHeader extends Component<IVariantHeaderProps> {
   /** renders */
   render() {
-    const { variantSelectedDate } = this.props;
+    const { variantSelectedDate, labels } = this.props;
     const startsAt = this.props.variantTimeSlot.startsAt;
     const unitsLeft = this.props.variantTimeSlot.unitsLeft || 0;
     let spaceLeft = unitsLeft - this.props.currentlySelectedTotal;
@@ -41,9 +44,9 @@ export class VariantHeader extends Component<IVariantHeaderProps> {
               <span id="VariantHeader-StartTime">
                 {format(new Date(startsAt), "h:mma").toLowerCase()}
               </span>
-              <span id="VariantHeader-SpotsAvailable">
-                {spaceLeft} spot{spaceLeft !== 1 && "s"} left
-              </span>
+              {!!labels.showSlotsRemainingLabel && <span id="VariantHeader-SpotsAvailable">
+                {this.props.labels.getSlotsRemainingLabel(spaceLeft)}
+              </span>}
             </p>
           </div>
         </div>
