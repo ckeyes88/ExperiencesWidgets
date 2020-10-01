@@ -11,10 +11,10 @@ export type EventCustomLabels = {
     confirmVariantsLabel: string; //V
     singularUnitLabel: string;
     pluralUnitLabel: string;
-    firstNameLabel: string;
-    lastNameLabel: string;
+    firstNameLabel: string; //V
+    lastNameLabel: string; //V
     phoneNumberLabel: string;
-    emailLabel: string;
+    emailLabel: string; //V
     optionalFieldLabel: string;
     requiredWarningLabel: string;
     showSlotsRemainingLabel: boolean; //V
@@ -24,15 +24,15 @@ export type EventCustomLabels = {
     noUpcomingTimeSlotsLabel: string;
     minQuantityLabel: string;
     maxQuantityLabel: string;
-    bookingModalHeaderLabel: string;
+    bookingModalHeaderLabel: string; //V
     perAttendeeStepLabel: string;
     previousLabel: string;
     nextLabel: string;
     confirmReservationButtonLabel: string;
     addLabel: string; //V
-    savedSpotLabel: string;
-    sentConfirmationLabel: string;
-    emailReminderLabel: string;
-    finalConfirmationLabel: string;
+    savedSpotLabel: string; //V
+    sentConfirmationLabel: string; //V
+    emailReminderLabel: string; //V
+    finalConfirmationLabel: string; //V
     confirmationAndPaymentFollowUpLabel: string;
   };

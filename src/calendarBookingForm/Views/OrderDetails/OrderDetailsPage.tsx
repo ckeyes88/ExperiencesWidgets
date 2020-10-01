@@ -16,6 +16,7 @@ import {
 import { FormFieldValueInput } from '../../../typings/FormFieldValueInput';
 import { plural } from '../../../Utils/helpers';
 import { CustomerInfoForm } from '../../Components/CustomerInfoForm';
+import { AppDictionary } from '../../../typings/Languages';
 
 export interface IOrderDetailsPageProps {
   /** Quantities by event variant */
@@ -43,6 +44,8 @@ export interface IOrderDetailsPageProps {
   onClickBack(): void;
   /** Method passed in to trigger a close modal */
   closeModal(): void;
+  /** Event custom labels set in admin experience interface */
+  labels: Partial<AppDictionary>;
 }
 
 export interface IOrderDetailsPageState {
@@ -222,7 +225,7 @@ export class OrderDetailsPage extends Component<
           <button type="button" onClick={this.props.onClickBack} id="CustomerInfo-BackBtn">
             &#8592;
           </button>
-          <span className="CustomerInfo-Header">Finalize your reservation</span>
+          <span className="CustomerInfo-Header">{this.props.labels.bookingModalHeaderLabel}</span>
           <button type="button" onClick={this.props.closeModal} id="CustomerInfo-CloseBtn">
             &#215;
           </button>
@@ -251,6 +254,7 @@ export class OrderDetailsPage extends Component<
           </span>
         </div>
         <CustomerInfoForm
+          labels={this.props.labels}
           key="CustomerInfo"
           handleChange={this.handleCustomerFormChange}
         />

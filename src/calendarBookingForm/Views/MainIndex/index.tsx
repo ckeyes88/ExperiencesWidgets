@@ -555,6 +555,7 @@ export class CalendarWidgetMain extends Component<
         return (
           // This view renders forms to collect user and attendee data if applicable
           <OrderDetailsPage
+            labels={this.state.labels}
             quantities={this.state.quantitiesMap}
             selectedDate={this.state.selectedDate}
             selectedTimeslot={this.state.selectedTimeslot}
@@ -571,6 +572,7 @@ export class CalendarWidgetMain extends Component<
       case ModalStateEnum.ConfirmPage:
         return (
           <ConfirmPage
+            labels={this.state.labels}
             closeModal={this.closeModal}
             customerInfo={this.state.customerInfo}
           />
