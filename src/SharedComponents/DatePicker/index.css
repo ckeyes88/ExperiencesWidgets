@@ -143,6 +143,7 @@
   user-select: none;
   text-align: center;
   text-transform: none;
+  font-size: 1rem;
 }
 
 .CalendarContainer>.Calendar>.body {
@@ -189,6 +190,7 @@
   /* padding: 4px 4px; */
   width: 30px;
   height: 2rem;
+  font-size: 1rem;
 }
 
 .CalendarContainer .Calendar .CalendarDay.isDisabled {
@@ -247,7 +249,7 @@
 
 .CalendarContainer>.Calendar .CalendarDay:not(.isDisabled).isSelected {
   font-weight: bold;
-  background-color: #B4E1FA;
+  background-color: #007ACE;
   border-radius: 50%;
   color: white;
   z-index: 100;
