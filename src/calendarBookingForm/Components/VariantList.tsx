@@ -78,30 +78,28 @@ export class VariantList extends Component<
 
   /** add a message to specify minimum and maximum allowable quantities if applicable */
   renderLimitMessage() {
-    const { minLimit, maxLimit } = this.props;
-    if (minLimit && !maxLimit) {
-      return (
-        <span className="VariantListTotal-QtyMessage">
-          Minimum purchase quantity of {minLimit} per order.
+    const { minLimit, maxLimit, variantTimeSlot } = this.props;
+    const maxQuantity = variantTimeSlot.unitsLeft;
+
+    const message = this.props.labels.getOrderLimitMessage(
+      minLimit || 0, 
+      maxLimit || maxQuantity, 
+      maxQuantity,
+      { minLimit, maxLimit });
+
+    if (!message) { return null; }
+
+    return !!message.whole ? (
+      <span className={"VariantListTotal-QtyMessage"}>
+        {message.whole}
+      </span>
+    ) : (
+        <span className={"VariantListTotal-QtyMessage"}>
+          {!!message.composite.mainMessage && <div>{message.composite.mainMessage}</div>}
+          {!!message.composite.minMessage && <div>{message.composite.minMessage}</div>}
+          {!!message.composite.maxMessage && <div>{message.composite.maxMessage}</div>}
         </span>
       );
-    }
-    if (!minLimit && maxLimit) {
-      return (
-        <span className="VariantListTotal-QtyMessage">
-          Maximum purchase quantity of {maxLimit} per order.
-        </span>
-      );
-    }
-    if (minLimit && maxLimit) {
-      return (
-        <span className="VariantListTotal-QtyMessage">
-          Minimum purchase quantity of {minLimit} with a maximum limit of {maxLimit}{" "}
-          per order.
-        </span>
-      );
-    }
-    return;
   }
 
   /** diplays variant header and mapping out the variants */

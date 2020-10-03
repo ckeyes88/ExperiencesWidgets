@@ -584,21 +584,24 @@ export class CalendarWidgetMain extends Component<
 
   /** Main render method - renders the display button, and the modal if open */
   public render() {
-    const { bookButtonLabel } = this.state.labels;
+    const { event, firstAvailable } = this.state;
+    const { bookButtonLabel, reserveButtonLabel, noUpcomingTimeSlotsLabel } = this.state.labels;
+    const resolvedBookLabel = event && event.paymentType === PaymentType.Prepay ? bookButtonLabel : reserveButtonLabel;
 
     // TODO: should we keep Reserve or use Book as it is in admin panel?
-    const label = this.state.loading ? "Loading..." : (bookButtonLabel || "Reserve");
+    const label = this.state.loading ? "Loading..." : resolvedBookLabel;
     return (
       <div>
         <div className="CalendarWidgetMain">
-          <button
+          {!!firstAvailable ? (<button
             onClick={this.openModal}
             className={`CalendarWidgetMain-OpenModalButton ${
               this.state.loading ? "-isLoading" : ""
             }`}
           >
             {label}
-          </button>
+          </button>) : 
+          <p>{noUpcomingTimeSlotsLabel}</p>}
           <Modal
             orderDetails={this.state.modalState}
             showModal={this.state.showModal}

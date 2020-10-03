@@ -3,6 +3,8 @@
 [class^="CalendarWidgetMain-OpenModalButton"]{
     background: $color-primary-blue;
     width: 100%;
+    max-width: 220px;
+    margin: 30px 0 15px 0;
     border: none;
     border-radius: 3px;
     color: white;

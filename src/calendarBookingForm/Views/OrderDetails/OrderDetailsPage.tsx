@@ -215,6 +215,8 @@ export class OrderDetailsPage extends Component<
 
   /** Renders a customer info form if the event is not prepay */
   renderCustomerInfoForm = () => {
+    const { labels } = this.props;
+
     return (
       <form
         className="CustomerInfo"
@@ -260,7 +262,7 @@ export class OrderDetailsPage extends Component<
         />
         {this.props.error && <div className="CustomerInfo-ErrorMessage">{"* " + this.props.error}</div>}
         <button className="CustomerInfo-SubmitBtn" type="submit">
-          Submit
+          {labels.confirmReservationButtonLabel}
         </button>
       </form>
     );
@@ -270,7 +272,8 @@ export class OrderDetailsPage extends Component<
    * This form is either per attendee or per order
    */
   renderCustomOrderDetails = (variant?: EventVariantDBO) => {
-    const { customOrderDetails } = this.props.event;
+    const { labels, event } = this.props;
+    const { customOrderDetails } = event;
     const { currentLineItemIndex } = this.state;
 
     //If the custom form is per attendee, add name/email fields and render attendee-specific info per form (ex. Attendee 1 of 3)
@@ -288,7 +291,7 @@ export class OrderDetailsPage extends Component<
           <div className="CustomOrderDetails-Header">
             <p>
               <span className="CustomOrderDetails-Ticket">
-                Ticket {currentLineItemIndex + 1} of {this.variants.length}
+                {labels.getPerAttendeeStepLabel(currentLineItemIndex + 1, this.variants.length)}
               </span>
               <span className="CustomOrderDetails-VariantName">
                 {variant.name}
@@ -311,7 +314,9 @@ export class OrderDetailsPage extends Component<
               handleChange={this.handleCustomFormChange}
             />
             <span className="CustomOrderDetails-SubmitBtn">
-              <button type="submit">Submit</button>
+            <button type="submit">
+              {(currentLineItemIndex + 1) === this.variants.length ? labels.confirmReservationButtonLabel : labels.nextLabel}
+            </button>
             </span>
           </form>
         </div>
@@ -334,7 +339,7 @@ export class OrderDetailsPage extends Component<
               handleChange={this.handleCustomFormChange}
             />
             <span className="CustomOrderDetails-SubmitBtn">
-              <button type="submit">Submit</button>
+            <button type="submit">{labels.confirmReservationButtonLabel}</button>
             </span>
           </form>
         </div>
