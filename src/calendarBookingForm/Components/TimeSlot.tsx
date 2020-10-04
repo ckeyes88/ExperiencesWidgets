@@ -31,12 +31,12 @@ export class TimeSlot extends Component<ITimeSlotProps> {
         <div className="TimeSlot-AvailableGrid">
           <div className="TimeSlot-Details">
             <span className="TimeSlot-TimeAvailable">{adjustedStartTimes}</span>
-            {!!labels.showSlotsRemainingLabel && <div className="TimeSlot-SpotAvailable">
-              {this.props.labels.getSlotsRemainingLabel(unitsLeft)}
+            {!!labels.showSlotsRemainingLabel && <div className={`TimeSlot-SpotAvailable ${unitsLeft === 0 ? "SoldOut" : ""}`}>
+              {unitsLeft > 0 ? this.props.labels.getSlotsRemainingLabel(unitsLeft) : "Sold Out"}
             </div>}
           </div>
           <div className="TimeSlot-Action">
-            <button onClick={this.onSelectTimeSlot} className="TimeSlot-SelectBtn">
+            <button onClick={this.onSelectTimeSlot} className="TimeSlot-SelectBtn" disabled={!timeslot.unitsLeft}>
               {this.props.labels.selectDateLabel}
             </button>
           </div>

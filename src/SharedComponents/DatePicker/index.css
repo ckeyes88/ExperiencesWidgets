@@ -195,7 +195,7 @@
 
 .CalendarContainer .Calendar .CalendarDay.isDisabled {
   cursor: pointer;
-  color: #616161;
+  color: #9B9B9B;
   opacity: .8;
   background: transparent;
   text-decoration: line-through;
