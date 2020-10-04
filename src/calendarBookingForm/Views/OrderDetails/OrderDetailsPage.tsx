@@ -302,7 +302,7 @@ export class OrderDetailsPage extends Component<
               onClick={this.props.closeModal}
               type="button" 
             >
-              &times;
+              <span>&times;</span>
             </button>
           </div>
           <form id="CustomOrder-Details" onSubmit={this.handleSubmitCustomForm}>
