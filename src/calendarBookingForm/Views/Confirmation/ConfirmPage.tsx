@@ -30,8 +30,8 @@ export class ConfirmPage extends Component<IConfirmPageProps> {
       <div className="ConfirmPage">
         <h1>{labels.savedSpotLabel}</h1>
         <p className="ConfirmPage-Email">{labels.sentConfirmationLabel} <span>{customerInfo.email}</span>.</p>
-        <p className="ConfirmPage-Email">{labels.getEmailReminderDaysLabel(1)}</p>  
-        <button className="ConfirmPage-Btn" onClick={closeModal}>{labels.finalConfirmationLabel}</button>
+        <p className="ConfirmPage-Email">{labels.getEmailReminderDaysLabel(1)}</p>
+        <div className="ConfirmPage-Btn" onClick={closeModal}>{labels.finalConfirmationLabel}</div>  
       </div>
     );
   }

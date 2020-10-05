@@ -1,7 +1,7 @@
 .CustomerInfo{
     text-align: center;
     height: 100%;
-    padding: 1rem;
+    padding: 50px 0;
     background-color: white;
     font-family: sans-serif;
 }
@@ -14,8 +14,8 @@
     border-radius: 3px;
     color: $color-white;
     text-align: center;
-    width: 6rem;
-    padding: 7px;
+    min-width: 6rem;
+    padding: 7px 20px;
     font-size: 15px;
     margin-top: 1rem;
     &:hover{
