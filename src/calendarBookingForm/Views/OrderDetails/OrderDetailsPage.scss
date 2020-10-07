@@ -102,6 +102,11 @@
     }
 }
 
+.CustomOrderDetials-RequiredWarning {
+    text-align: center;
+    margin-top: -1rem;
+}
+
 @include Phone {
     .CustomerInfo {
         padding: 1rem 0rem;

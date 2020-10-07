@@ -85,7 +85,7 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
       <div className="FormField-RenderSelect">
         <label className="FormField-SelectLabel" for={id}>
           <span>{label}</span>
-          {required !== true && <span className="FormField-OptionalLabel">{`(${optionalLabel})`}</span>}
+          {required !== true ? <span className="FormField-OptionalLabel">{`(${optionalLabel})`}</span> : <span className="Red">*</span>}
         </label>
         <select id={id} onChange={this.onChange}>
           {options.map(this.renderOption)}
@@ -115,7 +115,7 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
       <div className="FormField-RenderInput">
         <label className="FormField-Label" for={id}>
           <span>{label}</span>
-          {required !== true && <span className="FormField-OptionalLabel">{`(${optionalLabel})`}</span>}
+          {required !== true ? <span className="FormField-OptionalLabel">{`(${optionalLabel})`}</span> : <span className="Red">*</span>}
         </label>
         <input
           className="FormField-Input"

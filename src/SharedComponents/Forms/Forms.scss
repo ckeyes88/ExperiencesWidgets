@@ -37,13 +37,24 @@ input.FormField-Input:valid::placeholder{
     width: 100%;
 }
 .CustomForm-Container{
-    margin-bottom: 1rem;
     padding: 1rem;
     overflow: auto;
 }
 .FormField-OptionalLabel {
     font-size: 12px;
     margin-left: .5rem;
+}
+
+.FormField-RequredWarning {
+    text-align: center;
+
+    span:first-of-type {
+        color: $color-error-red;
+    }
+}
+
+.Red {
+    color: $color-error-red;
 }
 
 @include Phone {

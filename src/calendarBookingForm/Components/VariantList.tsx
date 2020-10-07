@@ -90,15 +90,15 @@ export class VariantList extends Component<
     if (!message) { return null; }
 
     return !!message.whole ? (
-      <span className={"VariantListTotal-QtyMessage"}>
+      <div className={"VariantListTotal-QtyMessage"}>
         {message.whole}
-      </span>
+      </div>
     ) : (
-        <span className={"VariantListTotal-QtyMessage"}>
+        <div className={"VariantListTotal-QtyMessage"}>
           {!!message.composite.mainMessage && <div>{message.composite.mainMessage}</div>}
           {!!message.composite.minMessage && <div>{message.composite.minMessage}</div>}
           {!!message.composite.maxMessage && <div>{message.composite.maxMessage}</div>}
-        </span>
+        </div>
       );
   }
 

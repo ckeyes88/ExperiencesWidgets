@@ -17,6 +17,7 @@ import { FormFieldValueInput } from '../../../typings/FormFieldValueInput';
 import { plural } from '../../../Utils/helpers';
 import { CustomerInfoForm } from '../../Components/CustomerInfoForm';
 import { AppDictionary } from '../../../typings/Languages';
+import RequiredWarning from '../../../SharedComponents/Forms/RequiredWarning';
 
 export interface IOrderDetailsPageProps {
   /** Quantities by event variant */
@@ -260,6 +261,7 @@ export class OrderDetailsPage extends Component<
           key="CustomerInfo"
           handleChange={this.handleCustomerFormChange}
         />
+        <RequiredWarning message={labels.requiredWarningLabel}/>
         {this.props.error && <div className="CustomerInfo-ErrorMessage">{"* " + this.props.error}</div>}
         <button className="CustomerInfo-SubmitBtn" type="submit">
           {labels.confirmReservationButtonLabel}
@@ -314,6 +316,7 @@ export class OrderDetailsPage extends Component<
               formTitle={customOrderDetails.formTitle}
               handleChange={this.handleCustomFormChange}
             />
+            <RequiredWarning message={labels.requiredWarningLabel}/>
             <span className="CustomOrderDetails-SubmitBtn">
             <button type="submit">
               {(currentLineItemIndex + 1) === this.variants.length ? labels.confirmReservationButtonLabel : labels.nextLabel}
@@ -340,6 +343,7 @@ export class OrderDetailsPage extends Component<
               formTitle={customOrderDetails.formTitle}
               handleChange={this.handleCustomFormChange}
             />
+            <RequiredWarning message={labels.requiredWarningLabel}/>
             <span className="CustomOrderDetails-SubmitBtn">
             <button type="submit">{labels.confirmReservationButtonLabel}</button>
             </span>
