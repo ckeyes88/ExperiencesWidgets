@@ -198,7 +198,7 @@ export const languageDictionary: LanguageDictionaryType = {
         };
       }
     },
-    optionalFieldLabel: "",
+    optionalFieldLabel: "optional",
     bookingModalHeaderLabel: "Finalize your reservation",
     perAttendeeStepLabel: "",
     getPerAttendeeStepLabel(current: number, total: number) {
@@ -329,7 +329,7 @@ export const languageDictionary: LanguageDictionaryType = {
         };
       }
     },
-    optionalFieldLabel: "",
+    optionalFieldLabel: "opcional",
     bookingModalHeaderLabel: "Termina tu reserva",
     perAttendeeStepLabel: "",
     getPerAttendeeStepLabel(current: number, total: number) {
@@ -457,7 +457,7 @@ export const languageDictionary: LanguageDictionaryType = {
         };
       }
     },
-    optionalFieldLabel: "",
+    optionalFieldLabel: "optional",
     bookingModalHeaderLabel: "Schließen Sie Ihre Reservierung ab.",
     perAttendeeStepLabel: "",
     getPerAttendeeStepLabel(current: number, total: number) {
@@ -582,7 +582,7 @@ export const languageDictionary: LanguageDictionaryType = {
         };
       }
     },
-    optionalFieldLabel: "",
+    optionalFieldLabel: "frivillig",
     bookingModalHeaderLabel: "Färdigställ din reservation",
     perAttendeeStepLabel: "",
     getPerAttendeeStepLabel(current: number, total: number) {
@@ -709,7 +709,7 @@ export const languageDictionary: LanguageDictionaryType = {
         };
       }
     },
-    optionalFieldLabel: "",
+    optionalFieldLabel: "facultatif",
     bookingModalHeaderLabel: "Finalisez votre réservation",
     perAttendeeStepLabel: "",
     getPerAttendeeStepLabel(current: number, total: number) {
@@ -836,7 +836,7 @@ export const languageDictionary: LanguageDictionaryType = {
         };
       }
     },
-    optionalFieldLabel: "",
+    optionalFieldLabel: "valgfri",
     bookingModalHeaderLabel: "Reservering afronden",
     perAttendeeStepLabel: "",
     getPerAttendeeStepLabel(current: number, total: number) {

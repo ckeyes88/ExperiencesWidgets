@@ -41,6 +41,10 @@ input.FormField-Input:valid::placeholder{
     padding: 1rem;
     overflow: auto;
 }
+.FormField-OptionalLabel {
+    font-size: 12px;
+    margin-left: .5rem;
+}
 
 @include Phone {
     .CustomForm-Container{

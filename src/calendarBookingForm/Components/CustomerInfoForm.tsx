@@ -21,6 +21,7 @@ export class CustomerInfoForm extends Component<ICustomerInfoFormProps> {
       <div className="CustomerInfo-Grid">
         <div className="CustomerInfo-Name">
           <FormField
+            optionalLabel={labels.optionalFieldLabel}
             onFieldChange={this.props.handleChange}
             type="Text"
             label={labels.firstNameLabel}
@@ -28,6 +29,7 @@ export class CustomerInfoForm extends Component<ICustomerInfoFormProps> {
             required
           />
           <FormField
+            optionalLabel={labels.optionalFieldLabel}
             onFieldChange={this.props.handleChange}
             type="Text"
             label={labels.lastNameLabel}
@@ -37,6 +39,7 @@ export class CustomerInfoForm extends Component<ICustomerInfoFormProps> {
         </div>
         <div className="CustomerInfo-Email">
           <FormField
+            optionalLabel={labels.optionalFieldLabel}
             onFieldChange={this.props.handleChange}
             type="Email"
             label={labels.emailLabel}

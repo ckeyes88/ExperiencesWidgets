@@ -307,6 +307,7 @@ export class OrderDetailsPage extends Component<
           </div>
           <form id="CustomOrder-Details" onSubmit={this.handleSubmitCustomForm}>
             <CustomForm
+              labels={labels}
               key={currentLineItemIndex}
               fields={fields}
               formDescription={customOrderDetails.formDescription}
@@ -332,6 +333,7 @@ export class OrderDetailsPage extends Component<
           </div>
           <form id="CustomOrder-Details" onSubmit={this.handleSubmitCustomForm}>
             <CustomForm
+              labels={labels}
               key={currentLineItemIndex}
               fields={customOrderDetails.fields}
               formDescription={customOrderDetails.formDescription}
