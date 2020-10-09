@@ -28,6 +28,10 @@
     &:hover{
         cursor: pointer;
     }
+    &:disabled {
+        background-color: $color-bright-blue;
+        cursor: not-allowed;
+    }
 }
 
 .TimeSlots-NotAvailable {

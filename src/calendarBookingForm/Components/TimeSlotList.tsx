@@ -7,6 +7,7 @@ import { Availability } from '../../typings/Availability';
 import { TimeSlot } from './TimeSlot';
 import { TimeSlotHeader } from './TimeSlotHeader';
 import { AppDictionary } from '../../typings/Languages';
+import { FirstAvailability } from '../../typings/FirstAvailability';
 
 export interface ITimeSlotListMainProps {
   /** creating time slots to hold an array of needed detail for selected date availability */
@@ -15,6 +16,8 @@ export interface ITimeSlotListMainProps {
   selectedDate: Date | null;
   /** holds detail on the selected time slot */
   onSelectTimeSlot(timeslot: Availability): void;
+  /** Object containing all fetched availabilities */
+  availability: FirstAvailability;
   /** handles the first selected availability on the calendar that has an event */
   onSelectFirstAvailability(): void;
   /** Event custom labels set in admin experience interface */
@@ -42,6 +45,8 @@ export class TimeSlotList extends Component<
    */
   renderTimeSlots = () => {
     const { timeslots, selectedDate } = this.props;
+    const noAvailableTimeSlots = !Object.keys(this.props.availability).length;
+
     if (!timeslots || !Array.isArray(timeslots) || !timeslots.length) {
       return (
         <div className="TimeSlots">
@@ -53,8 +58,9 @@ export class TimeSlotList extends Component<
             <button
               onClick={this.props.onSelectFirstAvailability}
               className="TimeSlots-NextAvailableBtn"
+              disabled={noAvailableTimeSlots}
             >
-              Go to next available
+              {noAvailableTimeSlots ? 'This event is sold out' : 'Go to next available'}
             </button>
           </div>
         </div>

@@ -115,6 +115,7 @@ export class AvailabilityPage extends Component<IAvailabilityPageProps, IAvailab
           timeslots={this.state.timeslots}
           selectedDate={this.props.selectedDate}
           onSelectTimeSlot={this.props.onSelectTimeslot}
+          availability={this.props.availability}
           onSelectFirstAvailability={this.props.onSelectFirstAvailability}
         />
       );
