@@ -31,16 +31,16 @@
     }
 }
 .VariantListTotal-QtyMessage{
-    padding-top: 1rem;
+    padding-top: 2rem;
     font-size: .7rem;
     color: rgb(119, 119, 119);
     text-align: center;
 }
 @include Phone {
-  .VariantContainer { 
-      padding: 0rem;
-  } 
-  .VariantContent, .VariantListTotal {
-      padding: 0 2rem;
-  }
+    .VariantContainer { 
+        padding: 0rem;
+    } 
+    .VariantContent, .VariantListTotal {
+        padding: 0 2rem;
+    }
 }

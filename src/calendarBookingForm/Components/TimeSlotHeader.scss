@@ -1,6 +1,6 @@
 .TimeSlotsHeader{
     text-align: center;
-    font-size: 1.1rem;
+    font-size: 1rem;
     margin-bottom: 2rem;
 }
 @include Phone{
@@ -12,6 +12,6 @@
 }
 @include Tablet{
     .TimeSlotsHeader{
-        padding-top: 4rem; 
+        padding-top: 6.6rem; 
     }
 }

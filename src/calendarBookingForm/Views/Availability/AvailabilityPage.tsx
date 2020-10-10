@@ -142,6 +142,9 @@ export class AvailabilityPage extends Component<IAvailabilityPageProps, IAvailab
       <div className="AvailabilityPage">
         <div className="AvailabilityPage-DatePickerContainer">
           <div className="MobileView-Header">
+          <button id="MobileView-CloseBtn" onClick={this.handleCloseModal}>
+            <span>&times;</span>
+          </button>
             <p>
               {/* Back button only for when time slot selected */}
               {!!this.props.selectedTimeslot && 
@@ -154,7 +157,6 @@ export class AvailabilityPage extends Component<IAvailabilityPageProps, IAvailab
                 </button>}
               {/* If a date has been selected then select quantity view will appear */}
               {!!this.props.selectedTimeslot ? "Select quantity" : this.props.event.name} 
-              <button id="MobileView-CloseBtn" onClick={this.handleCloseModal}>&times;</button>
             </p>
           </div>
           <DatePicker

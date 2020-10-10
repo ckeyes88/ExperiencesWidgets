@@ -1,5 +1,5 @@
 .TimeSlot-Container {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
 }
 
 .TimeSlot-AvailableGrid {
@@ -62,6 +62,9 @@
 }
 
 @include Phone {
+    .TimeSlot-Container {
+        margin: 0;
+    }
     .TimeSlot-Action, .TimeSlot-Details {
         justify-content: center;
     }
@@ -75,7 +78,7 @@
     }
 
     .TimeSlot-AvailableGrid {
-        padding: 10px 0px;
+        padding: 13px 0px;
         margin-top: 0px;
         border-bottom: 1px solid #dfdfdf;
     }
