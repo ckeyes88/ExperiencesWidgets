@@ -20,8 +20,8 @@
   display: block;
 }
 .BackButton{
-  transform: translateX(-.1rem);
-  margin-top: -1.5rem;
+  top: -1px;
+  position: relative;
 }
 
 /* CalendarHeader */
