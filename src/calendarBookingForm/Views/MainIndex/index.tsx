@@ -439,6 +439,7 @@ export class CalendarWidgetMain extends Component<
   handleAddLineItem = (
     variant: EventVariantDBO,
     customFormFieldValues?: FormFieldValueInput[],
+    index?: number
   ) => {
     const { event, selectedTimeslot } = this.state;
 
@@ -457,7 +458,13 @@ export class CalendarWidgetMain extends Component<
     };
 
     let newLineItems = this.state.lineItems;
-    newLineItems.push(newLineItem);
+    if (index !== undefined && typeof index === 'number') {
+      // if this index exists, update it with the newer version
+      newLineItems[index] = newLineItem;
+    } else {
+      // otherwise, add it
+      newLineItems.push(newLineItem);
+    }
     
     return new Promise((resolve) => this.setState({
       lineItems: newLineItems,
@@ -555,6 +562,7 @@ export class CalendarWidgetMain extends Component<
         return (
           // This view renders forms to collect user and attendee data if applicable
           <OrderDetailsPage
+            lineItems={this.state.lineItems}
             labels={this.state.labels}
             quantities={this.state.quantitiesMap}
             selectedDate={this.state.selectedDate}

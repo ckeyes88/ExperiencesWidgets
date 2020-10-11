@@ -26,6 +26,7 @@
       cursor: pointer;
     }
     &.asDisabled {
+        pointer-events: none;
         background-color: $color-gray;
         color: $color-white;
     }

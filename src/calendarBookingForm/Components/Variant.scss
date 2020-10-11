@@ -30,6 +30,7 @@
         cursor: pointer;
     }
     &.asDisabled{
+        pointer-events: none;
         opacity: .5;
     }
 }
@@ -54,6 +55,7 @@
     line-height: 1.4rem;
     padding: 0px;
     &.asDisabled {
+        pointer-events: none;
         opacity: .5;
     }
     &:hover{
