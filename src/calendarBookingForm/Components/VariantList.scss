@@ -1,6 +1,7 @@
-.VariantContainer{
-    padding: 4.5rem 1.5rem 2rem 1.5rem;
+.VariantContainer {
+    padding: 1.3rem 1.5rem 2rem 1.5rem;
     overflow: auto;
+    max-height: 95%;
 }
 .VariantListTotal-Label, .VariantListTotal-Value {
     display: flex;
@@ -40,6 +41,7 @@
 @include Phone {
     .VariantContainer { 
         padding: 0rem;
+        max-height: unset;
     } 
     .VariantContent, .VariantListTotal {
         padding: 0 2rem;

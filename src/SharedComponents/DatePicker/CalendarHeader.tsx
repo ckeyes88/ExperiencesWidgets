@@ -41,8 +41,7 @@ export class CalendarHeader extends Component<CalendarHeaderProps> {
           </button>
         }
         <h1 className="MonthDisplay" aria-live="assertive">
-          {monthsOfYear(locale)[month - 1]}
-          <span className="MonthDisplay-Year"> {year}</span>
+          {monthsOfYear(locale)[month - 1]} {year}
         </h1>
         <button
           className="NextButton"

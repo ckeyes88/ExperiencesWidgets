@@ -15,10 +15,6 @@
   margin: 0 auto;
   padding: 10% 0;
 }
-.MonthDisplay-Year{
-  font-size: 1rem;
-  display: block;
-}
 .BackButton{
   top: -1px;
   position: relative;
