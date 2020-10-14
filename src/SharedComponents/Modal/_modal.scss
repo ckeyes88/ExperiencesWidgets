@@ -28,7 +28,8 @@
     }
     &__ModalContentBoxOrderDetails {
         max-width: 800px;
-        max-height: unset;
+        max-height: 800px;
+        border-bottom: 3rem solid white;
         height: auto;  
     }
     &__ModalContentBox {
@@ -80,6 +81,7 @@
         &__ModalContentBox, &__ModalContentBoxOrderDetails {
           width: 100vw;
           height: 100vh;
+          border-bottom: none;
           max-height: none;
           max-width: none;
           position: relative;
