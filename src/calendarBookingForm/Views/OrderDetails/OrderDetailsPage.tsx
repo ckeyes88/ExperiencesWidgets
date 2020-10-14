@@ -19,6 +19,7 @@ import { CustomerInfoForm } from '../../Components/CustomerInfoForm';
 import { AppDictionary } from '../../../typings/Languages';
 import RequiredWarning from '../../../SharedComponents/Forms/RequiredWarning';
 import { OrderLineItemInputData } from '../../../typings/OrderLineItemInput';
+import CloseIcon from '../../../SharedComponents/Icons/CloseIcon';
 
 export interface IOrderDetailsPageProps {
   /** Quantities by event variant */
@@ -252,7 +253,7 @@ export class OrderDetailsPage extends Component<
           </button>
           <span className="CustomerInfo-Header">{this.props.labels.bookingModalHeaderLabel}</span>
           <button type="button" onClick={this.props.closeModal} id="CustomerInfo-CloseBtn">
-            &#215;
+            <CloseIcon/>
           </button>
         </p>
         <div className="CustomerInfo-EventDetails">
@@ -340,7 +341,7 @@ export class OrderDetailsPage extends Component<
               onClick={this.props.closeModal}
               type="button" 
             >
-              <span>&times;</span>
+              <CloseIcon/>
             </button>
           </div>
           <form id="CustomOrder-Details" onSubmit={this.handleSubmitCustomForm}>

@@ -46,6 +46,9 @@
     text-align: center;
     margin-right: 1rem;
     transform: translateY(-3px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .CustomerInfo-EventDetails{
    background-color:  rgb(238, 238, 238); 
@@ -128,7 +131,7 @@
 }
 
 @include Tablet {
-    .CustomerInfo-FinalizeOrder button, #CustomerInfo-EventName {
+    .CustomerInfo-FinalizeOrder button, #CustomerInfo-EventName, #CustomerInfo-CloseBtn {
         display: none;
     }
     .CustomerInfo-FinalizeOrder{

@@ -9,6 +9,7 @@ import { EventDBO, EventVariantDBO } from "../../../typings/Event";
 import { FirstAvailability } from "../../../typings/FirstAvailability";
 import { getTimeslotsByDate } from "../../../Utils/helpers";
 import { AppDictionary } from "../../../typings/Languages";
+import CloseIcon from "../../../SharedComponents/Icons/CloseIcon";
 
 export interface IAvailabilityPageProps {
   /** Sets the modal state in the index to "navigate" to a different view */
@@ -153,7 +154,7 @@ export class AvailabilityPage extends Component<IAvailabilityPageProps, IAvailab
                 <span>&#8592;</span>
             </button>}
           <button id="MobileView-CloseBtn" onClick={this.handleCloseModal}>
-            <span>&times;</span>
+            <CloseIcon/>
           </button>
             <p>
               {/* If a date has been selected then select quantity view will appear */}
