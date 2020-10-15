@@ -24,11 +24,12 @@
         .Modal-ModalMainContentBox {
             flex: 1;
             background-color: #fff;
+            max-height: inherit;
           }
     }
     &__ModalContentBoxOrderDetails {
         max-width: 800px;
-        max-height: 800px;
+        max-height: 600px;
         border-bottom: 3rem solid white;
         height: auto;  
     }
@@ -40,6 +41,7 @@
 
     .CustomOrderDetials {
       padding: 50px 0;
+      max-height: inherit;
     }
   }
 
