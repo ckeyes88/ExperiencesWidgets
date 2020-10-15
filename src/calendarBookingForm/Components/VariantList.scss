@@ -1,6 +1,7 @@
-.VariantContainer{
-    padding: 2rem 1.5rem;
+.VariantContainer {
+    padding: 1.3rem 1.5rem 2rem 1.5rem;
     overflow: auto;
+    max-height: 95%;
 }
 .VariantListTotal-Label, .VariantListTotal-Value {
     display: flex;
@@ -14,33 +15,38 @@
     justify-content: center;
 }
 .VariantListTotal-ConfirmBtn{
-    background-color: $color-primary-blue;
+    background-color: $color-darker-blue;
     border: none;
     border-radius: 3px;
     color: $color-white;
     text-align: center;
-    width: 6rem;
+    min-width: 6rem;
     font-size: 15px;
     padding: .5rem;
     &:hover{
       cursor: pointer;
     }
     &.asDisabled {
+        pointer-events: none;
         background-color: $color-gray;
         color: $color-white;
     }
 }
 .VariantListTotal-QtyMessage{
-    padding-top: 1rem;
+    padding-top: 2rem;
     font-size: .7rem;
     color: rgb(119, 119, 119);
     text-align: center;
 }
 @include Phone {
-  .VariantContainer { 
-      padding: 0rem;
-  } 
-  .VariantContent, .VariantListTotal {
-      padding: 0 2rem;
-  }
+    .VariantContainer { 
+        padding: 0rem;
+        max-height: unset;
+    } 
+    .VariantContent, .VariantListTotal {
+        padding: 0 2rem;
+    }
+    .VariantListTotal-QtyMessage {
+        padding-top: 3rem;
+    }
 }

@@ -27,6 +27,7 @@ mountComponent({
         storefrontAccessToken: data.calendarBookingFormStorefrontAccessToken,
         shopUrl: data.calendarBookingFormShopUrl, 
         shopifyProductId: parseInt(data.calendarBookingFormProductId),
+        languageCode: data.calendarBookingFormLanguageCode || "en-US"
     };
   },
   component: CalendarWidgetMain,

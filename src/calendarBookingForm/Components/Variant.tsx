@@ -5,6 +5,7 @@ import { Component, h } from 'preact';
 import { Availability } from '../../typings/Availability';
 import { EventVariantDBO } from '../../typings/Event';
 import { formatCurrency } from '../../Utils/helpers';
+import { AppDictionary } from '../../typings/Languages';
 
 export interface IVariantProps {
   /** creating variant to connect to shopify event detials for selected date */
@@ -17,6 +18,8 @@ export interface IVariantProps {
   onChangeQuantity(dir: number, variantId: number): void;
   currentlySelectedTotal: number;
   maxLimit: number;
+  /** Event custom labels set in admin experience interface */
+  labels: Partial<AppDictionary>;
 }
 
 /** exports the variant class */
@@ -46,6 +49,7 @@ export class Variant extends Component<IVariantProps> {
       quantity,
       maxLimit,
       variantTimeSlot,
+      labels
     } = this.props;
 
     const unitsLeft = variantTimeSlot.unitsLeft || 0;
@@ -59,7 +63,7 @@ export class Variant extends Component<IVariantProps> {
           className={`Variant-AddBtn ${isDisabled ? "asDisabled" : ""}`}
           disabled={isDisabled}
         >
-          Add
+          {labels.addLabel}
         </button>
       );
     } else {

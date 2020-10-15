@@ -20,7 +20,7 @@
 }
 .VariantHeader-DateSelected {
     text-align: center;
-    font-size: 1.1rem;
+    font-size: 1rem;
     display: block;
     margin: 1rem 0 .5rem 0;
 }
@@ -28,7 +28,7 @@
     margin: 0 0 .5rem 0;
 }
 #VariantHeader-StartTime {
-    font-size: 15px;
+    font-size: 1rem;
     color: $color-primary-blue;
     display: block;
 }
@@ -52,6 +52,10 @@
 
     .VariantHeader-Container {
         background-color: #F5F5F5;
+    }
+
+    .Variant-QtyBtnContainer {
+        min-width: 6rem;
     }
 }
 

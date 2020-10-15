@@ -16,6 +16,10 @@ import {
 import { FormFieldValueInput } from '../../../typings/FormFieldValueInput';
 import { plural } from '../../../Utils/helpers';
 import { CustomerInfoForm } from '../../Components/CustomerInfoForm';
+import { AppDictionary } from '../../../typings/Languages';
+import RequiredWarning from '../../../SharedComponents/Forms/RequiredWarning';
+import { OrderLineItemInputData } from '../../../typings/OrderLineItemInput';
+import CloseIcon from '../../../SharedComponents/Icons/CloseIcon';
 
 export interface IOrderDetailsPageProps {
   /** Quantities by event variant */
@@ -33,7 +37,8 @@ export interface IOrderDetailsPageProps {
   /** Method passed in and triggered upon submission of a custom form, passes values up to the top level */
   onAddCustomFormValues(
     variant: EventVariantDBO,
-    newCustomFormFieldValues?: FormFieldValueInput[]
+    newCustomFormFieldValues?: FormFieldValueInput[],
+    index?: number
   ): Promise<any>;
   /** Method passed in and triggered upon submission of customer info, passes values up to the top level */
   onAddCustomerInfo(customerInfo: CustomerInputData): Promise<any>;
@@ -43,6 +48,10 @@ export interface IOrderDetailsPageProps {
   onClickBack(): void;
   /** Method passed in to trigger a close modal */
   closeModal(): void;
+  /** Array of line item objects, used to create the order upon confirmation */
+  lineItems: OrderLineItemInputData[];
+  /** Event custom labels set in admin experience interface */
+  labels: Partial<AppDictionary>;
 }
 
 export interface IOrderDetailsPageState {
@@ -119,24 +128,42 @@ export class OrderDetailsPage extends Component<
 
   /** Passes current custom form values up to main level to be stored as a line item */
   onAddLineItem = async () => {
+    const { currentCustomFormValues, currentLineItemIndex } = this.state;
+
     // Establishes the current values stored in state
     let newCustomFormValues: FormFieldValueInput[] = [
-      ...this.state.currentCustomFormValues,
+      ...currentCustomFormValues,
     ];
 
     // Use the current line item index to determine the correct variant
-    const currentVariant = this.variants[this.state.currentLineItemIndex];
+    const currentVariant = this.variants[currentLineItemIndex];
 
     // Pass the variant and the form values up to the top level
-    await this.props.onAddCustomFormValues(currentVariant, newCustomFormValues);
+    await this.props.onAddCustomFormValues(currentVariant, newCustomFormValues, currentLineItemIndex);
 
     // Increment the current line item index in stateR
-    const newLineItemIndex = this.state.currentLineItemIndex + 1;
+    const newLineItemIndex = currentLineItemIndex + 1;
 
     // Reset the form values in state
     this.setState({
       currentCustomFormValues: [],
       currentLineItemIndex: newLineItemIndex,
+    });
+  };
+
+  onPreviousClick = async () => {
+    const { currentLineItemIndex } = this.state;
+    const { lineItems } = this.props;
+
+    // decrement lineItem index
+    const newLineItemIndex = currentLineItemIndex > 0 ? currentLineItemIndex - 1 : currentLineItemIndex;
+
+    // switch to a previous line item
+    const storedLineItem = lineItems[newLineItemIndex];
+
+    this.setState({ 
+      currentCustomFormValues: storedLineItem.customOrderDetailsValues,
+      currentLineItemIndex: newLineItemIndex 
     });
   };
 
@@ -212,6 +239,8 @@ export class OrderDetailsPage extends Component<
 
   /** Renders a customer info form if the event is not prepay */
   renderCustomerInfoForm = () => {
+    const { labels } = this.props;
+
     return (
       <form
         className="CustomerInfo"
@@ -222,9 +251,9 @@ export class OrderDetailsPage extends Component<
           <button type="button" onClick={this.props.onClickBack} id="CustomerInfo-BackBtn">
             &#8592;
           </button>
-          <span className="CustomerInfo-Header">Finalize your reservation</span>
+          <span className="CustomerInfo-Header">{this.props.labels.bookingModalHeaderLabel}</span>
           <button type="button" onClick={this.props.closeModal} id="CustomerInfo-CloseBtn">
-            &#215;
+            <CloseIcon/>
           </button>
         </p>
         <div className="CustomerInfo-EventDetails">
@@ -251,12 +280,14 @@ export class OrderDetailsPage extends Component<
           </span>
         </div>
         <CustomerInfoForm
+          labels={this.props.labels}
           key="CustomerInfo"
           handleChange={this.handleCustomerFormChange}
         />
+        <RequiredWarning message={labels.requiredWarningLabel}/>
         {this.props.error && <div className="CustomerInfo-ErrorMessage">{"* " + this.props.error}</div>}
         <button className="CustomerInfo-SubmitBtn" type="submit">
-          Submit
+          {labels.confirmReservationButtonLabel}
         </button>
       </form>
     );
@@ -266,17 +297,32 @@ export class OrderDetailsPage extends Component<
    * This form is either per attendee or per order
    */
   renderCustomOrderDetails = (variant?: EventVariantDBO) => {
-    const { customOrderDetails } = this.props.event;
+    const { labels, event, lineItems } = this.props;
+    const { customOrderDetails } = event;
     const { currentLineItemIndex } = this.state;
+
+    const currentLineItem = lineItems[currentLineItemIndex];
 
     //If the custom form is per attendee, add name/email fields and render attendee-specific info per form (ex. Attendee 1 of 3)
     if (customOrderDetails.formType === OrderDetailsFormType.PerAttendee) {
       //Adds first, last, and email to any custom form by default
-      const fields = customOrderDetails.fields.concat([
-        { type: FormFieldType.Text, label: "First Name", required: true },
-        { type: FormFieldType.Text, label: "Last Name", required: true },
-        { type: FormFieldType.Email, label: "Email", required: true },
+      let fields = customOrderDetails.fields.concat([
+        { type: FormFieldType.Text, label: labels.firstNameLabel, required: true },
+        { type: FormFieldType.Text, label: labels.lastNameLabel, required: true },
+        { type: FormFieldType.Email, label: labels.emailLabel, required: true },
       ]);
+
+      if (currentLineItem && currentLineItem.customOrderDetailsValues) {
+        fields = fields.map(f => {
+          // if there is a value stored from the previous step, use it
+          const existingFieldData = currentLineItem.customOrderDetailsValues.filter(l => l.label === f.label)[0];
+          return {
+            ...f,
+            value: !!existingFieldData ? existingFieldData.value : undefined
+          };
+        });
+      }
+      
       //Render the form
       //The custom form for per attendee, renders on how many tickets are bought
       return (
@@ -284,7 +330,7 @@ export class OrderDetailsPage extends Component<
           <div className="CustomOrderDetails-Header">
             <p>
               <span className="CustomOrderDetails-Ticket">
-                Ticket {currentLineItemIndex + 1} of {this.variants.length}
+                {labels.getPerAttendeeStepLabel(currentLineItemIndex + 1, this.variants.length)}
               </span>
               <span className="CustomOrderDetails-VariantName">
                 {variant.name}
@@ -295,19 +341,24 @@ export class OrderDetailsPage extends Component<
               onClick={this.props.closeModal}
               type="button" 
             >
-              &times;
+              <CloseIcon/>
             </button>
           </div>
           <form id="CustomOrder-Details" onSubmit={this.handleSubmitCustomForm}>
             <CustomForm
+              labels={labels}
               key={currentLineItemIndex}
               fields={fields}
               formDescription={customOrderDetails.formDescription}
               formTitle={customOrderDetails.formTitle}
               handleChange={this.handleCustomFormChange}
             />
+            <RequiredWarning message={labels.requiredWarningLabel}/>
             <span className="CustomOrderDetails-SubmitBtn">
-              <button type="submit">Submit</button>
+              <button type="button" onClick={this.onPreviousClick} disabled={!currentLineItemIndex}>{labels.previousLabel}</button>
+              <button type="submit">
+                {(currentLineItemIndex + 1) === this.variants.length ? labels.confirmReservationButtonLabel : labels.nextLabel}
+              </button>
             </span>
           </form>
         </div>
@@ -323,14 +374,16 @@ export class OrderDetailsPage extends Component<
           </div>
           <form id="CustomOrder-Details" onSubmit={this.handleSubmitCustomForm}>
             <CustomForm
+              labels={labels}
               key={currentLineItemIndex}
               fields={customOrderDetails.fields}
               formDescription={customOrderDetails.formDescription}
               formTitle={customOrderDetails.formTitle}
               handleChange={this.handleCustomFormChange}
             />
+            <RequiredWarning message={labels.requiredWarningLabel}/>
             <span className="CustomOrderDetails-SubmitBtn">
-              <button type="submit">Submit</button>
+              <button type="submit">{labels.confirmReservationButtonLabel}</button>
             </span>
           </form>
         </div>

@@ -4,12 +4,15 @@ import moment from 'moment-timezone';
 import { Component, h } from 'preact';
 
 import { Availability } from '../../typings/Availability';
+import { AppDictionary } from '../../typings/Languages';
 
 export interface ITimeSlotProps {
   /** the currently selected date */
   timeslot: Availability;
   /** hold details of the selected availabitiy */
   onSelectTimeSlot(timeslot: Availability): void;
+  /** Event custom labels set in admin experience interface */
+  labels: Partial<AppDictionary>;
 }
 
 /** exports a single component with time and spots avaiables */
@@ -20,7 +23,7 @@ export class TimeSlot extends Component<ITimeSlotProps> {
   };
   /**rendering */
   render() {
-    const { timeslot } = this.props;
+    const { timeslot, labels } = this.props;
     const { unitsLeft, startsAt, timezone } = timeslot;
     const adjustedStartTimes = moment(startsAt).tz(timezone).format("h:mma");
     return (
@@ -28,13 +31,13 @@ export class TimeSlot extends Component<ITimeSlotProps> {
         <div className="TimeSlot-AvailableGrid">
           <div className="TimeSlot-Details">
             <span className="TimeSlot-TimeAvailable">{adjustedStartTimes}</span>
-            <div className="TimeSlot-SpotAvailable">
-              {unitsLeft} spot{unitsLeft !== 1 && "s"} left
-            </div>
+            {!!labels.showSlotsRemainingLabel && <div className={`TimeSlot-SpotAvailable ${unitsLeft === 0 ? "SoldOut" : ""}`}>
+              {unitsLeft > 0 ? this.props.labels.getSlotsRemainingLabel(unitsLeft) : "Sold Out"}
+            </div>}
           </div>
           <div className="TimeSlot-Action">
-            <button onClick={this.onSelectTimeSlot} className="TimeSlot-SelectBtn">
-              Select
+            <button onClick={this.onSelectTimeSlot} className="TimeSlot-SelectBtn" disabled={!timeslot.unitsLeft}>
+              {this.props.labels.selectDateLabel}
             </button>
           </div>
         </div>

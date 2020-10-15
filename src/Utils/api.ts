@@ -14,6 +14,7 @@ import Client from "shopify-buy";
 
 import {AssetDBO} from "@helpfulhuman/expapp-shared-libs";
 import {OPRMProductSchema} from "@helpfulhuman/oprm-sdk";
+import { EventCustomLabels } from "../typings/EventCustomLabels";
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 export type EventAvailability = EventDBO & {
@@ -102,6 +103,10 @@ type GetCustomScriptsArgs = APIArguments;
 type GetCustomScriptsRequestBody = {};
 
 type GetCustomScriptsResponse = CustomScripts;
+
+type GetEventCustomLabelsResponse = {
+  data: EventCustomLabels;
+};
 
 type GetShopDetailsResponse = {
   name: string;
@@ -273,6 +278,15 @@ export async function getEvent({ baseUrl, shopId, shopifyProductId }: GetEventAr
   const res = await sendJSON<GetCustomFormRequestBody, GetEventResponse>("GET", `${baseUrl}/rest/event/?shop=${shopId}&productId=${shopifyProductId}`);
 
   return handleResponse<GetEventResponse>(res);
+}
+
+/**
+ * Fetches custom event labels set in admin interface of an experience
+ */
+export async function getEventCustomLabels({ baseUrl, shopId, shopifyProductId }: GetEventArgs): Promise<GetEventCustomLabelsResponse> {
+  const res = await sendJSON<GetCustomFormRequestBody, GetEventCustomLabelsResponse>("GET", `${baseUrl}/rest/event/custom-labels?productId=${shopifyProductId}&shop=${shopId}`);
+
+  return handleResponse<GetEventCustomLabelsResponse>(res);
 }
 
 /**

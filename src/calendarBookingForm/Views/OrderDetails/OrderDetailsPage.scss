@@ -1,7 +1,7 @@
 .CustomerInfo{
     text-align: center;
     height: 100%;
-    padding: 1rem;
+    padding: 50px 0;
     background-color: white;
     font-family: sans-serif;
 }
@@ -14,8 +14,8 @@
     border-radius: 3px;
     color: $color-white;
     text-align: center;
-    width: 6rem;
-    padding: 7px;
+    min-width: 6rem;
+    padding: 7px 20px;
     font-size: 15px;
     margin-top: 1rem;
     &:hover{
@@ -46,6 +46,9 @@
     text-align: center;
     margin-right: 1rem;
     transform: translateY(-3px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .CustomerInfo-EventDetails{
    background-color:  rgb(238, 238, 238); 
@@ -82,9 +85,12 @@
     display: block;
 }
 
-.CustomOrderDetails-SubmitBtn{
-    display: block;
-    padding: 1rem;
+.CustomOrderDetails-SubmitBtn {
+    display: flex;
+    justify-content: space-between;
+    max-width: 50%;
+    margin: 0 auto;
+    padding: 1rem 2rem;
     text-align: center;
     & button {
         font-size: 15px;
@@ -93,16 +99,30 @@
         border-radius: 3px;
         color: $color-white;
         text-align: center;
-        width: 6rem;
+        min-width: 7.5rem;
+        max-width: 10rem;
         padding: 7px;
         font-size: 15px;
         &:hover{
           cursor: pointer;
         }
+        &:disabled {
+            background-color: $color-bright-blue;
+            pointer-events: none;
+        }
     }
 }
 
+.CustomOrderDetials-RequiredWarning {
+    text-align: center;
+    margin-top: -1rem;
+}
+
 @include Phone {
+    .CustomOrderDetails-SubmitBtn {
+        max-width: 100%;
+        padding: 1rem;
+    }
     .CustomerInfo {
         padding: 1rem 0rem;
     }
@@ -113,7 +133,7 @@
 }
 
 @include Tablet {
-    .CustomerInfo-FinalizeOrder button, #CustomerInfo-EventName {
+    .CustomerInfo-FinalizeOrder button, #CustomerInfo-EventName, #CustomerInfo-CloseBtn {
         display: none;
     }
     .CustomerInfo-FinalizeOrder{

@@ -3,6 +3,8 @@
 [class^="CalendarWidgetMain-OpenModalButton"]{
     background: $color-primary-blue;
     width: 100%;
+    max-width: 220px;
+    margin: 30px 0 15px 0;
     border: none;
     border-radius: 3px;
     color: white;
@@ -12,6 +14,9 @@
     &:hover{
         cursor: pointer;
     }
+}
+.CalendarWidgetMain-noUpcomingTimeslotsMessage {
+    margin-top: 25px;
 }
 .Loading-Container{
     text-align: center;
@@ -33,6 +38,7 @@
 @media only screen and (min-width: 320px) and (max-width: 767px) {
     [class^="CalendarWidgetMain-OpenModalButton"]{
         width: 100%;
+        max-width: unset;
     }
 }
  @include Tablet{

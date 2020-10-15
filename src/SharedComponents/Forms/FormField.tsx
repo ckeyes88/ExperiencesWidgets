@@ -9,6 +9,8 @@ export interface IFormFieldProps {
   label: string;
   /** Indicate whether the form field is required */
   required: boolean;
+  /** (optional) sublabel, by default is taken from Languages.ts */
+  optionalLabel: string;
   /** Optional placeholder */
   placeholder?: string;
   /** options in the event that this is select field */
@@ -78,11 +80,12 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
 
   /** If the field is a select, this method renders it */
   renderSelect() {
-    const { id, label, options } = this.props;
+    const { id, label, options, optionalLabel, required } = this.props;
     return (
       <div className="FormField-RenderSelect">
         <label className="FormField-SelectLabel" for={id}>
-          {label}
+          <span>{label}</span>
+          {required !== true ? <span className="FormField-OptionalLabel">{`(${optionalLabel})`}</span> : <span className="Red">*</span>}
         </label>
         <select id={id} onChange={this.onChange}>
           {options.map(this.renderOption)}
@@ -106,12 +109,13 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
 
   /** If the field is a text, email, or phone input, this renders it */
   renderInput() {
-    const { id, label, required, placeholder, type } = this.props;
+    const { id, label, required, placeholder, type, optionalLabel } = this.props;
     
     return (
       <div className="FormField-RenderInput">
         <label className="FormField-Label" for={id}>
-          {label}
+          <span>{label}</span>
+          {required !== true ? <span className="FormField-OptionalLabel">{`(${optionalLabel})`}</span> : <span className="Red">*</span>}
         </label>
         <input
           className="FormField-Input"

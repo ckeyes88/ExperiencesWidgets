@@ -12,12 +12,22 @@
 
 .TimeSlots-Container {
     padding: 0 1.5rem;
-    max-height: 100%;
+    max-height: 65%;
     overflow-y: auto;
 }
 
+.TimeSlots-Container::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(0deg, rgba(255,255,255,1) 30%, rgba(255,255,255,0) 100%);
+    height: 10%;
+}
+
 .TimeSlots-NextAvailableBtn{
-    background-color: $color-primary-blue;
+    background-color: $color-darker-blue;
     border: none;
     border-radius: 3px;
     color: white;
@@ -27,6 +37,10 @@
     font-size: .8rem;
     &:hover{
         cursor: pointer;
+    }
+    &:disabled {
+        background-color: $color-bright-blue;
+        cursor: not-allowed;
     }
 }
 
@@ -66,6 +80,10 @@
 @media only screen and (min-width: 320px) and (max-width: 767px) {
     .AvailabilityPage-TimeSlotContainer {
         margin: 1rem 0;
+
+        &::after {
+            display: none;
+        }
     }
 
     .TimeSlot-DateSelected {
@@ -85,6 +103,14 @@
 
     .product__section-container {
         padding: 0rem;
+    }
+
+    .TimeSlots-Container {
+        max-height: unset;
+
+        &::after {
+            display: none;
+        }
     }
 }
 

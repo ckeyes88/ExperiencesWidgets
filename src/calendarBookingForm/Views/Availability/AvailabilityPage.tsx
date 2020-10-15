@@ -8,6 +8,8 @@ import { VariantList } from "../../Components/VariantList";
 import { EventDBO, EventVariantDBO } from "../../../typings/Event";
 import { FirstAvailability } from "../../../typings/FirstAvailability";
 import { getTimeslotsByDate } from "../../../Utils/helpers";
+import { AppDictionary } from "../../../typings/Languages";
+import CloseIcon from "../../../SharedComponents/Icons/CloseIcon";
 
 export interface IAvailabilityPageProps {
   /** Sets the modal state in the index to "navigate" to a different view */
@@ -44,6 +46,8 @@ export interface IAvailabilityPageProps {
   onSelectFirstAvailability(): void;
   /** Method passed in to handle confirmation of date/timeslot/quantity selection */
   onConfirmSelection(): void;
+  /** Event custom labels set in admin experience interface */
+  labels: Partial<AppDictionary>;
 }
 
 export interface IAvailabilityPageState {
@@ -91,6 +95,7 @@ export class AvailabilityPage extends Component<IAvailabilityPageProps, IAvailab
       }
       return (
         <VariantList
+          labels={this.props.labels}
           minLimit={this.props.event.minLimit}
           maxLimit={this.props.event.maxLimit}
           moneyFormat={moneyFormat}
@@ -107,9 +112,11 @@ export class AvailabilityPage extends Component<IAvailabilityPageProps, IAvailab
     } else {
       return (
         <TimeSlotList
+          labels={this.props.labels}
           timeslots={this.state.timeslots}
           selectedDate={this.props.selectedDate}
           onSelectTimeSlot={this.props.onSelectTimeslot}
+          availability={this.props.availability}
           onSelectFirstAvailability={this.props.onSelectFirstAvailability}
         />
       );
@@ -136,19 +143,22 @@ export class AvailabilityPage extends Component<IAvailabilityPageProps, IAvailab
       <div className="AvailabilityPage">
         <div className="AvailabilityPage-DatePickerContainer">
           <div className="MobileView-Header">
+            {/* Back button only for when time slot selected */}
+            {!!this.props.selectedTimeslot && 
+              <button
+                className="BackButton"
+                title="Previous Month"
+                style={{ float: "left" }}
+                onClick={this.props.onClickBack}
+              >
+                <span>&#8592;</span>
+            </button>}
+          <button id="MobileView-CloseBtn" onClick={this.handleCloseModal}>
+            <CloseIcon/>
+          </button>
             <p>
-              {/* Back button only for when time slot selected */}
-              {!!this.props.selectedTimeslot && 
-                <button
-                  className="BackButton"
-                  title="Previous Month"
-                  style={{ float: "left" }}
-                  onClick={this.props.onClickBack}
-                >&#8592;
-                </button>}
               {/* If a date has been selected then select quantity view will appear */}
               {!!this.props.selectedTimeslot ? "Select quantity" : this.props.event.name} 
-              <button id="MobileView-CloseBtn" onClick={this.handleCloseModal}>&times;</button>
             </p>
           </div>
           <DatePicker

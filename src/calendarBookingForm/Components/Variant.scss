@@ -4,7 +4,7 @@
     align-items: center;
     grid-template-areas: 
     "box1 box2 box3";
-    height: 4rem;
+    height: 3.2rem;
 }
 .Variant-Age, .Variant-Price {
     display: flex;
@@ -21,13 +21,16 @@
     border: 1px solid $color-gray;
     border-radius: 3px;
     text-align: center;
-    width: 6rem;
-    font-size: 15px;
+    min-width: 6rem;
+    font-size: 14px;
+    overflow: hidden;
+    padding: 4px 10px;
     height:2rem;
     &:hover{
         cursor: pointer;
     }
     &.asDisabled{
+        pointer-events: none;
         opacity: .5;
     }
 }
@@ -52,6 +55,7 @@
     line-height: 1.4rem;
     padding: 0px;
     &.asDisabled {
+        pointer-events: none;
         opacity: .5;
     }
     &:hover{
@@ -71,14 +75,17 @@
 
 @include Phone {
     .Variant-Grid {
-        padding: 0 2rem;
+        padding: 0;
         margin-top: 0px;
         border-bottom: 1px solid #dfdfdf;
         align-items: center;
+        grid-template-columns: 2fr 1fr 1fr;
     }
 
     .VariantListTotal-Grid {
-        padding: 1.5rem 2rem;
+        padding: 1rem 0;
         margin-top: 0px;
+        align-items: center;
+        grid-template-columns: 2fr 1fr 1fr;
     }
 }
