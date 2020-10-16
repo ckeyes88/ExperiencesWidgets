@@ -46,6 +46,8 @@ export interface IAvailabilityPageProps {
   onSelectFirstAvailability(): void;
   /** Method passed in to handle confirmation of date/timeslot/quantity selection */
   onConfirmSelection(): void;
+  /** Indicate which language you want the calendar to display in */
+  locale: string;
   /** Event custom labels set in admin experience interface */
   labels: Partial<AppDictionary>;
 }
@@ -96,6 +98,7 @@ export class AvailabilityPage extends Component<IAvailabilityPageProps, IAvailab
       return (
         <VariantList
           labels={this.props.labels}
+          locale={this.props.locale}
           minLimit={this.props.event.minLimit}
           maxLimit={this.props.event.maxLimit}
           moneyFormat={moneyFormat}
@@ -113,6 +116,7 @@ export class AvailabilityPage extends Component<IAvailabilityPageProps, IAvailab
       return (
         <TimeSlotList
           labels={this.props.labels}
+          locale={this.props.locale}
           timeslots={this.state.timeslots}
           selectedDate={this.props.selectedDate}
           onSelectTimeSlot={this.props.onSelectTimeslot}
@@ -137,8 +141,6 @@ export class AvailabilityPage extends Component<IAvailabilityPageProps, IAvailab
 
   /** Main render method, renders the calendar and the dynamic right side of the view */
   public render() {
-
-
     return (
       <div className="AvailabilityPage">
         <div className="AvailabilityPage-DatePickerContainer">
@@ -165,6 +167,8 @@ export class AvailabilityPage extends Component<IAvailabilityPageProps, IAvailab
             hideCalendar={!!this.props.selectedTimeslot}
             type={DatePickerType.SingleDay}
             date={this.props.selectedDate}
+            locale={this.props.locale}
+            labels={this.props.labels}
             onDateSelected={this.props.onDateSelect}
             isDateEnabled={this.dateHasAvailablility}
             onChangeMonth={this.props.setNewAvailability}

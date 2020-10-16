@@ -6,7 +6,7 @@ import { Component, h, JSX } from 'preact';
 import { Availability } from '../../typings/Availability';
 import { TimeSlot } from './TimeSlot';
 import { TimeSlotHeader } from './TimeSlotHeader';
-import { AppDictionary } from '../../typings/Languages';
+import { AppDictionary, localeMap } from '../../typings/Languages';
 import { FirstAvailability } from '../../typings/FirstAvailability';
 
 export interface ITimeSlotListMainProps {
@@ -20,6 +20,8 @@ export interface ITimeSlotListMainProps {
   availability: FirstAvailability;
   /** handles the first selected availability on the calendar that has an event */
   onSelectFirstAvailability(): void;
+  /** Indicate which language you want the calendar to display in */
+  locale: string;
   /** Event custom labels set in admin experience interface */
   labels: Partial<AppDictionary>;
 }
@@ -44,7 +46,7 @@ export class TimeSlotList extends Component<
    * or the user has not selected a date
    */
   renderTimeSlots = () => {
-    const { timeslots, selectedDate } = this.props;
+    const { timeslots, selectedDate, locale } = this.props;
     const noAvailableTimeSlots = !Object.keys(this.props.availability).length;
 
     if (!timeslots || !Array.isArray(timeslots) || !timeslots.length) {
@@ -52,7 +54,7 @@ export class TimeSlotList extends Component<
         <div className="TimeSlots">
           <div className="TimeSlots-NotAvailable">
             <span className="TimeSlot-DateSelected">
-              {format(new Date(this.props.selectedDate), "EEEE MMMM d, yyyy")}
+              {format(new Date(this.props.selectedDate), "EEEE MMMM d, yyyy", { locale: localeMap[locale] })}
             </span>
             <p>Nothing is available today</p>
             <button
@@ -68,7 +70,7 @@ export class TimeSlotList extends Component<
     } else {
       return (
         <div className="TimeSlotsHeader-Container">
-          <TimeSlotHeader selectedDate={selectedDate} />
+          <TimeSlotHeader selectedDate={selectedDate} locale={locale} />
           <div className="TimeSlots-Container">
             {timeslots.map(this.renderTimeslot)}
           </div>

@@ -4,6 +4,7 @@ import { addYears, addMonths, addWeeks, addDays, isSameDay, isBefore, isWithinIn
 
 import { Calendar } from "./Calendar";
 import "./index.css";
+import { AppDictionary } from "../../typings/Languages";
 
 
 export enum DatePickerType {
@@ -15,7 +16,7 @@ type DatePickerProps = {
   /** The initial date to load and pre-select on the calendar if it is single day picker*/
   date?: Date;
   /** Indicate which language you want the calendar to display in */
-  locale?: string;
+  locale: string;
   /** optional boolean to disable the entire calendar functionality including header and days default to false */
   disabled?: boolean;
   /** designates whether you want the calendar to function as a single day picker or a date range selector */
@@ -44,6 +45,8 @@ type DatePickerProps = {
   onChangeYear(date: Date): void;
   /** Fires every time a date is changed */
   onChangeMonth(date: Date): void;
+  /** Event custom labels set in admin experience interface */
+  labels: Partial<AppDictionary>;
 };
 
 type DatePickerState = {
@@ -422,6 +425,7 @@ export class DatePicker extends Component<DatePickerProps, DatePickerState> {
         onChangeYear={this.onChangeYear}
         locale={this.props.locale}
         disabled={this.props.disabled}
+        labels={this.props.labels}
       />
     );
   }

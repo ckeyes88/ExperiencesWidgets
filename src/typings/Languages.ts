@@ -1,4 +1,34 @@
 export type LanguageCodes = "en-US" | "es" | "ger" | "swe" | "fr" | "nl";
+import { enUS, de, nl, es, sv, fr } from 'date-fns/locale';
+
+// use it to get date-fns built-in locale for our LanguageCodes type
+export const localeMap: { [key: string]: Locale } = {
+  "en-US": enUS,
+  "es": es,
+  "ger": de,
+  "swe": sv,
+  "fr": fr,
+  "nl": nl
+}
+
+/**
+ * Month names; zero-indexed. Useful for grab Date month and converting to app dictionary 
+ * month property.
+ */
+export const monthNames = [
+  "january",
+  "february",
+  "march",
+  "april",
+  "may",
+  "june",
+  "july",
+  "august",
+  "september",
+  "october",
+  "november",
+  "december",
+];
 
 type OrderLimitMessage = {
   composite: {

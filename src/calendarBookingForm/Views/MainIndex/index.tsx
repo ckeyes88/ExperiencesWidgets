@@ -539,6 +539,7 @@ export class CalendarWidgetMain extends Component<
           // This view is the date picker where the user can select a date, timeslot, and set variant quantities
           <AvailabilityPage
             labels={this.state.labels}
+            locale={this.props.languageCode}
             availability={this.state.availability}
             moneyFormat={this.state.shop && this.state.shop.moneyFormat}
             event={this.state.event}
