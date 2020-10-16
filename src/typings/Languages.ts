@@ -1,5 +1,5 @@
-export type LanguageCodes = "en-US" | "es" | "ger" | "swe" | "fr" | "nl";
-import { enUS, de, nl, es, sv, fr } from 'date-fns/locale';
+export type LanguageCodes = "en-US" | "es" | "ger" | "swe" | "fr" | "nl" | "ja";
+import { enUS, de, nl, es, sv, fr, ja } from 'date-fns/locale';
 
 // use it to get date-fns built-in locale for our LanguageCodes type
 export const localeMap: { [key: string]: Locale } = {
@@ -8,8 +8,9 @@ export const localeMap: { [key: string]: Locale } = {
   "ger": de,
   "swe": sv,
   "fr": fr,
-  "nl": nl
-}
+  "nl": nl,
+  "ja": ja
+};
 
 /**
  * Month names; zero-indexed. Useful for grab Date month and converting to app dictionary 
@@ -380,6 +381,141 @@ export const languageDictionary: LanguageDictionaryType = {
       return !!this.emailReminderLabel && !!this.emailReminderLabel.trim() ?
         this.emailReminderLabel.replace("{days}", daysText) :
         `You will receive an email reminder ${daysText} before your scheduled time.`;
+    },
+  },
+  ja: {
+    selectDatesLabel: "希望日時を選択",
+    selectDatesAriaLabel: "日時を選択（カレンダーのウィンドウが開きます）",
+    totalLabel: "合計",
+    quantityLabel: "利用人数",
+    quantityAriaLabel: "利用人数（人数のドロップダウンが開きます）",
+    confirmVariantsLabel: "決定",
+    bookButtonLabel: "予約する",
+    reserveButtonLabel: "予約",
+    singularUnitLabel: "名",
+    pluralUnitLabel: "名",
+    free: "無料",
+    january: "1月",
+    february: "2月",
+    march: "3月",
+    april: "4月",
+    may: "5月",
+    june: "6月",
+    july: "7月",
+    august: "8月",
+    september: "9月",
+    october: "10月",
+    november: "11月",
+    december: "12月",
+    monday: "月曜日::（月）",
+    tuesday: "火曜日::（火）",
+    wednesday: "水曜日::（水）",
+    thursday: "木曜日::（木）",
+    friday: "金曜日::（金）",
+    saturday: "土曜日::（土）",
+    sunday: "日曜日::（日）",
+    firstNameLabel: "氏名（名）",
+    lastNameLabel: "氏名（性）",
+    phoneNumberLabel: "電話番号",
+    emailLabel: "メールアドレス",
+    requiredWarningLabel: "必須項目です",
+    selectDateLabel: "選択",
+    showSlotsRemainingLabel: true,
+    getSlotsRemainingLabel(units: number) {
+      if (!!this.slotsRemainingLabel && !!this.slotsRemainingLabel.trim()) {
+        return `${units} ${this.slotsRemainingLabel}`;
+      } else {
+        return units === 1
+          ? `${units} 名分の空き枠があります`
+          : `${units} 名分の空き枠があります`;
+      }
+    },
+    previousWeekAriaLabel: "前週",
+    nextWeekAriaLabel: "翌週",
+    getSelectedDateAriaLabel(date: string) {
+      return `現在の予約日時は ${date} です。`;
+    },
+    noUpcomingTimeSlotsLabel:
+      "申し訳ございません、お選びいただいた内容での空きはございません。",
+    minQuantityLabel: "",
+    maxQuantityLabel: "",
+    getOrderLimitMessage(
+      minLimit: number,
+      maxLimit: number,
+      maxQuantity: number,
+      userSetLimits
+    ) {
+      if (userSetLimits.minLimit || userSetLimits.maxLimit) {
+        // checks for NaN, 0, and undefined
+        if (
+          (!!this.minQuantityLabel && !!this.minQuantityLabel.trim()) ||
+          (!!this.maxQuantityLabel && !!this.maxQuantityLabel.trim())
+        ) {
+          // limits and custom labels are set (display the min/max limits with custom labels)
+          return {
+            whole: "",
+            composite: {
+              mainMessage: "",
+              minMessage: this.minQuantityLabel
+                ? this.minQuantityLabel.replace("{minLimit}", minLimit)
+                : "",
+              maxMessage: this.maxQuantityLabel
+                ? this.maxQuantityLabel.replace("{maxLimit}", maxLimit)
+                : "",
+            },
+          };
+        } else {
+          // limits are set but custom labels aren't (display the min/max limits with default limit labels)
+          if (maxQuantity <= 0 || minLimit > maxQuantity) {
+            return EMPTY_LIMIT_LABELS;
+          } else {
+            const minMsg = minLimit > 1 ? `最小注文個数が ${minLimit}` : "";
+            let connector = "";
+            if (!!minMsg && maxLimit < maxQuantity) {
+              connector = " ";
+            }
+            const maxMsg =
+              maxLimit >= maxQuantity
+                ? ""
+                : `１度の予約につき ${maxLimit} 個が上限です。`;
+            return {
+              composite: {},
+              whole: minMsg + connector + maxMsg,
+            };
+          }
+        }
+      } else {
+        // limits aren't set (don't display anything in the min/max limits label no matter what)
+        return {
+          whole: "",
+          composite: {},
+        };
+      }
+    },
+    optionalFieldLabel: "",
+    bookingModalHeaderLabel: "下記の内容で予約を確定します",
+    perAttendeeStepLabel: "",
+    getPerAttendeeStepLabel(current: number, total: number) {
+      return !!this.perAttendeeStepLabel && !!this.perAttendeeStepLabel.trim()
+        ? this.perAttendeeStepLabel
+            .replace("{current}", current)
+            .replace("{total}", total)
+        : `Ticket ${current} of ${total}`;
+    },
+    previousLabel: "前へ",
+    nextLabel: "次へ",
+    addLabel: "追加",
+    confirmReservationButtonLabel: "確認画面に進む",
+    savedSpotLabel: "利用人数分を確保できました！",
+    sentConfirmationLabel:
+      "確認メールが指定されたメールアドレスに送信されます。",
+    finalConfirmationLabel: "閉じる",
+    emailReminderLabel: "",
+    getEmailReminderDaysLabel(days: number) {
+      const daysText = days > 1 ? `${days} 日` : "日";
+      return !!this.emailReminderLabel && !!this.emailReminderLabel.trim()
+        ? this.emailReminderLabel.replace("{days}", daysText)
+        : `${daysText} リマインドの通知が指定されたメールアドレスに自動的に配信されます。`;
     },
   },
   ger: {
