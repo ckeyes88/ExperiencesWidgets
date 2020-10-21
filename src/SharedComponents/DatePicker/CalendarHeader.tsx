@@ -38,7 +38,6 @@ export class CalendarHeader extends Component<CalendarHeaderProps> {
           </button>
         }
         <h1 className="MonthDisplay" aria-live="assertive">
-          {/* @ts-ignore as months do unconditionally exist on labels object */}
           {labels[monthNames[month - 1]].split('::')[0]} {year}
         </h1>
         <button

@@ -45,7 +45,7 @@ const EMPTY_LIMIT_LABELS = {
   composite: {},
 };
 
-export type AppDictionary = {
+export type AppDictionary = { [key: string]: any } & {
   /** CTA Labels */
   bookButtonLabel: string;
   reserveButtonLabel: string;
