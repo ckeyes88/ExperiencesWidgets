@@ -31,6 +31,8 @@ export interface IVariantListMainProps {
   quantities: { [variantId: number]: number };
   /** Method passed in to handle changes in the desired quantity of a variant */
   onChangeQuantity(dir: number, variantId: number): void;
+  /** Indicate which language you want the calendar to display in */
+  locale: string;
   /** Event custom labels set in admin experience interface */
   labels: Partial<AppDictionary>;
 }
@@ -110,7 +112,8 @@ export class VariantList extends Component<
       variantTimeSlot,
       onConfirmSelection,
       minLimit,
-      labels
+      labels,
+      locale
     } = this.props;
 
     const isDisabled = this.totalQuantity < minLimit;
@@ -118,6 +121,7 @@ export class VariantList extends Component<
     return (
       <div>
         <VariantHeader
+          locale={locale}
           labels={labels}
           currentlySelectedTotal={this.totalQuantity}
           variantSelectedDate={variantSelectedDate}

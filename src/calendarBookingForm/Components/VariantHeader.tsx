@@ -4,7 +4,7 @@ import { format } from 'date-fns';
 import { Component, h } from 'preact';
 
 import { Availability } from '../../typings/Availability';
-import { AppDictionary } from '../../typings/Languages';
+import { AppDictionary, localeMap } from '../../typings/Languages';
 
 export interface IVariantHeaderProps {
   /** creating the variant selected date to date formant when selected or null when not */
@@ -15,6 +15,8 @@ export interface IVariantHeaderProps {
   onClickBack(): void;
   /** creating the currently selected todal to a number so it can be added up */
   currentlySelectedTotal: number;
+  /** Indicate which language you want the calendar to display in */
+  locale: string;
   /** Event custom labels set in admin experience interface */
   labels: Partial<AppDictionary>;
 }
@@ -23,7 +25,7 @@ export interface IVariantHeaderProps {
 export class VariantHeader extends Component<IVariantHeaderProps> {
   /** renders */
   render() {
-    const { variantSelectedDate, labels } = this.props;
+    const { variantSelectedDate, labels, locale } = this.props;
     const startsAt = this.props.variantTimeSlot.startsAt;
     const unitsLeft = this.props.variantTimeSlot.unitsLeft || 0;
     let spaceLeft = unitsLeft - this.props.currentlySelectedTotal;
@@ -38,7 +40,7 @@ export class VariantHeader extends Component<IVariantHeaderProps> {
           </button>
           <div className="VariantHeader-MobileContainer">
             <span className="VariantHeader-DateSelected">
-              {format(new Date(variantSelectedDate), "EEEE MMMM d, yyyy")}
+              {format(new Date(variantSelectedDate), "EEEE MMMM d, yyyy", { locale: localeMap[locale] })}
             </span>
             <p>
               <span id="VariantHeader-StartTime">

@@ -8,6 +8,7 @@ import {
     getMonthTemplate,
 } from "./Utils";
 import { isToday } from "date-fns";
+import { AppDictionary } from "../../typings/Languages";
 
 type CalendarProps = {
     /** Gives a unique reference to the top level calendar node */
@@ -44,8 +45,10 @@ type CalendarProps = {
     onChangeYear(ev: Event): void,
     /** indicates whether the entire calendar should be disabled */
     disabled: boolean;
-    /** indicates the standard language string to set the calendar display language */
-    locale: string,
+    /** Indicate which language you want the calendar to display in */
+    locale?: string;
+    /** Event custom labels set in admin experience interface */
+    labels: Partial<AppDictionary>;
 };
 
 /** Top Level Calendar component */
@@ -69,7 +72,7 @@ export class Calendar extends Component<CalendarProps> {
     private handleForward = () => this.props.onChangeMonth(1);
 
     /** render */
-    render({ month, calendarRef, year, isDateSelected, isDateEnabled, isDateHovered, isDateFocused, isDateInRange, isDateHighlighted, onDateFocused, onDateHovered, onDateSelected, onChangeYear, disabled, locale }: CalendarProps) {
+    render({ month, calendarRef, year, isDateSelected, isDateEnabled, isDateHovered, isDateFocused, isDateInRange, isDateHighlighted, onDateFocused, onDateHovered, onDateSelected, onChangeYear, disabled, labels }: CalendarProps) {
         return (
             /** Hide calendar view if a date has been selected */
             <div ref={calendarRef} className={`CalendarContainer ${this.props.hideCalendar ? "isHidden" : ""}`}>
@@ -78,8 +81,8 @@ export class Calendar extends Component<CalendarProps> {
                     year={year}
                     onBack={this.handleBack}
                     onForward={this.handleForward}
-                    locale={locale}
                     disabled={disabled}
+                    labels={labels}
                 />
                 <div className="Calendar" role="grid">
                     <div className="head" role="row">

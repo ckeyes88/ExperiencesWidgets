@@ -1,8 +1,5 @@
 import { h, Component } from "preact";
-
-import {
-  monthsOfYear,
-} from "./Utils";
+import { AppDictionary, monthNames } from "../../typings/Languages";
 
 type CalendarHeaderProps = {
   /** Function to fire when the user clicks/selects the back button */
@@ -11,12 +8,12 @@ type CalendarHeaderProps = {
   onForward(): void;
   /** the currently selected month */
   month: number;
-  /** the currently set language locale */
-  locale: string;
   /** flag to disable the entire form */
   disabled: boolean;
   /** the currently selected year */
   year: number;
+  /** Event custom labels set in admin experience interface */
+  labels: Partial<AppDictionary>;
 };
 
 /**
@@ -26,7 +23,7 @@ type CalendarHeaderProps = {
 export class CalendarHeader extends Component<CalendarHeaderProps> {
 
   /** render */
-  render({ disabled, locale, month, year, onBack, onForward }: CalendarHeaderProps) {
+  render({ disabled, month, year, onBack, onForward, labels }: CalendarHeaderProps) {
     return (
       <div className="CalendarHeader">
         {
@@ -41,7 +38,7 @@ export class CalendarHeader extends Component<CalendarHeaderProps> {
           </button>
         }
         <h1 className="MonthDisplay" aria-live="assertive">
-          {monthsOfYear(locale)[month - 1]} {year}
+          {labels[monthNames[month - 1]].split('::')[0]} {year}
         </h1>
         <button
           className="NextButton"
