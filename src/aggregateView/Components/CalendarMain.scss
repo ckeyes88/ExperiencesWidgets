@@ -1,0 +1,32 @@
+.aggregate-calendar-main {
+    .fc-scroller.fc-scroller-liquid-absolute {
+        height: 110%;
+    }
+
+    td.fc-daygrid-day.fc-day.fc-day-today  {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .fc-today-button.fc-button.fc-button-primary {
+        background-color: transparent;
+        border: none;
+        text-transform: capitalize;
+        color: #999B9E;
+        font-family: Avenir;
+        font-size: 14px;
+        line-height: 17px;
+    }
+
+    .fc-prev-button.fc-button.fc-button-primary,
+    .fc-next-button.fc-button.fc-button-primary {
+        background-color: white;
+        border: none;
+    }
+
+    .fc-icon.fc-icon-chevron-left, 
+    .fc-icon.fc-icon-chevron-right {
+        background-color: white;
+        border: none;
+        color: #666666;
+    }
+}

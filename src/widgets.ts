@@ -19,11 +19,12 @@ function loadExpAppWidget(keyAttribute: string, scriptPath: string): void {
   }
 }
 // baseUrl for Development
-// const baseUrl = "__BASE_URL__/__ENV_NAME__";
+const baseUrl = "__BASE_URL__/__ENV_NAME__";
 // baseURL for Production
-const baseUrl = "__BASE_URL__/public/__ENV_NAME__";
+// const baseUrl = "__BASE_URL__/public/__ENV_NAME__";
 loadExpAppWidget("[data-expapp-gallery]", `${baseUrl}/expAppListView.js`);
 loadExpAppWidget(
   "[data-expapp-calendar-booking-form]",
   `${baseUrl}/calendarBookingForm.js`
 );
+loadExpAppWidget("[expapp-calendar-booking-form]", `${baseUrl}/aggregateView.js`);
