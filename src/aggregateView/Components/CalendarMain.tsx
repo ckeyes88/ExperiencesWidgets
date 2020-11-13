@@ -23,13 +23,16 @@ export class CalendarContainer extends Component {
     const FullCalendarAsComponent = FullCalendarCast as ComponentClass<any>;
 
     return (
-      <div className="aggregate-calendar-main">
-        <CalendarViewSelector view={view} selectView={this.selectView}/>
-        <FullCalendarAsComponent
-          ref={this.calendarRef}
-          plugins={[dayGridPlugin, listPlugin]}
-          initialView={view}
-        />
+      <div className="aggregate-calendar-container">
+        <div className="main-heading">Events Calendar</div>
+        <div className="aggregate-calendar-main">
+          <CalendarViewSelector view={view} selectView={this.selectView}/>
+          <FullCalendarAsComponent
+            ref={this.calendarRef}
+            plugins={[dayGridPlugin, listPlugin]}
+            initialView={view}
+          />
+        </div>
       </div>
     );
   }

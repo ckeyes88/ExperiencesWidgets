@@ -1,13 +1,56 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap');
 
-.aggregate-calendar-main {
+.aggregate-calendar-container {
     font-family: Avenir, "Avenir-Black", "Nunito Sans";
-    padding-top: 2rem;
+
+    .main-heading {
+        color: #000000;
+        font-size: 36px;
+        line-height: 43px;
+        width: 100%;
+        text-align: center;
+        margin: 4rem 0 2rem 0;
+        font-weight: 800;
+    }
+}
+
+.aggregate-calendar-main {
+    padding: 2rem;
+    border: 1px solid #DEDEDE;
+    border-radius: 5px;
+    box-shadow: 0 2px 24px 0 rgba(0, 0, 0, 0.06);
 
     .fc-toolbar-title {
         color: #000000;
         font-size: 24px;
         line-height: 29px;
+        text-transform: capitalize;
+    }
+
+    table.fc-scrollgrid {
+        border: none;
+
+        .fc-scrollgrid-section-header {
+            td {
+                border: none;
+            }
+        }
+    }
+
+    .fc-col-header-cell.fc-day {
+        border: none;
+    }
+
+    .fc-col-header {
+        margin: 0;
+
+        &.fc-day {
+            border: none;
+        }
+    }
+
+    .fc-col-header-cell-cushion  {
+        border: none;
     }
 
     .fc-scroller.fc-scroller-liquid-absolute {
@@ -16,6 +59,24 @@
 
     td.fc-daygrid-day.fc-day.fc-day-today  {
         background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .fc-daygrid-day-frame {
+        border: 1px solid #D5D5D5;
+    }
+
+    .fc-daygrid-day-number {
+        border: none;
+        color: #000000;
+        font-size: 14px;
+        line-height: 17px;
+        margin: .3rem .3rem 0 0;
+    }
+
+    .fc-day-other {
+        .fc-daygrid-day-number {
+            display: none;
+        }
     }
 
     .fc-today-button.fc-button.fc-button-primary {
