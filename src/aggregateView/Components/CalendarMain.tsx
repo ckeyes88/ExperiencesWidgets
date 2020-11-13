@@ -1,14 +1,32 @@
 import "./CalendarMain.scss";
+import { addDays } from "date-fns/fp";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import listPlugin from '@fullcalendar/list';
 import { Component, h, ComponentClass, createRef } from "preact";
 import { CalendarViewSelector } from "./CalendarViewSelector";
+import { EventAvailability, fetchProductsWithAvailability } from "../../Utils/api";
 
-export class CalendarContainer extends Component {
+interface ICalendarContainer {
+  aggregateViewBaseUrl: string;
+  aggregateViewShop: string
+  aggregateViewShopUrl: string;
+  baseUrl: string;
+  languageCode: string;
+  shopUrl: string;
+  storefrontAccessToken?: string;
+}
+
+interface ICalendarContainerState {
+  view: string;
+  events: EventAvailability[];
+}
+
+export class CalendarContainer extends Component<ICalendarContainer> {
   calendarRef = createRef();
-  state = {
-    view: 'dayGridMonth'
+  state: ICalendarContainerState = {
+    view: 'dayGridMonth',
+    events: []
   };
 
   selectView = (view: string) => {
@@ -16,6 +34,13 @@ export class CalendarContainer extends Component {
     calendarApi.changeView(view);
     this.setState({ view });
   };
+
+  async componentDidMount() {
+    const { baseUrl, shopUrl } = this.props;
+    const events = await fetchProductsWithAvailability(baseUrl, shopUrl, new Date(), addDays(30)(new Date()));
+    this.setState({ events });
+    console.log('events are ', events);
+  }
 
   render() {
     const { view } = this.state;
