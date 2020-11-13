@@ -1,5 +1,39 @@
 .calendar-view-selector {
     position: relative;
     text-align: center;
-    top: 1.8rem;
+    top: 2.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .month-view, .list-view {
+        display: flex;
+        align-items: center;
+        color: #666666;
+        font-size: 14px;
+        line-height: 17px;
+        border-bottom: solid 3px #E3E3E3;
+        padding: 0 .5rem;
+        cursor: pointer;
+        user-select: none;
+
+        &.selected {
+            color: black;
+            border-bottom-color: #0088CB;
+            transition: all .5s ease-in-out;
+
+            .calendar-icon, .list-icon {
+                fill: black;    
+            }
+        }
+
+        .calendar-icon, .list-icon {
+            margin-bottom: 3px;
+            margin-right: .3rem;
+            width: 24px;
+            height: auto;
+            fill: #666666;
+            transition: all .5s ease-in-out;
+        }
+    }
 }

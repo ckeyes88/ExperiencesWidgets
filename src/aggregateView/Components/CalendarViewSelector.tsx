@@ -1,16 +1,29 @@
-import { h, Component } from "preact";
+import {
+    CalendarMajor,
+    ListMajor
+} from '@shopify/polaris-icons';
+import { Component, h } from "preact";
 import "./CalendarViewSelector.scss";
 
-export class CalendarViewSelector extends Component {
+interface ICalendarViewSelectorProps {
+    view: string;
+    selectView: (view: string) => void;
+}
+
+export class CalendarViewSelector extends Component<ICalendarViewSelectorProps> {
     render() {
+        const { selectView, view } = this.props;
+
         return <div className="calendar-view-selector">
-            <div>
-                <span>icon</span>
-                <span>Month</span>
+            <div className={`month-view ${view === 'dayGridMonth' ? 'selected' : ''}`} 
+                onClick={() => selectView('dayGridMonth')}>
+                <div className="calendar-icon"><CalendarMajor/></div>
+                <div>Month</div>
             </div>
-            <div>
-                <span>icon</span>
-                <span>List</span>
+            <div className={`list-view ${view === 'listWeek' ? 'selected' : ''}`} 
+                onClick={() => selectView('listWeek')}>
+                <div className="list-icon"><ListMajor/></div>
+                <div>List</div>
             </div>
         </div>
     }
