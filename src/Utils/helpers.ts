@@ -1,6 +1,6 @@
 import { FirstAvailability } from "../typings/FirstAvailability";
 import { Availability } from "../typings/Availability";
-import { EventAssetLinkDBO } from "../typings/Event";
+import { EventAssetLinkDBO, EventVariantDBO } from "../typings/Event";
 import { AssetDBO } from "@helpfulhuman/expapp-shared-libs";
 import { EventAvailability } from "./api";
 import { CalendarEvent } from "../SharedComponents/Calendar/CalendarWrapper";
@@ -328,6 +328,41 @@ export function findFeaturedImageUrl(images: EventAssetLinkDBO[], imageLinks: As
 }
 
 /*
+Takes images and imageLinks and returns a url of a featured of first image
+ */
+export const resolveImageUrl = (images: EventAssetLinkDBO[] = [], links: AssetDBO[] = []): string => {
+  if (!images.length) {
+    return "";
+  }
+
+  const featuredImage = images.find(i => i.featured);
+  const featuredImageId = featuredImage ? featuredImage.id : 0;
+  const link = links.find(i => i._id === featuredImageId);
+
+  if (!link) {
+    return "";
+  }
+
+  if (typeof link === "string") {
+    return link || "";
+  } else {
+    return link.url || "";
+  }
+};
+
+/*
+  Finds cheapest variant price from an array of EventVariantDBO
+ */
+export const findCheapestVariantPrice = (variants: EventVariantDBO[] = []): number => {
+  if (!variants.length) {
+    return 0;
+  }
+
+  const prices = variants.map(v => v.price);
+  return Math.min(...prices);
+};
+
+/*
  Takes events response and extracts available timeslots to display on FullCalendar
  */
 export const extractAndParseEvents = (events: EventAvailability[], storeUrl: string): CalendarEvent[] => {
@@ -340,8 +375,10 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
           ...event, 
           id: `${i}-${ts.productId}`, 
           start: new Date(ts.startsAt),
-          end: new Date(ts.endsAt),
-          url: `https://${storeUrl}/products/${e.handle}/${ts.startsAt}/${ts.endsAt}`,
+          url: `https://${storeUrl}/products/${e.handle}/${ts.startsAt}`,
+          imageUrl: resolveImageUrl(e.images, e.imageLinks),
+          paymentType: e.paymentType,
+          price: findCheapestVariantPrice(e.variants),
           editable: false,
           startEditable: false,
           durationEditable: false,

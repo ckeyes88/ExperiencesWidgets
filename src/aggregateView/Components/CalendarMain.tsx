@@ -5,6 +5,7 @@ import { CalendarViewSelector } from "./CalendarViewSelector";
 import { fetchProductsWithAvailability } from "../../Utils/api";
 import { Calendar, CalendarEvent } from "../../SharedComponents/Calendar/CalendarWrapper";
 import { extractAndParseEvents } from "../../Utils/helpers";
+import { CalendarEventContent } from "../../SharedComponents/Calendar/CalendarEventContent";
 
 interface ICalendarContainer {
   aggregateViewBaseUrl?: string;
@@ -54,6 +55,7 @@ export class CalendarContainer extends Component<ICalendarContainer, ICalendarCo
             forwardRef={this.calendarRef}
             view={view}
             events={events}
+            eventContent={CalendarEventContent}
           />
         </div>
       </div>
