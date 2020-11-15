@@ -2,6 +2,8 @@ import { FirstAvailability } from "../typings/FirstAvailability";
 import { Availability } from "../typings/Availability";
 import { EventAssetLinkDBO } from "../typings/Event";
 import { AssetDBO } from "@helpfulhuman/expapp-shared-libs";
+import { EventAvailability } from "./api";
+import { CalendarEvent } from "../SharedComponents/Calendar/CalendarWrapper";
 
 /**
 * Takes in shopify money_format property along with a float value
@@ -324,3 +326,22 @@ export function findFeaturedImageUrl(images: EventAssetLinkDBO[], imageLinks: As
     ? imageLinks[0].url
     : DEFAULT_EVENT_FEATURED_IMAGE;
 }
+
+export const extractAndParseEvents = (events: EventAvailability[]): CalendarEvent[] => {
+  const parsed: CalendarEvent[] = [];
+  events.forEach(e => {
+    const event = { title: e.name };
+    e.availabilityProducts && e.availabilityProducts.forEach((p) => {
+      p.availableTimeslots && p.availableTimeslots.forEach((ts: Availability, i: number) =>
+        parsed.push({ 
+          ...event, 
+          id: `${i}-${ts.productId}`, 
+          start: new Date(ts.startsAt),
+          end: new Date(ts.endsAt),
+          url: "https://www.google.com",
+        }));
+    });
+  });
+
+  return parsed;
+};

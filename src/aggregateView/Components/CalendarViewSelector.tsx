@@ -4,7 +4,6 @@ import "./CalendarViewSelector.scss";
 
 interface ICalendarViewSelectorProps {
   view: string;
-
   selectView(view: string): void;
 }
 

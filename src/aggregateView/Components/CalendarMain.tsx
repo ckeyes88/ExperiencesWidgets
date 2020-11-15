@@ -2,8 +2,9 @@ import "./CalendarMain.scss";
 import { addDays } from "date-fns/fp";
 import { Component, createRef, h } from "preact";
 import { CalendarViewSelector } from "./CalendarViewSelector";
-import { EventAvailability, fetchProductsWithAvailability } from "../../Utils/api";
-import { Calendar } from "../../SharedComponents/Calendar/CalendarWrapper";
+import { fetchProductsWithAvailability } from "../../Utils/api";
+import { Calendar, CalendarEvent } from "../../SharedComponents/Calendar/CalendarWrapper";
+import { extractAndParseEvents } from "../../Utils/helpers";
 
 interface ICalendarContainer {
   aggregateViewBaseUrl?: string;
@@ -17,10 +18,10 @@ interface ICalendarContainer {
 
 interface ICalendarContainerState {
   view: string;
-  events: EventAvailability[];
+  events: CalendarEvent[];
 }
 
-export class CalendarContainer extends Component<ICalendarContainer> {
+export class CalendarContainer extends Component<ICalendarContainer, ICalendarContainerState> {
   calendarRef = createRef();
   state: ICalendarContainerState = {
     view: "dayGridMonth",
@@ -35,13 +36,13 @@ export class CalendarContainer extends Component<ICalendarContainer> {
 
   async componentDidMount() {
     const { baseUrl, shopUrl } = this.props;
-    const events = await fetchProductsWithAvailability(baseUrl, shopUrl, new Date(), addDays(30)(new Date()));
+    const eventsResponse = await fetchProductsWithAvailability(baseUrl, shopUrl, new Date(), addDays(30)(new Date()));
+    const events = extractAndParseEvents(eventsResponse);
     this.setState({ events });
-    console.log("events are ", events);
   }
 
   render() {
-    const { view } = this.state;
+    const { events, view } = this.state;
 
     return (
       <div className="aggregate-calendar-container">
@@ -51,6 +52,7 @@ export class CalendarContainer extends Component<ICalendarContainer> {
           <Calendar
             forwardRef={this.calendarRef}
             view={view}
+            events={events}
           />
         </div>
       </div>
