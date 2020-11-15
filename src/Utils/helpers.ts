@@ -327,7 +327,10 @@ export function findFeaturedImageUrl(images: EventAssetLinkDBO[], imageLinks: As
     : DEFAULT_EVENT_FEATURED_IMAGE;
 }
 
-export const extractAndParseEvents = (events: EventAvailability[]): CalendarEvent[] => {
+/*
+ Takes events response and extracts available timeslots to display on FullCalendar
+ */
+export const extractAndParseEvents = (events: EventAvailability[], storeUrl: string): CalendarEvent[] => {
   const parsed: CalendarEvent[] = [];
   events.forEach(e => {
     const event = { title: e.name };
@@ -338,7 +341,11 @@ export const extractAndParseEvents = (events: EventAvailability[]): CalendarEven
           id: `${i}-${ts.productId}`, 
           start: new Date(ts.startsAt),
           end: new Date(ts.endsAt),
-          url: "https://www.google.com",
+          url: `https://${storeUrl}/products/${e.handle}/${ts.startsAt}/${ts.endsAt}`,
+          editable: false,
+          startEditable: false,
+          durationEditable: false,
+          resourceEditable: false,
         }));
     });
   });

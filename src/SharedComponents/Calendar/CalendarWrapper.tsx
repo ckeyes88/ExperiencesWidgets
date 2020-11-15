@@ -15,6 +15,10 @@ export type CalendarEvent = {
   end: Date;
   title: string;
   url: string;
+  editable: boolean;
+  startEditable: boolean;
+  durationEditable: boolean;
+  resourceEditable: boolean;
 };
 
 export class Calendar extends Component<ICalendarProps, any>{

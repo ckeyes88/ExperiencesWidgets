@@ -37,7 +37,8 @@ export class CalendarContainer extends Component<ICalendarContainer, ICalendarCo
   async componentDidMount() {
     const { baseUrl, shopUrl } = this.props;
     const eventsResponse = await fetchProductsWithAvailability(baseUrl, shopUrl, new Date(), addDays(30)(new Date()));
-    const events = extractAndParseEvents(eventsResponse);
+    console.log('eventsResponse is ', eventsResponse);
+    const events = extractAndParseEvents(eventsResponse, shopUrl);
     this.setState({ events });
   }
 
