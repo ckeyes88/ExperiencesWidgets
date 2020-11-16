@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap');
 
+$text-main: #666666;
+
 .aggregate-calendar-container {
-    font-family: Avenir, "Avenir-Black", "Nunito Sans";
+    font-family: Avenir, "Avenir-Black", "Nunito Sans", serif;
 
     .main-heading {
         color: #000000;
@@ -51,7 +53,7 @@
 
     .fc-col-header-cell-cushion  {
         border: none;
-        color: #666666;
+        color: $text-main;
         font-size: 14px;
         line-height: 17px;
         margin-bottom: .4rem;
@@ -102,6 +104,18 @@
     .fc-icon.fc-icon-chevron-right {
         background-color: white;
         border: none;
-        color: #666666;
+        color: $text-main;
+    }
+
+    a.fc-daygrid-event.fc-event {
+        border: none;
+        overflow-x: hidden;
+        color: $text-main;
+        font-size: 12px;
+        line-height: 14px;
+    }
+
+    .fc-direction-ltr .fc-list-table .fc-list-event-graphic {
+        display: none;
     }
 }

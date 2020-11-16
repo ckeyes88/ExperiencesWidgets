@@ -353,13 +353,14 @@ export const resolveImageUrl = (images: EventAssetLinkDBO[] = [], links: AssetDB
 /*
   Finds cheapest variant price from an array of EventVariantDBO
  */
-export const findCheapestVariantPrice = (variants: EventVariantDBO[] = []): number => {
+export const findCheapestVariantPrice = (variants: EventVariantDBO[] = []): string => {
   if (!variants.length) {
-    return 0;
+    return "$0";
   }
 
   const prices = variants.map(v => v.price);
-  return Math.min(...prices);
+  const price = Math.min(...prices);
+  return variants.length > 1 ? `Starts at $${price}` : `$${price}`;
 };
 
 /*
@@ -372,7 +373,8 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
     e.availabilityProducts && e.availabilityProducts.forEach((p) => {
       p.availableTimeslots && p.availableTimeslots.forEach((ts: Availability, i: number) =>
         parsed.push({ 
-          ...event, 
+          ...event,
+          event: {},
           id: `${i}-${ts.productId}`, 
           start: new Date(ts.startsAt),
           url: `https://${storeUrl}/products/${e.handle}/${ts.startsAt}`,

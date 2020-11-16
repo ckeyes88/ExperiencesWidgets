@@ -3,9 +3,10 @@ import { addDays } from "date-fns/fp";
 import { Component, createRef, h } from "preact";
 import { CalendarViewSelector } from "./CalendarViewSelector";
 import { fetchProductsWithAvailability } from "../../Utils/api";
-import { Calendar, CalendarEvent } from "../../SharedComponents/Calendar/CalendarWrapper";
+import { Calendar, CalendarEvent, calendarViewType } from "../../SharedComponents/Calendar/CalendarWrapper";
 import { extractAndParseEvents } from "../../Utils/helpers";
-import { CalendarEventContent } from "../../SharedComponents/Calendar/CalendarEventContent";
+import { CalendarEventListContent } from "../../SharedComponents/Calendar/CalendarEventListContent";
+import { CalendarEventGridContent } from "../../SharedComponents/Calendar/CalendarEventGridContent";
 
 interface ICalendarContainer {
   aggregateViewBaseUrl?: string;
@@ -22,10 +23,15 @@ interface ICalendarContainerState {
   events: CalendarEvent[];
 }
 
+const eventRendererViewMap = {
+  [calendarViewType.dayGrid]: CalendarEventGridContent,
+  [calendarViewType.list]: CalendarEventListContent,
+};
+
 export class CalendarContainer extends Component<ICalendarContainer, ICalendarContainerState> {
   calendarRef = createRef();
   state: ICalendarContainerState = {
-    view: "dayGridMonth",
+    view: calendarViewType.dayGrid,
     events: [],
   };
 
@@ -55,7 +61,7 @@ export class CalendarContainer extends Component<ICalendarContainer, ICalendarCo
             forwardRef={this.calendarRef}
             view={view}
             events={events}
-            eventContent={CalendarEventContent}
+            eventContent={eventRendererViewMap[view]}
           />
         </div>
       </div>
