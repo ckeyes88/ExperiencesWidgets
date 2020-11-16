@@ -6,6 +6,7 @@ export type OrderLineItemInputData = {
   eventVariantName: string;
   productId?: number;
   productVariantId?: number;
+  timeslotId?: string;
   startsAt: Date;
   endsAt: Date;
   timezone: string;

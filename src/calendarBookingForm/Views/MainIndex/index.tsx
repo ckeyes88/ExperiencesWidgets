@@ -450,6 +450,7 @@ export class CalendarWidgetMain extends Component<
       eventVariantName: variant.name,
       productId: event.shopifyProductId,
       productVariantId: variant.shopifyVariantId,
+      timeslotId: selectedTimeslot.timeslotId,
       startsAt: selectedTimeslot.startsAt,
       endsAt: selectedTimeslot.endsAt,
       timezone: selectedTimeslot.timezone,
