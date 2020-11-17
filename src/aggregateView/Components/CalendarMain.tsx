@@ -1,5 +1,6 @@
 import "./CalendarMain.scss";
 import { addDays } from "date-fns/fp";
+import { format } from "date-fns";
 import { Component, createRef, h } from "preact";
 import { CalendarViewSelector } from "../../SharedComponents/Calendar/CalendarViewSelector";
 import { fetchProductsWithAvailability } from "../../Utils/api";
@@ -22,8 +23,9 @@ interface ICalendarContainer {
 
 interface ICalendarContainerState {
   view: string;
-  daySelected?: string;
+  daySelected?: Date;
   events: CalendarEvent[];
+  daySelectedEvents: CalendarEvent[];
 }
 
 const eventRendererViewMap = {
@@ -36,7 +38,8 @@ export class CalendarContainer extends Component<ICalendarContainer, ICalendarCo
   state: ICalendarContainerState = {
     view: calendarViewType.dayGrid,
     events: [],
-    daySelected: "",
+    daySelected: null,
+    daySelectedEvents: [],
   };
 
   selectView = (view: string) => {
@@ -45,11 +48,14 @@ export class CalendarContainer extends Component<ICalendarContainer, ICalendarCo
     this.setState({ view });
   }
 
-  handleSelectDay = ({ dateStr }: DateClickEvent) => {
-    this.setState({ daySelected: dateStr });
+  handleSelectDay = ({ date }: DateClickEvent) => {
+    const earliest = new Date(date).getTime();
+    const latest = new Date(date).setHours(23, 59, 59);
+    const daySelectedEvents = this.state.events.filter(e => e.start.getTime() >= earliest && e.end.getTime() < latest);
+    this.setState({ daySelected: date, daySelectedEvents });
   }
 
-  handleClose = (isOpen: boolean) => this.setState({ daySelected: "" });
+  handleClose = () => this.setState({ daySelected: null });
 
   async componentDidMount() {
     const { baseUrl, shopUrl } = this.props;
@@ -60,14 +66,19 @@ export class CalendarContainer extends Component<ICalendarContainer, ICalendarCo
   }
 
   render() {
-    const { events, view, daySelected } = this.state;
+    const { events, view, daySelected, daySelectedEvents } = this.state;
 
     return (
       <div className="aggregate-calendar-container">
         <div className="main-heading">Events Calendar</div>
         <div className="aggregate-calendar-main">
           <CalendarViewSelector view={view} selectView={this.selectView} />
-          <CalendarDaySchedule open={!!daySelected} handleClose={this.handleClose} title={daySelected} events={[]} />
+          <CalendarDaySchedule
+            open={!!daySelected && !!daySelectedEvents.length}
+            handleClose={this.handleClose}
+            title={daySelected ? format(daySelected, "MMMM d, y") : ""}
+            events={daySelectedEvents}
+          />
           <Calendar
             forwardRef={this.calendarRef}
             view={view}

@@ -7,7 +7,7 @@ export const CalendarEventGridContent = ({ event: { _def, start } }: ICalendarEv
   return (
     <div className="calendar-event-grid-details">
       <div className="event-description">
-        <span>{format(start, "Kaaaaa")}</span>
+        <span>{format(start, "h:mmaaaaa")}</span>
         <span>
           <strong>
             {_def.title}

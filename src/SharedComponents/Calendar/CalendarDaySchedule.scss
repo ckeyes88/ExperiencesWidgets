@@ -4,12 +4,14 @@ dialog[open] {
 
 .calendar-day-schedule {
   padding: 0;
-  border: none;
   z-index: 1000;
   position: absolute;
   top: 60vh;
   margin: 0 auto;
   width: 300px;
+  border: 1px solid #DADADA;
+  border-radius: 0 3px 3px;
+  box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.25);
 }
 
 .calendar-day-schedule-header {
@@ -23,6 +25,10 @@ dialog[open] {
   font-size: 14px;
   line-height: 17px;
 
+  div:first-of-type {
+    font-weight: bold;
+  }
+
   button {
     background-color: transparent;
     border: none;
@@ -30,6 +36,49 @@ dialog[open] {
 
     path {
       fill: #A1A1A1;
+    }
+  }
+}
+
+.calendar-day-schedule-body {
+  display: flex;
+  align-content: center;
+  flex-direction: column;
+}
+
+.calendar-day-event {
+  display: flex;
+  margin: 10px 0;
+  cursor: pointer;
+
+  .event-time {
+    width: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .featured-image {
+    display: flex;
+    margin-right: 1rem;
+  }
+
+  img {
+    height: 45px;
+    width: auto;
+    min-width: 45px;
+  }
+
+  .event-description {
+    color: #666666;
+    font-size: 14px;
+    line-height: 17px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    div:first-child {
+      font-weight: 700;
     }
   }
 }

@@ -23,12 +23,12 @@ export type CalendarEvent = {
   event: any; // needed for CalendarEventContent compatibility
   id: string;
   start: Date;
-  end?: Date; // currently not being used, but might be useful
+  end: Date;
   title: string;
   url: string;
   imageUrl?: string | AssetDBO;
   paymentType?: string;
-  price?: string;
+  price: [string, number];
   editable: boolean;
   startEditable: boolean;
   durationEditable: boolean;

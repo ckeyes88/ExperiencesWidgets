@@ -8,7 +8,7 @@ export interface ICalendarEventContent {
       extendedProps: {
         imageUrl?: string | AssetDBO;
         paymentType?: string;
-        price?: string;
+        price?: [string, number];
       };
       title: string;
     };

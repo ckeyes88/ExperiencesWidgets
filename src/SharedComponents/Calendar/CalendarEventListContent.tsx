@@ -14,8 +14,8 @@ export const CalendarEventListContent = ({ event: { _def } }: ICalendarEventCont
         <div>{_def.title}</div>
         <div>
           <span>{e.paymentType}</span>
-          <span>{" | "}</span>
-          <span>{e.price}</span>
+          {e.price[1] > 0 && <span>{" | "}</span>}
+          {e.price[1] > 0 && <span>{e.price[0]}</span>}
         </div>
       </div>
     </div>
