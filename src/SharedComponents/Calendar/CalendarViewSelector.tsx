@@ -1,7 +1,7 @@
 import { CalendarMajor, ListMajor } from "@shopify/polaris-icons";
 import { Component, h } from "preact";
 import "./CalendarViewSelector.scss";
-import { calendarViewType } from "../../SharedComponents/Calendar/CalendarWrapper";
+import { calendarViewType } from "./CalendarWrapper";
 
 interface ICalendarViewSelectorProps {
   view: string;

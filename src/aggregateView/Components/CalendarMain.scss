@@ -5,6 +5,12 @@ $text-main: #666666;
 .aggregate-calendar-container {
     font-family: Avenir, "Avenir-Black", "Nunito Sans", serif;
 
+    .fc-view-harness {
+        &.fc-view-harness-active {
+            min-height: 680px;
+        }
+    }
+
     .main-heading {
         color: #000000;
         font-size: 36px;
@@ -117,5 +123,10 @@ $text-main: #666666;
 
     .fc-direction-ltr .fc-list-table .fc-list-event-graphic {
         display: none;
+    }
+
+    .fc .fc-daygrid-day-frame {
+        overflow-y: auto;
+        max-height: 50px;
     }
 }

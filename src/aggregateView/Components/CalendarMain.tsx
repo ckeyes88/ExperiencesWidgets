@@ -1,12 +1,14 @@
 import "./CalendarMain.scss";
 import { addDays } from "date-fns/fp";
 import { Component, createRef, h } from "preact";
-import { CalendarViewSelector } from "./CalendarViewSelector";
+import { CalendarViewSelector } from "../../SharedComponents/Calendar/CalendarViewSelector";
 import { fetchProductsWithAvailability } from "../../Utils/api";
 import { Calendar, CalendarEvent, calendarViewType } from "../../SharedComponents/Calendar/CalendarWrapper";
 import { extractAndParseEvents } from "../../Utils/helpers";
 import { CalendarEventListContent } from "../../SharedComponents/Calendar/CalendarEventListContent";
 import { CalendarEventGridContent } from "../../SharedComponents/Calendar/CalendarEventGridContent";
+import { CalendarDaySchedule } from "../../SharedComponents/Calendar/CalendarDaySchedule";
+import { DateClickEvent } from "../../typings/Calendar";
 
 interface ICalendarContainer {
   aggregateViewBaseUrl?: string;
@@ -20,6 +22,7 @@ interface ICalendarContainer {
 
 interface ICalendarContainerState {
   view: string;
+  daySelected?: string;
   events: CalendarEvent[];
 }
 
@@ -33,12 +36,18 @@ export class CalendarContainer extends Component<ICalendarContainer, ICalendarCo
   state: ICalendarContainerState = {
     view: calendarViewType.dayGrid,
     events: [],
+    daySelected: "",
   };
 
   selectView = (view: string) => {
     const calendarApi = this.calendarRef.current.getApi();
     calendarApi.changeView(view);
     this.setState({ view });
+  }
+
+  handleSelectDay = ({ dateStr }: DateClickEvent) => {
+    console.log("dateStr is ", dateStr)
+    this.setState({ daySelected: dateStr });
   }
 
   async componentDidMount() {
@@ -50,17 +59,19 @@ export class CalendarContainer extends Component<ICalendarContainer, ICalendarCo
   }
 
   render() {
-    const { events, view } = this.state;
+    const { events, view, daySelected } = this.state;
 
     return (
       <div className="aggregate-calendar-container">
         <div className="main-heading">Events Calendar</div>
         <div className="aggregate-calendar-main">
           <CalendarViewSelector view={view} selectView={this.selectView} />
+          <CalendarDaySchedule open={!!daySelected} title={daySelected} events={[]} />
           <Calendar
             forwardRef={this.calendarRef}
             view={view}
             events={events}
+            dateClick={this.handleSelectDay}
             eventContent={eventRendererViewMap[view]}
           />
         </div>

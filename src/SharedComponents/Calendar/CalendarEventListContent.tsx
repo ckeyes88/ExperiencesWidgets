@@ -1,22 +1,8 @@
 import { h, JSX } from "preact";
-import { AssetDBO } from "@helpfulhuman/expapp-shared-libs";
 import "./CalendarEventListContent.scss";
+import { ICalendarEventContent } from "../../typings/Calendar";
 
-interface ICalendarEventContentProps {
-  event: {
-    start: Date;
-    _def: {
-      extendedProps: {
-        imageUrl?: string | AssetDBO;
-        paymentType?: string;
-        price?: string;
-      };
-      title: string;
-    };
-  };
-}
-
-export const CalendarEventListContent = ({ event: { _def } }: ICalendarEventContentProps): JSX.Element => {
+export const CalendarEventListContent = ({ event: { _def } }: ICalendarEventContent): JSX.Element => {
   const { extendedProps: e } = _def;
 
   return (
