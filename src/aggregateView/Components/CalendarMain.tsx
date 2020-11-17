@@ -46,9 +46,10 @@ export class CalendarContainer extends Component<ICalendarContainer, ICalendarCo
   }
 
   handleSelectDay = ({ dateStr }: DateClickEvent) => {
-    console.log("dateStr is ", dateStr)
     this.setState({ daySelected: dateStr });
   }
+
+  handleClose = (isOpen: boolean) => this.setState({ daySelected: "" });
 
   async componentDidMount() {
     const { baseUrl, shopUrl } = this.props;
@@ -66,7 +67,7 @@ export class CalendarContainer extends Component<ICalendarContainer, ICalendarCo
         <div className="main-heading">Events Calendar</div>
         <div className="aggregate-calendar-main">
           <CalendarViewSelector view={view} selectView={this.selectView} />
-          <CalendarDaySchedule open={!!daySelected} title={daySelected} events={[]} />
+          <CalendarDaySchedule open={!!daySelected} handleClose={this.handleClose} title={daySelected} events={[]} />
           <Calendar
             forwardRef={this.calendarRef}
             view={view}

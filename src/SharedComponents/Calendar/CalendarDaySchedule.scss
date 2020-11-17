@@ -1,0 +1,35 @@
+dialog[open] {
+  animation: appear .35s cubic-bezier(0, 1.8, 1, 1.8);
+}
+
+.calendar-day-schedule {
+  padding: 0;
+  border: none;
+  z-index: 1000;
+  position: absolute;
+  top: 60vh;
+  margin: 0 auto;
+  width: 300px;
+}
+
+.calendar-day-schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 .5rem;
+  background-color: #F4F4F4;
+  height: 2rem;
+  color: #434343;
+  font-size: 14px;
+  line-height: 17px;
+
+  button {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+
+    path {
+      fill: #A1A1A1;
+    }
+  }
+}
