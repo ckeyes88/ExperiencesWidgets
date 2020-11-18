@@ -1,4 +1,4 @@
-import { Component, h } from "preact";
+import { Component, createRef, h } from "preact";
 import { CalendarEvent } from "./CalendarWrapper";
 import "./CalendarDaySchedule.scss";
 import CloseIcon from "../Icons/CloseIcon";
@@ -12,7 +12,21 @@ interface ICalendarDayScheduleProps {
 }
 
 export class CalendarDaySchedule extends Component<ICalendarDayScheduleProps, any> {
+  dialogRef = createRef();
   handleClose = () => this.props.handleClose();
+  handleClickOutside = (event: Event) => {
+    if (this.dialogRef && !this.dialogRef.current.contains(event.target)) {
+      this.handleClose();
+    }
+  }
+
+  componentDidMount() {
+    document.addEventListener("mousedown", this.handleClickOutside);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("mousedown", this.handleClickOutside);
+  }
 
   render() {
     const { title, open, events } = this.props;
@@ -20,7 +34,7 @@ export class CalendarDaySchedule extends Component<ICalendarDayScheduleProps, an
     if (!open) { return null; }
 
     return (
-      <dialog open={open} className="calendar-day-schedule">
+      <dialog ref={this.dialogRef} open={open} className="calendar-day-schedule">
         <div className="calendar-day-schedule-header">
           <div>{title}</div>
           <div>
