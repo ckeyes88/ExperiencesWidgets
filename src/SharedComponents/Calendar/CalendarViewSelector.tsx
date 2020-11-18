@@ -1,7 +1,8 @@
-import { CalendarMajor, ListMajor } from "@shopify/polaris-icons";
 import { Component, h } from "preact";
 import "./CalendarViewSelector.scss";
 import { calendarViewType } from "./CalendarWrapper";
+import { CalendarIcon } from "../Icons/CalendarIcon";
+import { ListIcon } from "../Icons/ListIcon";
 
 interface ICalendarViewSelectorProps {
   view: string;
@@ -19,7 +20,7 @@ export class CalendarViewSelector extends Component<ICalendarViewSelectorProps> 
           onClick={() => selectView(calendarViewType.dayGrid)}
         >
           <div className="calendar-icon">
-            <CalendarMajor />
+            <CalendarIcon />
           </div>
           <div>Month</div>
         </div>
@@ -28,7 +29,7 @@ export class CalendarViewSelector extends Component<ICalendarViewSelectorProps> 
           onClick={() => selectView(calendarViewType.list)}
         >
           <div className="list-icon">
-            <ListMajor />
+            <ListIcon />
           </div>
           <div>List</div>
         </div>
