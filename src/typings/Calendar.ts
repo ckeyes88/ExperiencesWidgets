@@ -4,6 +4,7 @@ import { ViewApi } from "@fullcalendar/react";
 export interface ICalendarEventContent {
   event: {
     start: Date;
+    url: string;
     _def: {
       extendedProps: {
         imageUrl?: string | AssetDBO;

@@ -41,6 +41,7 @@ dialog[open] {
 }
 
 .calendar-day-schedule-body {
+  padding: .5rem 0;
   display: flex;
   align-content: center;
   flex-direction: column;
@@ -48,11 +49,12 @@ dialog[open] {
 
 .calendar-day-event {
   display: flex;
-  margin: 10px 0;
+  margin: .5rem 0;
   cursor: pointer;
 
   .event-time {
-    width: 70px;
+    width: 80px;
+    margin-right: .5rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -70,6 +72,7 @@ dialog[open] {
   }
 
   .event-description {
+    margin-left: .3rem;
     color: #666666;
     font-size: 14px;
     line-height: 17px;

@@ -11,7 +11,7 @@ import { CalendarEventGridContent } from "../../SharedComponents/Calendar/Calend
 import { CalendarDaySchedule } from "../../SharedComponents/Calendar/CalendarDaySchedule";
 import { DateClickEvent } from "../../typings/Calendar";
 
-interface ICalendarContainer {
+interface ICalendarContainerProps {
   aggregateViewBaseUrl?: string;
   aggregateViewShop?: string;
   aggregateViewShopUrl?: string;
@@ -33,7 +33,7 @@ const eventRendererViewMap = {
   [calendarViewType.list]: CalendarEventListContent,
 };
 
-export class CalendarContainer extends Component<ICalendarContainer, ICalendarContainerState> {
+export class CalendarContainer extends Component<ICalendarContainerProps, ICalendarContainerState> {
   calendarRef = createRef();
   state: ICalendarContainerState = {
     view: calendarViewType.dayGrid,
@@ -60,7 +60,6 @@ export class CalendarContainer extends Component<ICalendarContainer, ICalendarCo
   async componentDidMount() {
     const { baseUrl, shopUrl } = this.props;
     const eventsResponse = await fetchProductsWithAvailability(baseUrl, shopUrl, new Date(), addDays(30)(new Date()));
-    console.log('eventsResponse is ', eventsResponse);
     const events = extractAndParseEvents(eventsResponse, shopUrl);
     this.setState({ events });
   }

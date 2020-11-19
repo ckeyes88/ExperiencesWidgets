@@ -1,10 +1,13 @@
 .calendar-view-selector {
     position: relative;
     text-align: center;
-    top: 2.2rem;
+    top: 1.2rem;
+    height: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 150px;
+    margin: 0 auto;
 
     .month-view, .list-view {
         display: flex;
@@ -14,6 +17,7 @@
         line-height: 17px;
         border-bottom: solid 3px #E3E3E3;
         padding: 0 .5rem;
+        height: 25px;
         cursor: pointer;
         user-select: none;
 

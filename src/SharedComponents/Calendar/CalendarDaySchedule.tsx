@@ -15,7 +15,7 @@ export class CalendarDaySchedule extends Component<ICalendarDayScheduleProps, an
   dialogRef = createRef();
   handleClose = () => this.props.handleClose();
   handleClickOutside = (event: Event) => {
-    if (this.dialogRef && !this.dialogRef.current.contains(event.target)) {
+    if (this.dialogRef && this.dialogRef.current && !this.dialogRef.current.contains(event.target)) {
       this.handleClose();
     }
   }
@@ -45,20 +45,22 @@ export class CalendarDaySchedule extends Component<ICalendarDayScheduleProps, an
         </div>
         <div className="calendar-day-schedule-body">
           {events.map(e => (
-            <div key={e.id} className="calendar-day-event">
-              <div className="event-time">{format(e.start, "h:mmaaaaa")}</div>
-              <div className="featured-image">
-                <img src={e.imageUrl as string} alt="Event featured image" />
-              </div>
-              <div className="event-description">
-                <div>{e.title}</div>
-                <div>
-                  <span>{e.paymentType}</span>
-                  {e.price[1] > 0 && <span>{" | "}</span>}
-                  {e.price[1] > 0 && <span>{e.price[0]}</span>}
+            <a key={e.id} href={e.url}>
+              <div className="calendar-day-event">
+                <div className="event-time">{format(e.start, "h:mmaaaaa")}</div>
+                <div className="featured-image">
+                  <img src={e.imageUrl as string} alt="Event featured image" />
+                </div>
+                <div className="event-description">
+                  <div>{e.title}</div>
+                  <div>
+                    <span>{e.paymentType}</span>
+                    {e.price[1] > 0 && <span>{" | "}</span>}
+                    {e.price[1] > 0 && <span>{e.price[0]}</span>}
+                  </div>
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </dialog>
