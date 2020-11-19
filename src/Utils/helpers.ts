@@ -382,7 +382,7 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
           id: `${i}-${ts.productId}`, 
           start: new Date(ts.startsAt),
           end: new Date(ts.endsAt),
-          url: `https://${storeUrl}/products/${e.handle}/${ts.startsAt}`,
+          url: `https://${storeUrl}/products/${e.handle}?day=${ts.startsAt}`,
           imageUrl: resolveImageUrl(e.images, e.imageLinks),
           paymentType: e.paymentType,
           price: findCheapestVariantPrice(e.variants),
