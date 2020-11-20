@@ -62,10 +62,16 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     const eventsResponse = await fetchProductsWithAvailability(baseUrl, shopUrl, new Date(), addDays(30)(new Date()));
     const events = extractAndParseEvents(eventsResponse, shopUrl);
     this.setState({ events });
+
+    // only show list view on smaller screens
+    if (window && window.innerWidth < 768) {
+      this.selectView(calendarViewType.list);
+    }
   }
 
   render() {
     const { events, view, daySelected, daySelectedEvents } = this.state;
+    const titleFormat = window && window.innerWidth >= 1024 ? null : { month: "short", year: "numeric" };
 
     return (
       <div className="aggregate-calendar-container">
@@ -84,6 +90,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
             events={events}
             dateClick={this.handleSelectDay}
             eventContent={eventRendererViewMap[view]}
+            titleFormat={titleFormat}
           />
         </div>
       </div>

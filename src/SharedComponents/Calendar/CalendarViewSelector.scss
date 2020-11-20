@@ -1,9 +1,13 @@
 .calendar-view-selector {
+    @include Tablet {
+        display: flex;
+    }
+
     position: relative;
     text-align: center;
     top: 1.2rem;
     height: 0;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     width: 150px;
@@ -27,7 +31,7 @@
             transition: all .5s ease-in-out;
 
             .calendar-icon, .list-icon {
-                fill: black;    
+                fill: black;
             }
         }
 

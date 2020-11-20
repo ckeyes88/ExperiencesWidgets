@@ -376,13 +376,15 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
     const event = { title: e.name };
     e.availabilityProducts && e.availabilityProducts.forEach((p) => {
       p.availableTimeslots && p.availableTimeslots.forEach((ts: Availability, i: number) =>
-        parsed.push({ 
+        parsed.push({
           ...event,
           event: {},
-          id: `${i}-${ts.productId}`, 
+          id: `${i}-${ts.productId}`,
           start: new Date(ts.startsAt),
           end: new Date(ts.endsAt),
-          url: `https://${storeUrl}/products/${e.handle}?day=${ts.startsAt}`,
+          url: `https://${storeUrl}/products/${e.handle}?day=${
+            encodeURIComponent(typeof ts.startsAt === "string" ? ts.startsAt : ts.startsAt.toISOString())
+          }`,
           imageUrl: resolveImageUrl(e.images, e.imageLinks),
           paymentType: e.paymentType,
           price: findCheapestVariantPrice(e.variants),

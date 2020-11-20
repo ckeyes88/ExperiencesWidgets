@@ -17,6 +17,12 @@ export interface ICalendarProps {
   eventContent(event: CalendarEvent): JSX.Element;
   forwardRef: any;
   dateClick?(e: DateClickEvent): void;
+  titleFormat?: {
+    month?: string; // "long" | "short"
+    year?: string; // "numeric"
+    day?: string; // "numeric"
+    weekday?: string; // "long" | "short"
+  };
 }
 
 export type CalendarEvent = {
@@ -38,7 +44,7 @@ export type CalendarEvent = {
 // Can be reused by any component
 export class Calendar extends Component<ICalendarProps, any> {
   render() {
-    const {view, events, eventContent, forwardRef, dateClick} = this.props;
+    const {view, events, eventContent, forwardRef, dateClick, titleFormat} = this.props;
     const FullCalendarCast = FullCalendar as unknown;
     const FullCalendarAsComponent = FullCalendarCast as ComponentClass<any>;
 
@@ -49,6 +55,7 @@ export class Calendar extends Component<ICalendarProps, any> {
         events={events}
         eventContent={eventContent}
         dateClick={dateClick}
+        titleFormat={titleFormat}
         ref={forwardRef}
       />
     );

@@ -164,7 +164,7 @@ export class CalendarWidgetMain extends Component<
 
       // select day and timeslot when coming from aggregate view (or elsewhere)
       const href = window.location.href;
-      const date = href.split("day=")[1];
+      const date = decodeURIComponent(href.split("day=")[1]);
       const selectedDate = date ? new Date(date) : new Date();
       const selectedDateTimeslots = date ? getTimeslotsByDate(availability, selectedDate) : [];
       const selectedTimeslot = selectedDateTimeslots.find(ts => ts.startsAt.toString() === date) || null;
@@ -180,7 +180,7 @@ export class CalendarWidgetMain extends Component<
         loading: false,
         selectedDate,
         selectedTimeslot,
-        showModal: !!"date",
+        showModal: !!date,
       });
     } catch (err) {
       this.setState({
