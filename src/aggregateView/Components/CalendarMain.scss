@@ -143,6 +143,7 @@ $text-main: #666666;
 
     .fc .fc-daygrid-day-frame {
         overflow-y: auto;
+        max-height: 50px;
     }
 
     .fc-list-day-cushion.fc-cell-shaded {
@@ -151,5 +152,15 @@ $text-main: #666666;
         a {
             border: none;
         }
+    }
+
+    @include Phone {
+        .fc .fc-list-table td, .fc .fc-list-day-cushion {
+            padding: 8px;
+        }
+    }
+
+    .fc .fc-list-event-time {
+        padding: 28px 14px;
     }
 }
