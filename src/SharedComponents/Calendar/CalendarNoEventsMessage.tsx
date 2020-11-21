@@ -12,7 +12,7 @@ export class CalendarNoEventsMessage extends Component<ICalendarNoEventsMessageP
     const { message, nextAvailableLabel, onNextAvailableClick } = this.props;
 
     return (
-      <div className="calendar-no-events">
+      <div className="Calendar-NoEvents">
         <div>{message || "No events to display"}</div>
         <div>
           <button className="CalendarAggregateView-GoToNextAvailableBtn" onClick={onNextAvailableClick}>

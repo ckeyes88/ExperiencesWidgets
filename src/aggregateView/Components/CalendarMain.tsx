@@ -85,9 +85,9 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     const titleFormat = window && window.innerWidth >= 1024 ? null : { month: "short", year: "numeric" };
 
     return (
-      <div className="aggregate-calendar-container">
+      <div className="CalendarAggregate-Container">
         <div className="main-heading">Events Calendar</div>
-        <div className="aggregate-calendar-main">
+        <div className="AggregateCalendar-Main">
           <CalendarViewSelector view={view} selectView={this.selectView} />
           <CalendarDaySchedule
             open={!!daySelected && !!daySelectedEvents.length}

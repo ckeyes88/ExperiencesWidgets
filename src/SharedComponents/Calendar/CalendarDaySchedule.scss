@@ -2,7 +2,7 @@ dialog[open] {
   animation: appear .35s cubic-bezier(0, 1.8, 1, 1.8);
 }
 
-.calendar-day-schedule {
+.Calendar-DaySchedule {
   padding: 0;
   z-index: 1000;
   position: absolute;
@@ -14,7 +14,7 @@ dialog[open] {
   box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.25);
 }
 
-.calendar-day-schedule-header {
+.Calendar-DaySchedule-Header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -40,19 +40,19 @@ dialog[open] {
   }
 }
 
-.calendar-day-schedule-body {
+.Calendar-DaySchedule-Body {
   padding: .5rem 0;
   display: flex;
   align-content: center;
   flex-direction: column;
 }
 
-.calendar-day-event {
+.Calendar-Day-Event {
   display: flex;
   margin: .5rem 0;
   cursor: pointer;
 
-  .event-time {
+  .EventTime {
     width: 80px;
     margin-right: .5rem;
     display: flex;
@@ -60,7 +60,7 @@ dialog[open] {
     align-items: center;
   }
 
-  .featured-image {
+  .FeaturedImage {
     display: flex;
     margin-right: 1rem;
   }
@@ -71,7 +71,7 @@ dialog[open] {
     min-width: 45px;
   }
 
-  .event-description {
+  .EventDescription {
     margin-left: .3rem;
     color: #666666;
     font-size: 14px;

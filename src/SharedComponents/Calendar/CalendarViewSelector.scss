@@ -1,4 +1,4 @@
-.calendar-view-selector {
+.Calendar-ViewSelector {
     @include Tablet {
         display: flex;
     }
@@ -13,7 +13,7 @@
     width: 150px;
     margin: 0 auto;
 
-    .month-view, .list-view {
+    .MonthView, .ListView {
         display: flex;
         align-items: center;
         color: #666666;
@@ -25,17 +25,17 @@
         cursor: pointer;
         user-select: none;
 
-        &.selected {
+        &.Selected {
             color: black;
             border-bottom-color: #0088CB;
             transition: all .5s ease-in-out;
 
-            .calendar-icon, .list-icon {
+            .CalendarIcon, .ListIcon {
                 fill: black;
             }
         }
 
-        .calendar-icon, .list-icon {
+        .CalendarIcon, .ListIcon {
             margin-bottom: 3px;
             margin-right: .3rem;
             width: 24px;

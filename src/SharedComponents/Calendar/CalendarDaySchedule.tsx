@@ -34,8 +34,8 @@ export class CalendarDaySchedule extends Component<ICalendarDayScheduleProps, an
     if (!open) { return null; }
 
     return (
-      <dialog ref={this.dialogRef} open={open} className="calendar-day-schedule">
-        <div className="calendar-day-schedule-header">
+      <dialog ref={this.dialogRef} open={open} className="Calendar-DaySchedule">
+        <div className="Calendar-DaySchedule-Header">
           <div>{title}</div>
           <div>
             <button onClick={this.handleClose}>
@@ -43,15 +43,15 @@ export class CalendarDaySchedule extends Component<ICalendarDayScheduleProps, an
             </button>
           </div>
         </div>
-        <div className="calendar-day-schedule-body">
+        <div className="Calendar-DaySchedule-Body">
           {events.map(e => (
             <a key={e.id} href={e.url}>
-              <div className="calendar-day-event">
-                <div className="event-time">{format(e.start, "h:mmaaaaa")}</div>
-                <div className="featured-image">
+              <div className="Calendar-Day-Event">
+                <div className="EventTime">{format(e.start, "h:mmaaaaa")}</div>
+                <div className="FeaturedImage">
                   <img src={e.imageUrl as string} alt="Event featured image" />
                 </div>
-                <div className="event-description">
+                <div className="EventDescription">
                   <div>{e.title}</div>
                   <div>
                     <span>{e.paymentType}</span>

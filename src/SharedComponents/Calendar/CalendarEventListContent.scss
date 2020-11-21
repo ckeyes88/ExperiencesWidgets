@@ -1,8 +1,8 @@
-.calendar-event-list-details {
+.Calendar-EventList-Details {
   display: flex;
   align-content: center;
 
-  .featured-image {
+  .FeaturedImage {
     display: flex;
     margin-right: 1rem;
   }
@@ -19,7 +19,7 @@
     }
   }
 
-  .event-description {
+  .EventDescription {
     color: #666666;
     font-size: 14px;
     line-height: 17px;
@@ -33,6 +33,6 @@
   }
 }
 
-.calendar-event-a:hover {
+.Calendar-Event-Link:hover {
   text-decoration: none;
 }

@@ -5,8 +5,8 @@ import { ICalendarEventContent } from "../../typings/Calendar";
 
 export const CalendarEventGridContent = ({ event: { _def, start } }: ICalendarEventContent): JSX.Element => {
   return (
-    <div className="calendar-event-grid-details">
-      <div className="event-description">
+    <div className="Calendar-EventGrid-Details">
+      <div className="EventDescription">
         <span>{format(start, "h:mmaaaaa")}</span>
         <span>
           <strong>
