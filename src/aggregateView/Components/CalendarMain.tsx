@@ -10,6 +10,7 @@ import { CalendarEventListContent } from "../../SharedComponents/Calendar/Calend
 import { CalendarEventGridContent } from "../../SharedComponents/Calendar/CalendarEventGridContent";
 import { CalendarDaySchedule } from "../../SharedComponents/Calendar/CalendarDaySchedule";
 import { DateClickEvent } from "../../typings/Calendar";
+import { CalendarNoEventsMessage } from "../../SharedComponents/Calendar/CalendarNoEventsMessage";
 
 interface ICalendarContainerProps {
   aggregateViewBaseUrl?: string;
@@ -69,6 +70,16 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     }
   }
 
+  navigateToNextAvailableTS = () => {
+    const earliestAvailableEventDate = Math.min(...this.state.events.map(e => e.start.getTime()));
+    const calendarApi = this.calendarRef.current.getApi();
+    calendarApi.gotoDate(new Date(earliestAvailableEventDate));
+  }
+
+  renderCalendarNoEventsMessage = () => {
+    return <CalendarNoEventsMessage  onNextAvailableClick={this.navigateToNextAvailableTS} />;
+  }
+
   render() {
     const { events, view, daySelected, daySelectedEvents } = this.state;
     const titleFormat = window && window.innerWidth >= 1024 ? null : { month: "short", year: "numeric" };
@@ -91,6 +102,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
             dateClick={this.handleSelectDay}
             eventContent={eventRendererViewMap[view]}
             titleFormat={titleFormat}
+            noEventsContent={this.renderCalendarNoEventsMessage()}
           />
         </div>
       </div>
