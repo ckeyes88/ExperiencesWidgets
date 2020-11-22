@@ -3,7 +3,7 @@ import { Availability } from "../typings/Availability";
 import { EventAssetLinkDBO, EventVariantDBO } from "../typings/Event";
 import { AssetDBO } from "@helpfulhuman/expapp-shared-libs";
 import { EventAvailability } from "./api";
-import { CalendarEvent } from "../SharedComponents/Calendar/CalendarWrapper";
+import { CalendarEvent, FullCalendarEvent } from "../SharedComponents/Calendar/CalendarWrapper";
 
 /**
 * Takes in shopify money_format property along with a float value
@@ -370,13 +370,17 @@ export const findCheapestVariantPrice = (variants: EventVariantDBO[] = []): [str
 /*
  Takes events response and extracts available timeslots to display on FullCalendar
  */
-export const extractAndParseEvents = (events: EventAvailability[], storeUrl: string): CalendarEvent[] => {
-  const parsed: CalendarEvent[] = [];
+export const extractAndParseEvents = (events: EventAvailability[], storeUrl: string): {
+  calendarEvents: CalendarEvent[];
+  fullCalendarEvents: FullCalendarEvent[];
+} => {
+  const calendarEvents: CalendarEvent[] = [];
+  const fullCalendarEvents: FullCalendarEvent[] = [];
   events.forEach(e => {
     const event = { title: e.name };
     e.availabilityProducts && e.availabilityProducts.forEach((p) => {
-      p.availableTimeslots && p.availableTimeslots.forEach((ts: Availability, i: number) =>
-        parsed.push({
+      p.availableTimeslots && p.availableTimeslots.forEach((ts: Availability, i: number) => {
+        let calendarEvent = {
           ...event,
           event: {},
           id: `${i}-${ts.productId}`,
@@ -392,9 +396,17 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
           startEditable: false,
           durationEditable: false,
           resourceEditable: false,
-        }));
+        };
+        calendarEvents.push(calendarEvent);
+        let fullCalendarEvent = { ...calendarEvent };
+        delete fullCalendarEvent.end;
+        fullCalendarEvents.push(fullCalendarEvent);
+      });
     });
   });
 
-  return parsed;
+  return {
+    calendarEvents,
+    fullCalendarEvents,
+  };
 };

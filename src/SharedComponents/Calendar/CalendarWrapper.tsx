@@ -12,7 +12,7 @@ export const calendarViewType = {
 };
 
 export interface ICalendarProps {
-  events: CalendarEvent[];
+  events: FullCalendarEvent[];
   view: string;
   eventContent(event: CalendarEvent): JSX.Element;
   forwardRef: any;
@@ -41,6 +41,8 @@ export type CalendarEvent = {
   durationEditable: boolean;
   resourceEditable: boolean;
 };
+
+export type FullCalendarEvent = Partial<CalendarEvent>;
 
 // Can be reused by any component
 export class Calendar extends Component<ICalendarProps, any> {

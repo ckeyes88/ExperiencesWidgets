@@ -50,6 +50,7 @@ dialog[open] {
 .Calendar-Day-Event {
   display: flex;
   margin: .5rem 0;
+  height: 55px;
   cursor: pointer;
 
   .EventTime {
@@ -72,6 +73,7 @@ dialog[open] {
   }
 
   .EventDescription {
+    overflow: auto;
     margin-left: .3rem;
     color: #666666;
     font-size: 14px;

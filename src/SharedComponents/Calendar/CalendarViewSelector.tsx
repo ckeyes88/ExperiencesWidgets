@@ -16,7 +16,7 @@ export class CalendarViewSelector extends Component<ICalendarViewSelectorProps> 
     return (
       <div className="Calendar-ViewSelector">
         <div
-          className={`month-view ${view === calendarViewType.dayGrid ? "selected" : ""}`}
+          className={`MonthView ${view === calendarViewType.dayGrid ? "Selected" : ""}`}
           onClick={() => selectView(calendarViewType.dayGrid)}
         >
           <div className="CalendarIcon">
@@ -25,7 +25,7 @@ export class CalendarViewSelector extends Component<ICalendarViewSelectorProps> 
           <div>Month</div>
         </div>
         <div
-          className={`list-view ${view === calendarViewType.list ? "selected" : ""}`}
+          className={`ListView ${view === calendarViewType.list ? "Selected" : ""}`}
           onClick={() => selectView(calendarViewType.list)}
         >
           <div className="ListIcon">

@@ -4,7 +4,12 @@ import { format } from "date-fns";
 import { Component, createRef, h } from "preact";
 import { CalendarViewSelector } from "../../SharedComponents/Calendar/CalendarViewSelector";
 import { fetchProductsWithAvailability } from "../../Utils/api";
-import { Calendar, CalendarEvent, calendarViewType } from "../../SharedComponents/Calendar/CalendarWrapper";
+import {
+  Calendar,
+  CalendarEvent,
+  calendarViewType,
+  FullCalendarEvent,
+} from "../../SharedComponents/Calendar/CalendarWrapper";
 import { extractAndParseEvents } from "../../Utils/helpers";
 import { CalendarEventListContent } from "../../SharedComponents/Calendar/CalendarEventListContent";
 import { CalendarEventGridContent } from "../../SharedComponents/Calendar/CalendarEventGridContent";
@@ -26,6 +31,7 @@ interface ICalendarContainerState {
   view: string;
   daySelected?: Date;
   events: CalendarEvent[];
+  fullCalendarEvents: FullCalendarEvent[];
   daySelectedEvents: CalendarEvent[];
 }
 
@@ -39,6 +45,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   state: ICalendarContainerState = {
     view: calendarViewType.dayGrid,
     events: [],
+    fullCalendarEvents: [],
     daySelected: null,
     daySelectedEvents: [],
   };
@@ -61,8 +68,8 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   async componentDidMount() {
     const { baseUrl, shopUrl } = this.props;
     const eventsResponse = await fetchProductsWithAvailability(baseUrl, shopUrl, new Date(), addDays(30)(new Date()));
-    const events = extractAndParseEvents(eventsResponse, shopUrl);
-    this.setState({ events });
+    const { calendarEvents: events, fullCalendarEvents } = extractAndParseEvents(eventsResponse, shopUrl);
+    this.setState({ events, fullCalendarEvents });
 
     // only show list view on smaller screens
     if (window && window.innerWidth < 768) {
@@ -81,7 +88,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   }
 
   render() {
-    const { events, view, daySelected, daySelectedEvents } = this.state;
+    const { fullCalendarEvents, view, daySelected, daySelectedEvents } = this.state;
     const titleFormat = window && window.innerWidth >= 1024 ? null : { month: "short", year: "numeric" };
 
     return (
@@ -98,7 +105,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
           <Calendar
             forwardRef={this.calendarRef}
             view={view}
-            events={events}
+            events={fullCalendarEvents}
             dateClick={this.handleSelectDay}
             eventContent={eventRendererViewMap[view]}
             titleFormat={titleFormat}
