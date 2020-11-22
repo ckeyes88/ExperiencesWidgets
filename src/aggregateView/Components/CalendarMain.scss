@@ -23,13 +23,26 @@ $text-main: #666666;
 }
 
 .AggregateCalendar-Main {
-    padding: 2rem .5rem;
+    padding: 1.5rem 0;
     border: 1px solid #dedede;
     border-radius: 5px;
     box-shadow: 0 2px 24px 0 rgba(0, 0, 0, 0.06);
 
     @include Tablet {
-        padding: 2rem;
+        padding: 1.5rem 2rem;
+    }
+
+    div.fc .fc-toolbar.fc-header-toolbar {
+       padding: 0;
+       margin-bottom: 1.4rem;
+
+        @include Phone {
+            padding: 0 .5rem;
+        }
+
+        @include Tablet {
+            margin-bottom: 3rem;
+        }
     }
 
     .fc-toolbar-title {
