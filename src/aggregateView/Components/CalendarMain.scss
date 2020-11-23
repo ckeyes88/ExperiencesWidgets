@@ -127,6 +127,7 @@ $text-main: #666666;
     .fc-next-button.fc-button.fc-button-primary {
         background-color: white;
         border: none;
+        outline: none;
     }
 
     button.fc-next-button.fc-button:focus,
@@ -137,6 +138,14 @@ $text-main: #666666;
         border: none;
         outline: none;
         border-color: transparent;
+        box-shadow: none;
+    }
+
+    button.fc-today-button.fc-button:focus,
+    button.fc-today-button.fc-button:active {
+        color: #0088CB;
+        background-color: transparent;
+        box-shadow: none;
     }
 
     .fc-icon.fc-icon-chevron-left,
