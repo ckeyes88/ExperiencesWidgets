@@ -7,6 +7,7 @@ import babel from 'rollup-plugin-babel';
 import json from "rollup-plugin-json";
 import dotenv from "dotenv";
 import alias from '@rollup/plugin-alias';
+import copy from "rollup-plugin-copy";
 
 dotenv.config();
 
@@ -148,6 +149,11 @@ export default [{
           { find: 'react-dom', replacement: 'preact/compat' }
         ]
       }),
+      copy({
+        targets: [
+          { src: 'src/assets/**/*', dest: 'dist/assets' }
+        ],
+      })
     ],
   }
 ];

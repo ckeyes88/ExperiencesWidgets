@@ -1,9 +1,13 @@
+// close-looking fallback in case imports in upper environment fail
 @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap");
+@import "src/sass/_fonts";
 
 $text-main: #666666;
+$button-blue: #0088CB; // differs from _variables.scss
+$button-disabled: #999B9E;
 
 .CalendarAggregate-Container {
-    font-family: "Avenir-Book", "Avenir-Black", "Nunito Sans", serif;
+    font-family: "Avenir-Book", "Nunito Sans", serif;
 
     .fc-view-harness {
         &.fc-view-harness-active {
@@ -46,6 +50,7 @@ $text-main: #666666;
     }
 
     .fc-toolbar-title {
+        font-family: Avenir-Medium, "Nunito Sans", serif;
         color: #000000;
         font-size: 24px;
         line-height: 29px;
@@ -113,13 +118,13 @@ $text-main: #666666;
         background-color: transparent;
         border: none;
         text-transform: capitalize;
-        color: #0088CB;
+        color: $button-blue;
         font-weight: 700;
         font-size: 14px;
         line-height: 17px;
 
         &:disabled {
-            color: #999B9E;
+            color: $button-disabled;
         }
     }
 
@@ -143,7 +148,7 @@ $text-main: #666666;
 
     button.fc-today-button.fc-button:focus,
     button.fc-today-button.fc-button:active {
-        color: #0088CB;
+        color: $button-blue;
         background-color: transparent;
         box-shadow: none;
     }
