@@ -1,7 +1,7 @@
 # Experience App Widgets
 
 It is our desire that the Experience App be more extensible and flexible so
-that it can more quickly meet the needs of the merchent, who may need to create
+that it can more quickly meet the needs of the merchant, who may need to create
 views for their data outside of the standard embedded app in the product page.
 
 To accomplish this, we've created a way for merchants and/or developers to create fully
