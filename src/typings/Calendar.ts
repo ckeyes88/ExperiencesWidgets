@@ -25,3 +25,7 @@ export type DateClickEvent = {
   view: ViewApi;
   dayEl: HTMLElement;
 };
+
+export type CalendarEventClick = {
+  event: ICalendarEventContent;
+}

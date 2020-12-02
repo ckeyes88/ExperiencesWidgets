@@ -14,7 +14,7 @@ import { extractAndParseEvents } from "../../Utils/helpers";
 import { CalendarEventListContent } from "../../SharedComponents/Calendar/CalendarEventListContent";
 import { CalendarEventGridContent } from "../../SharedComponents/Calendar/CalendarEventGridContent";
 import { CalendarDaySchedule } from "../../SharedComponents/Calendar/CalendarDaySchedule";
-import { DateClickEvent } from "../../typings/Calendar";
+import { CalendarEventClick, DateClickEvent } from "../../typings/Calendar";
 import { CalendarNoEventsMessage } from "../../SharedComponents/Calendar/CalendarNoEventsMessage";
 
 interface ICalendarContainerProps {
@@ -87,6 +87,10 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     return <CalendarNoEventsMessage  onNextAvailableClick={this.navigateToNextAvailableTS} />;
   }
 
+  eventClick = ({ event }: CalendarEventClick) => {
+    // show new dialog here
+  }
+
   render() {
     const { fullCalendarEvents, view, daySelected, daySelectedEvents } = this.state;
     const titleFormat = window && window.innerWidth >= 1024 ? null : { month: "short", year: "numeric" };
@@ -104,6 +108,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
           />
           <Calendar
             dayMaxEventRows={4}
+            eventClick={this.eventClick}
             forwardRef={this.calendarRef}
             view={view}
             events={fullCalendarEvents}

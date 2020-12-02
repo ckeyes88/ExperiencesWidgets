@@ -1,10 +1,10 @@
-import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
-import { Component, ComponentClass, h, JSX } from "preact";
+import listPlugin from "@fullcalendar/list";
+import FullCalendar from "@fullcalendar/react";
 import { AssetDBO } from "@helpfulhuman/expapp-shared-libs";
-import { DateClickEvent } from "../../typings/Calendar";
+import { Component, ComponentClass, h, JSX } from "preact";
+import { CalendarEventClick, DateClickEvent } from "../../typings/Calendar";
 
 export const calendarViewType = {
   dayGrid: "dayGridMonth",
@@ -17,6 +17,7 @@ export interface ICalendarProps {
   eventContent(event: CalendarEvent): JSX.Element;
   forwardRef: any;
   dayMaxEventRows?: number;
+  eventClick(e: CalendarEventClick): void;
   dateClick?(e: DateClickEvent): void;
   titleFormat?: {
     month?: string; // "long" | "short"
@@ -49,7 +50,7 @@ export type FullCalendarEvent = Partial<CalendarEvent>;
 // Can be reused by any component
 export class Calendar extends Component<ICalendarProps, any> {
   render() {
-    const {view, events, eventContent, forwardRef, dateClick, titleFormat, noEventsContent, dayMaxEventRows} = this.props;
+    const {view, events, eventContent, forwardRef, dateClick, titleFormat, noEventsContent, dayMaxEventRows, eventClick} = this.props;
     const FullCalendarCast = FullCalendar as unknown;
     const FullCalendarAsComponent = FullCalendarCast as ComponentClass<any>;
 
@@ -60,6 +61,7 @@ export class Calendar extends Component<ICalendarProps, any> {
         events={events}
         eventContent={eventContent}
         dateClick={dateClick}
+        eventClick={eventClick}
         titleFormat={titleFormat}
         dayMaxEventRows={dayMaxEventRows}
         ref={forwardRef}
