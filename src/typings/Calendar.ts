@@ -4,9 +4,10 @@ import { ViewApi } from "@fullcalendar/react";
 export interface ICalendarEventContent {
   event: {
     start: Date;
-    url: string;
+    url?: string;
     _def: {
       extendedProps: {
+        customUrl?: string;
         imageUrl?: string | AssetDBO;
         paymentType?: string;
         price?: [string, number];

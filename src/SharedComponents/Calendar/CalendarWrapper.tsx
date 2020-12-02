@@ -16,6 +16,7 @@ export interface ICalendarProps {
   view: string;
   eventContent(event: CalendarEvent): JSX.Element;
   forwardRef: any;
+  dayMaxEventRows?: number;
   dateClick?(e: DateClickEvent): void;
   titleFormat?: {
     month?: string; // "long" | "short"
@@ -32,7 +33,8 @@ export type CalendarEvent = {
   start: Date;
   end: Date;
   title: string;
-  url: string;
+  url?: string;
+  customUrl?: string;
   imageUrl?: string | AssetDBO;
   paymentType?: string;
   price: [string, number];
@@ -47,7 +49,7 @@ export type FullCalendarEvent = Partial<CalendarEvent>;
 // Can be reused by any component
 export class Calendar extends Component<ICalendarProps, any> {
   render() {
-    const {view, events, eventContent, forwardRef, dateClick, titleFormat, noEventsContent} = this.props;
+    const {view, events, eventContent, forwardRef, dateClick, titleFormat, noEventsContent, dayMaxEventRows} = this.props;
     const FullCalendarCast = FullCalendar as unknown;
     const FullCalendarAsComponent = FullCalendarCast as ComponentClass<any>;
 
@@ -59,6 +61,7 @@ export class Calendar extends Component<ICalendarProps, any> {
         eventContent={eventContent}
         dateClick={dateClick}
         titleFormat={titleFormat}
+        dayMaxEventRows={dayMaxEventRows}
         ref={forwardRef}
         noEventsContent={noEventsContent}
       />

@@ -386,7 +386,7 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
           id: `${i}-${ts.productId}`,
           start: new Date(ts.startsAt),
           end: new Date(ts.endsAt),
-          url: `https://${storeUrl}/products/${e.handle}?day=${
+          customUrl: `https://${storeUrl}/products/${e.handle}?day=${
             encodeURIComponent(typeof ts.startsAt === "string" ? ts.startsAt : ts.startsAt.toISOString())
           }`,
           imageUrl: resolveImageUrl(e.images, e.imageLinks),

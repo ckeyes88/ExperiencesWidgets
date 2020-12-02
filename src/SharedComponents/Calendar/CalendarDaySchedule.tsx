@@ -45,7 +45,7 @@ export class CalendarDaySchedule extends Component<ICalendarDayScheduleProps, an
         </div>
         <div className="Calendar-DaySchedule-Body">
           {events.map(e => (
-            <a key={e.id} href={e.url}>
+            <a key={e.id} href={e.customUrl}>
               <div className="Calendar-Day-Event">
                 <div className="EventTime">{format(e.start, "h:mmaaaaa")}</div>
                 <div className="FeaturedImage">

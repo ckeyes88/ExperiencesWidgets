@@ -103,6 +103,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
             events={daySelectedEvents}
           />
           <Calendar
+            dayMaxEventRows={4}
             forwardRef={this.calendarRef}
             view={view}
             events={fullCalendarEvents}

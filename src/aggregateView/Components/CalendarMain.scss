@@ -173,7 +173,6 @@ $button-disabled: #999B9E;
     }
 
     .fc .fc-daygrid-day-frame {
-        overflow-y: auto;
         max-height: 50px;
     }
 
@@ -193,5 +192,9 @@ $button-disabled: #999B9E;
 
     .fc .fc-list-event-time {
         padding: 28px 14px;
+    }
+
+    a.fc-daygrid-more-link {
+        border-bottom: none;
     }
 }
