@@ -1,7 +1,7 @@
+import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction"; // needed for dayClick
 import listPlugin from "@fullcalendar/list";
-import FullCalendar from "@fullcalendar/react";
 import { AssetDBO } from "@helpfulhuman/expapp-shared-libs";
 import { Component, ComponentClass, h, JSX } from "preact";
 import { CalendarEventClick, DateClickEvent } from "../../typings/Calendar";

@@ -7,7 +7,12 @@ $button-blue: #0088CB; // differs from _variables.scss
 $button-disabled: #999B9E;
 
 .CalendarAggregate-Container {
+    margin: 0 -10%;
     font-family: "Avenir-Book", "Nunito Sans", serif;
+
+    @include Tablet {
+        margin: unset;
+    }
 
     .fc-view-harness {
         &.fc-view-harness-active {
@@ -17,12 +22,17 @@ $button-disabled: #999B9E;
 
     .main-heading {
         color: #000000;
-        font-size: 36px;
-        line-height: 43px;
+        font-size: 24px;
+        line-height: 30px;
         width: 100%;
         text-align: center;
         margin: 4rem 0 2rem 0;
         font-weight: 800;
+
+        @include Tablet {
+            font-size: 36px;
+            line-height: 43px;
+        }
     }
 }
 
@@ -49,13 +59,18 @@ $button-disabled: #999B9E;
         }
     }
 
-    .fc-toolbar-title {
+    .fc .fc-toolbar-title {
         font-family: Avenir-Medium, "Nunito Sans", serif;
         color: #000000;
-        font-size: 24px;
-        line-height: 29px;
+        font-size: 18px;
+        line-height: 24px;
         text-transform: capitalize;
         letter-spacing: inherit;
+
+        @include Tablet {
+            font-size: 24px;
+            line-height: 43px;
+        }
     }
 
     table.fc-scrollgrid {
