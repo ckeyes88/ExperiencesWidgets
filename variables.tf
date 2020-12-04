@@ -1,20 +1,20 @@
 variable "aws_access_key" {
-  type        = "string"
+  type        = string
   description = "The access key for the AWS account you wish to deploy to."
 }
 
 variable "aws_secret_key" {
-  type        = "string"
+  type        = string
   description = "The secret key for the AWS account you wish to deploy to."
 }
 
 variable "environment" {
-  type = "string"
+  type = string
   description = "The environment where this is being deployed to. Will nest the public assets under `/"
   default = "dev"
 }
 variable "mime_types" {
-  type        = "map"
+  type        = map
   description = "The supported mime types for file asset uploads."
 
   default = {
@@ -24,5 +24,6 @@ variable "mime_types" {
     js   = "application/javascript"
     map  = "application/javascript"
     json = "application/json"
+    otf  = "font/otf"
   }
 }

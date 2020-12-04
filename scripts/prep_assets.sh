@@ -24,6 +24,10 @@ case "$path" in
   *map) continue
   ;;
 esac
+file_command="file"
+if [[ "$path" == *".otf"* ]]; then
+  file_command="filebase64"
+fi
 
 cat >> $TF_FILE << EOM
 resource "aws_s3_bucket_object" "file_$COUNT" {
@@ -31,8 +35,8 @@ resource "aws_s3_bucket_object" "file_$COUNT" {
   key = "public/\${var.environment}${path#$SRC}"
   acl = "public-read"
   source = "\${path.module}/$path"
-  content_type = "\${lookup(var.mime_types, "${path##*.}")}"
-  etag = "\${md5(file("\${path.module}/$path"))}"
+  content_type = lookup(var.mime_types, "${path##*.}")
+  etag = md5($file_command("\${path.module}/$path"))
 }
 
 EOM
