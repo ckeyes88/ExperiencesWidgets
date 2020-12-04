@@ -47,8 +47,8 @@ jobs:
           unzip terraform_"$tf_version"_linux_amd64.zip
           sudo mv terraform /usr/local/bin/
       - run: |
-        chmod +x ${{github.workspace}}/scripts/deploy.sh
-        .${{github.workspace}}/scripts/deploy.sh
+          chmod +x ${{github.workspace}}/scripts/deploy.sh
+          .${{github.workspace}}/scripts/deploy.sh
         env:
           ENV_NAME: "dev"
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
