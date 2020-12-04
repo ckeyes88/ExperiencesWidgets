@@ -35,7 +35,7 @@ jobs:
           BASE_API_URL: https://dev-v2-api.experiencesapp.services
       - name: Build Terraform Asset File
         run: |
-          ls ${{github.workspace}}
+          ls ${{github.workspace}}/scripts
           .${{github.workspace}}/scripts/prep_assets.sh
       - name: Install Terraform
         env:
