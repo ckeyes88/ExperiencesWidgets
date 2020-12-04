@@ -37,7 +37,7 @@ jobs:
         run: |
           ls ${{github.workspace}}/scripts
           chmod +x ${{github.workspace}}/scripts/prep_assets.sh
-          sh ${{github.workspace}}/scripts/prep_assets.sh
+          .${{github.workspace}}/scripts/prep_assets.sh
       - name: Install Terraform
         env:
           TERRAFORM_VERSION: "0.12.25"
@@ -48,7 +48,7 @@ jobs:
           sudo mv terraform /usr/local/bin/
       - run: |
           chmod +x ${{github.workspace}}/scripts/deploy.sh
-          sh ${{github.workspace}}/scripts/deploy.sh
+          .${{github.workspace}}/scripts/deploy.sh
         env:
           ENV_NAME: "dev"
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
