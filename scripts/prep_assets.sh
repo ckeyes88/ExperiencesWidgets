@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 # This file prepares assets in the public/ folder to be uploaded to S3 using
 # Terraform.
