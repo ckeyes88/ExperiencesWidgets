@@ -1,7 +1,9 @@
 import { FirstAvailability } from "../typings/FirstAvailability";
 import { Availability } from "../typings/Availability";
-import { EventAssetLinkDBO } from "../typings/Event";
+import { EventAssetLinkDBO, EventVariantDBO } from "../typings/Event";
 import { AssetDBO } from "@helpfulhuman/expapp-shared-libs";
+import { EventAvailability } from "./api";
+import { CalendarEvent, FullCalendarEvent } from "../SharedComponents/Calendar/CalendarWrapper";
 
 /**
 * Takes in shopify money_format property along with a float value
@@ -324,3 +326,87 @@ export function findFeaturedImageUrl(images: EventAssetLinkDBO[], imageLinks: As
     ? imageLinks[0].url
     : DEFAULT_EVENT_FEATURED_IMAGE;
 }
+
+/*
+Takes images and imageLinks and returns a url of a featured of first image
+ */
+export const resolveImageUrl = (images: EventAssetLinkDBO[] = [], links: AssetDBO[] = []): string => {
+  if (!images.length) {
+    return "";
+  }
+
+  const featuredImage = images.find(i => i.featured);
+  const featuredImageId = featuredImage ? featuredImage.id : 0;
+  const link = links.find(i => i._id === featuredImageId);
+
+  if (!link) {
+    return "";
+  }
+
+  if (typeof link === "string") {
+    return link || "";
+  } else {
+    return link.url || "";
+  }
+};
+
+/*
+  Finds cheapest variant price from an array of EventVariantDBO
+ */
+export const findCheapestVariantPrice = (variants: EventVariantDBO[] = []): [string, number] => {
+  let result: [string, number];
+
+  if (!variants.length) {
+    return ["$0", 0];
+  }
+
+  const prices = variants.map(v => v.price);
+  const price = Math.min(...prices);
+  const priceStr = variants.length > 1 ? `Starts at $${price}` : `$${price}`;
+  result = [priceStr, price];
+  return result;
+};
+
+/*
+ Takes events response and extracts available timeslots to display on FullCalendar
+ */
+export const extractAndParseEvents = (events: EventAvailability[], storeUrl: string): {
+  calendarEvents: CalendarEvent[];
+  fullCalendarEvents: FullCalendarEvent[];
+} => {
+  const calendarEvents: CalendarEvent[] = [];
+  const fullCalendarEvents: FullCalendarEvent[] = [];
+  events.forEach(e => {
+    const event = { title: e.name };
+    e.availabilityProducts && e.availabilityProducts.forEach((p) => {
+      p.availableTimeslots && p.availableTimeslots.forEach((ts: Availability, i: number) => {
+        let calendarEvent = {
+          ...event,
+          event: {},
+          id: `${i}-${ts.productId}`,
+          start: new Date(ts.startsAt),
+          end: new Date(ts.endsAt),
+          customUrl: `https://${storeUrl}/products/${e.handle}?day=${
+            encodeURIComponent(typeof ts.startsAt === "string" ? ts.startsAt : ts.startsAt.toISOString())
+          }`,
+          imageUrl: resolveImageUrl(e.images, e.imageLinks),
+          paymentType: e.paymentType,
+          price: findCheapestVariantPrice(e.variants),
+          editable: false,
+          startEditable: false,
+          durationEditable: false,
+          resourceEditable: false,
+        };
+        calendarEvents.push(calendarEvent);
+        let fullCalendarEvent = { ...calendarEvent };
+        delete fullCalendarEvent.end;
+        fullCalendarEvents.push(fullCalendarEvent);
+      });
+    });
+  });
+
+  return {
+    calendarEvents,
+    fullCalendarEvents,
+  };
+};

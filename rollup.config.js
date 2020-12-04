@@ -6,6 +6,8 @@ import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
 import json from "rollup-plugin-json";
 import dotenv from "dotenv";
+import alias from '@rollup/plugin-alias';
+import copy from "rollup-plugin-copy";
 
 dotenv.config();
 
@@ -108,6 +110,50 @@ export default [{
           'node_modules/preact/dist/preact.js': ['h', 'render', 'Component', 'cloneElement', 'options'],
         },
       }),
+    ],
+  },
+  {
+    input: 'src/aggregateView/index.tsx',
+    output: {
+      file: "./dist/aggregateView.js",
+      format: 'iife',
+      name: 'aggregateView',
+    },
+    treeshake: true,
+    plugins: [
+      replace({
+        'process.env.NODE_ENV': JSON.stringify('production'),
+      }),
+      scss(),
+      babel({
+        exclude: [
+          'node_modules/!(' +
+          'google-map-react|preact|preact-compat|react-redux' +
+          ')/**',
+        ]
+      }),
+      nodeResolve({
+        extensions: ['.ts', '.tsx'],
+      }),
+      json(),
+      typescript(),
+      commonjs({
+        include: 'node_modules/**',
+        namedExports: {
+          'node_modules/preact/dist/preact.js': ['h', 'render', 'Component', 'cloneElement', 'options'],
+        },
+      }),
+      alias({
+        entries: [
+          { find: 'react', replacement: 'preact/compat' },
+          { find: 'react-dom', replacement: 'preact/compat' }
+        ]
+      }),
+      copy({
+        targets: [
+          { src: 'src/assets/**/*', dest: 'dist/assets' }
+        ],
+      })
     ],
   }
 ];

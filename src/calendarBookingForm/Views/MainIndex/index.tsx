@@ -23,7 +23,7 @@ import {
   getFirstAvailability,
   getShopDetails,
 } from "../../../Utils/api";
-import { getFirstDayAvailabilities } from "../../../Utils/helpers";
+import { getFirstDayAvailabilities, getTimeslotsByDate } from "../../../Utils/helpers";
 import { unionAvailability } from "../../../Utils/mergeAvailability";
 import { ModalStateEnum } from "../../types";
 import { NotFound } from "../404/NotFound";
@@ -52,7 +52,7 @@ const INITIAL_STATE: ICalendarWidgetMainState = {
   availability: null,
   firstAvailable: null,
   fetchedMonths: {},
-  selectedDate: new Date(),
+  selectedDate: null,
   selectedTimeslot: null,
   quantitiesMap: {},
   lineItems: [],
@@ -162,6 +162,13 @@ export class CalendarWidgetMain extends Component<
         { ...defineLanguageDictionary(languageCode as LanguageCodes), ...labels.data } : 
         defineLanguageDictionary(languageCode as LanguageCodes);
 
+      // select day and timeslot when coming from aggregate view (or elsewhere)
+      const href = window.location.href;
+      const date = decodeURIComponent(href.split("day=")[1]);
+      const selectedDate = date ? new Date(date) : new Date();
+      const selectedDateTimeslots = date ? getTimeslotsByDate(availability, selectedDate) : [];
+      const selectedTimeslot = selectedDateTimeslots.find(ts => ts.startsAt.toString() === date) || null;
+
       //set state with the fetched values
       this.setState({
         shop,
@@ -171,6 +178,9 @@ export class CalendarWidgetMain extends Component<
         availability,
         firstAvailable: firstAvailable[0] && new Date(firstAvailable[0].startsAt),
         loading: false,
+        selectedDate,
+        selectedTimeslot,
+        showModal: !!date,
       });
     } catch (err) {
       this.setState({

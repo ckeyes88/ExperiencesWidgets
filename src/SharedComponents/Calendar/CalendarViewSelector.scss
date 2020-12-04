@@ -1,0 +1,47 @@
+.Calendar-ViewSelector {
+    @include Tablet {
+        display: flex;
+    }
+
+    position: relative;
+    text-align: center;
+    top: 1.2rem;
+    height: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    margin: 0 auto;
+
+    .MonthView, .ListView {
+        display: flex;
+        align-items: center;
+        color: #666666;
+        font-size: 14px;
+        line-height: 17px;
+        border-bottom: solid 3px #E3E3E3;
+        padding: 0 .5rem;
+        height: 25px;
+        cursor: pointer;
+        user-select: none;
+
+        &.Selected {
+            color: black;
+            border-bottom-color: #0088CB;
+            transition: all .5s ease-in-out;
+
+            .CalendarIcon, .ListIcon {
+                fill: black;
+            }
+        }
+
+        .CalendarIcon, .ListIcon {
+            margin-bottom: 3px;
+            margin-right: .3rem;
+            width: 24px;
+            height: auto;
+            fill: #666666;
+            transition: all .5s ease-in-out;
+        }
+    }
+}

@@ -1,0 +1,215 @@
+// close-looking fallback in case imports in upper environment fail
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap");
+@import "src/sass/_fonts";
+
+$text-main: #666666;
+$button-blue: #0088CB; // differs from _variables.scss
+$button-disabled: #999B9E;
+
+.CalendarAggregate-Container {
+    margin: 0 -10%;
+    font-family: "Avenir-Book", "Nunito Sans", serif;
+
+    @include Tablet {
+        margin: unset;
+    }
+
+    .fc-view-harness {
+        &.fc-view-harness-active {
+            min-height: 680px;
+        }
+    }
+
+    .main-heading {
+        color: #000000;
+        font-size: 24px;
+        line-height: 30px;
+        width: 100%;
+        text-align: center;
+        margin: 4rem 0 2rem 0;
+        font-weight: 800;
+
+        @include Tablet {
+            font-size: 36px;
+            line-height: 43px;
+        }
+    }
+}
+
+.AggregateCalendar-Main {
+    padding: 1.5rem 0;
+    border: 1px solid #dedede;
+    border-radius: 5px;
+    box-shadow: 0 2px 24px 0 rgba(0, 0, 0, 0.06);
+
+    @include Tablet {
+        padding: 1.5rem 2rem;
+    }
+
+    div.fc .fc-toolbar.fc-header-toolbar {
+       padding: 0;
+       margin-bottom: 1.4rem;
+
+        @include Phone {
+            padding: 0 .5rem;
+        }
+
+        @include Tablet {
+            margin-bottom: 3rem;
+        }
+    }
+
+    .fc .fc-toolbar-title {
+        font-family: Avenir-Medium, "Nunito Sans", serif;
+        color: #000000;
+        font-size: 18px;
+        line-height: 24px;
+        text-transform: capitalize;
+        letter-spacing: inherit;
+
+        @include Tablet {
+            font-size: 24px;
+            line-height: 43px;
+        }
+    }
+
+    table.fc-scrollgrid {
+        border: none;
+
+        .fc-scrollgrid-section-header {
+            td {
+                border: none;
+            }
+        }
+    }
+
+    .fc-scrollgrid td {
+        border: 1px solid #d5d5d5;
+    }
+
+    .fc-col-header-cell.fc-day {
+        border: none;
+    }
+
+    .fc-col-header {
+        margin: 0;
+
+        &.fc-day {
+            border: none;
+        }
+    }
+
+    .fc-col-header-cell-cushion {
+        border: none;
+        color: $text-main;
+        font-size: 14px;
+        line-height: 17px;
+        margin-bottom: 0.4rem;
+    }
+
+    .fc-scroller.fc-scroller-liquid-absolute {
+        height: 110%;
+    }
+
+    td.fc-daygrid-day.fc-day.fc-day-today {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .fc-daygrid-day-number {
+        border: none;
+        color: #000000;
+        font-size: 14px;
+        line-height: 17px;
+        margin: 0.3rem 0.3rem 0 0;
+    }
+
+    .fc-day-other {
+        .fc-daygrid-day-number {
+            display: none;
+        }
+    }
+
+    .fc-today-button.fc-button.fc-button-primary {
+        background-color: transparent;
+        border: none;
+        text-transform: capitalize;
+        color: $button-blue;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 17px;
+
+        &:disabled {
+            color: $button-disabled;
+        }
+    }
+
+    .fc-prev-button.fc-button.fc-button-primary,
+    .fc-next-button.fc-button.fc-button-primary {
+        background-color: white;
+        border: none;
+        outline: none;
+    }
+
+    button.fc-next-button.fc-button:focus,
+    button.fc-next-button.fc-button:active,
+    button.fc-prev-button.fc-button:focus,
+    button.fc-prev-button.fc-button:active {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        border-color: transparent;
+        box-shadow: none;
+    }
+
+    button.fc-today-button.fc-button:focus,
+    button.fc-today-button.fc-button:active {
+        color: $button-blue;
+        background-color: transparent;
+        box-shadow: none;
+    }
+
+    .fc-icon.fc-icon-chevron-left,
+    .fc-icon.fc-icon-chevron-right {
+        background-color: white;
+        border: none;
+        color: $text-main;
+    }
+
+    a.fc-daygrid-event.fc-event {
+        border: none;
+        overflow-x: hidden;
+        color: $text-main;
+        font-size: 12px;
+        line-height: 15px;
+    }
+
+    .fc-direction-ltr .fc-list-table .fc-list-event-graphic {
+        display: none;
+    }
+
+    .fc .fc-daygrid-day-frame {
+        max-height: 50px;
+    }
+
+    .fc-list-day-cushion.fc-cell-shaded {
+        padding: 0.3rem 1rem;
+
+        a {
+            border: none;
+        }
+    }
+
+    @include Phone {
+        .fc .fc-list-table td, .fc .fc-list-day-cushion {
+            padding: 8px;
+        }
+    }
+
+    .fc .fc-list-event-time {
+        padding: 28px 14px;
+    }
+
+    a.fc-daygrid-more-link {
+        border-bottom: none;
+    }
+}

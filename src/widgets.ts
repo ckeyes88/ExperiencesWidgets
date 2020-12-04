@@ -27,3 +27,4 @@ loadExpAppWidget(
   "[data-expapp-calendar-booking-form]",
   `${baseUrl}/calendarBookingForm.js`
 );
+loadExpAppWidget("[expapp-calendar-booking-form]", `${baseUrl}/aggregateView.js`);

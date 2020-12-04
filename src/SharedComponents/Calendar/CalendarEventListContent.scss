@@ -1,0 +1,38 @@
+.Calendar-EventList-Details {
+  display: flex;
+  align-content: center;
+
+  .FeaturedImage {
+    display: flex;
+    margin-right: 1rem;
+  }
+
+  img {
+    height: 45px;
+    width: auto;
+    min-width: 45px;
+
+    @include Tablet {
+      height: 65px;
+      width: auto;
+      min-width: 65px;
+    }
+  }
+
+  .EventDescription {
+    color: #666666;
+    font-size: 14px;
+    line-height: 17px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    div:first-child {
+      font-weight: 700;
+    }
+  }
+}
+
+.Calendar-Event-Link:hover {
+  text-decoration: none;
+}
