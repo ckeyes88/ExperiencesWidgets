@@ -31,7 +31,7 @@ jobs:
           BASE_WIDGET_URL: https://widgets.experiencesapp.services
           BASE_API_URL: https://prod-v2-api.experiencesapp.services
       - name: Build Terraform Asset File
-        run: ./scripts/prep_assets.sh
+        run: ./${{github.workspace}}/scripts/prep_assets.sh
       - name: Install Terraform
         env:
           TERRAFORM_VERSION: "0.12.25"
@@ -40,7 +40,7 @@ jobs:
           wget https://releases.hashicorp.com/terraform/"$tf_version"/terraform_"$tf_version"_linux_amd64.zip
           unzip terraform_"$tf_version"_linux_amd64.zip
           sudo mv terraform /usr/local/bin/
-      - run: ./scripts/deploy.sh
+      - run: ./${{github.workspace}}scripts/deploy.sh
         env:
           ENV_NAME: "prod"
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
