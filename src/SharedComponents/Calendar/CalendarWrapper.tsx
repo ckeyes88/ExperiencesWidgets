@@ -19,6 +19,7 @@ export interface ICalendarProps {
   dayMaxEventRows?: number;
   eventClick(e: CalendarEventClick): void;
   dateClick?(e: DateClickEvent): void;
+  moreLinkClick?(e: any): void;
   titleFormat?: {
     month?: string; // "long" | "short"
     year?: string; // "numeric"
@@ -26,7 +27,7 @@ export interface ICalendarProps {
     weekday?: string; // "long" | "short"
   };
   noEventsContent: JSX.Element;
-}
+};
 
 export type CalendarEvent = {
   event: any; // needed for CalendarEventContent compatibility
@@ -50,7 +51,19 @@ export type FullCalendarEvent = Partial<CalendarEvent>;
 // Can be reused by any component
 export class Calendar extends Component<ICalendarProps, any> {
   render() {
-    const {view, events, eventContent, forwardRef, dateClick, titleFormat, noEventsContent, dayMaxEventRows, eventClick} = this.props;
+    const {
+      view, 
+      events, 
+      eventContent, 
+      forwardRef, 
+      dateClick, 
+      titleFormat, 
+      noEventsContent, 
+      dayMaxEventRows, 
+      eventClick,
+      moreLinkClick
+    } = this.props;
+
     const FullCalendarCast = FullCalendar as unknown;
     const FullCalendarAsComponent = FullCalendarCast as ComponentClass<any>;
 
@@ -66,7 +79,8 @@ export class Calendar extends Component<ICalendarProps, any> {
         dayMaxEventRows={dayMaxEventRows}
         ref={forwardRef}
         noEventsContent={noEventsContent}
+        moreLinkClick={moreLinkClick}
       />
     );
   }
-}
+};

@@ -43,7 +43,7 @@ export class CalendarDaySchedule extends Component<ICalendarDayScheduleProps, an
             </button>
           </div>
         </div>
-        <div className="Calendar-DaySchedule-Body">
+        <div className={`Calendar-DaySchedule-Body ${events && events.length > 4 ? 'FadeBottom' : ''}`}>
           {events.map(e => (
             <a key={e.id} href={e.customUrl}>
               <div className="Calendar-Day-Event">
@@ -51,7 +51,7 @@ export class CalendarDaySchedule extends Component<ICalendarDayScheduleProps, an
                 <div className="FeaturedImage">
                   <img src={e.imageUrl as string} alt="Event featured image" />
                 </div>
-                <div className="EventDescription">
+                <div className={`EventDescription ${e.title.length > 50 ? 'SmallerFont' : ''}`}>
                   <div>{e.title}</div>
                   <div>
                     <span>{e.paymentType}</span>

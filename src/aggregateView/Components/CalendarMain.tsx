@@ -115,6 +115,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
             events={fullCalendarEvents}
             eventContent={eventRendererViewMap[view]}
             titleFormat={titleFormat}
+            moreLinkClick={this.handleMoreClick}
             noEventsContent={this.renderCalendarNoEventsMessage()}
           />
         </div>
