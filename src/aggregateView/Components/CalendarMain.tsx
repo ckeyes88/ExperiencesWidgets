@@ -50,21 +50,6 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     daySelectedEvents: [],
   };
 
-  selectView = (view: string) => {
-    const calendarApi = this.calendarRef.current.getApi();
-    calendarApi.changeView(view);
-    this.setState({ view });
-  }
-
-  handleSelectDay = ({ date }: DateClickEvent) => {
-    const earliest = new Date(date).getTime();
-    const latest = new Date(date).setHours(23, 59, 59);
-    const daySelectedEvents = this.state.events.filter(e => e.start.getTime() >= earliest && e.end.getTime() < latest);
-    this.setState({ daySelected: date, daySelectedEvents });
-  }
-
-  handleClose = () => this.setState({ daySelected: null });
-
   async componentDidMount() {
     const { baseUrl, shopUrl } = this.props;
     const eventsResponse = await fetchProductsWithAvailability(baseUrl, shopUrl, new Date(), addDays(30)(new Date()));
@@ -81,15 +66,31 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     const earliestAvailableEventDate = Math.min(...this.state.events.map(e => e.start.getTime()));
     const calendarApi = this.calendarRef.current.getApi();
     calendarApi.gotoDate(new Date(earliestAvailableEventDate));
-  }
+  };
 
   renderCalendarNoEventsMessage = () => {
     return <CalendarNoEventsMessage  onNextAvailableClick={this.navigateToNextAvailableTS} />;
-  }
+  };
 
-  eventClick = ({ event }: CalendarEventClick) => {
-    // show new dialog here
-  }
+  handleEventClick = ({ event: { _def, _instance }}: CalendarEventClick) => {
+    const eventSelected = this.state.events.find(e => _def.publicId.includes(e.id));
+    this.setState({ daySelected: _instance.range.start, daySelectedEvents: [eventSelected] });
+  };
+
+  selectView = (view: string) => {
+    const calendarApi = this.calendarRef.current.getApi();
+    calendarApi.changeView(view);
+    this.setState({ view });
+  };
+
+  handleMoreClick = ({ date }: DateClickEvent) => {
+    const earliest = new Date(date).getTime();
+    const latest = new Date(date).setHours(23, 59, 59);
+    const daySelectedEvents = this.state.events.filter(e => e.start.getTime() >= earliest && e.end.getTime() < latest);
+    this.setState({ daySelected: date, daySelectedEvents });
+  };
+
+  handleClose = () => this.setState({ daySelected: null });
 
   render() {
     const { fullCalendarEvents, view, daySelected, daySelectedEvents } = this.state;
@@ -108,11 +109,10 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
           />
           <Calendar
             dayMaxEventRows={4}
-            eventClick={this.eventClick}
+            eventClick={this.handleEventClick}
             forwardRef={this.calendarRef}
             view={view}
             events={fullCalendarEvents}
-            dateClick={this.handleSelectDay}
             eventContent={eventRendererViewMap[view]}
             titleFormat={titleFormat}
             noEventsContent={this.renderCalendarNoEventsMessage()}

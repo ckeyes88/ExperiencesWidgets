@@ -27,5 +27,15 @@ export type DateClickEvent = {
 };
 
 export type CalendarEventClick = {
-  event: ICalendarEventContent;
-}
+  event: {
+    _def: {
+      publicId: string;
+    };
+    _instance: {
+      range: {
+        start: Date;
+        end: Date;
+      };
+    };
+  }
+};
