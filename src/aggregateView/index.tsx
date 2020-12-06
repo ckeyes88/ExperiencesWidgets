@@ -15,6 +15,7 @@ mountComponent({
 
     return { 
         ...data, 
+        defaultVew: data.aggregateViewDefaultView,
         baseUrl: data.aggregateViewBaseUrl, 
         shopUrl: data.aggregateViewShopUrl, 
         languageCode: data.aggregateViewLanguageCode || "en-US",

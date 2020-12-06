@@ -6,7 +6,11 @@ import { AssetDBO } from "@helpfulhuman/expapp-shared-libs";
 import { Component, ComponentClass, h, JSX } from "preact";
 import { CalendarEventClick, DateClickEvent } from "../../typings/Calendar";
 
-export const calendarViewType = {
+type CalendarViewType = {
+  [key: string]: string;
+}
+
+export const calendarViewType: CalendarViewType = {
   dayGrid: "dayGridMonth",
   list: "listWeek",
 };

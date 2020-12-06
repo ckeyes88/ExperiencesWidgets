@@ -21,6 +21,7 @@ interface ICalendarContainerProps {
   aggregateViewBaseUrl?: string;
   aggregateViewShop?: string;
   aggregateViewShopUrl?: string;
+  defaultVew?: string;
   baseUrl?: string;
   languageCode?: string;
   shopUrl?: string;
@@ -51,7 +52,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   };
 
   async componentDidMount() {
-    const { baseUrl, shopUrl } = this.props;
+    const { baseUrl, shopUrl, defaultVew } = this.props;
     const eventsResponse = await fetchProductsWithAvailability(baseUrl, shopUrl, new Date(), addDays(30)(new Date()));
     const { calendarEvents: events, fullCalendarEvents } = extractAndParseEvents(eventsResponse, shopUrl);
     this.setState({ events, fullCalendarEvents });
@@ -59,6 +60,10 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     // only show list view on smaller screens
     if (window && window.innerWidth < 768) {
       this.selectView(calendarViewType.list);
+    }
+
+    if (defaultVew && calendarViewType[defaultVew]) {
+      this.selectView(calendarViewType[defaultVew])
     }
   }
 
