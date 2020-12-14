@@ -163,9 +163,9 @@ export class CalendarWidgetMain extends Component<
         defineLanguageDictionary(languageCode as LanguageCodes);
 
       // select day and timeslot when coming from aggregate view (or elsewhere)
-      const href = window.location.href;
-      const date = decodeURIComponent(href.split("day=")[1]);
-      const selectedDate = date ? new Date(date) : new Date();
+      const search = window.location.search || '';
+      const date = search.split("select=")[1] || '';
+      const selectedDate = date && !isNaN(+date) ? new Date(+date) : new Date();
       const selectedDateTimeslots = date ? getTimeslotsByDate(availability, selectedDate) : [];
       const selectedTimeslot = selectedDateTimeslots.find(ts => ts.startsAt.toString() === date) || null;
 
