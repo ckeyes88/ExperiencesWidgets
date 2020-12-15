@@ -32,6 +32,7 @@ import { ConfirmPage } from "../Confirmation/ConfirmPage";
 import { OrderDetailsPage } from "../OrderDetails/OrderDetailsPage";
 import { AppDictionary, defineLanguageDictionary, LanguageCodes } from "../../../typings/Languages";
 import React from "preact/compat";
+import { getQueryVariable } from "../../../SharedComponents/DatePicker/Utils";
 
 /** 32 days expressed in seconds, used to fetch new availability */
 const TIMESPAN_IN_SECONDS = 32 * 24 * 60 * 60;
@@ -163,11 +164,10 @@ export class CalendarWidgetMain extends Component<
         defineLanguageDictionary(languageCode as LanguageCodes);
 
       // select day and timeslot when coming from aggregate view (or elsewhere)
-      const href = window.location.href;
-      const date = decodeURIComponent(href.split("day=")[1]);
-      const selectedDate = date ? new Date(date) : new Date();
+      const date = getQueryVariable("select");
+      const selectedDate = date && !isNaN(+date) ? new Date(+date) : new Date();
       const selectedDateTimeslots = date ? getTimeslotsByDate(availability, selectedDate) : [];
-      const selectedTimeslot = selectedDateTimeslots.find(ts => ts.startsAt.toString() === date) || null;
+      const selectedTimeslot = selectedDateTimeslots.find(ts => (new Date(ts.startsAt)).getTime() === +date) || null;
 
       //set state with the fetched values
       this.setState({

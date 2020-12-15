@@ -386,8 +386,8 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
           id: `${i}-${ts.productId}`,
           start: new Date(ts.startsAt),
           end: new Date(ts.endsAt),
-          customUrl: `https://${storeUrl}/products/${e.handle}?day=${
-            encodeURIComponent(typeof ts.startsAt === "string" ? ts.startsAt : ts.startsAt.toISOString())
+          customUrl: `https://${storeUrl}/products/${e.handle}?select=${
+            new Date(typeof ts.startsAt === "string" ? ts.startsAt : ts.startsAt.toISOString()).getTime()
           }`,
           imageUrl: resolveImageUrl(e.images, e.imageLinks),
           paymentType: e.paymentType,
