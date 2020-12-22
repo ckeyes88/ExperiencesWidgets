@@ -1,8 +1,7 @@
-import "./CalendarWidgetMain.scss";
-
 import { format } from "date-fns";
-
+import React from "preact/compat";
 import { Component, h } from "../../../../node_modules/preact";
+import { getQueryVariable } from "../../../SharedComponents/DatePicker/Utils";
 import { Loading } from "../../../SharedComponents/loading/Loading";
 import { Modal } from "../../../SharedComponents/Modal/Modal";
 import { Availability } from "../../../typings/Availability";
@@ -11,6 +10,7 @@ import { CustomerInputData } from "../../../typings/CustomerInput";
 import { EventDBO, EventVariantDBO, PaymentType } from "../../../typings/Event";
 import { FirstAvailability } from "../../../typings/FirstAvailability";
 import { FormFieldValueInput } from "../../../typings/FormFieldValueInput";
+import { AppDictionary, defineLanguageDictionary, LanguageCodes } from "../../../typings/Languages";
 import { OrderLineItemInputData } from "../../../typings/OrderLineItemInput";
 import { ShopDetails } from "../../../typings/ShopDetails";
 import {
@@ -21,7 +21,7 @@ import {
   getEvent,
   getEventCustomLabels,
   getFirstAvailability,
-  getShopDetails,
+  getShopDetails
 } from "../../../Utils/api";
 import { getFirstDayAvailabilities, getTimeslotsByDate } from "../../../Utils/helpers";
 import { unionAvailability } from "../../../Utils/mergeAvailability";
@@ -30,9 +30,9 @@ import { NotFound } from "../404/NotFound";
 import { AvailabilityPage } from "../Availability/AvailabilityPage";
 import { ConfirmPage } from "../Confirmation/ConfirmPage";
 import { OrderDetailsPage } from "../OrderDetails/OrderDetailsPage";
-import { AppDictionary, defineLanguageDictionary, LanguageCodes } from "../../../typings/Languages";
-import React from "preact/compat";
-import { getQueryVariable } from "../../../SharedComponents/DatePicker/Utils";
+import "./CalendarWidgetMain.scss";
+
+
 
 /** 32 days expressed in seconds, used to fetch new availability */
 const TIMESPAN_IN_SECONDS = 32 * 24 * 60 * 60;
@@ -165,9 +165,9 @@ export class CalendarWidgetMain extends Component<
 
       // select day and timeslot when coming from aggregate view (or elsewhere)
       const date = getQueryVariable("select");
-      const selectedDate = date && !isNaN(+date) ? new Date(+date) : new Date();
+      const selectedDate = date && !isNaN(+date) ? new Date(+date * 1000) : new Date();
       const selectedDateTimeslots = date ? getTimeslotsByDate(availability, selectedDate) : [];
-      const selectedTimeslot = selectedDateTimeslots.find(ts => (new Date(ts.startsAt)).getTime() === +date) || null;
+      const selectedTimeslot = selectedDateTimeslots.find(ts => (new Date(ts.startsAt)).getTime() === +date * 1000) || null;
 
       //set state with the fetched values
       this.setState({
