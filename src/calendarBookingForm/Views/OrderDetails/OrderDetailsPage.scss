@@ -111,6 +111,10 @@
             pointer-events: none;
         }
     }
+
+    &.centered {
+        justify-content: center;
+    }
 }
 
 .CustomOrderDetials-RequiredWarning {
