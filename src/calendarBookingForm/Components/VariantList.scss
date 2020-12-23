@@ -60,7 +60,7 @@
         color: $color-white;
     }
 }
-.VariantListTotal-QtyMessage{
+.VariantListTotal-QtyMessage {
     padding: 0 0 2.5rem 0;
     font-size: .7rem;
     color: rgb(119, 119, 119);
@@ -70,11 +70,29 @@
     .VariantContainer { 
         padding: 0rem;
         max-height: unset;
+
+        > div::after {
+            content: none;
+        }
+
+        &.BottomGradient {
+            > div::after {
+                content: none;
+            }
+        }
     } 
     .VariantContent, .VariantListTotal {
         padding: 0 2rem;
     }
     .VariantListTotal-QtyMessage {
         padding-top: 3rem;
+        padding-bottom: 3.5rem;
+    }
+    .VariantListTotal {
+        width: 100%;
+        bottom: 0;
+    }
+    .AvailabilityPage-TimeSlotContainer {
+        overflow: unset;
     }
 }
