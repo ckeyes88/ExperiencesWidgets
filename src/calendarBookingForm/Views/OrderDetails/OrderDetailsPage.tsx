@@ -382,7 +382,7 @@ export class OrderDetailsPage extends Component<
               handleChange={this.handleCustomFormChange}
             />
             <RequiredWarning message={labels.requiredWarningLabel}/>
-            <span className="CustomOrderDetails-SubmitBtn">
+            <span className="CustomOrderDetails-SubmitBtn centered">
               <button type="submit">{labels.confirmReservationButtonLabel}</button>
             </span>
           </form>
