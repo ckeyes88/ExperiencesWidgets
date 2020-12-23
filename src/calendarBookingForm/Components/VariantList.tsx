@@ -129,6 +129,7 @@ export class VariantList extends Component<
           onClickBack={this.onClickBack}
         />
         <div className="VariantContent">{variants.map(this.renderVariant)}</div>
+        {this.renderLimitMessage()}
         {this.totalQuantity > 0 && (
           <div className="VariantListTotal">
             <div className="VariantListTotal-Grid">
@@ -148,7 +149,6 @@ export class VariantList extends Component<
             </div>
           </div>
         )}
-        {this.renderLimitMessage()}
       </div>
     );
   };
@@ -175,6 +175,12 @@ export class VariantList extends Component<
 
   /** rendering */
   render() {
-    return <div className="VariantContainer">{this.renderVariants()}</div>;
+    const { variants } = this.props;
+
+    return (
+      <div className={`VariantContainer ${this.totalQuantity > 0 ? 'BottomPadding' : ''} ${variants && variants.length < 5 ? '' : 'BottomGradient'}`}>
+        {this.renderVariants()}
+      </div>
+    );
   }
 }

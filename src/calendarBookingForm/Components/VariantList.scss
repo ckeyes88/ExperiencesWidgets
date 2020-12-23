@@ -1,7 +1,35 @@
 .VariantContainer {
     padding: 1.3rem 1.5rem 2rem 1.5rem;
     overflow: auto;
-    max-height: 95%;
+    max-height: 100%;
+
+    > div::after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: linear-gradient(0deg, rgba(255,255,255,1) 30%, rgba(255,255,255,0) 100%);
+        height: 10%;
+    }
+
+    &.BottomPadding {
+        > div::after {
+            bottom: 2.8rem;
+        }
+    }
+
+    &.BottomGradient {
+        > div::after {
+            content: '';
+        }
+    }
+}
+.VariantListTotal {
+    position: absolute;
+    z-index: 1000;
+    width: 87%;
+    background: white;
+    bottom: -.4rem;
 }
 .VariantListTotal-Label, .VariantListTotal-Value {
     display: flex;
@@ -33,7 +61,7 @@
     }
 }
 .VariantListTotal-QtyMessage{
-    padding-top: 2rem;
+    padding: 0 0 2.5rem 0;
     font-size: .7rem;
     color: rgb(119, 119, 119);
     text-align: center;
