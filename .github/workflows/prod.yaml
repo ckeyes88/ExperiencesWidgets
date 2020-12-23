@@ -44,8 +44,8 @@ jobs:
           sudo mv terraform /usr/local/bin/
       - name: Deploy to Production
         run: |
-          .${{github.workspace}}scripts/deploy.sh
-          bash ${{github.workspace}}/scripts/prep_assets.sh
+          chmod +x ${{github.workspace}}/scripts/deploy.sh
+          bash ${{github.workspace}}/scripts/deploy.sh
         env:
           ENV_NAME: "prod"
           NPM_TOKEN: ${{secrets.NPM_TOKEN}}
