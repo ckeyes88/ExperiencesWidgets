@@ -7,6 +7,10 @@ import { format } from "date-fns";
 interface ICalendarDayScheduleProps {
   open: boolean;
   handleClose(): void;
+  dialogPosition?: {
+    pageX: number;
+    pageY: number;
+  };
   title: string;
   events: CalendarEvent[];
 }
@@ -29,12 +33,15 @@ export class CalendarDaySchedule extends Component<ICalendarDayScheduleProps, an
   }
 
   render() {
-    const { title, open, events } = this.props;
+    const { title, open, events, dialogPosition } = this.props;
+    const style = { 
+      top: dialogPosition && dialogPosition.pageY ? dialogPosition.pageY - 100 : 0,
+    };
 
     if (!open) { return null; }
 
     return (
-      <dialog ref={this.dialogRef} open={open} className="Calendar-DaySchedule">
+      <dialog ref={this.dialogRef} open={open} className="Calendar-DaySchedule" style={style}>
         <div className="Calendar-DaySchedule-Header">
           <div>{title}</div>
           <div>

@@ -27,6 +27,7 @@ export type DateClickEvent = {
 };
 
 export type CalendarEventClick = {
+  jsEvent: MouseEvent;
   event: {
     _def: {
       publicId: string;
