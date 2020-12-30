@@ -362,6 +362,10 @@ export async function addToCart(
             { key: "Email", value: attendee.email },
           ];
 
+          if(timeslot.timeslotId) {
+            customAttributes.push({key: "Timeslot", value: timeslot.timeslotId});
+          }
+
           if (Array.isArray(attendee.fields)) {
             for (let field of attendee.fields) {
               customAttributes.push({
@@ -385,6 +389,10 @@ export async function addToCart(
         const customAttributes: ShopifyAttribute[] = [
           { key: "When", value: When },
         ];
+
+        if(timeslot.timeslotId) {
+          customAttributes.push({key: "Timeslot", value: timeslot.timeslotId});
+        }
 
         if (Array.isArray(fields)) {
           for (const field of fields) {
@@ -433,6 +441,10 @@ export async function addToCart(
           Email: attendee.email,
         };
 
+        if(timeslot.timeslotId) {
+          properties.Timeslot = timeslot.timeslotId;
+        }
+
         if (Array.isArray(attendee.fields)) {
           for (let field of attendee.fields) {
             properties[field.label] = field.value;
@@ -449,6 +461,10 @@ export async function addToCart(
     // Otherwise, each variant will be its own line item
     else {
       const properties: IHashTable<string> = { When };
+      
+      if(timeslot.timeslotId) {
+        properties.Timeslot = timeslot.timeslotId;
+      }
 
       if (Array.isArray(fields)) {
         for (let field of fields) {
