@@ -481,7 +481,7 @@ export async function addToCart(
       }
     }
 
-    const cartUrl = shopUrl ? `https://${shopUrl}/cart/add.js` : "/cart/add.js";
+    const cartUrl = "/cart/add.js";
 
     for (let request of requests) {
       let error: Error | null = null;
@@ -513,7 +513,7 @@ export async function addToCart(
  * Gets the current cart content
  */
 export async function getCart(shopUrl?: string): Promise<GetCartResponse> {
-  const cartUrl = shopUrl ? `${shopUrl}/cart.js` : "/cart.js";
+  const cartUrl = "/cart.js";
   const res = await sendJSON<GetCartRequestBody, GetCartResponse>("GET", cartUrl);
 
   return handleResponse<GetCartResponse>(res);
