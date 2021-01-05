@@ -330,9 +330,9 @@ export function findFeaturedImageUrl(images: EventAssetLinkDBO[], imageLinks: As
 /*
 Takes images and imageLinks and returns a url of a featured of first image
  */
-export const resolveImageUrl = (images: EventAssetLinkDBO[] = [], links: AssetDBO[] = []): string => {
+export const resolveImageUrl = (baseUrl: string, images: EventAssetLinkDBO[] = [], links: AssetDBO[] = []): string => {
   if (!images.length) {
-    return "";
+    return `${baseUrl}/images/default_event_image.png`;
   }
 
   const featuredImage = images.find(i => i.featured);
@@ -340,13 +340,13 @@ export const resolveImageUrl = (images: EventAssetLinkDBO[] = [], links: AssetDB
   const link = links.find(i => i._id === featuredImageId);
 
   if (!link) {
-    return "";
+    return `${baseUrl}/images/default_event_image.png`;
   }
 
   if (typeof link === "string") {
-    return link || "";
+    return link || `${baseUrl}/images/default_event_image.png`;
   } else {
-    return link.url || "";
+    return link.url || `${baseUrl}/images/default_event_image.png`;
   }
 };
 
@@ -370,7 +370,7 @@ export const findCheapestVariantPrice = (variants: EventVariantDBO[] = []): [str
 /*
  Takes events response and extracts available timeslots to display on FullCalendar
  */
-export const extractAndParseEvents = (events: EventAvailability[], storeUrl: string): {
+export const extractAndParseEvents = (events: EventAvailability[], storeUrl: string, baseUrl: string): {
   calendarEvents: CalendarEvent[];
   fullCalendarEvents: FullCalendarEvent[];
 } => {
@@ -389,7 +389,7 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
           customUrl: `https://${storeUrl}/products/${e.handle}?select=${
             new Date(typeof ts.startsAt === "string" ? ts.startsAt : ts.startsAt.toISOString()).getTime() / 1000
           }`,
-          imageUrl: resolveImageUrl(e.images, e.imageLinks),
+          imageUrl: resolveImageUrl(baseUrl, e.images, e.imageLinks),
           paymentType: e.paymentType,
           price: findCheapestVariantPrice(e.variants),
           editable: false,

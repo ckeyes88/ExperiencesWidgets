@@ -62,7 +62,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   async componentDidMount() {
     const { baseUrl, shopUrl, defaultVew } = this.props;
     const eventsResponse = await fetchProductsWithAvailability(baseUrl, shopUrl, new Date(), addDays(30)(new Date()));
-    const { calendarEvents: events, fullCalendarEvents } = extractAndParseEvents(eventsResponse, shopUrl);
+    const { calendarEvents: events, fullCalendarEvents } = extractAndParseEvents(eventsResponse, shopUrl, baseUrl);
     this.setState({ events, fullCalendarEvents });
 
     // only show list view on smaller screens
