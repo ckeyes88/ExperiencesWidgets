@@ -181,7 +181,9 @@ export class CalendarWidgetMain extends Component<
         selectedDate,
         showModal: !!date,
       }, () => {
-        this.handleSelectTimeSlot(selectedTimeslot);
+        if (selectedTimeslot) {
+          this.handleSelectTimeSlot(selectedTimeslot);
+        }
       });
     } catch (err) {
       this.setState({
