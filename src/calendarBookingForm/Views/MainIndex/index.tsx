@@ -132,6 +132,14 @@ export class CalendarWidgetMain extends Component<
     this.setLoading();
     const { baseUrl, shopUrl, shopifyProductId, languageCode } = this.props;
 
+    // select day and timeslot when coming from aggregate view (or elsewhere)
+    const date = getQueryVariable("select");
+    const ms = +date * 1000;
+    const selectedDate = date && !isNaN(+date) ? new Date(ms) : new Date();
+    const availabilityRangeEnd = (Date.now() + ms) > (Date.now() + TIMESPAN_IN_SECONDS * 1000) ? 
+      (selectedDate.getTime() / 1000) + (TIMESPAN_IN_SECONDS * 2) : 
+      TIMESPAN_IN_SECONDS * 2;
+
     try {
       // fetch everything in parallel to improve loading time
       const [shop, labels, event, availability] = await Promise.all([
@@ -147,7 +155,7 @@ export class CalendarWidgetMain extends Component<
         // get availability for the current month and the next
         this.fetchRangeOfAvailability(
           this.state.now,
-          TIMESPAN_IN_SECONDS * 2,
+          availabilityRangeEnd,
         )
       ]);
 
@@ -163,16 +171,6 @@ export class CalendarWidgetMain extends Component<
         { ...defineLanguageDictionary(languageCode as LanguageCodes), ...labels.data } : 
         defineLanguageDictionary(languageCode as LanguageCodes);
 
-      // select day and timeslot when coming from aggregate view (or elsewhere)
-      const date = getQueryVariable("select");
-      const ms = +date * 1000;
-      if (Date.now() + ms > Date.now() + TIMESPAN_IN_SECONDS) {
-        await this.fetchRangeOfAvailability(
-          this.state.now,
-          ms,
-        );
-      }
-      const selectedDate = date && !isNaN(+date) ? new Date(ms) : new Date();
       const selectedDateTimeslots = date ? getTimeslotsByDate(availability, selectedDate) : [];
       const selectedTimeslot = selectedDateTimeslots.find(ts => (new Date(ts.startsAt)).getTime() === +date * 1000) || null;
 
