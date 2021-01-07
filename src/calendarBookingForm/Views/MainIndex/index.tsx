@@ -165,7 +165,14 @@ export class CalendarWidgetMain extends Component<
 
       // select day and timeslot when coming from aggregate view (or elsewhere)
       const date = getQueryVariable("select");
-      const selectedDate = date && !isNaN(+date) ? new Date(+date * 1000) : new Date();
+      const ms = +date * 1000;
+      if (Date.now() + ms > Date.now() + TIMESPAN_IN_SECONDS) {
+        await this.fetchRangeOfAvailability(
+          this.state.now,
+          ms,
+        );
+      }
+      const selectedDate = date && !isNaN(+date) ? new Date(ms) : new Date();
       const selectedDateTimeslots = date ? getTimeslotsByDate(availability, selectedDate) : [];
       const selectedTimeslot = selectedDateTimeslots.find(ts => (new Date(ts.startsAt)).getTime() === +date * 1000) || null;
 
