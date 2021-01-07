@@ -1,5 +1,5 @@
 import "./CalendarMain.scss";
-import { addDays } from "date-fns/fp";
+import { addDays, subDays, isAfter } from "date-fns/fp";
 import { format } from "date-fns";
 import { Component, createRef, h } from "preact";
 import { CalendarViewSelector } from "../../SharedComponents/Calendar/CalendarViewSelector";
@@ -38,6 +38,8 @@ interface ICalendarContainerState {
   events: CalendarEvent[];
   fullCalendarEvents: FullCalendarEvent[];
   daySelectedEvents: CalendarEvent[];
+  end: Date; // tracks current date of next and prev updates
+  eventsFetchedUntil: Date; // tracks current end date of events fetched
 }
 
 const eventRendererViewMap = {
@@ -57,13 +59,13 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     fullCalendarEvents: [],
     daySelected: null,
     daySelectedEvents: [],
+    end: addDays(30)(new Date()),
+    eventsFetchedUntil: addDays(30)(new Date())
   };
 
   async componentDidMount() {
-    const { baseUrl, shopUrl, defaultVew } = this.props;
-    const eventsResponse = await fetchProductsWithAvailability(baseUrl, shopUrl, new Date(), addDays(30)(new Date()));
-    const { calendarEvents: events, fullCalendarEvents } = extractAndParseEvents(eventsResponse, shopUrl, baseUrl);
-    this.setState({ events, fullCalendarEvents });
+    const { defaultVew } = this.props;
+    this.fetchEvents();
 
     // only show list view on smaller screens
     if (window && window.innerWidth < 768) {
@@ -73,7 +75,43 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     if (defaultVew && calendarViewType[defaultVew]) {
       this.selectView(calendarViewType[defaultVew])
     }
+
+    document && document.getElementsByClassName('fc-prev-button')[0].addEventListener('click', this.handlePrevClick);
+    document && document.getElementsByClassName('fc-next-button')[0].addEventListener('click', this.handleNextClick);
   }
+
+  componentWillUnmount() {
+    document && document.getElementsByClassName('fc-prev-button')[0].removeEventListener('click', this.handlePrevClick);
+    document && document.getElementsByClassName('fc-next-button')[0].removeEventListener('click', this.handleNextClick);
+  }
+
+  handlePrevClick = async () => {
+    const { view, end } = this.state;
+    const decrement = view === calendarViewType.dayGrid ? 30 : 7;
+    const newEnd = subDays(decrement)(end);
+    if (isAfter(newEnd, end)) {
+      this.setState({ end: newEnd });
+    }
+  };
+
+  handleNextClick = async () => {
+    const { view, end, eventsFetchedUntil } = this.state;
+    const increment = view === calendarViewType.dayGrid ? 30 : 7;
+    const newEnd = addDays(increment)(end)
+    if (newEnd > eventsFetchedUntil) { // only fetch new events if new date is not covered by events lust
+      this.fetchEvents(undefined, newEnd);
+      this.setState({ end: newEnd, eventsFetchedUntil: newEnd });
+    } else {
+      this.setState({ end: newEnd });
+    }
+  };
+
+  fetchEvents = async (start = new Date(), end = this.state.end) => {
+    const { baseUrl, shopUrl } = this.props;
+    const eventsResponse = await fetchProductsWithAvailability(baseUrl, shopUrl, start, end);
+    const { calendarEvents: events, fullCalendarEvents } = extractAndParseEvents(eventsResponse, shopUrl, baseUrl);
+    this.setState({ events, fullCalendarEvents });
+  };
 
   navigateToNextAvailableTS = () => {
     const earliestAvailableEventDate = Math.min(...this.state.events.map(e => e.start.getTime()));
