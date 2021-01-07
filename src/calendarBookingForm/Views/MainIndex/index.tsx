@@ -179,8 +179,11 @@ export class CalendarWidgetMain extends Component<
         firstAvailable: firstAvailable[0] && new Date(firstAvailable[0].startsAt),
         loading: false,
         selectedDate,
-        selectedTimeslot,
         showModal: !!date,
+      }, () => {
+        if (selectedTimeslot) {
+          this.handleSelectTimeSlot(selectedTimeslot);
+        }
       });
     } catch (err) {
       this.setState({
