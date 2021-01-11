@@ -114,6 +114,8 @@ export type AppDictionary = { [key: string]: any } & {
   nextLabel: string;
   confirmReservationButtonLabel: string;
   addLabel: string;
+  nothingIsAvailableTodayLabel: string;
+  goToNextAvailableLabel: string;
 };
 
 export type LanguageDictionaryType = {
@@ -262,6 +264,8 @@ export const languageDictionary: LanguageDictionaryType = {
         ? this.emailReminderLabel.replace("{days}", daysText)
         : `You will receive an email reminder ${daysText} before your scheduled time.`;
     },
+    nothingIsAvailableTodayLabel: "Nothing is available today",
+    goToNextAvailableLabel: "Go to next available"
   },
   es: {
     selectDatesLabel: "Seleccionar fechas",
@@ -406,6 +410,8 @@ export const languageDictionary: LanguageDictionaryType = {
         ? this.emailReminderLabel.replace("{days}", daysText)
         : `You will receive an email reminder ${daysText} before your scheduled time.`;
     },
+    nothingIsAvailableTodayLabel: "Hoy no hay nada disponible",
+    goToNextAvailableLabel: "Ir al siguiente disponible"
   },
   ja: {
     selectDatesLabel: "希望日時を選択",
@@ -541,6 +547,8 @@ export const languageDictionary: LanguageDictionaryType = {
         ? this.emailReminderLabel.replace("{days}", daysText)
         : `${daysText} リマインドの通知が指定されたメールアドレスに自動的に配信されます。`;
     },
+    nothingIsAvailableTodayLabel: "今日は何も利用できません",
+    goToNextAvailableLabel: "次に利用可能なものに移動します"
   },
   ger: {
     selectDatesLabel: "Bitte Datum wählen",
@@ -680,6 +688,8 @@ export const languageDictionary: LanguageDictionaryType = {
         ? this.emailReminderLabel.replace("{days}", daysText)
         : `Du wirst ${daysText} vor der gebuchten Zeit eine Erinnerung per E-Mail erhalten.`;
     },
+    nothingIsAvailableTodayLabel: "Heute ist nichts verfügbar",
+    goToNextAvailableLabel: "Zum nächsten verfügbaren gehen"
   },
   swe: {
     selectDatesLabel: "Välj Datum",
@@ -817,6 +827,8 @@ export const languageDictionary: LanguageDictionaryType = {
         ? this.emailReminderLabel.replace("{days}", daysText)
         : `Du kommer att få en påminnelse via email ${daysText} innan din bokade tid.`;
     },
+    nothingIsAvailableTodayLabel: "Ingenting är tillgängligt idag",
+    goToNextAvailableLabel: "Gå till nästa tillgängliga"
   },
   fr: {
     selectDatesLabel: "Sélectionnez vos dates",
@@ -956,6 +968,8 @@ export const languageDictionary: LanguageDictionaryType = {
         ? this.emailReminderLabel.replace("{days}", daysText)
         : `Vous allez recevoir un email de rappel ${daysText} avant la date réservée.`;
     },
+    nothingIsAvailableTodayLabel: "Rien n'est disponible aujourd'hui",
+    goToNextAvailableLabel: "Aller au prochain disponible"
   },
   nl: {
     selectDatesLabel: "Selecteer datum",
@@ -1094,6 +1108,8 @@ export const languageDictionary: LanguageDictionaryType = {
         ? this.emailReminderLabel.replace("{days}", daysText)
         : `Je zult een bevestigings email ontvangen ${daysText} voor het geboekte tijdslot.`;
     },
+    nothingIsAvailableTodayLabel: "Er is vandaag niets beschikbaar",
+    goToNextAvailableLabel: "Ga naar de volgende beschikbare"
   },
   it: {
     selectDatesLabel: "Scegli le date",
@@ -1232,6 +1248,8 @@ export const languageDictionary: LanguageDictionaryType = {
         ? this.emailReminderLabel.replace("{days}", daysText)
         : `Riceverai una mail di promemoria ${daysText} prima dell'orario previsto.`;
     },
+    nothingIsAvailableTodayLabel: "Niente è disponibile oggi",
+    goToNextAvailableLabel: "Vai al prossimo disponibile"
   },
 };
 
