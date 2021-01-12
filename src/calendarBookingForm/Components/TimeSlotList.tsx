@@ -46,7 +46,7 @@ export class TimeSlotList extends Component<
    * or the user has not selected a date
    */
   renderTimeSlots = () => {
-    const { timeslots, selectedDate, locale } = this.props;
+    const { timeslots, selectedDate, locale, labels } = this.props;
     const noAvailableTimeSlots = !Object.keys(this.props.availability).length;
 
     if (!timeslots || !Array.isArray(timeslots) || !timeslots.length) {
@@ -56,13 +56,13 @@ export class TimeSlotList extends Component<
             <span className="TimeSlot-DateSelected">
               {format(new Date(this.props.selectedDate), "EEEE MMMM d, yyyy", { locale: localeMap[locale] })}
             </span>
-            <p>Nothing is available today</p>
+            <p>{labels.nothingIsAvailableTodayLabel}</p>
             <button
               onClick={this.props.onSelectFirstAvailability}
               className="TimeSlots-NextAvailableBtn"
               disabled={noAvailableTimeSlots}
             >
-              {noAvailableTimeSlots ? 'This event is sold out' : 'Go to next available'}
+              {noAvailableTimeSlots ? 'This event is sold out' : labels.goToNextAvailableLabel}
             </button>
           </div>
         </div>
