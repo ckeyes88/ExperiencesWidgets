@@ -11,6 +11,7 @@ export interface ICalendarEventContent {
         imageUrl?: string | AssetDBO;
         paymentType?: string;
         price?: [string, number];
+        uuid: string;
       };
       title: string;
     };
@@ -30,7 +31,11 @@ export type CalendarEventClick = {
   jsEvent: MouseEvent;
   event: {
     _def: {
+      extendedProps: {
+        uuid: string;
+      }
       publicId: string;
+      title: string;
     };
     _instance: {
       range: {

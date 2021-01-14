@@ -51,7 +51,7 @@ export class CalendarDaySchedule extends Component<ICalendarDayScheduleProps, an
           </div>
         </div>
         <div className={`Calendar-DaySchedule-Body ${events && events.length > 4 ? 'FadeBottom' : ''}`}>
-          {events.sort((a, b) => a.start.getTime() - b.start.getTime()).map(e => (
+          {events.map(e => (
             <a key={e.id} href={e.customUrl}>
               <div className="Calendar-Day-Event">
                 <div className="EventTime">{format(e.start, "h:mmaaaaa")}</div>
