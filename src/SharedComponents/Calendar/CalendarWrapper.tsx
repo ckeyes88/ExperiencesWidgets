@@ -37,6 +37,7 @@ export interface ICalendarProps {
 
 export type CalendarEvent = {
   event: any; // needed for CalendarEventContent compatibility
+  uuid: string;
   id: string;
   start: Date;
   end: Date;
