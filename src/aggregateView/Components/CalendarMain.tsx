@@ -139,7 +139,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     const dialogPosition = { pageX, pageY };
     const earliest = new Date(date).getTime();
     const latest = new Date(date).setHours(23, 59, 59);
-    const daySelectedEvents = this.state.events.filter(e => e.start.getTime() >= earliest && e.end.getTime() < latest);
+    const daySelectedEvents = this.state.events.filter(e => e.start.getTime() >= earliest && e.start.getTime() < latest);
     this.setState({ daySelected: date, daySelectedEvents, dialogPosition });
   };
 

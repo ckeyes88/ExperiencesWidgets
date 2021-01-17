@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { fromUnixTime } from "date-fns/fp";
 import React from "preact/compat";
 import { Component, h } from "../../../../node_modules/preact";
 import { getQueryVariable } from "../../../SharedComponents/DatePicker/Utils";
@@ -134,9 +135,9 @@ export class CalendarWidgetMain extends Component<
 
     // select day and timeslot when coming from aggregate view (or elsewhere)
     const date = getQueryVariable("select");
-    const ms = +date * 1000;
-    const selectedDate = date && !isNaN(+date) ? new Date(ms) : new Date();
-    const availabilityRangeEnd = (Date.now() + ms) > (Date.now() + TIMESPAN_IN_SECONDS * 1000) ? 
+    const ms = +date;
+    const selectedDate = isNaN(ms) ? new Date() : fromUnixTime(ms);
+    const availabilityRangeEnd = (Date.now() + ms * 1000) > (Date.now() + TIMESPAN_IN_SECONDS * 1000) ? 
       (selectedDate.getTime() / 1000) + (TIMESPAN_IN_SECONDS * 2) : 
       TIMESPAN_IN_SECONDS * 2;
 

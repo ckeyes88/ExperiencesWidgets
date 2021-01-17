@@ -1,3 +1,4 @@
+import { parseISO } from "date-fns";
 import { FirstAvailability } from "../typings/FirstAvailability";
 import { Availability } from "../typings/Availability";
 import { EventAssetLinkDBO, EventVariantDBO } from "../typings/Event";
@@ -398,8 +399,7 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
             event: {},
             uuid: makeid(),
             id: `${i}-${ts.productId}`,
-            start: new Date(ts.startsAt),
-            end: new Date(ts.endsAt),
+            start: parseISO(ts.formattedTimeslot.isoWithoutTZ),
             customUrl: `https://${storeUrl}/products/${e.handle}?select=${new Date(ts.startsAt).getTime() / 1000}`,
             imageUrl: resolveImageUrl(baseUrl, e.images, e.imageLinks),
             paymentType: e.paymentType,
@@ -411,7 +411,6 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
           };
           calendarEvents.push(calendarEvent);
           let fullCalendarEvent = { ...calendarEvent };
-          delete fullCalendarEvent.end;
           fullCalendarEvents.push(fullCalendarEvent);
         });
       });
