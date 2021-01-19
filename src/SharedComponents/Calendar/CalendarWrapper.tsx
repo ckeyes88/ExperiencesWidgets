@@ -31,13 +31,15 @@ export interface ICalendarProps {
     weekday?: string; // "long" | "short"
   };
   noEventsContent: JSX.Element;
+  customButtons?: any;
+  headerToolbar?: any;
 };
 
 export type CalendarEvent = {
   event: any; // needed for CalendarEventContent compatibility
+  uuid: string;
   id: string;
   start: Date;
-  end: Date;
   title: string;
   url?: string;
   customUrl?: string;
@@ -65,7 +67,9 @@ export class Calendar extends Component<ICalendarProps, any> {
       noEventsContent, 
       dayMaxEventRows, 
       eventClick,
-      moreLinkClick
+      moreLinkClick,
+      customButtons,
+      headerToolbar
     } = this.props;
 
     const FullCalendarCast = FullCalendar as unknown;
@@ -76,6 +80,8 @@ export class Calendar extends Component<ICalendarProps, any> {
         plugins={[dayGridPlugin, listPlugin, interactionPlugin]}
         initialView={view}
         events={events}
+        customButtons={customButtons}
+        headerToolbar={headerToolbar}
         eventContent={eventContent}
         dateClick={dateClick}
         eventClick={eventClick}

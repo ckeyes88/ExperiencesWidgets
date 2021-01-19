@@ -1,5 +1,6 @@
-import { format } from "date-fns";
+import { fromUnixTime } from "date-fns/fp";
 import React from "preact/compat";
+import moment from 'moment-timezone';
 import { Component, h } from "../../../../node_modules/preact";
 import { getQueryVariable } from "../../../SharedComponents/DatePicker/Utils";
 import { Loading } from "../../../SharedComponents/loading/Loading";
@@ -132,6 +133,14 @@ export class CalendarWidgetMain extends Component<
     this.setLoading();
     const { baseUrl, shopUrl, shopifyProductId, languageCode } = this.props;
 
+    // select day and timeslot when coming from aggregate view (or elsewhere)
+    const date = getQueryVariable("select");
+    const ms = +date;
+    const selectedDate = isNaN(ms) ? new Date() : fromUnixTime(ms);
+    const availabilityRangeEnd = (Date.now() + ms * 1000) > (Date.now() + TIMESPAN_IN_SECONDS * 1000) ? 
+      (selectedDate.getTime() / 1000) + (TIMESPAN_IN_SECONDS * 2) : 
+      TIMESPAN_IN_SECONDS * 2;
+
     try {
       // fetch everything in parallel to improve loading time
       const [shop, labels, event, availability] = await Promise.all([
@@ -147,7 +156,7 @@ export class CalendarWidgetMain extends Component<
         // get availability for the current month and the next
         this.fetchRangeOfAvailability(
           this.state.now,
-          TIMESPAN_IN_SECONDS * 2,
+          availabilityRangeEnd,
         )
       ]);
 
@@ -163,9 +172,6 @@ export class CalendarWidgetMain extends Component<
         { ...defineLanguageDictionary(languageCode as LanguageCodes), ...labels.data } : 
         defineLanguageDictionary(languageCode as LanguageCodes);
 
-      // select day and timeslot when coming from aggregate view (or elsewhere)
-      const date = getQueryVariable("select");
-      const selectedDate = date && !isNaN(+date) ? new Date(+date * 1000) : new Date();
       const selectedDateTimeslots = date ? getTimeslotsByDate(availability, selectedDate) : [];
       const selectedTimeslot = selectedDateTimeslots.find(ts => (new Date(ts.startsAt)).getTime() === +date * 1000) || null;
 
@@ -179,8 +185,11 @@ export class CalendarWidgetMain extends Component<
         firstAvailable: firstAvailable[0] && new Date(firstAvailable[0].startsAt),
         loading: false,
         selectedDate,
-        selectedTimeslot,
         showModal: !!date,
+      }, () => {
+        if (selectedTimeslot) {
+          this.handleSelectTimeSlot(selectedTimeslot);
+        }
       });
     } catch (err) {
       this.setState({
@@ -516,6 +525,11 @@ export class CalendarWidgetMain extends Component<
   /** Determine content of the loading view */
   renderLoading = () => {
     const { lineItems } = this.state;
+    let date = moment();
+    if (Array.isArray(lineItems) && lineItems[0]) {
+      const { startsAt, timezone } = lineItems[0];
+      date = moment(startsAt).tz(timezone);
+    }
 
     return (
       <div className="Loading-Container">
@@ -527,8 +541,8 @@ export class CalendarWidgetMain extends Component<
                 Reserving {lineItems.length} spot{lineItems.length > 1 && "s"} for{" "}
               </span>
               <span className="Loading-ReserveDate">
-                {format(new Date(lineItems[0].startsAt), "EEEE MMMM d, yyyy")} at{" "}
-                {format(new Date(lineItems[0].startsAt), "h:mma")}
+                {date.format("dddd MMMM D, YYYY")} at{" "}
+                {date.format("h:mmA")}
               </span>
             </React.Fragment>
           ) : (

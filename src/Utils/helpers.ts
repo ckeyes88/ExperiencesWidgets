@@ -1,3 +1,4 @@
+import { parseISO } from "date-fns";
 import { FirstAvailability } from "../typings/FirstAvailability";
 import { Availability } from "../typings/Availability";
 import { EventAssetLinkDBO, EventVariantDBO } from "../typings/Event";
@@ -375,6 +376,16 @@ export const findCheapestVariantPrice = (variants: EventVariantDBO[] = []): [str
   return result;
 };
 
+export const makeid = (length: number = 10): string => {
+  var result           = '';
+  var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  var charactersLength = characters.length;
+  for ( var i = 0; i < length; i++ ) {
+     result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};
+
 /*
  Takes events response and extracts available timeslots to display on FullCalendar
  */
@@ -382,36 +393,36 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
   calendarEvents: CalendarEvent[];
   fullCalendarEvents: FullCalendarEvent[];
 } => {
+
   const calendarEvents: CalendarEvent[] = [];
   const fullCalendarEvents: FullCalendarEvent[] = [];
-  events.forEach(e => {
-    const event = { title: e.name };
-    e.availabilityProducts && e.availabilityProducts.forEach((p) => {
-      p.availableTimeslots && p.availableTimeslots.forEach((ts: Availability, i: number) => {
-        let calendarEvent = {
-          ...event,
-          event: {},
-          id: `${i}-${ts.productId}`,
-          start: new Date(ts.startsAt),
-          end: new Date(ts.endsAt),
-          customUrl: `https://${storeUrl}/products/${e.handle}?select=${
-            new Date(typeof ts.startsAt === "string" ? ts.startsAt : ts.startsAt.toISOString()).getTime() / 1000
-          }`,
-          imageUrl: resolveImageUrl(baseUrl, e.images, e.imageLinks),
-          paymentType: e.paymentType,
-          price: findCheapestVariantPrice(e.variants),
-          editable: false,
-          startEditable: false,
-          durationEditable: false,
-          resourceEditable: false,
-        };
-        calendarEvents.push(calendarEvent);
-        let fullCalendarEvent = { ...calendarEvent };
-        delete fullCalendarEvent.end;
-        fullCalendarEvents.push(fullCalendarEvent);
+  events
+    .sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime())
+    .forEach(e => {
+      const event = { title: e.name };
+      e.availabilityProducts && e.availabilityProducts.forEach((p) => {
+        p.availableTimeslots && p.availableTimeslots.forEach((ts: Availability, i: number) => {
+          let calendarEvent = {
+            ...event,
+            event: {},
+            uuid: makeid(),
+            id: `${i}-${ts.productId}`,
+            start: parseISO(ts.formattedTimeslot.isoWithoutTZ),
+            customUrl: `https://${storeUrl}/products/${e.handle}?select=${new Date(ts.startsAt).getTime() / 1000}`,
+            imageUrl: resolveImageUrl(baseUrl, e.images, e.imageLinks),
+            paymentType: e.paymentType,
+            price: findCheapestVariantPrice(e.variants),
+            editable: false,
+            startEditable: false,
+            durationEditable: false,
+            resourceEditable: false,
+          };
+          calendarEvents.push(calendarEvent);
+          let fullCalendarEvent = { ...calendarEvent };
+          fullCalendarEvents.push(fullCalendarEvent);
+        });
       });
     });
-  });
 
   return {
     calendarEvents,
