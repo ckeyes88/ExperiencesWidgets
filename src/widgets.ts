@@ -1,3 +1,5 @@
+import "ts-polyfill";
+
 /**
  * Loads a specified widget code into the website
  *
