@@ -125,7 +125,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
 
   handleEventClick = ({ event: { _def, _instance }, jsEvent: { pageX, pageY }}: CalendarEventClick) => {
     const dialogPosition = { pageX, pageY };
-    const eventSelected = this.state.events.find(e => _def.publicId.includes(e.id));
+    const eventSelected = this.state.events.find(e => _def.extendedProps.uuid === e.uuid);
     this.setState({ daySelected: _instance.range.start, daySelectedEvents: [eventSelected], dialogPosition });
   };
 
