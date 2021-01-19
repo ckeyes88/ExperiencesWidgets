@@ -316,6 +316,11 @@ export function findFeaturedImageUrl(images: EventAssetLinkDBO[], imageLinks: As
     }
   }
 
+  if(!featuredId && images.length > 0) {
+    console.log(images[0]);
+    featuredId = images[0].id;
+  }
+
   for (let j = 0; j < imageLinks.length; j++) {
     if (imageLinks[j]._id.toString() === featuredId) {
       return imageLinks[j].url;
@@ -335,7 +340,10 @@ export const resolveImageUrl = (baseUrl: string, images: EventAssetLinkDBO[] = [
     return `${baseUrl}/images/default_event_image.png`;
   }
 
-  const featuredImage = images.find(i => i.featured);
+  let featuredImage = images.find(i => i.featured);
+  if(!featuredImage && images.length > 0) {
+    featuredImage = images[0];
+  }
   const featuredImageId = featuredImage ? featuredImage.id : 0;
   const link = links.find(i => i._id === featuredImageId);
 

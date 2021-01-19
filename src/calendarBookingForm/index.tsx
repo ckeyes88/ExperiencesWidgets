@@ -1,3 +1,4 @@
+import "ts-polyfill";
 import "./index.scss";
 import { mountComponent } from "../Utils/mount";
 import { CalendarWidgetMain } from "./Views/MainIndex";
