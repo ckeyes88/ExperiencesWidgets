@@ -40,7 +40,6 @@ export type CalendarEvent = {
   uuid: string;
   id: string;
   start: Date;
-  end: Date;
   title: string;
   url?: string;
   customUrl?: string;

@@ -1,5 +1,6 @@
-import { format } from "date-fns";
+import { fromUnixTime } from "date-fns/fp";
 import React from "preact/compat";
+import moment from 'moment-timezone';
 import { Component, h } from "../../../../node_modules/preact";
 import { getQueryVariable } from "../../../SharedComponents/DatePicker/Utils";
 import { Loading } from "../../../SharedComponents/loading/Loading";
@@ -134,9 +135,9 @@ export class CalendarWidgetMain extends Component<
 
     // select day and timeslot when coming from aggregate view (or elsewhere)
     const date = getQueryVariable("select");
-    const ms = +date * 1000;
-    const selectedDate = date && !isNaN(+date) ? new Date(ms) : new Date();
-    const availabilityRangeEnd = (Date.now() + ms) > (Date.now() + TIMESPAN_IN_SECONDS * 1000) ? 
+    const ms = +date;
+    const selectedDate = isNaN(ms) ? new Date() : fromUnixTime(ms);
+    const availabilityRangeEnd = (Date.now() + ms * 1000) > (Date.now() + TIMESPAN_IN_SECONDS * 1000) ? 
       (selectedDate.getTime() / 1000) + (TIMESPAN_IN_SECONDS * 2) : 
       TIMESPAN_IN_SECONDS * 2;
 
@@ -524,6 +525,11 @@ export class CalendarWidgetMain extends Component<
   /** Determine content of the loading view */
   renderLoading = () => {
     const { lineItems } = this.state;
+    let date = moment();
+    if (Array.isArray(lineItems) && lineItems[0]) {
+      const { startsAt, timezone } = lineItems[0];
+      date = moment(startsAt).tz(timezone);
+    }
 
     return (
       <div className="Loading-Container">
@@ -535,8 +541,8 @@ export class CalendarWidgetMain extends Component<
                 Reserving {lineItems.length} spot{lineItems.length > 1 && "s"} for{" "}
               </span>
               <span className="Loading-ReserveDate">
-                {format(new Date(lineItems[0].startsAt), "EEEE MMMM d, yyyy")} at{" "}
-                {format(new Date(lineItems[0].startsAt), "h:mma")}
+                {date.format("dddd MMMM D, YYYY")} at{" "}
+                {date.format("h:mmA")}
               </span>
             </React.Fragment>
           ) : (

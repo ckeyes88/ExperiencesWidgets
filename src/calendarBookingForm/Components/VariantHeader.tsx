@@ -1,5 +1,6 @@
 import './VariantHeader.scss';
 
+import { parseISO } from 'date-fns/fp'
 import { format } from 'date-fns';
 import { Component, h } from 'preact';
 
@@ -26,7 +27,7 @@ export class VariantHeader extends Component<IVariantHeaderProps> {
   /** renders */
   render() {
     const { variantSelectedDate, labels, locale } = this.props;
-    const startsAt = this.props.variantTimeSlot.startsAt;
+    const isoWithoutTZ = this.props.variantTimeSlot.formattedTimeslot.isoWithoutTZ;
     const unitsLeft = this.props.variantTimeSlot.unitsLeft || 0;
     let spaceLeft = unitsLeft - this.props.currentlySelectedTotal;
     return (
@@ -44,7 +45,7 @@ export class VariantHeader extends Component<IVariantHeaderProps> {
             </span>
             <p>
               <span id="VariantHeader-StartTime">
-                {format(new Date(startsAt), "h:mma").toLowerCase()}
+                {format(parseISO(isoWithoutTZ), "h:mma").toLowerCase()}
               </span>
               {!!labels.showSlotsRemainingLabel && <span id="VariantHeader-SpotsAvailable">
                 {this.props.labels.getSlotsRemainingLabel(spaceLeft)}

@@ -1,5 +1,6 @@
 import './OrderDetailsPage.scss';
 
+import { parseISO } from 'date-fns/fp'
 import { format } from 'date-fns';
 import { Component, h } from 'preact';
 
@@ -264,14 +265,14 @@ export class OrderDetailsPage extends Component<
             <br />
             <span className="CustomerInfo-DeteSelected">
               {format(
-                new Date(this.props.selectedTimeslot.startsAt),
+                parseISO(this.props.selectedTimeslot.formattedTimeslot.isoWithoutTZ),
                 "EEEE MMMM d, yyyy"
               )}
             </span>
             <p className="CustomerInfo-VariantDetails">
               <span className="CustomerInfo-StartTime">
                 {format(
-                  new Date(this.props.selectedTimeslot.startsAt),
+                  parseISO(this.props.selectedTimeslot.formattedTimeslot.isoWithoutTZ),
                   "h:mma"
                 ).toLowerCase()}
               </span>
