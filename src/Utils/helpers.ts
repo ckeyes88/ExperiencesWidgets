@@ -318,7 +318,6 @@ export function findFeaturedImageUrl(images: EventAssetLinkDBO[], imageLinks: As
   }
 
   if(!featuredId && images.length > 0) {
-    console.log(images[0]);
     featuredId = images[0].id;
   }
 
