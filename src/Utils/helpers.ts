@@ -1,3 +1,4 @@
+import { parseISO } from "date-fns";
 import { FirstAvailability } from "../typings/FirstAvailability";
 import { Availability } from "../typings/Availability";
 import { EventAssetLinkDBO, EventVariantDBO } from "../typings/Event";
@@ -316,6 +317,10 @@ export function findFeaturedImageUrl(images: EventAssetLinkDBO[], imageLinks: As
     }
   }
 
+  if(!featuredId && images.length > 0) {
+    featuredId = images[0].id;
+  }
+
   for (let j = 0; j < imageLinks.length; j++) {
     if (imageLinks[j]._id.toString() === featuredId) {
       return imageLinks[j].url;
@@ -335,7 +340,10 @@ export const resolveImageUrl = (baseUrl: string, images: EventAssetLinkDBO[] = [
     return `${baseUrl}/images/default_event_image.png`;
   }
 
-  const featuredImage = images.find(i => i.featured);
+  let featuredImage = images.find(i => i.featured);
+  if(!featuredImage && images.length > 0) {
+    featuredImage = images[0];
+  }
   const featuredImageId = featuredImage ? featuredImage.id : 0;
   const link = links.find(i => i._id === featuredImageId);
 
@@ -398,8 +406,7 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
             event: {},
             uuid: makeid(),
             id: `${i}-${ts.productId}`,
-            start: new Date(ts.startsAt),
-            end: new Date(ts.endsAt),
+            start: parseISO(ts.formattedTimeslot.isoWithoutTZ),
             customUrl: `https://${storeUrl}/products/${e.handle}?select=${new Date(ts.startsAt).getTime() / 1000}`,
             imageUrl: resolveImageUrl(baseUrl, e.images, e.imageLinks),
             paymentType: e.paymentType,
@@ -411,7 +418,6 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
           };
           calendarEvents.push(calendarEvent);
           let fullCalendarEvent = { ...calendarEvent };
-          delete fullCalendarEvent.end;
           fullCalendarEvents.push(fullCalendarEvent);
         });
       });

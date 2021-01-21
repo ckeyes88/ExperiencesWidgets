@@ -50,7 +50,8 @@
     "preact": "10.4.1",
     "preact-compat": "^3.19.0",
     "rollup-plugin-json": "^4.0.0",
-    "shopify-buy": "^2.8.1"
+    "shopify-buy": "^2.8.1",
+    "ts-polyfill": "^3.8.2"
   },
   "devDependencies": {
     "@helpfulhuman/tslint-rules": "1.0.0",

@@ -129,7 +129,8 @@ export type LanguageDictionaryType = {
 export const languageDictionary: LanguageDictionaryType = {
   "en-US": {
     selectDatesLabel: "Select Dates",
-    selectDatesAriaLabel: "Select Dates, this will open the calendar dropdown.",
+    selectDatesAriaLabel:
+      "Select Dates, this will open the calendar dropdown.",
     quantityLabel: "How Many People",
     totalLabel: "Total",
     quantityAriaLabel:
@@ -182,14 +183,8 @@ export const languageDictionary: LanguageDictionaryType = {
       "Sorry, there are no upcoming dates for this experience.",
     minQuantityLabel: "",
     maxQuantityLabel: "",
-    getOrderLimitMessage(
-      minLimit: number,
-      maxLimit: number,
-      maxQuantity: number,
-      userSetLimits
-    ) {
-      if (userSetLimits.minLimit || userSetLimits.maxLimit) {
-        // checks for NaN, 0, and undefined
+    getOrderLimitMessage(minLimit: number, maxLimit: number, maxQuantity: number, userSetLimits) {
+      if (userSetLimits.minLimit || userSetLimits.maxLimit) { // checks for NaN, 0, and undefined
         if (
           (!!this.minQuantityLabel && !!this.minQuantityLabel.trim()) ||
           (!!this.maxQuantityLabel && !!this.maxQuantityLabel.trim())
@@ -199,12 +194,8 @@ export const languageDictionary: LanguageDictionaryType = {
             whole: "",
             composite: {
               mainMessage: "Purchase quantity limits:",
-              minMessage: this.minQuantityLabel
-                ? this.minQuantityLabel.replace("{minLimit}", minLimit)
-                : "",
-              maxMessage: this.maxQuantityLabel
-                ? this.maxQuantityLabel.replace("{maxLimit}", maxLimit)
-                : "",
+              minMessage: this.minQuantityLabel ? this.minQuantityLabel.replace("{minLimit}", minLimit) : "",
+              maxMessage: this.maxQuantityLabel ? this.maxQuantityLabel.replace("{maxLimit}", maxLimit) : "",
             },
           };
         } else {
@@ -224,8 +215,8 @@ export const languageDictionary: LanguageDictionaryType = {
               maxLimit >= maxQuantity
                 ? ""
                 : `${
-                    !!connector ? "m" : "M"
-                  }aximum limit of ${maxLimit} per order.`;
+                  !!connector ? "m" : "M"
+                }aximum limit of ${maxLimit} per order.`;
             return {
               composite: {},
               whole: minMsg + connector + maxMsg,
@@ -240,15 +231,13 @@ export const languageDictionary: LanguageDictionaryType = {
         };
       }
     },
-    optionalFieldLabel: "",
+    optionalFieldLabel: "optional",
     bookingModalHeaderLabel: "Finalize your reservation",
     perAttendeeStepLabel: "",
     getPerAttendeeStepLabel(current: number, total: number) {
-      return !!this.perAttendeeStepLabel && !!this.perAttendeeStepLabel.trim()
-        ? this.perAttendeeStepLabel
-            .replace("{current}", current)
-            .replace("{total}", total)
-        : `Ticket ${current} of ${total}`;
+      return !!this.perAttendeeStepLabel && !!this.perAttendeeStepLabel.trim() ?
+        this.perAttendeeStepLabel.replace("{current}", current).replace("{total}", total) :
+        `Ticket ${current} of ${total}`;
     },
     previousLabel: "Previous",
     nextLabel: "Next",
@@ -260,16 +249,17 @@ export const languageDictionary: LanguageDictionaryType = {
     emailReminderLabel: "",
     getEmailReminderDaysLabel(days: number) {
       const daysText = days > 1 ? `${days} days` : "one day";
-      return !!this.emailReminderLabel && !!this.emailReminderLabel.trim()
-        ? this.emailReminderLabel.replace("{days}", daysText)
-        : `You will receive an email reminder ${daysText} before your scheduled time.`;
+      return !!this.emailReminderLabel && !!this.emailReminderLabel.trim() ?
+        this.emailReminderLabel.replace("{days}", daysText) :
+        `You will receive an email reminder ${daysText} before your scheduled time.`;
     },
     nothingIsAvailableTodayLabel: "Nothing is available today",
     goToNextAvailableLabel: "Go to next available"
   },
   es: {
     selectDatesLabel: "Seleccionar fechas",
-    selectDatesAriaLabel: "Selecciona fechas, esto abrirá un calendario.",
+    selectDatesAriaLabel:
+      "Selecciona fechas, esto abrirá un calendario.",
     totalLabel: "Total",
     quantityLabel: "Cuántas personas",
     quantityAriaLabel:
@@ -322,14 +312,8 @@ export const languageDictionary: LanguageDictionaryType = {
       "Lo sentimos, por el momento no hay fechas disponibles para esta experiencia.",
     minQuantityLabel: "",
     maxQuantityLabel: "",
-    getOrderLimitMessage(
-      minLimit: number,
-      maxLimit: number,
-      maxQuantity: number,
-      userSetLimits
-    ) {
-      if (userSetLimits.minLimit || userSetLimits.maxLimit) {
-        // checks for NaN, 0, and undefined
+    getOrderLimitMessage(minLimit: number, maxLimit: number, maxQuantity: number, userSetLimits) {
+      if (userSetLimits.minLimit || userSetLimits.maxLimit) { // checks for NaN, 0, and undefined
         if (
           (!!this.minQuantityLabel && !!this.minQuantityLabel.trim()) ||
           (!!this.maxQuantityLabel && !!this.maxQuantityLabel.trim())
@@ -339,12 +323,8 @@ export const languageDictionary: LanguageDictionaryType = {
             whole: "",
             composite: {
               mainMessage: "Límites de cantidad de compra:",
-              minMessage: this.minQuantityLabel
-                ? this.minQuantityLabel.replace("{minLimit}", minLimit)
-                : "",
-              maxMessage: this.maxQuantityLabel
-                ? this.maxQuantityLabel.replace("{maxLimit}", maxLimit)
-                : "",
+              minMessage: this.minQuantityLabel ? this.minQuantityLabel.replace("{minLimit}", minLimit) : "",
+              maxMessage: this.maxQuantityLabel ? this.maxQuantityLabel.replace("{maxLimit}", maxLimit) : "",
             },
           };
         } else {
@@ -353,9 +333,7 @@ export const languageDictionary: LanguageDictionaryType = {
             return EMPTY_LIMIT_LABELS;
           } else {
             const minMsg =
-              minLimit > 1
-                ? `Debes reservar para un mínimo de ${minLimit}`
-                : "";
+              minLimit > 1 ? `Debes reservar para un mínimo de ${minLimit}` : "";
             let connector = "";
             if (!!minMsg && maxLimit < maxQuantity) {
               connector = " y para ";
@@ -364,14 +342,14 @@ export const languageDictionary: LanguageDictionaryType = {
               maxLimit >= maxQuantity
                 ? ""
                 : `${
-                    minMsg
-                      ? !!connector
-                        ? "un m"
-                        : "Un m"
-                      : !!connector
-                      ? "m"
-                      : "M"
-                  }áximo de ${maxLimit} por reserva.`;
+                  minMsg
+                    ? !!connector
+                    ? "un m"
+                    : "Un m"
+                    : !!connector
+                    ? "m"
+                    : "M"
+                }áximo de ${maxLimit} por reserva.`;
             return {
               composite: {},
               whole: minMsg + connector + maxMsg,
@@ -386,15 +364,13 @@ export const languageDictionary: LanguageDictionaryType = {
         };
       }
     },
-    optionalFieldLabel: "",
+    optionalFieldLabel: "opcional",
     bookingModalHeaderLabel: "Termina tu reserva",
     perAttendeeStepLabel: "",
     getPerAttendeeStepLabel(current: number, total: number) {
-      return !!this.perAttendeeStepLabel && !!this.perAttendeeStepLabel.trim()
-        ? this.perAttendeeStepLabel
-            .replace("{current}", current)
-            .replace("{total}", total)
-        : `Ticket ${current} of ${total}`;
+      return !!this.perAttendeeStepLabel && !!this.perAttendeeStepLabel.trim() ?
+        this.perAttendeeStepLabel.replace("{current}", current).replace("{total}", total) :
+        `Ticket ${current} of ${total}`;
     },
     previousLabel: "Anterior",
     nextLabel: "Siguiente",
@@ -406,9 +382,9 @@ export const languageDictionary: LanguageDictionaryType = {
     emailReminderLabel: "",
     getEmailReminderDaysLabel(days: number) {
       const daysText = days > 1 ? `${days} días` : "un día";
-      return !!this.emailReminderLabel && !!this.emailReminderLabel.trim()
-        ? this.emailReminderLabel.replace("{days}", daysText)
-        : `You will receive an email reminder ${daysText} before your scheduled time.`;
+      return !!this.emailReminderLabel && !!this.emailReminderLabel.trim() ?
+        this.emailReminderLabel.replace("{days}", daysText) :
+        `You will receive an email reminder ${daysText} before your scheduled time.`;
     },
     nothingIsAvailableTodayLabel: "Hoy no hay nada disponible",
     goToNextAvailableLabel: "Ir al siguiente disponible"
@@ -594,7 +570,9 @@ export const languageDictionary: LanguageDictionaryType = {
       if (!!this.slotsRemainingLabel && !!this.slotsRemainingLabel.trim()) {
         return `${units} ${this.slotsRemainingLabel}`;
       } else {
-        return units === 1 ? `${units} übrig` : `${units} Verbleibende`;
+        return units === 1
+          ? `${units} übrig`
+          : `${units} Verbleibende`;
       }
     },
     previousWeekAriaLabel: "Vorherige Woche",
@@ -606,14 +584,8 @@ export const languageDictionary: LanguageDictionaryType = {
       "Entschuldigung, aktuell sind keine zukünftigen Daten für diese Veranstaltung verfügbar.",
     minQuantityLabel: "",
     maxQuantityLabel: "",
-    getOrderLimitMessage(
-      minLimit: number,
-      maxLimit: number,
-      maxQuantity: number,
-      userSetLimits
-    ) {
-      if (userSetLimits.minLimit || userSetLimits.maxLimit) {
-        // checks for NaN, 0, and undefined
+    getOrderLimitMessage(minLimit: number, maxLimit: number, maxQuantity: number, userSetLimits) {
+      if (userSetLimits.minLimit || userSetLimits.maxLimit) { // checks for NaN, 0, and undefined
         if (
           (!!this.minQuantityLabel && !!this.minQuantityLabel.trim()) ||
           (!!this.maxQuantityLabel && !!this.maxQuantityLabel.trim())
@@ -623,12 +595,8 @@ export const languageDictionary: LanguageDictionaryType = {
             whole: "",
             composite: {
               mainMessage: "Kaufmengenlimits:",
-              minMessage: this.minQuantityLabel
-                ? this.minQuantityLabel.replace("{minLimit}", minLimit)
-                : "",
-              maxMessage: this.maxQuantityLabel
-                ? this.maxQuantityLabel.replace("{maxLimit}", maxLimit)
-                : "",
+              minMessage: this.minQuantityLabel ? this.minQuantityLabel.replace("{minLimit}", minLimit) : "",
+              maxMessage: this.maxQuantityLabel ? this.maxQuantityLabel.replace("{maxLimit}", maxLimit) : "",
             },
           };
         } else {
@@ -636,8 +604,7 @@ export const languageDictionary: LanguageDictionaryType = {
           if (maxQuantity <= 0 || minLimit > maxQuantity) {
             return EMPTY_LIMIT_LABELS;
           } else {
-            const minMsg =
-              minLimit > 1 ? `Minimale Anzahl von ${minLimit}` : "";
+            const minMsg = minLimit > 1 ? `Minimale Anzahl von ${minLimit}` : "";
             let connector = "";
             if (!!minMsg && maxLimit >= maxQuantity) {
               connector = " benötigt.";
@@ -648,8 +615,8 @@ export const languageDictionary: LanguageDictionaryType = {
               maxLimit >= maxQuantity
                 ? ""
                 : `${
-                    !!connector ? "m" : "M"
-                  }aximale Anzahl von ${maxLimit} pro Bestellung.`;
+                  !!connector ? "m" : "M"
+                }aximale Anzahl von ${maxLimit} pro Bestellung.`;
             return {
               composite: {},
               whole: minMsg + connector + maxMsg,
@@ -664,15 +631,13 @@ export const languageDictionary: LanguageDictionaryType = {
         };
       }
     },
-    optionalFieldLabel: "",
+    optionalFieldLabel: "optional",
     bookingModalHeaderLabel: "Schließen Sie Ihre Reservierung ab.",
     perAttendeeStepLabel: "",
     getPerAttendeeStepLabel(current: number, total: number) {
-      return !!this.perAttendeeStepLabel && !!this.perAttendeeStepLabel.trim()
-        ? this.perAttendeeStepLabel
-            .replace("{current}", current)
-            .replace("{total}", total)
-        : `Ticket ${current} of ${total}`;
+      return !!this.perAttendeeStepLabel && !!this.perAttendeeStepLabel.trim() ?
+        this.perAttendeeStepLabel.replace("{current}", current).replace("{total}", total) :
+        `Ticket ${current} of ${total}`;
     },
     previousLabel: "Vorheriges",
     nextLabel: "Nächstes",
@@ -684,9 +649,9 @@ export const languageDictionary: LanguageDictionaryType = {
     emailReminderLabel: "",
     getEmailReminderDaysLabel(days: number) {
       const daysText = days > 1 ? `${days} tage` : "1 tag";
-      return !!this.emailReminderLabel && !!this.emailReminderLabel.trim()
-        ? this.emailReminderLabel.replace("{days}", daysText)
-        : `Du wirst ${daysText} vor der gebuchten Zeit eine Erinnerung per E-Mail erhalten.`;
+      return !!this.emailReminderLabel && !!this.emailReminderLabel.trim() ?
+        this.emailReminderLabel.replace("{days}", daysText) :
+        `Du wirst ${daysText} vor der gebuchten Zeit eine Erinnerung per E-Mail erhalten.`;
     },
     nothingIsAvailableTodayLabel: "Heute ist nichts verfügbar",
     goToNextAvailableLabel: "Zum nächsten verfügbaren gehen"
@@ -746,14 +711,8 @@ export const languageDictionary: LanguageDictionaryType = {
       "Ledsen, För tillfället finns inga tillgängliga framtida datum för denna upplevelse.",
     minQuantityLabel: "",
     maxQuantityLabel: "",
-    getOrderLimitMessage(
-      minLimit: number,
-      maxLimit: number,
-      maxQuantity: number,
-      userSetLimits
-    ) {
-      if (userSetLimits.minLimit || userSetLimits.maxLimit) {
-        // checks for NaN, 0, and undefined
+    getOrderLimitMessage(minLimit: number, maxLimit: number, maxQuantity: number, userSetLimits) {
+      if (userSetLimits.minLimit || userSetLimits.maxLimit) { // checks for NaN, 0, and undefined
         if (
           (!!this.minQuantityLabel && !!this.minQuantityLabel.trim()) ||
           (!!this.maxQuantityLabel && !!this.maxQuantityLabel.trim())
@@ -763,12 +722,8 @@ export const languageDictionary: LanguageDictionaryType = {
             whole: "",
             composite: {
               mainMessage: "Gränser för köpkvantitet:",
-              minMessage: this.minQuantityLabel
-                ? this.minQuantityLabel.replace("{minLimit}", minLimit)
-                : "",
-              maxMessage: this.maxQuantityLabel
-                ? this.maxQuantityLabel.replace("{maxLimit}", maxLimit)
-                : "",
+              minMessage: this.minQuantityLabel ? this.minQuantityLabel.replace("{minLimit}", minLimit) : "",
+              maxMessage: this.maxQuantityLabel ? this.maxQuantityLabel.replace("{maxLimit}", maxLimit) : "",
             },
           };
         } else {
@@ -787,8 +742,8 @@ export const languageDictionary: LanguageDictionaryType = {
               maxLimit >= maxQuantity
                 ? ""
                 : `${
-                    !!connector ? "m" : "M"
-                  }aximalt antal är  ${maxLimit} per order.`;
+                  !!connector ? "m" : "M"
+                }aximalt antal är  ${maxLimit} per order.`;
             return {
               composite: {},
               whole: minMsg + connector + maxMsg,
@@ -803,15 +758,13 @@ export const languageDictionary: LanguageDictionaryType = {
         };
       }
     },
-    optionalFieldLabel: "",
+    optionalFieldLabel: "frivillig",
     bookingModalHeaderLabel: "Färdigställ din reservation",
     perAttendeeStepLabel: "",
     getPerAttendeeStepLabel(current: number, total: number) {
-      return !!this.perAttendeeStepLabel && !!this.perAttendeeStepLabel.trim()
-        ? this.perAttendeeStepLabel
-            .replace("{current}", current)
-            .replace("{total}", total)
-        : `Ticket ${current} of ${total}`;
+      return !!this.perAttendeeStepLabel && !!this.perAttendeeStepLabel.trim() ?
+        this.perAttendeeStepLabel.replace("{current}", current).replace("{total}", total) :
+        `Ticket ${current} of ${total}`;
     },
     previousLabel: "Föregående",
     nextLabel: "Nästa",
@@ -823,9 +776,9 @@ export const languageDictionary: LanguageDictionaryType = {
     emailReminderLabel: "",
     getEmailReminderDaysLabel(days: number) {
       const daysText = days > 1 ? `${days} dagar` : "en dag";
-      return !!this.emailReminderLabel && !!this.emailReminderLabel.trim()
-        ? this.emailReminderLabel.replace("{days}", daysText)
-        : `Du kommer att få en påminnelse via email ${daysText} innan din bokade tid.`;
+      return !!this.emailReminderLabel && !!this.emailReminderLabel.trim() ?
+        this.emailReminderLabel.replace("{days}", daysText) :
+        `Du kommer att få en påminnelse via email ${daysText} innan din bokade tid.`;
     },
     nothingIsAvailableTodayLabel: "Ingenting är tillgängligt idag",
     goToNextAvailableLabel: "Gå till nästa tillgängliga"
@@ -874,7 +827,9 @@ export const languageDictionary: LanguageDictionaryType = {
       if (!!this.slotsRemainingLabel && !!this.slotsRemainingLabel.trim()) {
         return `${units} ${this.slotsRemainingLabel}`;
       } else {
-        return units === 1 ? `${units} restant` : `${units} restants`;
+        return units === 1
+          ? `${units} restant`
+          : `${units} restants`;
       }
     },
     previousWeekAriaLabel: "Semaine précedente",
@@ -886,14 +841,8 @@ export const languageDictionary: LanguageDictionaryType = {
       "Désolé, il n'y a pas de futures dates pour cette expérience en ce moment.",
     minQuantityLabel: "",
     maxQuantityLabel: "",
-    getOrderLimitMessage(
-      minLimit: number,
-      maxLimit: number,
-      maxQuantity: number,
-      userSetLimits
-    ) {
-      if (userSetLimits.minLimit || userSetLimits.maxLimit) {
-        // checks for NaN, 0, and undefined
+    getOrderLimitMessage(minLimit: number, maxLimit: number, maxQuantity: number, userSetLimits) {
+      if (userSetLimits.minLimit || userSetLimits.maxLimit) { // checks for NaN, 0, and undefined
         if (
           (!!this.minQuantityLabel && !!this.minQuantityLabel.trim()) ||
           (!!this.maxQuantityLabel && !!this.maxQuantityLabel.trim())
@@ -903,12 +852,8 @@ export const languageDictionary: LanguageDictionaryType = {
             whole: "",
             composite: {
               mainMessage: "Limites de quantité d'achat:",
-              minMessage: this.minQuantityLabel
-                ? this.minQuantityLabel.replace("{minLimit}", minLimit)
-                : "",
-              maxMessage: this.maxQuantityLabel
-                ? this.maxQuantityLabel.replace("{maxLimit}", maxLimit)
-                : "",
+              minMessage: this.minQuantityLabel ? this.minQuantityLabel.replace("{minLimit}", minLimit) : "",
+              maxMessage: this.maxQuantityLabel ? this.maxQuantityLabel.replace("{maxLimit}", maxLimit) : "",
             },
           };
         } else {
@@ -927,9 +872,7 @@ export const languageDictionary: LanguageDictionaryType = {
             const maxMsg =
               maxLimit >= maxQuantity
                 ? ""
-                : `${
-                    !!connector ? "m" : "M"
-                  }aximum de ${maxLimit} par commande.`;
+                : `${!!connector ? "m" : "M"}aximum de ${maxLimit} par commande.`;
             return {
               composite: {},
               whole: minMsg + connector + maxMsg,
@@ -944,15 +887,13 @@ export const languageDictionary: LanguageDictionaryType = {
         };
       }
     },
-    optionalFieldLabel: "",
+    optionalFieldLabel: "facultatif",
     bookingModalHeaderLabel: "Finalisez votre réservation",
     perAttendeeStepLabel: "",
     getPerAttendeeStepLabel(current: number, total: number) {
-      return !!this.perAttendeeStepLabel && !!this.perAttendeeStepLabel.trim()
-        ? this.perAttendeeStepLabel
-            .replace("{current}", current)
-            .replace("{total}", total)
-        : `Ticket ${current} of ${total}`;
+      return !!this.perAttendeeStepLabel && !!this.perAttendeeStepLabel.trim() ?
+        this.perAttendeeStepLabel.replace("{current}", current).replace("{total}", total) :
+        `Ticket ${current} of ${total}`;
     },
     previousLabel: "Précédent",
     nextLabel: "Suivant",
@@ -964,16 +905,17 @@ export const languageDictionary: LanguageDictionaryType = {
     emailReminderLabel: "",
     getEmailReminderDaysLabel(days: number) {
       const daysText = days > 1 ? `${days} jours` : "un jour";
-      return !!this.emailReminderLabel && !!this.emailReminderLabel.trim()
-        ? this.emailReminderLabel.replace("{days}", daysText)
-        : `Vous allez recevoir un email de rappel ${daysText} avant la date réservée.`;
+      return !!this.emailReminderLabel && !!this.emailReminderLabel.trim() ?
+        this.emailReminderLabel.replace("{days}", daysText) :
+        `Vous allez recevoir un email de rappel ${daysText} avant la date réservée.`;
     },
     nothingIsAvailableTodayLabel: "Rien n'est disponible aujourd'hui",
     goToNextAvailableLabel: "Aller au prochain disponible"
   },
   nl: {
     selectDatesLabel: "Selecteer datum",
-    selectDatesAriaLabel: "Selecteer datum, dit opent kalender.",
+    selectDatesAriaLabel:
+      "Selecteer datum, dit opent kalender.",
     totalLabel: "Totaal",
     quantityLabel: "Aantal personen",
     quantityAriaLabel:
@@ -1026,14 +968,8 @@ export const languageDictionary: LanguageDictionaryType = {
       "Sorry, er zijn geen datums voor dit evenement in de toekomst.",
     minQuantityLabel: "",
     maxQuantityLabel: "",
-    getOrderLimitMessage(
-      minLimit: number,
-      maxLimit: number,
-      maxQuantity: number,
-      userSetLimits
-    ) {
-      if (userSetLimits.minLimit || userSetLimits.maxLimit) {
-        // checks for NaN, 0, and undefined
+    getOrderLimitMessage(minLimit: number, maxLimit: number, maxQuantity: number, userSetLimits) {
+      if (userSetLimits.minLimit || userSetLimits.maxLimit) { // checks for NaN, 0, and undefined
         if (
           (!!this.minQuantityLabel && !!this.minQuantityLabel.trim()) ||
           (!!this.maxQuantityLabel && !!this.maxQuantityLabel.trim())
@@ -1043,12 +979,8 @@ export const languageDictionary: LanguageDictionaryType = {
             whole: "",
             composite: {
               mainMessage: "Limieten voor aankoophoeveelheden:",
-              minMessage: this.minQuantityLabel
-                ? this.minQuantityLabel.replace("{minLimit}", minLimit)
-                : "",
-              maxMessage: this.maxQuantityLabel
-                ? this.maxQuantityLabel.replace("{maxLimit}", maxLimit)
-                : "",
+              minMessage: this.minQuantityLabel ? this.minQuantityLabel.replace("{minLimit}", minLimit) : "",
+              maxMessage: this.maxQuantityLabel ? this.maxQuantityLabel.replace("{maxLimit}", maxLimit) : "",
             },
           };
         } else {
@@ -1068,8 +1000,8 @@ export const languageDictionary: LanguageDictionaryType = {
               maxLimit >= maxQuantity
                 ? ""
                 : `${
-                    !!connector ? "m" : "M"
-                  }aximum van ${maxLimit} per aankoop.`;
+                  !!connector ? "m" : "M"
+                }aximum van ${maxLimit} per aankoop.`;
             return {
               composite: {},
               whole: minMsg + connector + maxMsg,
@@ -1084,15 +1016,13 @@ export const languageDictionary: LanguageDictionaryType = {
         };
       }
     },
-    optionalFieldLabel: "",
+    optionalFieldLabel: "valgfri",
     bookingModalHeaderLabel: "Reservering afronden",
     perAttendeeStepLabel: "",
     getPerAttendeeStepLabel(current: number, total: number) {
-      return !!this.perAttendeeStepLabel && !!this.perAttendeeStepLabel.trim()
-        ? this.perAttendeeStepLabel
-            .replace("{current}", current)
-            .replace("{total}", total)
-        : `Ticket ${current} of ${total}`;
+      return !!this.perAttendeeStepLabel && !!this.perAttendeeStepLabel.trim() ?
+        this.perAttendeeStepLabel.replace("{current}", current).replace("{total}", total) :
+        `Ticket ${current} of ${total}`;
     },
     previousLabel: "Vorige",
     nextLabel: "Volgende",
@@ -1104,9 +1034,9 @@ export const languageDictionary: LanguageDictionaryType = {
     emailReminderLabel: "",
     getEmailReminderDaysLabel(days: number) {
       const daysText = days > 1 ? `${days} dagen` : "dag";
-      return !!this.emailReminderLabel && !!this.emailReminderLabel.trim()
-        ? this.emailReminderLabel.replace("{days}", daysText)
-        : `Je zult een bevestigings email ontvangen ${daysText} voor het geboekte tijdslot.`;
+      return !!this.emailReminderLabel && !!this.emailReminderLabel.trim() ?
+        this.emailReminderLabel.replace("{days}", daysText) :
+        `Je zult een bevestigings email ontvangen ${daysText} voor het geboekte tijdslot.`;
     },
     nothingIsAvailableTodayLabel: "Er is vandaag niets beschikbaar",
     goToNextAvailableLabel: "Ga naar de volgende beschikbare"

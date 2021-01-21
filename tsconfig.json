@@ -10,12 +10,12 @@
     "noUnusedLocals": true,
     "jsx": "react",
     "jsxFactory": "h",
-    "lib": [
+    "lib": ["DOM",
       "es2015",
       "es2016",
       "es2017",
-      "dom"
-    ]
+      "es2018"
+    ],
   },
   "include": [
     "src/**/*.ts",
