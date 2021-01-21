@@ -1,10 +1,10 @@
-import './TimeSlot.scss';
+import "./TimeSlot.scss";
 
-import moment from 'moment-timezone';
-import { Component, h } from 'preact';
+import moment from "moment-timezone";
+import { Component, h } from "preact";
 
-import { Availability } from '../../typings/Availability';
-import { AppDictionary } from '../../typings/Languages';
+import { Availability } from "../../typings/Availability";
+import { AppDictionary } from "../../typings/Languages";
 
 export interface ITimeSlotProps {
   /** the currently selected date */
@@ -20,7 +20,7 @@ export class TimeSlot extends Component<ITimeSlotProps> {
   /** holds details of selected availabity props */
   onSelectTimeSlot = () => {
     this.props.onSelectTimeSlot(this.props.timeslot);
-  };
+  }
   /**rendering */
   render() {
     const { timeslot, labels } = this.props;

@@ -1,26 +1,26 @@
-import './OrderDetailsPage.scss';
+import "./OrderDetailsPage.scss";
 
-import { parseISO } from 'date-fns/fp'
-import { format } from 'date-fns';
-import { Component, h } from 'preact';
+import { parseISO } from "date-fns/fp";
+import { format } from "date-fns";
+import { Component, h } from "preact";
 
-import { CustomForm } from '../../../SharedComponents/Forms/CustomForm';
-import { Availability } from '../../../typings/Availability';
-import { CustomerInputData } from '../../../typings/CustomerInput';
+import { CustomForm } from "../../../SharedComponents/Forms/CustomForm";
+import { Availability } from "../../../typings/Availability";
+import { CustomerInputData } from "../../../typings/CustomerInput";
 import {
   EventDBO,
   EventVariantDBO,
   FormFieldType,
   OrderDetailsFormType,
-  PaymentType
-} from '../../../typings/Event';
-import { FormFieldValueInput } from '../../../typings/FormFieldValueInput';
-import { plural } from '../../../Utils/helpers';
-import { CustomerInfoForm } from '../../Components/CustomerInfoForm';
-import { AppDictionary } from '../../../typings/Languages';
-import RequiredWarning from '../../../SharedComponents/Forms/RequiredWarning';
-import { OrderLineItemInputData } from '../../../typings/OrderLineItemInput';
-import CloseIcon from '../../../SharedComponents/Icons/CloseIcon';
+  PaymentType,
+} from "../../../typings/Event";
+import { FormFieldValueInput } from "../../../typings/FormFieldValueInput";
+import { plural } from "../../../Utils/helpers";
+import { CustomerInfoForm } from "../../Components/CustomerInfoForm";
+import { AppDictionary } from "../../../typings/Languages";
+import RequiredWarning from "../../../SharedComponents/Forms/RequiredWarning";
+import { OrderLineItemInputData } from "../../../typings/OrderLineItemInput";
+import CloseIcon from "../../../SharedComponents/Icons/CloseIcon";
 
 export interface IOrderDetailsPageProps {
   /** Quantities by event variant */
@@ -39,7 +39,7 @@ export interface IOrderDetailsPageProps {
   onAddCustomFormValues(
     variant: EventVariantDBO,
     newCustomFormFieldValues?: FormFieldValueInput[],
-    index?: number
+    index?: number,
   ): Promise<any>;
   /** Method passed in and triggered upon submission of customer info, passes values up to the top level */
   onAddCustomerInfo(customerInfo: CustomerInputData): Promise<any>;
@@ -111,7 +111,7 @@ export class OrderDetailsPage extends Component<
         variants.push(
           event.variants.find(function (v) {
             return v.shopifyVariantId === variant;
-          })
+          }),
         );
       }
     });
@@ -125,7 +125,7 @@ export class OrderDetailsPage extends Component<
       ...this.state.customerInfo,
     };
     await this.props.onAddCustomerInfo(newCustomer);
-  };
+  }
 
   /** Passes current custom form values up to main level to be stored as a line item */
   onAddLineItem = async () => {
@@ -150,7 +150,7 @@ export class OrderDetailsPage extends Component<
       currentCustomFormValues: [],
       currentLineItemIndex: newLineItemIndex,
     });
-  };
+  }
 
   onPreviousClick = async () => {
     const { currentLineItemIndex } = this.state;
@@ -164,9 +164,9 @@ export class OrderDetailsPage extends Component<
 
     this.setState({ 
       currentCustomFormValues: storedLineItem.customOrderDetailsValues,
-      currentLineItemIndex: newLineItemIndex 
+      currentLineItemIndex: newLineItemIndex, 
     });
-  };
+  }
 
   /** Passed down to the customer form and triggered on changes to store the values in state */
   handleCustomerFormChange = (fieldName: string, fieldValue: string) => {
@@ -176,7 +176,7 @@ export class OrderDetailsPage extends Component<
         [fieldName]: fieldValue,
       },
     });
-  };
+  }
 
   /** Passed down to the custom form and triggered on changes to store the values in state */
   handleCustomFormChange = (fieldLabelIndex: string, fieldValue: string) => {
@@ -196,7 +196,7 @@ export class OrderDetailsPage extends Component<
     this.setState({
       currentCustomFormValues,
     });
-  };
+  }
 
    /** Triggered on submission of a custom form */
    handleSubmitCustomForm = async (ev: Event) => {
@@ -212,7 +212,7 @@ export class OrderDetailsPage extends Component<
     ) {
       this.props.onConfirmOrder();
     }
-  };
+  }
 
   /** Triggered on submission of a customer info form */
   handleSubmitCustomerInfoForm = async (ev: Event) => {
@@ -236,7 +236,7 @@ export class OrderDetailsPage extends Component<
       });
       this.props.onConfirmOrder();
     }
-  };
+  }
 
   /** Renders a customer info form if the event is not prepay */
   renderCustomerInfoForm = () => {
@@ -254,7 +254,7 @@ export class OrderDetailsPage extends Component<
           </button>
           <span className="CustomerInfo-Header">{this.props.labels.bookingModalHeaderLabel}</span>
           <button type="button" onClick={this.props.closeModal} id="CustomerInfo-CloseBtn">
-            <CloseIcon/>
+            <CloseIcon />
           </button>
         </p>
         <div className="CustomerInfo-EventDetails">
@@ -266,14 +266,14 @@ export class OrderDetailsPage extends Component<
             <span className="CustomerInfo-DeteSelected">
               {format(
                 parseISO(this.props.selectedTimeslot.formattedTimeslot.isoWithoutTZ),
-                "EEEE MMMM d, yyyy"
+                "EEEE MMMM d, yyyy",
               )}
             </span>
             <p className="CustomerInfo-VariantDetails">
               <span className="CustomerInfo-StartTime">
                 {format(
                   parseISO(this.props.selectedTimeslot.formattedTimeslot.isoWithoutTZ),
-                  "h:mma"
+                  "h:mma",
                 ).toLowerCase()}
               </span>
               {this.renderVariantDetails()}
@@ -285,14 +285,14 @@ export class OrderDetailsPage extends Component<
           key="CustomerInfo"
           handleChange={this.handleCustomerFormChange}
         />
-        <RequiredWarning message={labels.requiredWarningLabel}/>
+        <RequiredWarning message={labels.requiredWarningLabel} />
         {this.props.error && <div className="CustomerInfo-ErrorMessage">{"* " + this.props.error}</div>}
         <button className="CustomerInfo-SubmitBtn" type="submit">
           {labels.confirmReservationButtonLabel}
         </button>
       </form>
     );
-  };
+  }
 
   /** Renders a custom order form as set up by the merchant
    * This form is either per attendee or per order
@@ -319,7 +319,7 @@ export class OrderDetailsPage extends Component<
           const existingFieldData = currentLineItem.customOrderDetailsValues.filter(l => l.label === f.label)[0];
           return {
             ...f,
-            value: !!existingFieldData ? existingFieldData.value : undefined
+            value: !!existingFieldData ? existingFieldData.value : undefined,
           };
         });
       }
@@ -342,7 +342,7 @@ export class OrderDetailsPage extends Component<
               onClick={this.props.closeModal}
               type="button" 
             >
-              <CloseIcon/>
+              <CloseIcon />
             </button>
           </div>
           <form id="CustomOrder-Details" onSubmit={this.handleSubmitCustomForm}>
@@ -354,7 +354,7 @@ export class OrderDetailsPage extends Component<
               formTitle={customOrderDetails.formTitle}
               handleChange={this.handleCustomFormChange}
             />
-            <RequiredWarning message={labels.requiredWarningLabel}/>
+            <RequiredWarning message={labels.requiredWarningLabel} />
             <span className="CustomOrderDetails-SubmitBtn">
               <button type="button" onClick={this.onPreviousClick} disabled={!currentLineItemIndex}>{labels.previousLabel}</button>
               <button type="submit">
@@ -382,7 +382,7 @@ export class OrderDetailsPage extends Component<
               formTitle={customOrderDetails.formTitle}
               handleChange={this.handleCustomFormChange}
             />
-            <RequiredWarning message={labels.requiredWarningLabel}/>
+            <RequiredWarning message={labels.requiredWarningLabel} />
             <span className="CustomOrderDetails-SubmitBtn centered">
               <button type="submit">{labels.confirmReservationButtonLabel}</button>
             </span>
@@ -390,7 +390,7 @@ export class OrderDetailsPage extends Component<
         </div>
       );
     }
-  };
+  }
   /**renders the differnt variant name and quanity depeanding on what has be selected by the user */
   renderVariantDetails = () => {
     let variantsByName: { [name: string]: number } = {};
@@ -405,7 +405,7 @@ export class OrderDetailsPage extends Component<
       let variantName = "";
       if (this.variants.find((variant) => variant.shopifyVariantId === id)) {
         variantName = this.variants.find(
-          (variant) => variant.shopifyVariantId === id
+          (variant) => variant.shopifyVariantId === id,
         ).name;
       }
       variantName = plural(variantName, quantities[id]);
@@ -420,11 +420,11 @@ export class OrderDetailsPage extends Component<
         </span>
       );
     });
-  };
+  }
   /** rendering */
   public render() {
-    const { customerInfo, event } = this.props
-    const { currentLineItemIndex } = this.state
+    const { customerInfo, event } = this.props;
+    const { currentLineItemIndex } = this.state;
 
     if ((!customerInfo &&
       event.paymentType !== PaymentType.Prepay)
@@ -439,7 +439,7 @@ export class OrderDetailsPage extends Component<
       currentLineItemIndex < this.variants.length
     ) {
       return this.renderCustomOrderDetails(
-        this.variants[currentLineItemIndex]
+        this.variants[currentLineItemIndex],
       );
     }
   }

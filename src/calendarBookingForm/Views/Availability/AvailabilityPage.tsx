@@ -156,7 +156,7 @@ export class AvailabilityPage extends Component<IAvailabilityPageProps, IAvailab
                 <span>&#8592;</span>
             </button>}
           <button id="MobileView-CloseBtn" onClick={this.handleCloseModal}>
-            <CloseIcon/>
+            <CloseIcon />
           </button>
             <p>
               {/* If a date has been selected then select quantity view will appear */}

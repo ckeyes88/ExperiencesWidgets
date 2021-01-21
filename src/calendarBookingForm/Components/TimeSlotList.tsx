@@ -1,13 +1,13 @@
-import './TimeSlotList.scss';
+import "./TimeSlotList.scss";
 
-import { format } from 'date-fns';
-import { Component, h, JSX } from 'preact';
+import { format } from "date-fns";
+import { Component, h, JSX } from "preact";
 
-import { Availability } from '../../typings/Availability';
-import { TimeSlot } from './TimeSlot';
-import { TimeSlotHeader } from './TimeSlotHeader';
-import { AppDictionary, localeMap } from '../../typings/Languages';
-import { FirstAvailability } from '../../typings/FirstAvailability';
+import { Availability } from "../../typings/Availability";
+import { TimeSlot } from "./TimeSlot";
+import { TimeSlotHeader } from "./TimeSlotHeader";
+import { AppDictionary, localeMap } from "../../typings/Languages";
+import { FirstAvailability } from "../../typings/FirstAvailability";
 
 export interface ITimeSlotListMainProps {
   /** creating time slots to hold an array of needed detail for selected date availability */
@@ -62,7 +62,7 @@ export class TimeSlotList extends Component<
               className="TimeSlots-NextAvailableBtn"
               disabled={noAvailableTimeSlots}
             >
-              {noAvailableTimeSlots ? 'This event is sold out' : labels.goToNextAvailableLabel}
+              {noAvailableTimeSlots ? "This event is sold out" : labels.goToNextAvailableLabel}
             </button>
           </div>
         </div>
@@ -77,7 +77,7 @@ export class TimeSlotList extends Component<
         </div>
       );
     }
-  };
+  }
 
   /**
    * This function is used to iterate over the list of
@@ -88,7 +88,7 @@ export class TimeSlotList extends Component<
     return (
       <TimeSlot labels={this.props.labels} timeslot={timeslot} onSelectTimeSlot={this.props.onSelectTimeSlot} />
     );
-  };
+  }
 
   /** render */
   render() {

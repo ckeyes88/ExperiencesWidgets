@@ -1,6 +1,6 @@
 import { fromUnixTime } from "date-fns/fp";
 import React from "preact/compat";
-import moment from 'moment-timezone';
+import moment from "moment-timezone";
 import { Component, h } from "../../../../node_modules/preact";
 import { getQueryVariable } from "../../../SharedComponents/DatePicker/Utils";
 import { Loading } from "../../../SharedComponents/loading/Loading";
@@ -22,7 +22,7 @@ import {
   getEvent,
   getEventCustomLabels,
   getFirstAvailability,
-  getShopDetails
+  getShopDetails,
 } from "../../../Utils/api";
 import { getFirstDayAvailabilities, getTimeslotsByDate } from "../../../Utils/helpers";
 import { unionAvailability } from "../../../Utils/mergeAvailability";
@@ -59,7 +59,7 @@ const INITIAL_STATE: ICalendarWidgetMainState = {
   quantitiesMap: {},
   lineItems: [],
   customerInfo: null,
-  labels: {}
+  labels: {},
 };
 
 export type VariantInput = {
@@ -157,7 +157,7 @@ export class CalendarWidgetMain extends Component<
         this.fetchRangeOfAvailability(
           this.state.now,
           availabilityRangeEnd,
-        )
+        ),
       ]);
 
       //add next month to the fetched month state
@@ -458,7 +458,7 @@ export class CalendarWidgetMain extends Component<
   handleAddLineItem = (
     variant: EventVariantDBO,
     customFormFieldValues?: FormFieldValueInput[],
-    index?: number
+    index?: number,
   ) => {
     const { event, selectedTimeslot } = this.state;
 
@@ -478,7 +478,7 @@ export class CalendarWidgetMain extends Component<
     };
 
     let newLineItems = this.state.lineItems;
-    if (index !== undefined && typeof index === 'number') {
+    if (index !== undefined && typeof index === "number") {
       // if this index exists, update it with the newer version
       newLineItems[index] = newLineItem;
     } else {

@@ -1,8 +1,8 @@
-import './_modal.scss';
+import "./_modal.scss";
 
-import { Component, createRef, h } from 'preact';
+import { Component, createRef, h } from "preact";
 
-import { Portal } from '../../calendarBookingForm/Components/Portal';
+import { Portal } from "../../calendarBookingForm/Components/Portal";
 
 type ModalProps = {
   /** sets the prop if the mobal should be visiable or not */
@@ -45,7 +45,7 @@ export class Modal extends Component<ModalProps, ModalState> {
     }
 
     this.modal.current.style.top = window.scrollY + "px";
-  };
+  }
 
   /** On click, check if click was outside modal and close if so */
   handleClickOutsideModal = (e: Event) => {
@@ -55,7 +55,7 @@ export class Modal extends Component<ModalProps, ModalState> {
       }
     }
     this.props.closeModal();
-  };
+  }
 
   /** rendering the modal container */
   render() {

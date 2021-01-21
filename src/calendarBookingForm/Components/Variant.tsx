@@ -1,11 +1,11 @@
-import './Variant.scss';
+import "./Variant.scss";
 
-import { Component, h } from 'preact';
+import { Component, h } from "preact";
 
-import { Availability } from '../../typings/Availability';
-import { EventVariantDBO } from '../../typings/Event';
-import { formatCurrency } from '../../Utils/helpers';
-import { AppDictionary } from '../../typings/Languages';
+import { Availability } from "../../typings/Availability";
+import { EventVariantDBO } from "../../typings/Event";
+import { formatCurrency } from "../../Utils/helpers";
+import { AppDictionary } from "../../typings/Languages";
 
 export interface IVariantProps {
   /** creating variant to connect to shopify event detials for selected date */
@@ -36,20 +36,20 @@ export class Variant extends Component<IVariantProps> {
 
   handleIncrQty = () => {
     this.props.onChangeQuantity(1, this.props.variant.shopifyVariantId);
-  };
+  }
 
   handleDecrQty = () => {
     if (this.props.quantity !== 0) {
       this.props.onChangeQuantity(-1, this.props.variant.shopifyVariantId);
     }
-  };
+  }
 
   renderQtySelector() {
     const {
       quantity,
       maxLimit,
       variantTimeSlot,
-      labels
+      labels,
     } = this.props;
 
     const unitsLeft = variantTimeSlot.unitsLeft || 0;

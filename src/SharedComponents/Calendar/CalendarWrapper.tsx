@@ -8,7 +8,7 @@ import { CalendarEventClick, DateClickEvent } from "../../typings/Calendar";
 
 type CalendarViewType = {
   [key: string]: string;
-}
+};
 
 export const calendarViewType: CalendarViewType = {
   dayGrid: "dayGridMonth",
@@ -33,7 +33,7 @@ export interface ICalendarProps {
   noEventsContent: JSX.Element;
   customButtons?: any;
   headerToolbar?: any;
-};
+}
 
 export type CalendarEvent = {
   event: any; // needed for CalendarEventContent compatibility
@@ -69,7 +69,7 @@ export class Calendar extends Component<ICalendarProps, any> {
       eventClick,
       moreLinkClick,
       customButtons,
-      headerToolbar
+      headerToolbar,
     } = this.props;
 
     const FullCalendarCast = FullCalendar as unknown;
@@ -93,4 +93,4 @@ export class Calendar extends Component<ICalendarProps, any> {
       />
     );
   }
-};
+}

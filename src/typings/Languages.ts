@@ -1,5 +1,5 @@
 export type LanguageCodes = "en-US" | "es" | "ger" | "swe" | "fr" | "nl" | "ja";
-import { enUS, de, nl, es, sv, fr, ja } from 'date-fns/locale';
+import { enUS, de, nl, es, sv, fr, ja } from "date-fns/locale";
 
 // use it to get date-fns built-in locale for our LanguageCodes type
 export const localeMap: { [key: string]: Locale } = {
@@ -9,7 +9,7 @@ export const localeMap: { [key: string]: Locale } = {
   "swe": sv,
   "fr": fr,
   "nl": nl,
-  "ja": ja
+  "ja": ja,
 };
 
 /**
@@ -254,7 +254,7 @@ export const languageDictionary: LanguageDictionaryType = {
         `You will receive an email reminder ${daysText} before your scheduled time.`;
     },
     nothingIsAvailableTodayLabel: "Nothing is available today",
-    goToNextAvailableLabel: "Go to next available"
+    goToNextAvailableLabel: "Go to next available",
   },
   es: {
     selectDatesLabel: "Seleccionar fechas",
@@ -387,7 +387,7 @@ export const languageDictionary: LanguageDictionaryType = {
         `You will receive an email reminder ${daysText} before your scheduled time.`;
     },
     nothingIsAvailableTodayLabel: "Hoy no hay nada disponible",
-    goToNextAvailableLabel: "Ir al siguiente disponible"
+    goToNextAvailableLabel: "Ir al siguiente disponible",
   },
   ja: {
     selectDatesLabel: "希望日時を選択",
@@ -449,7 +449,7 @@ export const languageDictionary: LanguageDictionaryType = {
       minLimit: number,
       maxLimit: number,
       maxQuantity: number,
-      userSetLimits
+      userSetLimits,
     ) {
       if (userSetLimits.minLimit || userSetLimits.maxLimit) {
         // checks for NaN, 0, and undefined
@@ -524,7 +524,7 @@ export const languageDictionary: LanguageDictionaryType = {
         : `${daysText} リマインドの通知が指定されたメールアドレスに自動的に配信されます。`;
     },
     nothingIsAvailableTodayLabel: "今日は何も利用できません",
-    goToNextAvailableLabel: "次に利用可能なものに移動します"
+    goToNextAvailableLabel: "次に利用可能なものに移動します",
   },
   ger: {
     selectDatesLabel: "Bitte Datum wählen",
@@ -654,7 +654,7 @@ export const languageDictionary: LanguageDictionaryType = {
         `Du wirst ${daysText} vor der gebuchten Zeit eine Erinnerung per E-Mail erhalten.`;
     },
     nothingIsAvailableTodayLabel: "Heute ist nichts verfügbar",
-    goToNextAvailableLabel: "Zum nächsten verfügbaren gehen"
+    goToNextAvailableLabel: "Zum nächsten verfügbaren gehen",
   },
   swe: {
     selectDatesLabel: "Välj Datum",
@@ -781,7 +781,7 @@ export const languageDictionary: LanguageDictionaryType = {
         `Du kommer att få en påminnelse via email ${daysText} innan din bokade tid.`;
     },
     nothingIsAvailableTodayLabel: "Ingenting är tillgängligt idag",
-    goToNextAvailableLabel: "Gå till nästa tillgängliga"
+    goToNextAvailableLabel: "Gå till nästa tillgängliga",
   },
   fr: {
     selectDatesLabel: "Sélectionnez vos dates",
@@ -910,7 +910,7 @@ export const languageDictionary: LanguageDictionaryType = {
         `Vous allez recevoir un email de rappel ${daysText} avant la date réservée.`;
     },
     nothingIsAvailableTodayLabel: "Rien n'est disponible aujourd'hui",
-    goToNextAvailableLabel: "Aller au prochain disponible"
+    goToNextAvailableLabel: "Aller au prochain disponible",
   },
   nl: {
     selectDatesLabel: "Selecteer datum",
@@ -1039,7 +1039,7 @@ export const languageDictionary: LanguageDictionaryType = {
         `Je zult een bevestigings email ontvangen ${daysText} voor het geboekte tijdslot.`;
     },
     nothingIsAvailableTodayLabel: "Er is vandaag niets beschikbaar",
-    goToNextAvailableLabel: "Ga naar de volgende beschikbare"
+    goToNextAvailableLabel: "Ga naar de volgende beschikbare",
   },
   it: {
     selectDatesLabel: "Scegli le date",
@@ -1100,7 +1100,7 @@ export const languageDictionary: LanguageDictionaryType = {
       minLimit: number,
       maxLimit: number,
       maxQuantity: number,
-      userSetLimits
+      userSetLimits,
     ) {
       if (userSetLimits.minLimit || userSetLimits.maxLimit) {
         // checks for NaN, 0, and undefined
@@ -1179,7 +1179,7 @@ export const languageDictionary: LanguageDictionaryType = {
         : `Riceverai una mail di promemoria ${daysText} prima dell'orario previsto.`;
     },
     nothingIsAvailableTodayLabel: "Niente è disponibile oggi",
-    goToNextAvailableLabel: "Vai al prossimo disponibile"
+    goToNextAvailableLabel: "Vai al prossimo disponibile",
   },
 };
 
