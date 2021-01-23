@@ -1,4 +1,5 @@
 import { parseISO } from "date-fns";
+import moment from "moment-timezone";
 import { FirstAvailability } from "../typings/FirstAvailability";
 import { Availability } from "../typings/Availability";
 import { EventAssetLinkDBO, EventVariantDBO } from "../typings/Event";
@@ -401,13 +402,14 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
       const event = { title: e.name };
       e.availabilityProducts && e.availabilityProducts.forEach((p) => {
         p.availableTimeslots && p.availableTimeslots.forEach((ts: Availability, i: number) => {
+          const startAtLocationTZ = moment(ts.startsAt).tz(ts.timezone);
           let calendarEvent = {
             ...event,
             event: {},
             uuid: makeid(),
             id: `${i}-${ts.productId}`,
             start: parseISO(ts.formattedTimeslot.isoWithoutTZ),
-            customUrl: `https://${storeUrl}/products/${e.handle}?select=${new Date(ts.startsAt).getTime() / 1000}`,
+            customUrl: `https://${storeUrl}/products/${e.handle}?select=${startAtLocationTZ.unix()}`,
             imageUrl: resolveImageUrl(baseUrl, e.images, e.imageLinks),
             paymentType: e.paymentType,
             price: findCheapestVariantPrice(e.variants),
