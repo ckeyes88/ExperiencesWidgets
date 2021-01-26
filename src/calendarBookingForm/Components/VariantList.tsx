@@ -1,12 +1,12 @@
-import './VariantList.scss';
+import "./VariantList.scss";
 
-import { Component, h, JSX } from 'preact';
+import { Component, h, JSX } from "preact";
 
-import { Availability } from '../../typings/Availability';
-import { EventDBO, EventVariantDBO } from '../../typings/Event';
-import { Variant } from './Variant';
-import { VariantHeader } from './VariantHeader';
-import { AppDictionary } from '../../typings/Languages';
+import { Availability } from "../../typings/Availability";
+import { EventDBO, EventVariantDBO } from "../../typings/Event";
+import { Variant } from "./Variant";
+import { VariantHeader } from "./VariantHeader";
+import { AppDictionary } from "../../typings/Languages";
 
 export interface IVariantListMainProps {
   /**passing in the entire event, may render some other props unnecessary */
@@ -59,7 +59,7 @@ export class VariantList extends Component<
     const { quantities } = this.props;
     return Object.entries(quantities).reduce(
       (sum, [variantId, quantity]) => sum + quantity,
-      0
+      0,
     );
   }
 
@@ -68,11 +68,11 @@ export class VariantList extends Component<
     const total = Object.entries(this.props.quantities).reduce(
       (sum, [variantId, quantity]: [string, number]) => {
         const variant = this.props.variants.find(
-          (v) => v.shopifyVariantId === +variantId
+          (v) => v.shopifyVariantId === +variantId,
         );
         return sum + variant.price * quantity;
       },
-      0
+      0,
     );
     /** Convert the total to a string, add a dollar sign, and add commas if > 999 */
     return `$${total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
@@ -113,7 +113,7 @@ export class VariantList extends Component<
       onConfirmSelection,
       minLimit,
       labels,
-      locale
+      locale,
     } = this.props;
 
     const isDisabled = this.totalQuantity < minLimit;
@@ -151,7 +151,7 @@ export class VariantList extends Component<
         )}
       </div>
     );
-  };
+  }
 
   /** rendering a single variant */
   renderVariant = (variant: EventVariantDBO): JSX.Element => {
@@ -167,18 +167,18 @@ export class VariantList extends Component<
         maxLimit={this.props.maxLimit}
       />
     );
-  };
+  }
   /** allows the page to go back once the button is clicked */
   onClickBack = () => {
     this.props.onClickBack();
-  };
+  }
 
   /** rendering */
   render() {
     const { variants } = this.props;
 
     return (
-      <div className={`VariantContainer ${this.totalQuantity > 0 ? 'BottomPadding' : ''} ${variants && variants.length < 5 ? '' : 'BottomGradient'}`}>
+      <div className={`VariantContainer ${this.totalQuantity > 0 ? "BottomPadding" : ""} ${variants && variants.length < 5 ? "" : "BottomGradient"}`}>
         {this.renderVariants()}
       </div>
     );

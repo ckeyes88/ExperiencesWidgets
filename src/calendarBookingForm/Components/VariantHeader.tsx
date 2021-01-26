@@ -1,11 +1,11 @@
-import './VariantHeader.scss';
+import "./VariantHeader.scss";
 
-import { parseISO } from 'date-fns/fp'
-import { format } from 'date-fns';
-import { Component, h } from 'preact';
+import { parseISO } from "date-fns/fp";
+import { format } from "date-fns";
+import { Component, h } from "preact";
 
-import { Availability } from '../../typings/Availability';
-import { AppDictionary, localeMap } from '../../typings/Languages';
+import { Availability } from "../../typings/Availability";
+import { AppDictionary, localeMap } from "../../typings/Languages";
 
 export interface IVariantHeaderProps {
   /** creating the variant selected date to date formant when selected or null when not */

@@ -1,4 +1,4 @@
-import { h } from 'preact';
+import { h } from "preact";
 
 interface IRequiredWarningProps {
     message: string;
@@ -11,7 +11,7 @@ const RequiredWarning = ({ message }: IRequiredWarningProps) => {
             <span> - </span>
             <span>{message}</span>
         </div>
-    )
-}
+    );
+};
 
 export default RequiredWarning;

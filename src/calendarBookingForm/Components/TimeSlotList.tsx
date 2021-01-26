@@ -1,13 +1,13 @@
-import './TimeSlotList.scss';
+import "./TimeSlotList.scss";
 
-import { format } from 'date-fns';
-import { Component, h, JSX } from 'preact';
+import { format } from "date-fns";
+import { Component, h, JSX } from "preact";
 
-import { Availability } from '../../typings/Availability';
-import { TimeSlot } from './TimeSlot';
-import { TimeSlotHeader } from './TimeSlotHeader';
-import { AppDictionary, localeMap } from '../../typings/Languages';
-import { FirstAvailability } from '../../typings/FirstAvailability';
+import { Availability } from "../../typings/Availability";
+import { TimeSlot } from "./TimeSlot";
+import { TimeSlotHeader } from "./TimeSlotHeader";
+import { AppDictionary, localeMap } from "../../typings/Languages";
+import { FirstAvailability } from "../../typings/FirstAvailability";
 
 export interface ITimeSlotListMainProps {
   /** creating time slots to hold an array of needed detail for selected date availability */
@@ -46,7 +46,7 @@ export class TimeSlotList extends Component<
    * or the user has not selected a date
    */
   renderTimeSlots = () => {
-    const { timeslots, selectedDate, locale } = this.props;
+    const { timeslots, selectedDate, locale, labels } = this.props;
     const noAvailableTimeSlots = !Object.keys(this.props.availability).length;
 
     if (!timeslots || !Array.isArray(timeslots) || !timeslots.length) {
@@ -56,13 +56,13 @@ export class TimeSlotList extends Component<
             <span className="TimeSlot-DateSelected">
               {format(new Date(this.props.selectedDate), "EEEE MMMM d, yyyy", { locale: localeMap[locale] })}
             </span>
-            <p>Nothing is available today</p>
+            <p>{labels.nothingIsAvailableTodayLabel}</p>
             <button
               onClick={this.props.onSelectFirstAvailability}
               className="TimeSlots-NextAvailableBtn"
               disabled={noAvailableTimeSlots}
             >
-              {noAvailableTimeSlots ? 'This event is sold out' : 'Go to next available'}
+              {noAvailableTimeSlots ? "This event is sold out" : labels.goToNextAvailableLabel}
             </button>
           </div>
         </div>
@@ -77,7 +77,7 @@ export class TimeSlotList extends Component<
         </div>
       );
     }
-  };
+  }
 
   /**
    * This function is used to iterate over the list of
@@ -88,7 +88,7 @@ export class TimeSlotList extends Component<
     return (
       <TimeSlot labels={this.props.labels} timeslot={timeslot} onSelectTimeSlot={this.props.onSelectTimeSlot} />
     );
-  };
+  }
 
   /** render */
   render() {

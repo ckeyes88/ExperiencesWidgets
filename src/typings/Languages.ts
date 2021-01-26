@@ -1,5 +1,5 @@
 export type LanguageCodes = "en-US" | "es" | "ger" | "swe" | "fr" | "nl" | "ja";
-import { enUS, de, nl, es, sv, fr, ja } from 'date-fns/locale';
+import { enUS, de, nl, es, sv, fr, ja } from "date-fns/locale";
 
 // use it to get date-fns built-in locale for our LanguageCodes type
 export const localeMap: { [key: string]: Locale } = {
@@ -9,7 +9,7 @@ export const localeMap: { [key: string]: Locale } = {
   "swe": sv,
   "fr": fr,
   "nl": nl,
-  "ja": ja
+  "ja": ja,
 };
 
 /**
@@ -114,6 +114,8 @@ export type AppDictionary = { [key: string]: any } & {
   nextLabel: string;
   confirmReservationButtonLabel: string;
   addLabel: string;
+  nothingIsAvailableTodayLabel: string;
+  goToNextAvailableLabel: string;
 };
 
 export type LanguageDictionaryType = {
@@ -251,6 +253,8 @@ export const languageDictionary: LanguageDictionaryType = {
         this.emailReminderLabel.replace("{days}", daysText) :
         `You will receive an email reminder ${daysText} before your scheduled time.`;
     },
+    nothingIsAvailableTodayLabel: "Nothing is available today",
+    goToNextAvailableLabel: "Go to next available",
   },
   es: {
     selectDatesLabel: "Seleccionar fechas",
@@ -382,6 +386,8 @@ export const languageDictionary: LanguageDictionaryType = {
         this.emailReminderLabel.replace("{days}", daysText) :
         `You will receive an email reminder ${daysText} before your scheduled time.`;
     },
+    nothingIsAvailableTodayLabel: "Hoy no hay nada disponible",
+    goToNextAvailableLabel: "Ir al siguiente disponible",
   },
   ja: {
     selectDatesLabel: "希望日時を選択",
@@ -443,7 +449,7 @@ export const languageDictionary: LanguageDictionaryType = {
       minLimit: number,
       maxLimit: number,
       maxQuantity: number,
-      userSetLimits
+      userSetLimits,
     ) {
       if (userSetLimits.minLimit || userSetLimits.maxLimit) {
         // checks for NaN, 0, and undefined
@@ -517,6 +523,8 @@ export const languageDictionary: LanguageDictionaryType = {
         ? this.emailReminderLabel.replace("{days}", daysText)
         : `${daysText} リマインドの通知が指定されたメールアドレスに自動的に配信されます。`;
     },
+    nothingIsAvailableTodayLabel: "今日は何も利用できません",
+    goToNextAvailableLabel: "次に利用可能なものに移動します",
   },
   ger: {
     selectDatesLabel: "Bitte Datum wählen",
@@ -645,6 +653,8 @@ export const languageDictionary: LanguageDictionaryType = {
         this.emailReminderLabel.replace("{days}", daysText) :
         `Du wirst ${daysText} vor der gebuchten Zeit eine Erinnerung per E-Mail erhalten.`;
     },
+    nothingIsAvailableTodayLabel: "Heute ist nichts verfügbar",
+    goToNextAvailableLabel: "Zum nächsten verfügbaren gehen",
   },
   swe: {
     selectDatesLabel: "Välj Datum",
@@ -770,6 +780,8 @@ export const languageDictionary: LanguageDictionaryType = {
         this.emailReminderLabel.replace("{days}", daysText) :
         `Du kommer att få en påminnelse via email ${daysText} innan din bokade tid.`;
     },
+    nothingIsAvailableTodayLabel: "Ingenting är tillgängligt idag",
+    goToNextAvailableLabel: "Gå till nästa tillgängliga",
   },
   fr: {
     selectDatesLabel: "Sélectionnez vos dates",
@@ -897,6 +909,8 @@ export const languageDictionary: LanguageDictionaryType = {
         this.emailReminderLabel.replace("{days}", daysText) :
         `Vous allez recevoir un email de rappel ${daysText} avant la date réservée.`;
     },
+    nothingIsAvailableTodayLabel: "Rien n'est disponible aujourd'hui",
+    goToNextAvailableLabel: "Aller au prochain disponible",
   },
   nl: {
     selectDatesLabel: "Selecteer datum",
@@ -1024,6 +1038,148 @@ export const languageDictionary: LanguageDictionaryType = {
         this.emailReminderLabel.replace("{days}", daysText) :
         `Je zult een bevestigings email ontvangen ${daysText} voor het geboekte tijdslot.`;
     },
+    nothingIsAvailableTodayLabel: "Er is vandaag niets beschikbaar",
+    goToNextAvailableLabel: "Ga naar de volgende beschikbare",
+  },
+  it: {
+    selectDatesLabel: "Scegli le date",
+    selectDatesAriaLabel: "Scegli le date, questo aprirà il menù a tendina del calendario",
+    quantityLabel: "Quanti partecipanti",
+    totalLabel: "Totale",
+    quantityAriaLabel:
+      "Quante persone, questo aprirà il menù a tendina per inserire i partecipanti",
+    confirmVariantsLabel: "Conferma",
+    bookButtonLabel: "Prenota",
+    reserveButtonLabel: "Prenota",
+    singularUnitLabel: "persona",
+    pluralUnitLabel: "persone",
+    free: "gratis",
+    january: "Gennaio::genn.",
+    february: "Febbraio::febbr.",
+    march: "Marzo::mar.",
+    april: "Aprile::apr.",
+    may: "Maggio::magg.",
+    june: "Giugno::giugno",
+    july: "Luglio::luglio",
+    august: "Agosto::ag.",
+    september: "Settembre::sett.",
+    october: "Ottobre::ott.",
+    november: "Novembre::nov.",
+    december: "Dicembre::dic.",
+    monday: "Lunedì::Lu",
+    tuesday: "Martedì::Ma",
+    wednesday: "Mercoledì::Me",
+    thursday: "Giovedì::Gi",
+    friday: "Venerdì::Ve",
+    saturday: "Sabato::Sa",
+    sunday: "Domenica::Do",
+    firstNameLabel: "Nome",
+    lastNameLabel: "Cognome",
+    phoneNumberLabel: "Telefono",
+    emailLabel: "E-mail",
+    requiredWarningLabel: "I campi evidenziati sono obbligatori",
+    selectDateLabel: "Scegli",
+    showSlotsRemainingLabel: true,
+    getSlotsRemainingLabel(units: number) {
+      if (!!this.slotsRemainingLabel && !!this.slotsRemainingLabel.trim()) {
+        return `${units} ${this.slotsRemainingLabel}`;
+      } else {
+        return `${units} Rimanenti`;
+      }
+    },
+    previousWeekAriaLabel: "Settimana precedente",
+    nextWeekAriaLabel: "Settimana successiva",
+    getSelectedDateAriaLabel(date: string) {
+      return `La data scelta è ${date}`;
+    },
+    noUpcomingTimeSlotsLabel:
+      "Ci dispiace, ma al momento non sono disponibili date per questa esperienza",
+    minQuantityLabel: "",
+    maxQuantityLabel: "",
+    getOrderLimitMessage(
+      minLimit: number,
+      maxLimit: number,
+      maxQuantity: number,
+      userSetLimits,
+    ) {
+      if (userSetLimits.minLimit || userSetLimits.maxLimit) {
+        // checks for NaN, 0, and undefined
+        if (
+          (!!this.minQuantityLabel && !!this.minQuantityLabel.trim()) ||
+          (!!this.maxQuantityLabel && !!this.maxQuantityLabel.trim())
+        ) {
+          // limits and custom labels are set (display the min/max limits with custom labels)
+          return {
+            whole: "",
+            composite: {
+              mainMessage: "Limiti di quantità di acquisto:",
+              minMessage: this.minQuantityLabel
+                ? this.minQuantityLabel.replace("{minLimit}", minLimit)
+                : "",
+              maxMessage: this.maxQuantityLabel
+                ? this.maxQuantityLabel.replace("{maxLimit}", maxLimit)
+                : "",
+            },
+          };
+        } else {
+          // limits are set but custom labels aren't (display the min/max limits with default limit labels)
+          if (maxQuantity <= 0 || minLimit > maxQuantity) {
+            return EMPTY_LIMIT_LABELS;
+          } else {
+            const minMsg =
+              minLimit > 1 ? `Quantità minima di acquisto di ${minLimit}` : "";
+            let connector = "";
+            if (!!minMsg && maxLimit >= maxQuantity) {
+              connector = " obbligatorio.";
+            } else if (!!minMsg && maxLimit < maxQuantity) {
+              connector = " con ";
+            }
+            const maxMsg =
+              maxLimit >= maxQuantity
+                ? ""
+                : `${
+                    !!connector ? "l" : "L"
+                  }imite massimo di ${maxLimit} per ordine.`;
+            return {
+              composite: {},
+              whole: minMsg + connector + maxMsg,
+            };
+          }
+        }
+      } else {
+        // limits aren't set (don't display anything in the min/max limits label no matter what)
+        return {
+          whole: "",
+          composite: {},
+        };
+      }
+    },
+    optionalFieldLabel: "(opzionale)",
+    bookingModalHeaderLabel: "Concludi la tua prenotazione",
+    perAttendeeStepLabel: "",
+    getPerAttendeeStepLabel(current: number, total: number) {
+      return !!this.perAttendeeStepLabel && !!this.perAttendeeStepLabel.trim()
+        ? this.perAttendeeStepLabel
+            .replace("{current}", current)
+            .replace("{total}", total)
+        : `Biglietto ${current} di ${total}`;
+    },
+    previousLabel: "Precedente",
+    nextLabel: "Prossimo",
+    addLabel: "Aggiungere",
+    confirmReservationButtonLabel: "Conferma",
+    savedSpotLabel: "Ti abbiamo riservato un posto",
+    sentConfirmationLabel: "Una conferma verrà inviata a",
+    finalConfirmationLabel: "Vicino",
+    emailReminderLabel: "",
+    getEmailReminderDaysLabel(days: number) {
+      const daysText = days > 1 ? `${days} giorni` : "giorno";
+      return !!this.emailReminderLabel && !!this.emailReminderLabel.trim()
+        ? this.emailReminderLabel.replace("{days}", daysText)
+        : `Riceverai una mail di promemoria ${daysText} prima dell'orario previsto.`;
+    },
+    nothingIsAvailableTodayLabel: "Niente è disponibile oggi",
+    goToNextAvailableLabel: "Vai al prossimo disponibile",
   },
 };
 

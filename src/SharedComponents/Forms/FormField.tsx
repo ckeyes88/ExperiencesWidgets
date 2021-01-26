@@ -1,6 +1,6 @@
-import './Forms.scss';
+import "./Forms.scss";
 
-import { Component, h, JSX } from 'preact';
+import { Component, h, JSX } from "preact";
 
 export interface IFormFieldProps {
   /** Designate what type of an input this is */
@@ -49,7 +49,7 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
         {
           value: options[0],
         },
-        this.setDefaultSelect
+        this.setDefaultSelect,
       );
     }
   }
@@ -62,7 +62,7 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
     if (options && options[0]) {
       this.props.onFieldChange(id, options[0]);
     }
-  };
+  }
 
   /** Sets the local state to current value of the field
    * Passes the value and the field's id into the designated method passed in as a prop
@@ -74,9 +74,9 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
     });
     this.props.onFieldChange(
       (ev.target as HTMLInputElement).id,
-      (ev.target as HTMLInputElement).value
+      (ev.target as HTMLInputElement).value,
     );
-  };
+  }
 
   /** If the field is a select, this method renders it */
   renderSelect() {
@@ -105,7 +105,7 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
         {option}
       </option>
     );
-  };
+  }
 
   /** If the field is a text, email, or phone input, this renders it */
   renderInput() {

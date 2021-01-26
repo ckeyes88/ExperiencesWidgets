@@ -38,7 +38,7 @@ export class CalendarHeader extends Component<CalendarHeaderProps> {
           </button>
         }
         <h1 className="MonthDisplay" aria-live="assertive">
-          {labels[monthNames[month - 1]].split('::')[0]} {year}
+          {labels[monthNames[month - 1]].split("::")[0]} {year}
         </h1>
         <button
           className="NextButton"

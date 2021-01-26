@@ -35,4 +35,6 @@ export type EventCustomLabels = {
     emailReminderLabel: string;
     finalConfirmationLabel: string;
     confirmationAndPaymentFollowUpLabel: string;
+    nothingIsAvailableTodayLabel: string;
+    goToNextAvailableLabel: string;
   };

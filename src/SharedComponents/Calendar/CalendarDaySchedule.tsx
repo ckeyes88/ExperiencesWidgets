@@ -50,7 +50,7 @@ export class CalendarDaySchedule extends Component<ICalendarDayScheduleProps, an
             </button>
           </div>
         </div>
-        <div className={`Calendar-DaySchedule-Body ${events && events.length > 4 ? 'FadeBottom' : ''}`}>
+        <div className={`Calendar-DaySchedule-Body ${events && events.length > 4 ? "FadeBottom" : ""}`}>
           {events
             .sort((a, b) => a.start.getTime() - b.start.getTime())
             .map(e => (
@@ -60,7 +60,7 @@ export class CalendarDaySchedule extends Component<ICalendarDayScheduleProps, an
                 <div className="FeaturedImage">
                   <img src={e.imageUrl as string} alt="Event featured image" />
                 </div>
-                <div className={`EventDescription ${e.title.length > 50 ? 'SmallerFont' : ''}`}>
+                <div className={`EventDescription ${e.title.length > 50 ? "SmallerFont" : ""}`}>
                   <div>{e.title}</div>
                   <div>
                     <span>{e.paymentType}</span>
