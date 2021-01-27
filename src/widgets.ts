@@ -10,13 +10,16 @@ function loadExpAppWidget(keyAttribute: string, scriptPath: string): void {
   const mountPoints = document.querySelectorAll(keyAttribute);
 
   if (mountPoints.length > 0) {
+    let head = document.getElementsByTagName('HEAD')[0];
     let script = document.createElement("script");
     let styles = document.createElement("link");
+
     styles.rel = "stylesheet";
+    styles.type = 'text/css';
     styles.href = scriptPath.replace(".js", ".css");
 
     script.src = scriptPath;
-    document.head.appendChild(styles);
+    head.appendChild(styles);
     document.body.appendChild(script);
   }
 }
