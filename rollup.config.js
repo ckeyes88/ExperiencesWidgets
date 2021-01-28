@@ -33,6 +33,7 @@ export default [{
         ]
       }),
       nodeResolve({
+        jsnext: true, preferBuiltins: true, browser: true,
         extensions: ['.ts'],
       }),
       json(),
@@ -57,6 +58,8 @@ export default [{
     plugins: [
       replace({
         'process.env.NODE_ENV': process.env.NODE_ENV,
+        __ENV_NAME__: process.env.ENV_NAME,
+        __BASE_URL__: process.env.BASE_WIDGET_URL
       }),
       scss(),
       babel({
@@ -67,6 +70,7 @@ export default [{
         ]
       }),
       nodeResolve({
+        jsnext: true, preferBuiltins: true, browser: true,
         extensions: ['.ts', '.tsx'],
       }),
       json(),
@@ -90,6 +94,8 @@ export default [{
     plugins: [
       replace({
         'process.env.NODE_ENV': JSON.stringify('production'),
+        __ENV_NAME__: process.env.ENV_NAME,
+        __BASE_URL__: process.env.BASE_WIDGET_URL
       }),
       scss(),
       babel({
@@ -100,6 +106,7 @@ export default [{
         ]
       }),
       nodeResolve({
+        jsnext: true, preferBuiltins: true, browser: true,
         extensions: ['.ts', '.tsx'],
       }),
       json(),
@@ -123,6 +130,8 @@ export default [{
     plugins: [
       replace({
         'process.env.NODE_ENV': JSON.stringify('production'),
+        __ENV_NAME__: process.env.ENV_NAME,
+        __BASE_URL__: process.env.BASE_WIDGET_URL
       }),
       scss(),
       babel({
@@ -133,6 +142,7 @@ export default [{
         ]
       }),
       nodeResolve({
+        jsnext: true, preferBuiltins: true, browser: true,
         extensions: ['.ts', '.tsx'],
       }),
       json(),
