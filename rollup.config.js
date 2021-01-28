@@ -32,12 +32,9 @@ export default [{
           ')/**',
         ]
       }),
-      nodeResolve({
-        jsnext: true, preferBuiltins: true, browser: true,
-        extensions: ['.ts'],
-      }),
-      json(),
       typescript(),
+      nodeResolve({browser: true, preferBuiltins: true}),
+      json(),
 
       commonjs({
         include: 'node_modules/**',
@@ -69,12 +66,9 @@ export default [{
           ')/**',
         ]
       }),
-      nodeResolve({
-        jsnext: true, preferBuiltins: true, browser: true,
-        extensions: ['.ts', '.tsx'],
-      }),
-      json(),
       typescript(),
+      nodeResolve({browser: true, preferBuiltins: true}),
+      json(),
       commonjs({
         include: 'node_modules/**',
         namedExports: {
@@ -105,12 +99,9 @@ export default [{
           ')/**',
         ]
       }),
-      nodeResolve({
-        jsnext: true, preferBuiltins: true, browser: true,
-        extensions: ['.ts', '.tsx'],
-      }),
-      json(),
       typescript(),
+      nodeResolve({browser: true, preferBuiltins: true}),
+      json(),
       commonjs({
         include: 'node_modules/**',
         namedExports: {
@@ -141,12 +132,9 @@ export default [{
           ')/**',
         ]
       }),
-      nodeResolve({
-        jsnext: true, preferBuiltins: true, browser: true,
-        extensions: ['.ts', '.tsx'],
-      }),
-      json(),
       typescript(),
+      nodeResolve({browser: true, preferBuiltins: true}),
+      json(),
       commonjs({
         include: 'node_modules/**',
         namedExports: {
