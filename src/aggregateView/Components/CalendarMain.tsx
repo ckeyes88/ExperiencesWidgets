@@ -31,10 +31,6 @@ interface ICalendarContainerProps {
 interface ICalendarContainerState {
   view: string;
   daySelected?: Date;
-  dialogPosition: {
-    pageX: number;
-    pageY: number;
-  };
   events: CalendarEvent[];
   fullCalendarEvents: FullCalendarEvent[];
   daySelectedEvents: CalendarEvent[];
@@ -52,10 +48,6 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   state: ICalendarContainerState = {
     view: calendarViewType.dayGrid,
     events: [],
-    dialogPosition: {
-      pageX: 0,
-      pageY: 0,
-    },
     fullCalendarEvents: [],
     daySelected: null,
     daySelectedEvents: [],
@@ -123,10 +115,9 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     return <CalendarNoEventsMessage  onNextAvailableClick={this.navigateToNextAvailableTS} />;
   }
 
-  handleEventClick = ({ event: { _def, _instance }, jsEvent: { pageX, pageY }}: CalendarEventClick) => {
-    const dialogPosition = { pageX, pageY };
+  handleEventClick = ({ event: { _def, _instance }}: CalendarEventClick) => {
     const eventSelected = this.state.events.find(e => _def.extendedProps.uuid === e.uuid);
-    this.setState({ daySelected: _instance.range.start, daySelectedEvents: [eventSelected], dialogPosition });
+    this.setState({ daySelected: _instance.range.start, daySelectedEvents: [eventSelected] });
   }
 
   selectView = (view: string) => {
@@ -135,18 +126,17 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     this.setState({ view });
   }
 
-  handleMoreClick = ({ date, jsEvent: { pageX, pageY } }: DateClickEvent) => {
-    const dialogPosition = { pageX, pageY };
+  handleMoreClick = ({ date }: DateClickEvent) => {
     const earliest = new Date(date).getTime();
     const latest = new Date(date).setHours(23, 59, 59);
     const daySelectedEvents = this.state.events.filter(e => e.start.getTime() >= earliest && e.start.getTime() < latest);
-    this.setState({ daySelected: date, daySelectedEvents, dialogPosition });
+    this.setState({ daySelected: date, daySelectedEvents });
   }
 
   handleClose = () => this.setState({ daySelected: null });
 
   render() {
-    const { fullCalendarEvents, view, daySelected, daySelectedEvents, dialogPosition } = this.state;
+    const { fullCalendarEvents, view, daySelected, daySelectedEvents } = this.state;
     const titleFormat = window && window.innerWidth >= 1024 ? null : { month: "short", year: "numeric" };
 
     return (
@@ -155,7 +145,6 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
         <div className="AggregateCalendar-Main">
           <CalendarViewSelector view={view} selectView={this.selectView} />
           <CalendarDaySchedule
-            dialogPosition={dialogPosition}
             open={!!daySelected && !!daySelectedEvents.length}
             handleClose={this.handleClose}
             title={daySelected ? format(daySelected, "MMMM d, y") : ""}
