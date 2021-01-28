@@ -1,3 +1,4 @@
+import axios, { AxiosResponse } from "axios";
 import { Availability } from "../typings/Availability";
 import { Cart } from "../typings/Cart";
 import { CustomScripts } from "../typings/CustomScripts";
@@ -191,13 +192,13 @@ export type SdkLineItemInput = {
 /**
  * Generic function for mapping the responses from `sendJSON` and throw error if error present.
  */
-function handleResponse<Response>(response: HttpResponse<Response>) {
-  if (response.error) {
-    throw new Error(`(${response.error.errorType}) ${response.error.errorMessage}`);
-  } else {
-    return response.body;
-  }
-}
+// function handleResponse<Response>(response: HttpResponse<Response>) {
+//   if (response.error) {
+//     throw new Error(`(${response.error.errorType}) ${response.error.errorMessage}`);
+//   } else {
+//     return response.body;
+//   }
+// }
 
 /**
  * Generic function for creating XHR calls and handling the responses.
@@ -248,63 +249,63 @@ export function sendJSON<RequestBody, ResponseBody>(method: HttpMethod, url: str
  * Fetches the schedule pattern data for the product from our API.
  */
 export async function getProductFromScheduler({ baseUrl, shopId, productId }: GetProductFromSchedulerArgs): Promise<GetProductFromSchedulerResponse> {
-  const res = await sendJSON<GetProductFromSchedulerRequestBody, GetProductFromSchedulerResponse>("GET", `${baseUrl}/rest/schedule?shop=${shopId}&productId=${productId}`);
+  const res = await axios.get<GetProductFromSchedulerRequestBody, AxiosResponse<GetProductFromSchedulerResponse>>(`${baseUrl}/rest/schedule?shop=${shopId}&productId=${productId}`);
 
-  return handleResponse<GetProductFromSchedulerResponse>(res);
+  return res.data;
 }
 
 /**
  * Fetches the availability for a scheduler product from the API.
  */
 export async function getFirstAvailability({ baseUrl, shopId, productId, startingFrom, timespanInSeconds }: GetFirstAvailabilityArgs): Promise<FirstAvailability> {
-  const res = await sendJSON<GetFirstAvailabilityRequestBody, GetFirstAvailabilityResponse>("POST", `${baseUrl}/rest/firstAvailability?shop=${shopId}`, { productId, startingFrom, timespanInSeconds });
-
-  return handleResponse<GetFirstAvailabilityResponse>(res);
+  const res = await axios.post<GetFirstAvailabilityRequestBody, AxiosResponse<GetFirstAvailabilityResponse>>(`${baseUrl}/rest/firstAvailability?shop=${shopId}`, { productId, startingFrom, timespanInSeconds });
+  return res.data;
 }
 
 /**
  * Creates an order with the customer information
  */
 export async function createOrder({ baseUrl, shopId, order }: CreateOrderArgs): Promise<CreateOrderResponse> {
-  const res = await sendJSON<CreateOrderRequestBody, CreateOrderResponse>("POST", `${baseUrl}/rest/createOrder?shop=${shopId}`, { order });
+  const res = await axios.post<CreateOrderRequestBody, AxiosResponse<CreateOrderResponse>>(`${baseUrl}/rest/createOrder?shop=${shopId}`, { order });
 
-  return handleResponse<CreateOrderResponse>(res);
+  return res.data;
 }
 
 /**
  * Fetches data from remService in order to build the custom order details form
  */
 export async function getEvent({ baseUrl, shopId, shopifyProductId }: GetEventArgs): Promise<GetEventResponse> {
-  const res = await sendJSON<GetCustomFormRequestBody, GetEventResponse>("GET", `${baseUrl}/rest/event/?shop=${shopId}&productId=${shopifyProductId}`);
+  const res = await axios.get<GetCustomFormRequestBody, AxiosResponse<GetEventResponse>>(`${baseUrl}/rest/event/?shop=${shopId}&productId=${shopifyProductId}`);
 
-  return handleResponse<GetEventResponse>(res);
+  return res.data;
 }
 
 /**
  * Fetches custom event labels set in admin interface of an experience
  */
 export async function getEventCustomLabels({ baseUrl, shopId, shopifyProductId }: GetEventArgs): Promise<GetEventCustomLabelsResponse> {
-  const res = await sendJSON<GetCustomFormRequestBody, GetEventCustomLabelsResponse>("GET", `${baseUrl}/rest/event/custom-labels?productId=${shopifyProductId}&shop=${shopId}`);
+  const res = await axios.get<GetCustomFormRequestBody, AxiosResponse<GetEventCustomLabelsResponse>>(`${baseUrl}/rest/event/custom-labels?productId=${shopifyProductId}&shop=${shopId}`);
 
-  return handleResponse<GetEventCustomLabelsResponse>(res);
+  return res.data;
 }
 
 /**
  * Gets custom scripts
  */
 export async function getCustomScripts({ baseUrl, shopId }: GetCustomScriptsArgs): Promise<GetCustomScriptsResponse> {
-  const res = await sendJSON<GetCustomScriptsRequestBody, GetCustomScriptsResponse>("GET", `${baseUrl}/rest/shopSettings?shop=${shopId}&fields=customScripts&fields=trackingPixelUrl`);
+  const res = await axios.get<GetCustomScriptsRequestBody, AxiosResponse<GetCustomScriptsResponse>>(`${baseUrl}/rest/shopSettings?shop=${shopId}&fields=customScripts&fields=trackingPixelUrl`);
 
-  return handleResponse<GetCustomScriptsResponse>(res);
+  return res.data;
 }
 
 /**
  * Gets custom scripts
  */
 export async function getShopDetails({ baseUrl, shopId }: APIArguments): Promise<GetShopDetailsResponse> {
-  const res = await sendJSON<APIArguments, GetShopDetailsResponse>("GET", `${baseUrl}/rest/shop?shop=${shopId}`);
+  const res = await axios.get<APIArguments, AxiosResponse<GetShopDetailsResponse>>(`${baseUrl}/rest/shop?shop=${shopId}`);
+  //const res = await sendJSON<APIArguments, GetShopDetailsResponse>("GET", `${baseUrl}/rest/shop?shop=${shopId}`);
 
-  return handleResponse<GetShopDetailsResponse>(res);
+  return res.data;
 }
 
 /**
@@ -488,7 +489,8 @@ export async function addToCart(
       let count = 0;
       do {
         try {
-          await sendJSON<AddToCartRequestBody, AddToCartResponse>("POST", cartUrl, request);
+          await axios.post<AddToCartRequestBody, AxiosResponse<AddToCartResponse>>(cartUrl, request);
+          //await sendJSON<AddToCartRequestBody, AddToCartResponse>("POST", cartUrl, request);
           error = null;
         } catch (err) {
           error = err;
@@ -514,9 +516,10 @@ export async function addToCart(
  */
 export async function getCart(shopUrl?: string): Promise<GetCartResponse> {
   const cartUrl = "/cart.js";
-  const res = await sendJSON<GetCartRequestBody, GetCartResponse>("GET", cartUrl);
+  const res = await axios.post<GetCartRequestBody, AxiosResponse<GetCartResponse>>(cartUrl);
+  //const res = await sendJSON<GetCartRequestBody, GetCartResponse>("GET", cartUrl);
 
-  return handleResponse<GetCartResponse>(res);
+  return res.data;
 }
 
 type FetchProductsWithAvailabilityPayload = {
@@ -535,15 +538,12 @@ export async function fetchProductsWithAvailability(baseUrl: string, shop: strin
   // Set end date hours to end of day
   endDateClone.setHours(23, 59, 59, 999);
   // Make call for the good stuff
-  const res = await sendJSON<FetchProductsWithAvailabilityPayload, EventAvailability[]>(
-    "POST", 
+
+  const res = await axios.post<FetchProductsWithAvailabilityPayload, AxiosResponse<EventAvailability[]>>(
     `${baseUrl}/rest/productsAvailability?shop=${shop}`, 
     { startsAt, endsAt: endDateClone },
   );
-  // If error, throw
-  if (res.error) {
-    throw new Error(`(${res.error.errorType}) ${res.error.errorMessage}`);
-  } 
+
   // Return the good stuff
-  return res.body;
+  return res.data;
 }
