@@ -461,6 +461,10 @@ export class CalendarWidgetMain extends Component<
     index?: number,
   ) => {
     const { event, selectedTimeslot } = this.state;
+    const firstName: { value?: string, label?: string } = customFormFieldValues ? customFormFieldValues.find(({ label }) => label === "First Name") : {};
+    const lastName: { value?: string, label?: string } = customFormFieldValues ? customFormFieldValues.find(({ label }) => label === "Last Name") : {};
+    const name = (firstName.value || lastName.value) ? `${firstName ? firstName.value : ""} ${lastName ? lastName.value : ""}` : "N/A";
+    const email: { value?: string, label?: string } = customFormFieldValues ? customFormFieldValues.find(({ label }) => label === "Email") : {};
 
     const eventId = event._id.toString();
 
@@ -475,6 +479,14 @@ export class CalendarWidgetMain extends Component<
       timezone: selectedTimeslot.timezone,
       quantity: 1,
       customOrderDetailsValues: customFormFieldValues,
+      attendee: {
+        // @ts-ignore
+        checkedInAt: null,
+        info: {
+          name,
+          email: email ? email.value : "N/A",
+        },
+      },
     };
 
     let newLineItems = this.state.lineItems;
