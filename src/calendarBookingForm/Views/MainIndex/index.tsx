@@ -32,8 +32,13 @@ import { AvailabilityPage } from "../Availability/AvailabilityPage";
 import { ConfirmPage } from "../Confirmation/ConfirmPage";
 import { OrderDetailsPage } from "../OrderDetails/OrderDetailsPage";
 import "./CalendarWidgetMain.scss";
+import { FormField } from "../../../typings/CustomForm";
 
-
+enum CUSTOM_FIELDS_TO_SKIP {
+  firstName = "First Name",
+  lastName = "Last Name",
+  email = "Email",
+}
 
 /** 32 days expressed in seconds, used to fetch new availability */
 const TIMESPAN_IN_SECONDS = 32 * 24 * 60 * 60;
@@ -461,10 +466,18 @@ export class CalendarWidgetMain extends Component<
     index?: number,
   ) => {
     const { event, selectedTimeslot } = this.state;
-    const firstName: { value?: string, label?: string } = customFormFieldValues ? customFormFieldValues.find(({ label }) => label === "First Name") : {};
-    const lastName: { value?: string, label?: string } = customFormFieldValues ? customFormFieldValues.find(({ label }) => label === "Last Name") : {};
-    const name = (firstName.value || lastName.value) ? `${firstName ? firstName.value : ""} ${lastName ? lastName.value : ""}` : "N/A";
-    const email: { value?: string, label?: string } = customFormFieldValues ? customFormFieldValues.find(({ label }) => label === "Email") : {};
+    const firstName: Partial<FormField> = customFormFieldValues ?
+      customFormFieldValues.find(({ label }) => label === CUSTOM_FIELDS_TO_SKIP.firstName) : {};
+    const lastName: Partial<FormField> = customFormFieldValues ?
+      customFormFieldValues.find(({ label }) => label === CUSTOM_FIELDS_TO_SKIP.lastName) : {};
+    const name = ((firstName && firstName.value) || (lastName && lastName.value)) ?
+      `${firstName ? firstName.value : ""} ${lastName ? lastName.value : ""}` : "N/A";
+    const email: Partial<FormField> = customFormFieldValues ?
+      customFormFieldValues.find(({ label }) => label === CUSTOM_FIELDS_TO_SKIP.email) : {};
+
+    // remove attendee info from custom form fields
+    const filteredCustomFormFieldValues = customFormFieldValues ? customFormFieldValues.filter(({ label }) =>
+      !Object.values(CUSTOM_FIELDS_TO_SKIP).includes(label)) : undefined;
 
     const eventId = event._id.toString();
 
@@ -478,7 +491,7 @@ export class CalendarWidgetMain extends Component<
       endsAt: selectedTimeslot.endsAt,
       timezone: selectedTimeslot.timezone,
       quantity: 1,
-      customOrderDetailsValues: customFormFieldValues,
+      customOrderDetailsValues: filteredCustomFormFieldValues,
       attendee: {
         // @ts-ignore
         checkedInAt: null,
