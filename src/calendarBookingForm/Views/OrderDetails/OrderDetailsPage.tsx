@@ -180,21 +180,26 @@ export class OrderDetailsPage extends Component<
 
   /** Passed down to the custom form and triggered on changes to store the values in state */
   handleCustomFormChange = (fieldLabelIndex: string, fieldValue: string) => {
-    const defaultForm: FormFieldValueInput[] = this.props.event.customOrderDetails.fields.map(field => ({ label: field.label, value: field.defaultValue }));
+    const newCurrentCustomFormValues: FormFieldValueInput[] = this.props.event.customOrderDetails.fields.map(field => ({ ...field, value: field.defaultValue }));
 
     //Copy the current values to a new array
-    let currentCustomFormValues = defaultForm.concat(this.state.currentCustomFormValues);
+    this.state.currentCustomFormValues.forEach((v, i) => {
+      newCurrentCustomFormValues[i] = v;
+    });
+
     //fieldLabelIndex is the field label/name and its index position joined by a hyphen
     //Split the values apart here
     const [label, index] = fieldLabelIndex.split("-");
+
     //Create a new custom form value of type FormFieldValueInput
-    const newCustomFormValue = { label, value: fieldValue };
+    const oldVal = newCurrentCustomFormValues[parseInt(index)] || {};
+
     //Index into the form values array using the index from the field ID
-    currentCustomFormValues[parseInt(index)] = newCustomFormValue;
+    newCurrentCustomFormValues[parseInt(index)] = { ...oldVal, label, value: fieldValue };
 
     //Set state with the updated value
     this.setState({
-      currentCustomFormValues,
+      currentCustomFormValues: newCurrentCustomFormValues,
     });
   }
 
