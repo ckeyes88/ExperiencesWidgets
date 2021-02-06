@@ -50,6 +50,7 @@ export type CalendarEvent = {
   startEditable: boolean;
   durationEditable: boolean;
   resourceEditable: boolean;
+  pastEvent: boolean;
 };
 
 export type FullCalendarEvent = Partial<CalendarEvent>;

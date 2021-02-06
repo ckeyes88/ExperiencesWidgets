@@ -12,6 +12,7 @@ export interface ICalendarEventContent {
         paymentType?: string;
         price?: [string, number];
         uuid: string;
+        pastEvent: boolean;
       };
       title: string;
     };

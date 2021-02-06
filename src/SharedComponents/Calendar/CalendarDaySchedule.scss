@@ -64,6 +64,14 @@ dialog[open] {
     width    : 100%;
     height   : 3em;
   }
+
+  a.PastEvent {
+    pointer-events: none;
+
+    .Calendar-Day-Event .EventDescription {
+      color: $color-gray-disabled;
+    }
+  }
 }
 
 .Calendar-Day-Event {

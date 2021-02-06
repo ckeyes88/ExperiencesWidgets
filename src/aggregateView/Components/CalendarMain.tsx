@@ -34,8 +34,8 @@ interface ICalendarContainerState {
   events: CalendarEvent[];
   fullCalendarEvents: FullCalendarEvent[];
   daySelectedEvents: CalendarEvent[];
-  end: Date; // tracks current date of next and prev updates
-  eventsFetchedUntil: Date; // tracks current end date of events fetched
+  start: Date; // tracks current start date of next and prev updates
+  end: Date; // tracks current end date of next and prev updates
 }
 
 const eventRendererViewMap = {
@@ -51,8 +51,8 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     fullCalendarEvents: [],
     daySelected: null,
     daySelectedEvents: [],
-    end: addDays(30)(new Date()),
-    eventsFetchedUntil: addDays(30)(new Date()),
+    start: subDays(30)(new Date()),
+    end: addDays(60)(new Date()),
   };
 
   async componentDidMount() {
@@ -78,27 +78,26 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   }
 
   handlePrevClick = async () => {
-    const { view, end } = this.state;
+    const { view, start, end } = this.state;
     const decrement = view === calendarViewType.dayGrid ? 30 : 7;
     const newEnd = subDays(decrement)(end);
+    const newStart = subDays(decrement)(start);
     if (isAfter(newEnd, end)) {
       this.setState({ end: newEnd });
     }
+    this.fetchEvents(newStart, end);
+    this.setState({ start: newStart });
   }
 
   handleNextClick = async () => {
-    const { view, end, eventsFetchedUntil } = this.state;
+    const { view, start, end } = this.state;
     const increment = view === calendarViewType.dayGrid ? 30 : 7;
     const newEnd = addDays(increment)(end);
-    if (newEnd > eventsFetchedUntil) { // only fetch new events if new date is not covered by events lust
-      this.fetchEvents(undefined, newEnd);
-      this.setState({ end: newEnd, eventsFetchedUntil: newEnd });
-    } else {
-      this.setState({ end: newEnd });
-    }
+    this.fetchEvents(start, newEnd);
+    this.setState({ end: newEnd });
   }
 
-  fetchEvents = async (start = new Date(), end = this.state.end) => {
+  fetchEvents = async (start = this.state.start, end = this.state.end) => {
     const { baseUrl, shopUrl } = this.props;
     const eventsResponse = await fetchProductsWithAvailability(baseUrl, shopUrl, start, end);
     const { calendarEvents: events, fullCalendarEvents } = extractAndParseEvents(eventsResponse, shopUrl, baseUrl);

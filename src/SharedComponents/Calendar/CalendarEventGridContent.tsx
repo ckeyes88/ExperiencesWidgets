@@ -8,7 +8,7 @@ export const CalendarEventGridContent = ({ event: { _def, start } }: ICalendarEv
     <div className="Calendar-EventGrid-Details">
       <div className="EventDescription">
         <span>{format(start, "h:mmaaaaa")}</span>
-        <span>
+        <span className={`${_def.extendedProps.pastEvent ? "PastEvent" : ""}`}>
           <strong>
             {_def.title}
           </strong>
