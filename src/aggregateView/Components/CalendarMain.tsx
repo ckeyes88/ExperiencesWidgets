@@ -150,6 +150,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
             events={daySelectedEvents}
           />
           <Calendar
+            showNonCurrentDates={false}
             dayMaxEventRows={4}
             eventClick={this.handleEventClick}
             forwardRef={this.calendarRef}

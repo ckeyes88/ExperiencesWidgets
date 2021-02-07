@@ -33,6 +33,7 @@ export interface ICalendarProps {
   noEventsContent: JSX.Element;
   customButtons?: any;
   headerToolbar?: any;
+  showNonCurrentDates?: boolean;
 }
 
 export type CalendarEvent = {
@@ -71,6 +72,7 @@ export class Calendar extends Component<ICalendarProps, any> {
       moreLinkClick,
       customButtons,
       headerToolbar,
+      showNonCurrentDates,
     } = this.props;
 
     const FullCalendarCast = FullCalendar as unknown;
@@ -78,6 +80,7 @@ export class Calendar extends Component<ICalendarProps, any> {
 
     return (
       <FullCalendarAsComponent
+        showNonCurrentDates={showNonCurrentDates}
         plugins={[dayGridPlugin, listPlugin, interactionPlugin]}
         initialView={view}
         events={events}
