@@ -6,7 +6,7 @@ export const CalendarEventListContent = ({ event: { _def } }: ICalendarEventCont
   const { extendedProps: e } = _def;
 
   return (
-    <a href={e.customUrl} className="Calendar-Event-Link">
+    <a href={e.customUrl} className={`Calendar-Event-Link ${e.pastEvent ? "PastEvent" : ""}`}>
       <div className="Calendar-EventList-Details">
         <div className="FeaturedImage">
           <img src={e.imageUrl as string} alt="Event featured image" />

@@ -1,3 +1,5 @@
+@import "../../sass/variables";
+
 .Calendar-EventGrid-Details {
   margin-left: .3rem;
 
@@ -7,5 +9,10 @@
     span:first-of-type {
       margin-right: .3rem;
     }
+  }
+
+  .PastEvent {
+    pointer-events: none;
+    color: $color-gray-disabled;
   }
 }

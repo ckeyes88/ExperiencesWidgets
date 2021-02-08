@@ -1,3 +1,5 @@
+@import "../../sass/variables";
+
 .Calendar-EventList-Details {
   display: flex;
   align-content: center;
@@ -33,6 +35,17 @@
 
     div:first-child {
       font-weight: 700;
+    }
+  }
+}
+
+.Calendar-Event-Link {
+  &.PastEvent {
+    pointer-events: none;
+    color: $color-gray-disabled;
+
+    .EventDescription {
+      color: $color-gray-disabled;
     }
   }
 }

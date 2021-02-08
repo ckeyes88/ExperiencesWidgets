@@ -212,4 +212,8 @@ $button-disabled: #999B9E;
     a.fc-daygrid-more-link {
         border-bottom: none;
     }
+
+    td.fc-daygrid-day.fc-day.fc-day-disabled {
+        background: white;
+    }
 }

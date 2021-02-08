@@ -1,4 +1,4 @@
-import { parseISO } from "date-fns";
+import { parseISO, isBefore } from "date-fns";
 import moment from "moment-timezone";
 import { FirstAvailability } from "../typings/FirstAvailability";
 import { Availability } from "../typings/Availability";
@@ -402,6 +402,7 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
       const event = { title: e.name };
       e.availabilityProducts && e.availabilityProducts.forEach((p) => {
         p.availableTimeslots && p.availableTimeslots.forEach((ts: Availability, i: number) => {
+          const pastEvent = isBefore(new Date(ts.startsAt), new Date());
           const startAtLocationTZ = moment(ts.startsAt).tz(ts.timezone);
           let calendarEvent = {
             ...event,
@@ -409,7 +410,7 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
             uuid: makeid(),
             id: `${i}-${ts.productId}`,
             start: parseISO(ts.formattedTimeslot.isoWithoutTZ),
-            customUrl: `https://${storeUrl}/products/${e.handle}?select=${startAtLocationTZ.unix()}`,
+            customUrl: pastEvent ? "#" : `https://${storeUrl}/products/${e.handle}?select=${startAtLocationTZ.unix()}`,
             imageUrl: resolveImageUrl(baseUrl, e.images, e.imageLinks),
             paymentType: e.paymentType,
             price: findCheapestVariantPrice(e.variants),
@@ -417,6 +418,7 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
             startEditable: false,
             durationEditable: false,
             resourceEditable: false,
+            pastEvent,
           };
           calendarEvents.push(calendarEvent);
           let fullCalendarEvent = { ...calendarEvent };
