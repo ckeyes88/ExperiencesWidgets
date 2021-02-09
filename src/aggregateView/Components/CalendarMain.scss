@@ -214,8 +214,11 @@ $button-disabled: #999B9E;
         padding: 28px 14px;
     }
 
-    a.fc-daygrid-more-link {
-        border-bottom: none;
+    div.fc-daygrid-day-bottom {
+        a.fc-daygrid-more-link {
+            border-bottom: none;
+            font-size: 12.75px;
+        }
     }
 
     td.fc-daygrid-day.fc-day.fc-day-disabled {
