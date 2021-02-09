@@ -9,6 +9,10 @@ $button-disabled: #999B9E;
 .CalendarAggregate-Container {
     margin: 0 -10%;
     font-family: "Avenir-Book", "Nunito Sans", serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
     @include Tablet {
         margin: unset;
@@ -37,6 +41,7 @@ $button-disabled: #999B9E;
 }
 
 .AggregateCalendar-Main {
+    width: 100%;
     padding: 1.5rem 0;
     border: 1px solid #dedede;
     border-radius: 5px;
@@ -209,8 +214,11 @@ $button-disabled: #999B9E;
         padding: 28px 14px;
     }
 
-    a.fc-daygrid-more-link {
-        border-bottom: none;
+    div.fc-daygrid-day-bottom {
+        a.fc-daygrid-more-link {
+            border-bottom: none;
+            font-size: 12.75px;
+        }
     }
 
     td.fc-daygrid-day.fc-day.fc-day-disabled {
