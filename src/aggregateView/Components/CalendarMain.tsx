@@ -16,6 +16,7 @@ import { CalendarEventGridContent } from "../../SharedComponents/Calendar/Calend
 import { CalendarDaySchedule } from "../../SharedComponents/Calendar/CalendarDaySchedule";
 import { CalendarEventClick, DateClickEvent } from "../../typings/Calendar";
 import { CalendarNoEventsMessage } from "../../SharedComponents/Calendar/CalendarNoEventsMessage";
+import { Loading } from "../../SharedComponents/loading/Loading";
 
 interface ICalendarContainerProps {
   aggregateViewBaseUrl?: string;
@@ -36,6 +37,7 @@ interface ICalendarContainerState {
   daySelectedEvents: CalendarEvent[];
   start: Date; // tracks current start date of next and prev updates
   end: Date; // tracks current end date of next and prev updates
+  loading: boolean;
 }
 
 const eventRendererViewMap = {
@@ -53,6 +55,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     daySelectedEvents: [],
     start: subDays(30)(new Date()),
     end: addDays(60)(new Date()),
+    loading: false,
   };
 
   async componentDidMount() {
@@ -99,9 +102,10 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
 
   fetchEvents = async (start = this.state.start, end = this.state.end) => {
     const { baseUrl, shopUrl } = this.props;
+    this.setState({ loading: true });
     const eventsResponse = await fetchProductsWithAvailability(baseUrl, shopUrl, start, end);
     const { calendarEvents: events, fullCalendarEvents } = extractAndParseEvents(eventsResponse, shopUrl, baseUrl);
-    this.setState({ events, fullCalendarEvents });
+    this.setState({ events, fullCalendarEvents, loading: false });
   }
 
   navigateToNextAvailableTS = () => {
@@ -135,11 +139,17 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   handleClose = () => this.setState({ daySelected: null });
 
   render() {
-    const { fullCalendarEvents, view, daySelected, daySelectedEvents } = this.state;
+    const { fullCalendarEvents, view, daySelected, daySelectedEvents, loading } = this.state;
     const titleFormat = window && window.innerWidth >= 1024 ? null : { month: "short", year: "numeric" };
 
     return (
       <div className="CalendarAggregate-Container">
+        {loading && <Loading
+          customStyles={{
+            position: "absolute",
+            zIndex: 1000,
+          }}
+        />}
         <div className="main-heading">Events Calendar</div>
         <div className="AggregateCalendar-Main">
           <CalendarViewSelector view={view} selectView={this.selectView} />
