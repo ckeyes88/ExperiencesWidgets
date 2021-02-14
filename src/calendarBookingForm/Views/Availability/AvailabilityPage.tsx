@@ -9,7 +9,7 @@ import { EventDBO, EventVariantDBO } from "../../../typings/Event";
 import { FirstAvailability } from "../../../typings/FirstAvailability";
 import { getTimeslotsByDate } from "../../../Utils/helpers";
 import { AppDictionary } from "../../../typings/Languages";
-import CloseIcon from "../../../SharedComponents/Icons/CloseIcon";
+import { CloseIcon } from "../../../SharedComponents/Icons/CloseIcon";
 import { Weekdays } from "../../../Utils/Constants";
 
 export interface IAvailabilityPageProps {
