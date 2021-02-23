@@ -10,11 +10,15 @@
     "noUnusedLocals": true,
     "jsx": "react",
     "jsxFactory": "h",
-    "lib": ["DOM",
+    "lib": [
+      "DOM",
+      "es6",
       "es2015",
       "es2016",
       "es2017",
-      "es2018"
+      "es2018",
+      "es2019",
+      "es2020"
     ],
   },
   "include": [
