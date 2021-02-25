@@ -3,7 +3,7 @@ import { addDays, isAfter, subDays } from "date-fns/fp";
 import { format } from "date-fns";
 import { Component, createRef, h } from "preact";
 import { CalendarViewSelector } from "../../SharedComponents/Calendar/CalendarViewSelector";
-import { fetchProductsWithAvailability, getCustomScripts } from "../../Utils/api";
+import { fetchProductsWithAvailability, getCustomScripts, getEventCustomLabels } from "../../Utils/api";
 import {
   Calendar,
   CalendarEvent,
@@ -18,6 +18,7 @@ import { CalendarEventClick, DateClickEvent } from "../../typings/Calendar";
 import { CalendarNoEventsMessage } from "../../SharedComponents/Calendar/CalendarNoEventsMessage";
 import { Loading } from "../../SharedComponents/loading/Loading";
 import { Weekdays } from "../../Utils/Constants";
+import { AppDictionary, defineLanguageDictionary, LanguageCodes, localeMap } from "../../typings/Languages";
 
 interface ICalendarContainerProps {
   aggregateViewBaseUrl?: string;
@@ -40,6 +41,7 @@ interface ICalendarContainerState {
   end: Date; // tracks current end date of next and prev updates
   loading: boolean;
   weekStartsOn: Weekdays;
+  labels: Partial<AppDictionary>;
 }
 
 const eventRendererViewMap = {
@@ -59,6 +61,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     end: addDays(60)(new Date()),
     loading: false,
     weekStartsOn: Weekdays.Monday,
+    labels: {},
   };
 
   async componentDidMount() {
@@ -120,6 +123,16 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     this.setState({ events, fullCalendarEvents, loading: false });
   }
 
+  fetchLabels = async (baseUrl: string, shopId: string, shopifyProductId: number) => {
+    const { languageCode } = this.props;
+    // fetch custom event labels
+    const labels = await getEventCustomLabels({ baseUrl, shopId: shopId, shopifyProductId });
+    const labelsResolved = labels && labels.data ?
+      { ...defineLanguageDictionary(languageCode as LanguageCodes), ...labels.data } :
+      defineLanguageDictionary(languageCode as LanguageCodes);
+    this.setState({ labels: labelsResolved });
+  }
+
   navigateToNextAvailableTS = () => {
     const earliestAvailableEventDate = Math.min(...this.state.events.map(e => e.start.getTime()));
     const calendarApi = this.calendarRef.current.getApi();
@@ -127,7 +140,14 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   }
 
   renderCalendarNoEventsMessage = () => {
-    return <CalendarNoEventsMessage  onNextAvailableClick={this.navigateToNextAvailableTS} />;
+    const { labels } = this.state;
+    return (
+      <CalendarNoEventsMessage
+        message={labels.nothingIsAvailableTodayLabel}
+        nextAvailableLabel={labels.goToNextAvailableLabel}
+        onNextAvailableClick={this.navigateToNextAvailableTS}
+      />
+    );
   }
 
   handleEventClick = ({ event: { _def, _instance }}: CalendarEventClick) => {
@@ -151,7 +171,8 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   handleClose = () => this.setState({ daySelected: null });
 
   render() {
-    const { fullCalendarEvents, view, daySelected, daySelectedEvents, loading, weekStartsOn } = this.state;
+    const { languageCode } = this.props;
+    const { fullCalendarEvents, view, daySelected, daySelectedEvents, loading, weekStartsOn, labels } = this.state;
     const titleFormat = window && window.innerWidth >= 1024 ? null : { month: "short", year: "numeric" };
 
     return (
@@ -164,14 +185,16 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
         />}
         <div className="main-heading">Events Calendar</div>
         <div className="AggregateCalendar-Main">
-          <CalendarViewSelector view={view} selectView={this.selectView} />
+          <CalendarViewSelector labels={labels} view={view} selectView={this.selectView} />
           <CalendarDaySchedule
             open={!!daySelected && !!daySelectedEvents.length}
             handleClose={this.handleClose}
-            title={daySelected ? format(daySelected, "MMMM d, y") : ""}
+            title={daySelected ? format(daySelected, "MMMM d, y", { locale: localeMap[languageCode] }) : ""}
             events={daySelectedEvents}
           />
           <Calendar
+            buttonText={{ today: labels.today }}
+            languageCode={languageCode as LanguageCodes}
             firstDay={weekStartsOn}
             showNonCurrentDates={false}
             dayMaxEventRows={4}

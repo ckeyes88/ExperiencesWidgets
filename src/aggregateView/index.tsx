@@ -14,11 +14,16 @@ mountComponent({
       throw new Error("You must specify the [data-expapp-shop-url] attribute for this widget to load");
     }
 
+    if (!data.aggregateViewProductId) {
+      throw new Error("You must specify a product id for this widget to work");
+    }
+
     return { 
         ...data, 
         defaultVew: data.aggregateViewDefaultView,
         baseUrl: data.aggregateViewBaseUrl, 
-        shopUrl: data.aggregateViewShopUrl, 
+        shopUrl: data.aggregateViewShopUrl,
+        shopifyProductId: parseInt(data.aggregateViewProductId),
         languageCode: data.aggregateViewLanguageCode || "en-US",
     };
   },
