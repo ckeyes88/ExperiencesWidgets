@@ -30,8 +30,9 @@
     &__ModalContentBoxOrderDetails {
         max-width: 800px;
         max-height: 600px;
+        min-height: 300px;
         border-bottom: 3rem solid white;
-        height: auto;  
+        height: auto;
     }
     &__ModalContentBox {
       max-width: 800px;
