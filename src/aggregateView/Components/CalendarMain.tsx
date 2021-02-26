@@ -163,7 +163,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
           }}
         />}
         <div className="main-heading">Events Calendar</div>
-        <div className="AggregateCalendar-Main">
+        <div id="AggregateCalendar-Main" className="AggregateCalendar-Main">
           <CalendarViewSelector view={view} selectView={this.selectView} />
           <CalendarDaySchedule
             open={!!daySelected && !!daySelectedEvents.length}
