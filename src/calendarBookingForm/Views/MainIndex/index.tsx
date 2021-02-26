@@ -11,7 +11,11 @@ import { CustomerInputData } from "../../../typings/CustomerInput";
 import { EventDBO, EventVariantDBO, PaymentType } from "../../../typings/Event";
 import { FirstAvailability } from "../../../typings/FirstAvailability";
 import { FormFieldValueInput } from "../../../typings/FormFieldValueInput";
-import { AppDictionary, defineLanguageDictionary, LanguageCodes } from "../../../typings/Languages";
+import {
+  AppDictionary,
+  defineLanguageDictionary,
+  LanguageCodes,
+} from "../../../typings/Languages";
 import { OrderLineItemInputData } from "../../../typings/OrderLineItemInput";
 import { ShopDetails } from "../../../typings/ShopDetails";
 import {
@@ -25,7 +29,10 @@ import {
   getFirstAvailability,
   getShopDetails,
 } from "../../../Utils/api";
-import { getFirstDayAvailabilities, getTimeslotsByDate } from "../../../Utils/helpers";
+import {
+  getFirstDayAvailabilities,
+  getTimeslotsByDate,
+} from "../../../Utils/helpers";
 import { unionAvailability } from "../../../Utils/mergeAvailability";
 import { ModalStateEnum } from "../../types";
 import { NotFound } from "../404/NotFound";
@@ -147,9 +154,10 @@ export class CalendarWidgetMain extends Component<
     const date = getQueryVariable("select");
     const ms = +date;
     const selectedDate = isNaN(ms) ? new Date() : fromUnixTime(ms);
-    const availabilityRangeEnd = (Date.now() + ms * 1000) > (Date.now() + TIMESPAN_IN_SECONDS * 1000) ? 
-      (selectedDate.getTime() / 1000) + (TIMESPAN_IN_SECONDS * 2) : 
-      TIMESPAN_IN_SECONDS * 2;
+    const availabilityRangeEnd =
+      Date.now() + ms * 1000 > Date.now() + TIMESPAN_IN_SECONDS * 1000
+        ? selectedDate.getTime() / 1000 + TIMESPAN_IN_SECONDS * 2
+        : TIMESPAN_IN_SECONDS * 2;
 
     try {
       // fetch everything in parallel to improve loading time
@@ -164,10 +172,7 @@ export class CalendarWidgetMain extends Component<
         getEvent({ baseUrl, shopId: shopUrl, shopifyProductId }),
 
         // get availability for the current month and the next
-        this.fetchRangeOfAvailability(
-          this.state.now,
-          availabilityRangeEnd,
-        ),
+        this.fetchRangeOfAvailability(this.state.now, availabilityRangeEnd),
 
         getCustomScripts({ baseUrl, shopId: shopUrl }),
       ]);
@@ -175,39 +180,53 @@ export class CalendarWidgetMain extends Component<
       //add next month to the fetched month state
       this.addFetchedMonth(
         this.state.now.getMonth() + 1,
-        this.state.now.getFullYear(),
+        this.state.now.getFullYear()
       );
       //capture the first day with availability
       const firstAvailable = getFirstDayAvailabilities(availability);
-      
-      const labelsResolved = labels && labels.data ? 
-        { ...defineLanguageDictionary(languageCode as LanguageCodes), ...labels.data } : 
-        defineLanguageDictionary(languageCode as LanguageCodes);
 
-      const selectedDateTimeslots = date ? getTimeslotsByDate(availability, selectedDate) : [];
-      const selectedTimeslot = selectedDateTimeslots.find(ts => (new Date(ts.startsAt)).getTime() === +date * 1000) || null;
+      const labelsResolved =
+        labels && labels.data
+          ? {
+              ...defineLanguageDictionary(languageCode as LanguageCodes),
+              ...labels.data,
+            }
+          : defineLanguageDictionary(languageCode as LanguageCodes);
 
-      const weekStartsOn = settings.weekStartsOn !== undefined ?
-        settings.weekStartsOn as Weekdays :
-        Weekdays.Monday;
+      const selectedDateTimeslots = date
+        ? getTimeslotsByDate(availability, selectedDate)
+        : [];
+      const selectedTimeslot =
+        selectedDateTimeslots.find(
+          (ts) => new Date(ts.startsAt).getTime() === +date * 1000
+        ) || null;
+
+      const weekStartsOn =
+        settings.weekStartsOn !== undefined
+          ? (settings.weekStartsOn as Weekdays)
+          : Weekdays.Monday;
 
       //set state with the fetched values
-      this.setState({
-        shop,
-        event: event && event.data,
-        labels: labelsResolved,
-        error: "",
-        availability,
-        firstAvailable: firstAvailable[0] && new Date(firstAvailable[0].startsAt),
-        loading: false,
-        selectedDate,
-        showModal: !!date,
-        weekStartsOn,
-      }, () => {
-        if (selectedTimeslot) {
-          this.handleSelectTimeSlot(selectedTimeslot);
+      this.setState(
+        {
+          shop,
+          event: event && event.data,
+          labels: labelsResolved,
+          error: "",
+          availability,
+          firstAvailable:
+            firstAvailable[0] && new Date(firstAvailable[0].startsAt),
+          loading: false,
+          selectedDate,
+          showModal: !!date,
+          weekStartsOn,
+        },
+        () => {
+          if (selectedTimeslot) {
+            this.handleSelectTimeSlot(selectedTimeslot);
+          }
         }
-      });
+      );
     } catch (err) {
       this.setState({
         error: err,
@@ -250,7 +269,7 @@ export class CalendarWidgetMain extends Component<
    */
   fetchRangeOfAvailability = async (
     date: Date,
-    timespanInSeconds = TIMESPAN_IN_SECONDS,
+    timespanInSeconds = TIMESPAN_IN_SECONDS
   ) => {
     const { baseUrl, shopUrl, shopifyProductId } = this.props;
     return getFirstAvailability({
@@ -260,7 +279,7 @@ export class CalendarWidgetMain extends Component<
       startingFrom: date,
       timespanInSeconds,
     });
-  }
+  };
 
   /**
    * On navigation to a new month or year, this method is called to fetch more availability and add it to the current availability in state.
@@ -277,7 +296,9 @@ export class CalendarWidgetMain extends Component<
 
       //if the current date is mid-month, only fetch beginning from the current date
       if (this.state.now.getTime() >= date.getTime()) {
-        fetchedAvailability = await this.fetchRangeOfAvailability(this.state.now);
+        fetchedAvailability = await this.fetchRangeOfAvailability(
+          this.state.now
+        );
         //else fetch from the date passed in (i.e. the first of the month)
       } else {
         fetchedAvailability = await this.fetchRangeOfAvailability(date);
@@ -286,7 +307,7 @@ export class CalendarWidgetMain extends Component<
       //merge the fetched availability with the previously fetched availability in state
       const newAvailability = unionAvailability(
         this.state.availability,
-        fetchedAvailability,
+        fetchedAvailability
       );
 
       this.setState({
@@ -296,20 +317,20 @@ export class CalendarWidgetMain extends Component<
       //remember that this month has already been fetched
       this.addFetchedMonth(month, year);
     }
-  }
+  };
 
   /** Sets the top-level loading state to true */
   setLoading = () => {
     //calls out to api
     this.setState({ loading: true, error: "" });
-  }
+  };
 
   /** Sets the showModal state slice to true, displaying the modal */
   openModal = () => {
     this.setState({
       showModal: true,
     });
-  }
+  };
 
   /** Sets the showModal state slice to false, and returns the component to its initial state */
   closeModal = () => {
@@ -325,18 +346,18 @@ export class CalendarWidgetMain extends Component<
       lineItems: [],
       customerInfo: null,
     });
-  }
+  };
 
   /** Pass in a valid modal state to dictate the modal's current content */
   navigateTo = (modalState: ModalStateEnum) => {
     this.setState({
       modalState,
     });
-  }
+  };
   /** On click fires the first available event */
   handleSelectFirstAvailability = () => {
     this.handleDateSelect(this.state.firstAvailable);
-  }
+  };
 
   /**
    * Redirects client to checkout URL (ie: cart page if within realm of Shopify). Takes
@@ -344,7 +365,7 @@ export class CalendarWidgetMain extends Component<
    */
   private handleNavigateToCheckout = (url?: string) => {
     window.location.href = url || "/cart";
-  }
+  };
 
   /** Sets up the order and either sends confirmation email OR adds the order to the cart */
   private handleConfirmOrder = async () => {
@@ -373,11 +394,22 @@ export class CalendarWidgetMain extends Component<
         });
       }
 
+      //Parse fields in custom order form, if they exist.
+      let fields: FormFieldValueInput[] = [].concat(
+        ...this.state.lineItems.map((lineItem) => {
+          return lineItem.customOrderDetailsValues.map((det) => ({
+            label: det.label,
+            value: det.value,
+          }));
+        })
+      );
+
       // Define order object
       const order: AddToCartArgs = {
         variants: shopifyVariants,
         timeslot: selectedTimeslot,
         quantities: quantitiesMap,
+        fields: fields.length > 0 ? fields : undefined,
         shopUrl: this.props.shopUrl,
       };
 
@@ -392,7 +424,7 @@ export class CalendarWidgetMain extends Component<
         this.setState({ loading: false });
         console.error(e);
       }
-    // The order is *NOT* prepay, so it should be created in our system
+      // The order is *NOT* prepay, so it should be created in our system
     } else {
       const { customerInfo, lineItems } = this.state;
       const { baseUrl, shopUrl } = this.props;
@@ -412,9 +444,9 @@ export class CalendarWidgetMain extends Component<
       //create the order
       try {
         await createOrder(orderArgs);
-      } catch(error) {
+      } catch (error) {
         this.setState({
-          error: "Invalid email address", 
+          error: "Invalid email address",
           modalState: ModalStateEnum.OrderDetails,
           customerInfo: null,
           lineItems: [],
@@ -424,7 +456,7 @@ export class CalendarWidgetMain extends Component<
       //reset loading to false and navigate to the confirmation page
       this.setState({ loading: false });
     }
-  }
+  };
 
   /** makes sure to set state to selected date */
   handleDateSelect = (date: Date) => {
@@ -432,7 +464,7 @@ export class CalendarWidgetMain extends Component<
       selectedDate: date,
       selectedTimeslot: null,
     });
-  }
+  };
 
   /** Called when the user selects a timeslot
    * Stores the timeslot in state and sets the initial quantities per variant to zero
@@ -449,14 +481,14 @@ export class CalendarWidgetMain extends Component<
       selectedTimeslot: timeslot,
       quantitiesMap: quantities,
     });
-  }
+  };
 
   /** Triggered when the user increments or decrements the quantity for a single variant */
   handleChangeQuantity = (dir: number, variantId: number) => {
     let newQuantities = this.state.quantitiesMap;
     newQuantities[variantId] += dir;
     this.setState({ quantitiesMap: newQuantities });
-  }
+  };
 
   /** Triggered upon clicking the back button displayed on the date picker when a timeslot is selected
    * Deselects the timeslot by setting the timeslot to null in state
@@ -465,31 +497,47 @@ export class CalendarWidgetMain extends Component<
     this.setState({
       selectedTimeslot: null,
     });
-  }
+  };
   /** Triggered upon clicking the back button in the conformation view will display the selected time slot */
   handleConfirmationClickBack = () => {
     this.navigateTo(ModalStateEnum.Availability);
-  }
+  };
 
   /** Creates an order line item  */
   handleAddLineItem = (
     variant: EventVariantDBO,
     customFormFieldValues?: FormFieldValueInput[],
-    index?: number,
+    index?: number
   ) => {
     const { event, selectedTimeslot } = this.state;
-    const firstName: Partial<FormField> = customFormFieldValues ?
-      customFormFieldValues.find(({ label }) => label === CUSTOM_FIELDS_TO_SKIP.firstName) : {};
-    const lastName: Partial<FormField> = customFormFieldValues ?
-      customFormFieldValues.find(({ label }) => label === CUSTOM_FIELDS_TO_SKIP.lastName) : {};
-    const name = ((firstName && firstName.value) || (lastName && lastName.value)) ?
-      `${firstName ? firstName.value : ""} ${lastName ? lastName.value : ""}` : "N/A";
-    const email: Partial<FormField> = customFormFieldValues ?
-      customFormFieldValues.find(({ label }) => label === CUSTOM_FIELDS_TO_SKIP.email) : {};
+    const firstName: Partial<FormField> = customFormFieldValues
+      ? customFormFieldValues.find(
+          ({ label }) => label === CUSTOM_FIELDS_TO_SKIP.firstName
+        )
+      : {};
+    const lastName: Partial<FormField> = customFormFieldValues
+      ? customFormFieldValues.find(
+          ({ label }) => label === CUSTOM_FIELDS_TO_SKIP.lastName
+        )
+      : {};
+    const name =
+      (firstName && firstName.value) || (lastName && lastName.value)
+        ? `${firstName ? firstName.value : ""} ${
+            lastName ? lastName.value : ""
+          }`
+        : "N/A";
+    const email: Partial<FormField> = customFormFieldValues
+      ? customFormFieldValues.find(
+          ({ label }) => label === CUSTOM_FIELDS_TO_SKIP.email
+        )
+      : {};
 
     // remove attendee info from custom form fields
-    const filteredCustomFormFieldValues = customFormFieldValues ? customFormFieldValues.filter(({ label }) =>
-      !Object.values(CUSTOM_FIELDS_TO_SKIP).includes(label)) : undefined;
+    const filteredCustomFormFieldValues = customFormFieldValues
+      ? customFormFieldValues.filter(
+          ({ label }) => !Object.values(CUSTOM_FIELDS_TO_SKIP).includes(label)
+        )
+      : undefined;
 
     const eventId = event._id.toString();
 
@@ -522,20 +570,30 @@ export class CalendarWidgetMain extends Component<
       // otherwise, add it
       newLineItems.push(newLineItem);
     }
-    
-    return new Promise((resolve) => this.setState({
-      lineItems: newLineItems,
-    }, resolve));
-  }
+
+    return new Promise((resolve) =>
+      this.setState(
+        {
+          lineItems: newLineItems,
+        },
+        resolve
+      )
+    );
+  };
 
   /** If an event is not prepay, this is triggered when the user enters their name and email
    * This happens in the OrderDetailsPage view
    */
   handleAddCustomerInfo = (customer: CustomerInputData) => {
-    return new Promise((resolve) => this.setState({
-      customerInfo: customer,
-    }, resolve));
-  }
+    return new Promise((resolve) =>
+      this.setState(
+        {
+          customerInfo: customer,
+        },
+        resolve
+      )
+    );
+  };
 
   /** This is triggered when the user confirms their desired date, timeslot, and variant quantities */
   handleConfirmVariants = () => {
@@ -557,7 +615,7 @@ export class CalendarWidgetMain extends Component<
     } else {
       this.handleConfirmOrder();
     }
-  }
+  };
 
   /** Determine content of the loading view */
   renderLoading = () => {
@@ -571,15 +629,16 @@ export class CalendarWidgetMain extends Component<
     return (
       <div className="Loading-Container">
         <Loading>
-          {(this.state.modalState === ModalStateEnum.ConfirmPage && Array.isArray(lineItems) && lineItems[0]) ? 
-          (
+          {this.state.modalState === ModalStateEnum.ConfirmPage &&
+          Array.isArray(lineItems) &&
+          lineItems[0] ? (
             <React.Fragment>
               <span className="Loading-ReserveSpot">
-                Reserving {lineItems.length} spot{lineItems.length > 1 && "s"} for{" "}
+                Reserving {lineItems.length} spot{lineItems.length > 1 && "s"}{" "}
+                for{" "}
               </span>
               <span className="Loading-ReserveDate">
-                {date.format("dddd MMMM D, YYYY")} at{" "}
-                {date.format("h:mmA")}
+                {date.format("dddd MMMM D, YYYY")} at {date.format("h:mmA")}
               </span>
             </React.Fragment>
           ) : (
@@ -588,7 +647,7 @@ export class CalendarWidgetMain extends Component<
         </Loading>
       </div>
     );
-  }
+  };
 
   /** Switch case statement to render the appropriate view in the modal */
   renderModalContent = () => {
@@ -652,28 +711,38 @@ export class CalendarWidgetMain extends Component<
       default:
         <NotFound navigateTo={this.navigateTo} />;
     }
-  }
+  };
 
   /** Main render method - renders the display button, and the modal if open */
   public render() {
     const { event, firstAvailable } = this.state;
-    const { bookButtonLabel, reserveButtonLabel, noUpcomingTimeSlotsLabel } = this.state.labels;
-    const resolvedBookLabel = event && event.paymentType === PaymentType.Prepay ? bookButtonLabel : reserveButtonLabel;
+    const {
+      bookButtonLabel,
+      reserveButtonLabel,
+      noUpcomingTimeSlotsLabel,
+    } = this.state.labels;
+    const resolvedBookLabel =
+      event && event.paymentType === PaymentType.Prepay
+        ? bookButtonLabel
+        : reserveButtonLabel;
 
     // TODO: should we keep Reserve or use Book as it is in admin panel?
     const label = this.state.loading ? "Loading..." : resolvedBookLabel;
     return (
       <div>
         <div className="CalendarWidgetMain">
-          {!!firstAvailable ? (<button
-            onClick={this.openModal}
-            className={`CalendarWidgetMain-OpenModalButton ${
-              this.state.loading ? "-isLoading" : ""
-            }`}
-          >
-            {label}
-          </button>) : 
-          <p>{noUpcomingTimeSlotsLabel}</p>}
+          {!!firstAvailable ? (
+            <button
+              onClick={this.openModal}
+              className={`CalendarWidgetMain-OpenModalButton ${
+                this.state.loading ? "-isLoading" : ""
+              }`}
+            >
+              {label}
+            </button>
+          ) : (
+            <p>{noUpcomingTimeSlotsLabel}</p>
+          )}
           <Modal
             orderDetails={this.state.modalState}
             showModal={this.state.showModal}
