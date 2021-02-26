@@ -3,7 +3,7 @@ import { addDays, isAfter, subDays } from "date-fns/fp";
 import { format } from "date-fns";
 import { Component, createRef, h } from "preact";
 import { CalendarViewSelector } from "../../SharedComponents/Calendar/CalendarViewSelector";
-import { fetchProductsWithAvailability, getCustomScripts, getEventCustomLabels } from "../../Utils/api";
+import { fetchProductsWithAvailability, getCustomScripts } from "../../Utils/api";
 import {
   Calendar,
   CalendarEvent,
@@ -65,9 +65,10 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   };
 
   async componentDidMount() {
-    const { defaultVew, shopUrl, baseUrl } = this.props;
+    const { defaultVew, shopUrl, baseUrl, languageCode } = this.props;
     this.fetchEvents();
     this.fetchSettings(baseUrl, shopUrl);
+    this.setState({ labels: defineLanguageDictionary(languageCode as LanguageCodes) });
 
     // only show list view on smaller screens
     if (window && window.innerWidth < 768) {
@@ -123,16 +124,6 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     this.setState({ events, fullCalendarEvents, loading: false });
   }
 
-  fetchLabels = async (baseUrl: string, shopId: string, shopifyProductId: number) => {
-    const { languageCode } = this.props;
-    // fetch custom event labels
-    const labels = await getEventCustomLabels({ baseUrl, shopId: shopId, shopifyProductId });
-    const labelsResolved = labels && labels.data ?
-      { ...defineLanguageDictionary(languageCode as LanguageCodes), ...labels.data } :
-      defineLanguageDictionary(languageCode as LanguageCodes);
-    this.setState({ labels: labelsResolved });
-  }
-
   navigateToNextAvailableTS = () => {
     const earliestAvailableEventDate = Math.min(...this.state.events.map(e => e.start.getTime()));
     const calendarApi = this.calendarRef.current.getApi();
@@ -140,11 +131,8 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   }
 
   renderCalendarNoEventsMessage = () => {
-    const { labels } = this.state;
     return (
       <CalendarNoEventsMessage
-        message={labels.nothingIsAvailableTodayLabel}
-        nextAvailableLabel={labels.goToNextAvailableLabel}
         onNextAvailableClick={this.navigateToNextAvailableTS}
       />
     );
