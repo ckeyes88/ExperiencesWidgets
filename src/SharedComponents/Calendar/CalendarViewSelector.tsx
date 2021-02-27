@@ -3,10 +3,12 @@ import "./CalendarViewSelector.scss";
 import { calendarViewType } from "./CalendarWrapper";
 import { CalendarIcon } from "../Icons/CalendarIcon";
 import { ListIcon } from "../Icons/ListIcon";
+import { AppDictionary } from "../../typings/Languages";
 
 interface ICalendarViewSelectorProps {
   view: string;
   selectView(view: string): void;
+  labels: Partial<AppDictionary>;
 }
 
 export class CalendarViewSelector extends Component<ICalendarViewSelectorProps> {
@@ -19,7 +21,7 @@ export class CalendarViewSelector extends Component<ICalendarViewSelectorProps> 
   }
 
   render() {
-    const { view } = this.props;
+    const { view, labels } = this.props;
 
     return (
       <div className="Calendar-ViewSelector">
@@ -30,7 +32,7 @@ export class CalendarViewSelector extends Component<ICalendarViewSelectorProps> 
           <div className="CalendarIcon">
             <CalendarIcon />
           </div>
-          <div>Month</div>
+          <div>{labels.month}</div>
         </div>
         <div
           className={`ListView ${view === calendarViewType.list ? "Selected" : ""}`}
@@ -39,7 +41,7 @@ export class CalendarViewSelector extends Component<ICalendarViewSelectorProps> 
           <div className="ListIcon">
             <ListIcon />
           </div>
-          <div>List</div>
+          <div>{labels.list}</div>
         </div>
       </div>
     );
