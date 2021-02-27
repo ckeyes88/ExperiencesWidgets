@@ -18,6 +18,7 @@ import { CalendarEventClick, DateClickEvent } from "../../typings/Calendar";
 import { CalendarNoEventsMessage } from "../../SharedComponents/Calendar/CalendarNoEventsMessage";
 import { Loading } from "../../SharedComponents/loading/Loading";
 import { Weekdays } from "../../Utils/Constants";
+import { AppDictionary, defineLanguageDictionary, LanguageCodes, localeMap } from "../../typings/Languages";
 
 interface ICalendarContainerProps {
   aggregateViewBaseUrl?: string;
@@ -40,6 +41,7 @@ interface ICalendarContainerState {
   end: Date; // tracks current end date of next and prev updates
   loading: boolean;
   weekStartsOn: Weekdays;
+  labels: Partial<AppDictionary>;
 }
 
 const eventRendererViewMap = {
@@ -59,12 +61,14 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     end: addDays(60)(new Date()),
     loading: false,
     weekStartsOn: Weekdays.Monday,
+    labels: {},
   };
 
   async componentDidMount() {
-    const { defaultVew, shopUrl, baseUrl } = this.props;
+    const { defaultVew, shopUrl, baseUrl, languageCode } = this.props;
     this.fetchEvents();
     this.fetchSettings(baseUrl, shopUrl);
+    this.setState({ labels: defineLanguageDictionary(languageCode as LanguageCodes) });
 
     // only show list view on smaller screens
     if (window && window.innerWidth < 768) {
@@ -127,7 +131,11 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   }
 
   renderCalendarNoEventsMessage = () => {
-    return <CalendarNoEventsMessage  onNextAvailableClick={this.navigateToNextAvailableTS} />;
+    return (
+      <CalendarNoEventsMessage
+        onNextAvailableClick={this.navigateToNextAvailableTS}
+      />
+    );
   }
 
   handleEventClick = ({ event: { _def, _instance }}: CalendarEventClick) => {
@@ -151,7 +159,8 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   handleClose = () => this.setState({ daySelected: null });
 
   render() {
-    const { fullCalendarEvents, view, daySelected, daySelectedEvents, loading, weekStartsOn } = this.state;
+    const { languageCode } = this.props;
+    const { fullCalendarEvents, view, daySelected, daySelectedEvents, loading, weekStartsOn, labels } = this.state;
     const titleFormat = window && window.innerWidth >= 1024 ? null : { month: "short", year: "numeric" };
 
     return (
@@ -164,15 +173,17 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
         />}
         <div className="main-heading">Events Calendar</div>
         <div id="AggregateCalendar-Main" className="AggregateCalendar-Main">
-          <CalendarViewSelector view={view} selectView={this.selectView} />
+          <CalendarViewSelector labels={labels} view={view} selectView={this.selectView} />
           <CalendarDaySchedule
             open={!!daySelected && !!daySelectedEvents.length}
             handleClose={this.handleClose}
-            title={daySelected ? format(daySelected, "MMMM d, y") : ""}
+            title={daySelected ? format(daySelected, "MMMM d, y", { locale: localeMap[languageCode] }) : ""}
             events={daySelectedEvents}
           />
           <Calendar
-            firstDay={weekStartsOn}
+            buttonText={{ today: labels.today }}
+            languageCode={languageCode as LanguageCodes}
+            firstDay={weekStartsOn}k
             showNonCurrentDates={false}
             dayMaxEventRows={4}
             eventClick={this.handleEventClick}

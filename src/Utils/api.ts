@@ -4,7 +4,6 @@ import { Cart } from "../typings/Cart";
 import { CustomScripts } from "../typings/CustomScripts";
 import { EventDBO } from "../typings/Event";
 import { FirstAvailability } from "../typings/FirstAvailability";
-import { FormField } from "../typings/CustomForm";
 import { FormAttendee } from "../typings/FormAttendee";
 import { OrderInputData } from "../typings/CreateOrderInput";
 import { Quantities } from "../typings/Quantities";
@@ -13,9 +12,10 @@ import { Variants } from "../typings/Variant";
 import { LineItem } from "shopify-buy";
 import Client from "shopify-buy";
 
-import {AssetDBO} from "@helpfulhuman/expapp-shared-libs";
-import {OPRMProductSchema} from "@helpfulhuman/oprm-sdk";
+import { AssetDBO } from "@helpfulhuman/expapp-shared-libs";
+import { OPRMProductSchema } from "@helpfulhuman/oprm-sdk";
 import { EventCustomLabels } from "../typings/EventCustomLabels";
+import { FormFieldValueInput } from "../typings/FormFieldValueInput";
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
 export type EventAvailability = EventDBO & {
@@ -57,9 +57,7 @@ type GetProductFromSchedulerArgs = {
 
 type GetProductFromSchedulerRequestBody = {};
 
-
 type GetProductFromSchedulerResponse = SchedulerProduct;
-
 
 type GetFirstAvailabilityArgs = {
   productId: number;
@@ -75,7 +73,6 @@ type GetFirstAvailabilityRequestBody = {
 
 type GetFirstAvailabilityResponse = FirstAvailability;
 
-
 export type CreateOrderArgs = {
   order: OrderInputData;
 } & APIArguments;
@@ -86,14 +83,11 @@ type CreateOrderRequestBody = {
 
 type CreateOrderResponse = {};
 
-
 type GetEventArgs = {
   shopifyProductId: number;
 } & APIArguments;
 
-type GetCustomFormRequestBody = {
-
-};
+type GetCustomFormRequestBody = {};
 
 type GetEventResponse = {
   data: EventDBO;
@@ -120,7 +114,7 @@ export type AddToCartArgs = {
   variants: Variants;
   timeslot: Availability;
   quantities: Quantities;
-  fields?: FormField[];
+  fields?: FormFieldValueInput[];
   attendees?: FormAttendee[];
 };
 
@@ -133,28 +127,30 @@ export enum DisableRedirect {
   None,
 }
 
-export type AddToCartOptions = {
-  /** Access token for store front buy access */
-  storefrontAccessToken?: string;
-  /** The original event DBO object */
-  event: EventDBO;
-  /** Prevent auto-navigation to checkout URL */
-  disableRedirect?: DisableRedirect;
-  /** Callback to invoke when items have been added to cart */
-  onCartAdd?(url?: string): void;
-} | undefined;
+export type AddToCartOptions =
+  | {
+      /** Access token for store front buy access */
+      storefrontAccessToken?: string;
+      /** The original event DBO object */
+      event: EventDBO;
+      /** Prevent auto-navigation to checkout URL */
+      disableRedirect?: DisableRedirect;
+      /** Callback to invoke when items have been added to cart */
+      onCartAdd?(url?: string): void;
+    }
+  | undefined;
 
 type AttendeeProperties = {
-  firstName: string,
-  lastName: string,
-  email: string,
+  firstName: string;
+  lastName: string;
+  email: string;
   fields?: IHashTable<string>[];
 };
 
 type AddToCartRequestBody = {
-  id: string,
-  quantity: number,
-  properties: IHashTable<string | AttendeeProperties[]>,
+  id: string;
+  quantity: number;
+  properties: IHashTable<string | AttendeeProperties[]>;
 };
 
 type AddToCartResponse = {};
@@ -203,7 +199,11 @@ export type SdkLineItemInput = {
 /**
  * Generic function for creating XHR calls and handling the responses.
  */
-export function sendJSON<RequestBody, ResponseBody>(method: HttpMethod, url: string, body?: RequestBody): Promise<HttpResponse<ResponseBody>> {
+export function sendJSON<RequestBody, ResponseBody>(
+  method: HttpMethod,
+  url: string,
+  body?: RequestBody
+): Promise<HttpResponse<ResponseBody>> {
   return new Promise((accept, reject) => {
     // create the requeset object
     const xhr = new XMLHttpRequest();
@@ -220,7 +220,11 @@ export function sendJSON<RequestBody, ResponseBody>(method: HttpMethod, url: str
       try {
         let error: ServiceError | null = null;
         let response = JSON.parse(xhr.responseText);
-        if (xhr.status < 200 || xhr.status > 299 || (response && response.errorType)) {
+        if (
+          xhr.status < 200 ||
+          xhr.status > 299 ||
+          (response && response.errorType)
+        ) {
           error = response as ServiceError;
           response = null;
         }
@@ -248,8 +252,15 @@ export function sendJSON<RequestBody, ResponseBody>(method: HttpMethod, url: str
 /**
  * Fetches the schedule pattern data for the product from our API.
  */
-export async function getProductFromScheduler({ baseUrl, shopId, productId }: GetProductFromSchedulerArgs): Promise<GetProductFromSchedulerResponse> {
-  const res = await axios.get<GetProductFromSchedulerRequestBody, AxiosResponse<GetProductFromSchedulerResponse>>(`${baseUrl}/rest/schedule?shop=${shopId}&productId=${productId}`);
+export async function getProductFromScheduler({
+  baseUrl,
+  shopId,
+  productId,
+}: GetProductFromSchedulerArgs): Promise<GetProductFromSchedulerResponse> {
+  const res = await axios.get<
+    GetProductFromSchedulerRequestBody,
+    AxiosResponse<GetProductFromSchedulerResponse>
+  >(`${baseUrl}/rest/schedule?shop=${shopId}&productId=${productId}`);
 
   return res.data;
 }
@@ -257,16 +268,36 @@ export async function getProductFromScheduler({ baseUrl, shopId, productId }: Ge
 /**
  * Fetches the availability for a scheduler product from the API.
  */
-export async function getFirstAvailability({ baseUrl, shopId, productId, startingFrom, timespanInSeconds }: GetFirstAvailabilityArgs): Promise<FirstAvailability> {
-  const res = await axios.post<GetFirstAvailabilityRequestBody, AxiosResponse<GetFirstAvailabilityResponse>>(`${baseUrl}/rest/firstAvailability?shop=${shopId}`, { productId, startingFrom, timespanInSeconds });
+export async function getFirstAvailability({
+  baseUrl,
+  shopId,
+  productId,
+  startingFrom,
+  timespanInSeconds,
+}: GetFirstAvailabilityArgs): Promise<FirstAvailability> {
+  const res = await axios.post<
+    GetFirstAvailabilityRequestBody,
+    AxiosResponse<GetFirstAvailabilityResponse>
+  >(`${baseUrl}/rest/firstAvailability?shop=${shopId}`, {
+    productId,
+    startingFrom,
+    timespanInSeconds,
+  });
   return res.data;
 }
 
 /**
  * Creates an order with the customer information
  */
-export async function createOrder({ baseUrl, shopId, order }: CreateOrderArgs): Promise<CreateOrderResponse> {
-  const res = await axios.post<CreateOrderRequestBody, AxiosResponse<CreateOrderResponse>>(`${baseUrl}/rest/createOrder?shop=${shopId}`, { order });
+export async function createOrder({
+  baseUrl,
+  shopId,
+  order,
+}: CreateOrderArgs): Promise<CreateOrderResponse> {
+  const res = await axios.post<
+    CreateOrderRequestBody,
+    AxiosResponse<CreateOrderResponse>
+  >(`${baseUrl}/rest/createOrder?shop=${shopId}`, { order });
 
   return res.data;
 }
@@ -274,8 +305,15 @@ export async function createOrder({ baseUrl, shopId, order }: CreateOrderArgs): 
 /**
  * Fetches data from remService in order to build the custom order details form
  */
-export async function getEvent({ baseUrl, shopId, shopifyProductId }: GetEventArgs): Promise<GetEventResponse> {
-  const res = await axios.get<GetCustomFormRequestBody, AxiosResponse<GetEventResponse>>(`${baseUrl}/rest/event/?shop=${shopId}&productId=${shopifyProductId}`);
+export async function getEvent({
+  baseUrl,
+  shopId,
+  shopifyProductId,
+}: GetEventArgs): Promise<GetEventResponse> {
+  const res = await axios.get<
+    GetCustomFormRequestBody,
+    AxiosResponse<GetEventResponse>
+  >(`${baseUrl}/rest/event/?shop=${shopId}&productId=${shopifyProductId}`);
 
   return res.data;
 }
@@ -283,8 +321,17 @@ export async function getEvent({ baseUrl, shopId, shopifyProductId }: GetEventAr
 /**
  * Fetches custom event labels set in admin interface of an experience
  */
-export async function getEventCustomLabels({ baseUrl, shopId, shopifyProductId }: GetEventArgs): Promise<GetEventCustomLabelsResponse> {
-  const res = await axios.get<GetCustomFormRequestBody, AxiosResponse<GetEventCustomLabelsResponse>>(`${baseUrl}/rest/event/custom-labels?productId=${shopifyProductId}&shop=${shopId}`);
+export async function getEventCustomLabels({
+  baseUrl,
+  shopId,
+  shopifyProductId,
+}: GetEventArgs): Promise<GetEventCustomLabelsResponse> {
+  const res = await axios.get<
+    GetCustomFormRequestBody,
+    AxiosResponse<GetEventCustomLabelsResponse>
+  >(
+    `${baseUrl}/rest/event/custom-labels?productId=${shopifyProductId}&shop=${shopId}`
+  );
 
   return res.data;
 }
@@ -292,8 +339,16 @@ export async function getEventCustomLabels({ baseUrl, shopId, shopifyProductId }
 /**
  * Gets custom scripts
  */
-export async function getCustomScripts({ baseUrl, shopId }: GetCustomScriptsArgs): Promise<GetCustomScriptsResponse> {
-  const res = await axios.get<GetCustomScriptsRequestBody, AxiosResponse<GetCustomScriptsResponse>>(`${baseUrl}/rest/shopSettings?shop=${shopId}&fields=customScripts&fields=trackingPixelUrl&fields=weekStartsOn`);
+export async function getCustomScripts({
+  baseUrl,
+  shopId,
+}: GetCustomScriptsArgs): Promise<GetCustomScriptsResponse> {
+  const res = await axios.get<
+    GetCustomScriptsRequestBody,
+    AxiosResponse<GetCustomScriptsResponse>
+  >(
+    `${baseUrl}/rest/shopSettings?shop=${shopId}&fields=customScripts&fields=trackingPixelUrl&fields=weekStartsOn`
+  );
 
   return res.data;
 }
@@ -301,8 +356,14 @@ export async function getCustomScripts({ baseUrl, shopId }: GetCustomScriptsArgs
 /**
  * Gets custom scripts
  */
-export async function getShopDetails({ baseUrl, shopId }: APIArguments): Promise<GetShopDetailsResponse> {
-  const res = await axios.get<APIArguments, AxiosResponse<GetShopDetailsResponse>>(`${baseUrl}/rest/shop?shop=${shopId}`);
+export async function getShopDetails({
+  baseUrl,
+  shopId,
+}: APIArguments): Promise<GetShopDetailsResponse> {
+  const res = await axios.get<
+    APIArguments,
+    AxiosResponse<GetShopDetailsResponse>
+  >(`${baseUrl}/rest/shop?shop=${shopId}`);
   //const res = await sendJSON<APIArguments, GetShopDetailsResponse>("GET", `${baseUrl}/rest/shop?shop=${shopId}`);
 
   return res.data;
@@ -314,16 +375,16 @@ export async function getShopDetails({ baseUrl, shopId }: APIArguments): Promise
  */
 export async function addToCart(
   { timeslot, quantities, fields, attendees, shopUrl }: AddToCartArgs,
-  { 
+  {
     event: { handle, variants: eventVariants },
     disableRedirect = DisableRedirect.None,
-    onCartAdd, 
+    onCartAdd,
     storefrontAccessToken,
-  }: AddToCartOptions,
+  }: AddToCartOptions
 ): Promise<void> {
   // Extract "When" string from timeslot
   const When: string = timeslot.formattedTimeslot.when;
-  
+
   /**
    * If client is *not* in Shopify-land, we'll need to utilize the Shopify Buy SDK to add
    * items to cart & navigate to checkout.
@@ -344,7 +405,7 @@ export async function addToCart(
       const sdkVariantMap: SdkVariantMap = {};
       // List of gql variants
       const sdkVariants = sdkProduct.variants;
-      
+
       // Populate variant map to fetch variant GIDs (Shopify's GraphQL IDs for the variants)
       for (let i = 0; i < sdkVariants.length; i++) {
         const sdkVariant = sdkVariants[i];
@@ -359,12 +420,18 @@ export async function addToCart(
         for (const attendee of attendees) {
           const customAttributes: ShopifyAttribute[] = [
             { key: "When", value: When },
-            { key: "Name", value: `${attendee.firstName} ${attendee.lastName}` },
+            {
+              key: "Name",
+              value: `${attendee.firstName} ${attendee.lastName}`,
+            },
             { key: "Email", value: attendee.email },
           ];
 
-          if(timeslot.timeslotId) {
-            customAttributes.push({key: "Timeslot", value: timeslot.timeslotId});
+          if (timeslot.timeslotId) {
+            customAttributes.push({
+              key: "Timeslot",
+              value: timeslot.timeslotId,
+            });
           }
 
           if (Array.isArray(attendee.fields)) {
@@ -372,7 +439,7 @@ export async function addToCart(
               customAttributes.push({
                 key: field.label,
                 value: field.value,
-              }); 
+              });
             }
           }
 
@@ -391,8 +458,11 @@ export async function addToCart(
           { key: "When", value: When },
         ];
 
-        if(timeslot.timeslotId) {
-          customAttributes.push({key: "Timeslot", value: timeslot.timeslotId});
+        if (timeslot.timeslotId) {
+          customAttributes.push({
+            key: "Timeslot",
+            value: timeslot.timeslotId,
+          });
         }
 
         if (Array.isArray(fields)) {
@@ -414,22 +484,23 @@ export async function addToCart(
         }
       }
 
-      await sbClient.checkout.addLineItems(sdkCart.id, sdkLineItems as unknown as LineItem[]);
+      await sbClient.checkout.addLineItems(
+        sdkCart.id,
+        (sdkLineItems as unknown) as LineItem[]
+      );
 
       // Navigate to checkout URL
       if (onCartAdd && disableRedirect !== DisableRedirect.BuySdk) {
-        onCartAdd((sdkCart as unknown as SdkCart).webUrl);
+        onCartAdd(((sdkCart as unknown) as SdkCart).webUrl);
       }
-    }
-    catch (err) {
+    } catch (err) {
       console.error(`There was an error utilizing the Shopify Buy SDK: ${err}`);
     }
-  }
-  /**
-   * The following logic should be the default (ie: most cases), where the client is in
-   * Shopify-land and the Buy SDK will *not* be utilized.
-   */ 
-  else {
+  } else {
+    /**
+     * The following logic should be the default (ie: most cases), where the client is in
+     * Shopify-land and the Buy SDK will *not* be utilized.
+     */
     // Store request bodies in array to shoot off sequentially later
     const requests: AddToCartRequestBody[] = [];
 
@@ -442,7 +513,7 @@ export async function addToCart(
           Email: attendee.email,
         };
 
-        if(timeslot.timeslotId) {
+        if (timeslot.timeslotId) {
           properties.Timeslot = timeslot.timeslotId;
         }
 
@@ -462,8 +533,8 @@ export async function addToCart(
     // Otherwise, each variant will be its own line item
     else {
       const properties: IHashTable<string> = { When };
-      
-      if(timeslot.timeslotId) {
+
+      if (timeslot.timeslotId) {
         properties.Timeslot = timeslot.timeslotId;
       }
 
@@ -489,7 +560,10 @@ export async function addToCart(
       let count = 0;
       do {
         try {
-          await axios.post<AddToCartRequestBody, AxiosResponse<AddToCartResponse>>(cartUrl, request);
+          await axios.post<
+            AddToCartRequestBody,
+            AxiosResponse<AddToCartResponse>
+          >(cartUrl, request);
           //await sendJSON<AddToCartRequestBody, AddToCartResponse>("POST", cartUrl, request);
           error = null;
         } catch (err) {
@@ -499,16 +573,19 @@ export async function addToCart(
       } while (error && count < 3);
 
       if (error) {
-        console.error("Failed to add an item to the cart after multiple attempts.", request);
+        console.error(
+          "Failed to add an item to the cart after multiple attempts.",
+          request
+        );
         throw error;
       }
-    } 
+    }
 
     // Invoke callback (typically to navigate us to checkout URL)
     if (onCartAdd && disableRedirect !== DisableRedirect.ShopifyCart) {
       onCartAdd();
     }
-  }  
+  }
 }
 
 /**
@@ -516,7 +593,10 @@ export async function addToCart(
  */
 export async function getCart(shopUrl?: string): Promise<GetCartResponse> {
   const cartUrl = "/cart.js";
-  const res = await axios.post<GetCartRequestBody, AxiosResponse<GetCartResponse>>(cartUrl);
+  const res = await axios.post<
+    GetCartRequestBody,
+    AxiosResponse<GetCartResponse>
+  >(cartUrl);
   //const res = await sendJSON<GetCartRequestBody, GetCartResponse>("GET", cartUrl);
 
   return res.data;
@@ -524,25 +604,33 @@ export async function getCart(shopUrl?: string): Promise<GetCartResponse> {
 
 type FetchProductsWithAvailabilityPayload = {
   /** Start date of availabilities */
-  startsAt: Date | string; 
+  startsAt: Date | string;
   /** End date of availabilities */
-  endsAt: Date | string
+  endsAt: Date | string;
 };
 
 /**
  * Fetches the products with availability between two given dates.
  */
-export async function fetchProductsWithAvailability(baseUrl: string, shop: string, startsAt: Date | string, endsAt: Date | string): Promise<EventAvailability[]> {
+export async function fetchProductsWithAvailability(
+  baseUrl: string,
+  shop: string,
+  startsAt: Date | string,
+  endsAt: Date | string
+): Promise<EventAvailability[]> {
   // Clone incoming end date so we keep things pure
   const endDateClone = new Date(endsAt);
   // Set end date hours to end of day
   endDateClone.setHours(23, 59, 59, 999);
   // Make call for the good stuff
 
-  const res = await axios.post<FetchProductsWithAvailabilityPayload, AxiosResponse<EventAvailability[]>>(
-    `${baseUrl}/rest/productsAvailability?shop=${shop}`, 
-    { startsAt, endsAt: endDateClone },
-  );
+  const res = await axios.post<
+    FetchProductsWithAvailabilityPayload,
+    AxiosResponse<EventAvailability[]>
+  >(`${baseUrl}/rest/productsAvailability?shop=${shop}`, {
+    startsAt,
+    endsAt: endDateClone,
+  });
 
   // Return the good stuff
   return res.data;
