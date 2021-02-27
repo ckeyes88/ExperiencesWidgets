@@ -172,7 +172,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
           }}
         />}
         <div className="main-heading">Events Calendar</div>
-        <div className="AggregateCalendar-Main">
+        <div id="AggregateCalendar-Main" className="AggregateCalendar-Main">
           <CalendarViewSelector labels={labels} view={view} selectView={this.selectView} />
           <CalendarDaySchedule
             open={!!daySelected && !!daySelectedEvents.length}
@@ -183,7 +183,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
           <Calendar
             buttonText={{ today: labels.today }}
             languageCode={languageCode as LanguageCodes}
-            firstDay={weekStartsOn}
+            firstDay={weekStartsOn}k
             showNonCurrentDates={false}
             dayMaxEventRows={4}
             eventClick={this.handleEventClick}
