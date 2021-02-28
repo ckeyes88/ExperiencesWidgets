@@ -183,7 +183,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
           <Calendar
             buttonText={{ today: labels.today }}
             languageCode={languageCode as LanguageCodes}
-            firstDay={weekStartsOn}k
+            firstDay={weekStartsOn}
             showNonCurrentDates={false}
             dayMaxEventRows={4}
             eventClick={this.handleEventClick}
