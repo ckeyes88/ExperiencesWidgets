@@ -77,12 +77,12 @@ export const getMonthTemplate = (month: number, year: number, weekStartsOn: Week
   // Number of days in month.
   const numDaysInMonth = daysInMonth(month, year);
   // Days between Sunday and start of month.
-  const offset = (new Date(year, month - 1, 1)).getDay() + 1;
+  const offset = (new Date(year, month - 1, 1)).getDay() + (weekStartsOn === 0 ? 1 : 0);
   // Fill in array with days of month.
   let monthTemplates: MonthTemplate[] = [];
   for (let i = 0; i < numDaysInMonth; i++) {
     monthTemplates.push({
-      date: new Date(year, month - 1, i + 1 + weekStartsOn), // if +2 week starts on Monday, if +1 then on Sunday
+      date: new Date(year, month - 1, i + 1),
       style: {
         msGridRow: Math.ceil((offset + i) / 7),
         msGridColumn: (((offset - 1) + i) % 7) + 1,
