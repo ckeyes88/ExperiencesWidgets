@@ -15,6 +15,7 @@ This widget shows all possible experiences that a shop offers on a single page. 
 <div data-expapp-aggregate-view
     data-expapp-aggregate-view-shop="{{ shop.permanent_domain }}"
     data-expapp-aggregate-view-shop-url="{{ shop.permanent_domain }}"
+    data-expapp-aggregate-view-language-code="en-US"
     data-expapp-aggregate-view-base-url="https://prod-v2-api.experiencesapp.services">
 </div>
 
@@ -49,8 +50,9 @@ This widget shows all possible experiences that a shop offers on a single page. 
 <script src="prod-v2.experiencesapp.services/dist/aggregateView.js"></script>
 ```
 6. Update your styling if you made any modifications
-7. Click `Save`
-8. Make note of the new template name
+7. Update language code `data-expapp-aggregate-view-language-code` to be one of the following options if needed: "en-US", "es", "ger", "swe", "fr", "nl", "ja"
+8. Click `Save`
+9. Make note of the new template name
 
 
 ##### Add a new page

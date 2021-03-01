@@ -116,6 +116,9 @@ export type AppDictionary = { [key: string]: any } & {
   addLabel: string;
   nothingIsAvailableTodayLabel: string;
   goToNextAvailableLabel: string;
+  month: string;
+  list: string;
+  today: string;
 };
 
 export type LanguageDictionaryType = {
@@ -255,6 +258,9 @@ export const languageDictionary: LanguageDictionaryType = {
     },
     nothingIsAvailableTodayLabel: "Nothing is available today",
     goToNextAvailableLabel: "Go to next available",
+    month: "Month",
+    list: "List",
+    today: "Today",
   },
   es: {
     selectDatesLabel: "Seleccionar fechas",
@@ -388,6 +394,9 @@ export const languageDictionary: LanguageDictionaryType = {
     },
     nothingIsAvailableTodayLabel: "Hoy no hay nada disponible",
     goToNextAvailableLabel: "Ir al siguiente disponible",
+    month: "Mes",
+    list: "Lista",
+    today: "Hoy dia",
   },
   ja: {
     selectDatesLabel: "希望日時を選択",
@@ -525,6 +534,9 @@ export const languageDictionary: LanguageDictionaryType = {
     },
     nothingIsAvailableTodayLabel: "今日は何も利用できません",
     goToNextAvailableLabel: "次に利用可能なものに移動します",
+    month: "月",
+    list: "リスト",
+    today: "今日",
   },
   ger: {
     selectDatesLabel: "Bitte Datum wählen",
@@ -655,6 +667,9 @@ export const languageDictionary: LanguageDictionaryType = {
     },
     nothingIsAvailableTodayLabel: "Heute ist nichts verfügbar",
     goToNextAvailableLabel: "Zum nächsten verfügbaren gehen",
+    month: "Monat",
+    list: "Liste",
+    today: "Heute",
   },
   swe: {
     selectDatesLabel: "Välj Datum",
@@ -782,6 +797,9 @@ export const languageDictionary: LanguageDictionaryType = {
     },
     nothingIsAvailableTodayLabel: "Ingenting är tillgängligt idag",
     goToNextAvailableLabel: "Gå till nästa tillgängliga",
+    month: "Månad",
+    list: "Lista",
+    today: "I dag",
   },
   fr: {
     selectDatesLabel: "Sélectionnez vos dates",
@@ -911,6 +929,9 @@ export const languageDictionary: LanguageDictionaryType = {
     },
     nothingIsAvailableTodayLabel: "Rien n'est disponible aujourd'hui",
     goToNextAvailableLabel: "Aller au prochain disponible",
+    month: "Mois",
+    list: "Lister",
+    today: "Aujourd'hui",
   },
   nl: {
     selectDatesLabel: "Selecteer datum",
@@ -1040,6 +1061,9 @@ export const languageDictionary: LanguageDictionaryType = {
     },
     nothingIsAvailableTodayLabel: "Er is vandaag niets beschikbaar",
     goToNextAvailableLabel: "Ga naar de volgende beschikbare",
+    month: "Maand",
+    list: "Lijst",
+    today: "Vandaag",
   },
   it: {
     selectDatesLabel: "Scegli le date",
@@ -1180,6 +1204,9 @@ export const languageDictionary: LanguageDictionaryType = {
     },
     nothingIsAvailableTodayLabel: "Niente è disponibile oggi",
     goToNextAvailableLabel: "Vai al prossimo disponibile",
+    month: "Mese",
+    list: "Elenco",
+    today: "Oggi",
   },
 };
 

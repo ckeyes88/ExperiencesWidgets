@@ -30,8 +30,19 @@ export class CalendarDaySchedule extends Component<ICalendarDayScheduleProps, an
 
   render() {
     const { title, open, events } = this.props;
+
+    // making sure popup is always roughly in the center of the calendar vew
+    const hostEl = document.getElementById("AggregateCalendar-Main");
+    const baseOffset = hostEl ? hostEl.offsetTop + (hostEl.clientHeight / 2) : 0;
+    let listLengthCompensation = 0;
+    if (events.length > 1 && events.length < 6) {
+      listLengthCompensation = events.length * 35;
+    } else if (events.length > 1) {
+      listLengthCompensation = 200;
+    }
+
     const style = { 
-      top: events.length > 3 ? "30%" : "39%",
+      top: `${baseOffset - listLengthCompensation}px`,
     };
 
     if (!open) { return null; }
