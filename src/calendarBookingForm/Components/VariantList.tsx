@@ -76,7 +76,7 @@ export class VariantList extends Component<
       0,
     );
     /** Convert the total to a string, add a dollar sign, and add commas if > 999 */
-    return total.toFixed(2);
+    return total;
   }
 
   /** add a message to specify minimum and maximum allowable quantities if applicable */
