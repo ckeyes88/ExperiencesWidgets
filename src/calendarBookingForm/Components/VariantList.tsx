@@ -118,7 +118,6 @@ export class VariantList extends Component<
     } = this.props;
 
     const isDisabled = this.totalQuantity < minLimit;
-    console.log(this.props.moneyFormat, this.totalAmount);
     return (
       <div>
         <VariantHeader
