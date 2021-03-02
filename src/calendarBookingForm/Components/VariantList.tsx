@@ -7,6 +7,7 @@ import { EventDBO, EventVariantDBO } from "../../typings/Event";
 import { Variant } from "./Variant";
 import { VariantHeader } from "./VariantHeader";
 import { AppDictionary } from "../../typings/Languages";
+import { formatCurrency } from "../../Utils/helpers";
 
 export interface IVariantListMainProps {
   /**passing in the entire event, may render some other props unnecessary */
@@ -75,7 +76,7 @@ export class VariantList extends Component<
       0,
     );
     /** Convert the total to a string, add a dollar sign, and add commas if > 999 */
-    return `$${total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+    return total.toFixed(2);
   }
 
   /** add a message to specify minimum and maximum allowable quantities if applicable */
@@ -117,7 +118,7 @@ export class VariantList extends Component<
     } = this.props;
 
     const isDisabled = this.totalQuantity < minLimit;
-
+    console.log(this.props.moneyFormat, this.totalAmount);
     return (
       <div>
         <VariantHeader
@@ -134,7 +135,7 @@ export class VariantList extends Component<
           <div className="VariantListTotal">
             <div className="VariantListTotal-Grid">
               <span className="VariantListTotal-Label">{labels.totalLabel}</span>
-              <span className="VariantListTotal-Value">{this.totalAmount}</span>
+              <span className="VariantListTotal-Value" dangerouslySetInnerHTML={{__html: formatCurrency(this.props.moneyFormat, this.totalAmount)}}></span>
               <span className="VariantListTotal-Action">
                 <button
                   className={`VariantListTotal-ConfirmBtn${
