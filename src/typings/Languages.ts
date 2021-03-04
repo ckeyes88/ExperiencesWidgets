@@ -127,6 +127,7 @@ export type AppDictionary = { [key: string]: any } & {
   addLabel: string;
   nothingIsAvailableTodayLabel: string;
   goToNextAvailableLabel: string;
+  goToNextAvailableMessage: string;
   month: string;
   list: string;
   today: string;
@@ -142,6 +143,7 @@ export type LanguageDictionaryType = {
  */
 export const languageDictionary: LanguageDictionaryType = {
   "en-US": {
+    goToNextAvailableMessage: "No events to display",
     calendarHeader: "Events Calendar",
     selectDatesLabel: "Select Dates",
     selectDatesAriaLabel:
@@ -275,6 +277,7 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Today",
   },
   es: {
+    goToNextAvailableMessage: "No hay eventos para mostrar",
     calendarHeader: "Calendario de eventos",
     selectDatesLabel: "Seleccionar fechas",
     selectDatesAriaLabel:
@@ -412,6 +415,7 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Hoy dia",
   },
   ja: {
+    goToNextAvailableMessage: "表示するイベントはありません",
     calendarHeader: "イベントカレンダー",
     selectDatesLabel: "希望日時を選択",
     selectDatesAriaLabel: "日時を選択（カレンダーのウィンドウが開きます）",
@@ -553,6 +557,7 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "今日",
   },
   ger: {
+    goToNextAvailableMessage: "Keine Ereignisse zum Anzeigen",
     calendarHeader: "Veranstaltungskalender",
     selectDatesLabel: "Bitte Datum wählen",
     selectDatesAriaLabel:
@@ -687,6 +692,7 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Heute",
   },
   swe: {
+    goToNextAvailableMessage: "Inga händelser att visa",
     calendarHeader: "Evenemangskalender",
     selectDatesLabel: "Välj Datum",
     selectDatesAriaLabel: "Välj Datum, detta öppnar kalendervyn.",
@@ -818,6 +824,7 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "I dag",
   },
   fr: {
+    goToNextAvailableMessage: "Aucun événement à afficher",
     calendarHeader: "Calendrier des événements",
     selectDatesLabel: "Sélectionnez vos dates",
     selectDatesAriaLabel:
@@ -951,6 +958,7 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Aujourd'hui",
   },
   nl: {
+    goToNextAvailableMessage: "Geen evenementen om weer te geven",
     calendarHeader: "Evenementen kalender",
     selectDatesLabel: "Selecteer datum",
     selectDatesAriaLabel:
@@ -1084,6 +1092,7 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Vandaag",
   },
   it: {
+    goToNextAvailableMessage: "Nessun evento da visualizzare",
     calendarHeader: "Calendario eventi",
     selectDatesLabel: "Scegli le date",
     selectDatesAriaLabel: "Scegli le date, questo aprirà il menù a tendina del calendario",
