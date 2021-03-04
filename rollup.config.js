@@ -153,5 +153,49 @@ export default [{
         ],
       })
     ],
-  }
+  },
+  {
+    input: 'src/fullPageBookingForm/index.tsx',
+    output: {
+      file: "./dist/fullPageBookingForm.js",
+      format: 'iife',
+      name: 'fullPageBookingForm',
+    },
+    treeshake: true,
+    plugins: [
+      replace({
+        'process.env.NODE_ENV': JSON.stringify('production'),
+        __ENV_NAME__: process.env.ENV_NAME,
+        __BASE_URL__: process.env.BASE_WIDGET_URL
+      }),
+      // scss(),
+      babel({
+        exclude: [
+          'node_modules/!(' +
+          'google-map-react|preact|preact-compat|react-redux' +
+          ')/**',
+        ]
+      }),
+      typescript(),
+      nodeResolve({browser: true, preferBuiltins: true}),
+      json(),
+      commonjs({
+        include: 'node_modules/**',
+        namedExports: {
+          'node_modules/preact/dist/preact.js': ['h', 'render', 'Component', 'cloneElement', 'options'],
+        },
+      }),
+      alias({
+        entries: [
+          { find: 'react', replacement: 'preact/compat' },
+          { find: 'react-dom', replacement: 'preact/compat' }
+        ]
+      }),
+      // copy({
+      //   targets: [
+      //     { src: 'src/assets/**/*', dest: 'dist/assets' }
+      //   ],
+      // })
+    ],
+  },
 ];
