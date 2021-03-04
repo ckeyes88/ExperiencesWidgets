@@ -135,6 +135,8 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     return (
       <CalendarNoEventsMessage
         onNextAvailableClick={this.navigateToNextAvailableTS}
+        nextAvailableLabel={languageDictionary[this.props.languageCode].goToNextAvailableLabel}
+        message={languageDictionary[this.props.languageCode].goToNextAvailableMessage}
       />
     );
   }
