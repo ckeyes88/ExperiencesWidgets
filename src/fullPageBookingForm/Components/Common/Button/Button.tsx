@@ -15,8 +15,8 @@ export const Button: FunctionComponent<ButtonProps> = ({
   color,
   text,
   variant = "contained",
-  disabled = false,
-  fullWidth = false,
+  disabled,
+  fullWidth,
   onClick,
 }) => {
   const classNames = [
