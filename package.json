@@ -13,7 +13,9 @@
     "test": "jest --maxWorkers=4",
     "tdd": "jest --watch",
     "lint": "tslint -p .",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "jest": {
     "verbose": true,
@@ -55,8 +57,13 @@
     "ts-polyfill": "^3.8.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.13.8",
     "@helpfulhuman/tslint-rules": "1.0.0",
     "@rollup/plugin-alias": "3.1.1",
+    "@storybook/addon-actions": "^6.1.21",
+    "@storybook/addon-essentials": "^6.1.21",
+    "@storybook/addon-links": "^6.1.21",
+    "@storybook/preact": "^6.1.21",
     "@types/bugsnag": "2.5.28",
     "@types/dotenv": "^8.2.0",
     "@types/jest": "24.0.18",
@@ -65,7 +72,9 @@
     "@types/react": "^17.0.2",
     "@types/react-dom": "^17.0.1",
     "@types/shopify-buy": "^1.4.3",
+    "babel-loader": "^8.2.2",
     "browser-sync": "2.26.7",
+    "core-js": "^3.9.1",
     "dotenv": "^8.1.0",
     "jest": "24.9.0",
     "node-sass": "^4.12.0",
