@@ -168,7 +168,7 @@ export default [{
         __ENV_NAME__: process.env.ENV_NAME,
         __BASE_URL__: process.env.BASE_WIDGET_URL
       }),
-      // scss(),
+      scss(),
       babel({
         exclude: [
           'node_modules/!(' +
