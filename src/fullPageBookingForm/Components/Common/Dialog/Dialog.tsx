@@ -1,0 +1,56 @@
+/** @jsx h */
+import { h, FunctionComponent } from "preact";
+import { Button, ButtonProps } from "../Button/Button";
+import { Card } from "../Card/Card";
+import { TextStyle } from "../TextStyle/TextStyle";
+import { CloseIcon } from "../Icon/CloseIcon";
+import "./Dialog.scss";
+
+export type DialogProps = {
+  open: boolean;
+  title: string;
+  message: string | JSX.Element;
+  actions: ButtonProps[];
+  onClose: () => void;
+};
+
+export const Dialog: FunctionComponent<DialogProps> = ({
+  open,
+  title,
+  message,
+  actions,
+  onClose,
+}) => {
+  const dialogClassNames = ["dialog"];
+
+  if (open) {
+    dialogClassNames.push("dialog--open");
+  }
+
+  return (
+    <div className={dialogClassNames.join(" ")} role="dialog">
+      <div className="dialog__content">
+        <Card>
+          <div className="dialog__title">
+            <TextStyle text={title} variant="display2" />
+            <div
+              className="dialog__title__close-button"
+              onClick={onClose}
+              data-testid="dialog-close-button"
+            >
+              <CloseIcon color="#a7a7a7" width={20} height={20} />
+            </div>
+          </div>
+          <div className="dialog__message">
+            <TextStyle text={message} variant="body1" />
+          </div>
+          <div className="dialog__actions">
+            {actions.map((action) => (
+              <Button key={action.text} {...action} />
+            ))}
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+};

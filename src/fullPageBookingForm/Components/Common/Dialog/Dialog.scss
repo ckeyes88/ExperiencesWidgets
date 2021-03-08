@@ -1,0 +1,54 @@
+@import "../../../base";
+
+// @todo: implement slide up/down animation
+
+.dialog {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.dialog--open {
+  display: block;
+}
+
+.dialog__content {
+  display: inline-block;
+  max-width: 459px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.dialog__title {
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.dialog__title__close-button {
+  cursor: pointer;
+}
+
+.dialog__message {
+  margin-bottom: 51px;
+}
+
+.dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    margin-right: 10px;
+
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+}
