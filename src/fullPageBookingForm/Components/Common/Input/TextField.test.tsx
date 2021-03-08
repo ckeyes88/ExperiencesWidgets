@@ -3,18 +3,6 @@ import { h } from "preact";
 import { fireEvent, render, screen } from "@testing-library/preact";
 import { TextField } from "./TextField";
 
-test("Displays optional marker to label if not required", () => {
-  const { rerender } = render(
-    <TextField name="test-field" label="Test Field" />,
-  );
-
-  expect(screen.getByText(/test field/i)).toBeInTheDocument();
-  expect(screen.getByText(/opt/i)).toBeInTheDocument();
-
-  rerender(<TextField name="test-field" label="Test Field" required={true} />);
-  expect(screen.queryByText(/opt/i)).not.toBeInTheDocument();
-});
-
 test("Sets value correctly", () => {
   render(<TextField name="test-field" label="Test Field" value="Test Value" />);
 

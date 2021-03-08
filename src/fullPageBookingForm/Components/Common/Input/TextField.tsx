@@ -1,6 +1,7 @@
 /** @jsx h */
 import { h, Fragment, FunctionComponent } from "preact";
 import { JSXInternal } from "preact/src/jsx";
+import { InputLabel } from "./InputLabel";
 import "./Input.scss";
 
 export type TextFieldProps = {
@@ -53,10 +54,7 @@ export const TextField: FunctionComponent<TextFieldProps> = ({
   return (
     <Fragment>
       <div className={inputClassNames.join(" ")}>
-        <label className="input__label" for={name}>
-          <span className="input__label__text">{label}</span>
-          {!required && <span className="input__label__marker">opt</span>}
-        </label>
+        <InputLabel name={name} label={label} required={required} />
         <input
           className={inputFieldClassNames.join(" ")}
           id={name}

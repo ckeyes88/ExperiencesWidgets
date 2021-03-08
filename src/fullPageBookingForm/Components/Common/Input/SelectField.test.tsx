@@ -24,25 +24,6 @@ test("Renders correctly with basic props", () => {
   expect(screen.getAllByRole("option").length).toBe(options.length + 1); // plus the placeholder
 });
 
-test("Displays optional marker to label if not required", () => {
-  const { rerender } = render(
-    <SelectField name="test-field" label="Test Field" options={options} />,
-  );
-
-  expect(screen.getByText("opt")).toBeInTheDocument();
-
-  rerender(
-    <SelectField
-      required
-      name="test-field"
-      label="Test Field"
-      options={options}
-    />,
-  );
-
-  expect(screen.queryByText("opt")).not.toBeInTheDocument();
-});
-
 test("Displays fallback placeholder if no placeholder provided", () => {
   const { rerender } = render(
     <SelectField name="test-field" label="Test Field" options={options} />,
