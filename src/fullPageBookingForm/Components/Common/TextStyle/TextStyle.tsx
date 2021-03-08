@@ -4,7 +4,7 @@ import "./TextStyle.scss";
 
 export type TextStyleProps = {
   variant: "display1" | "display2" | "body1" | "body2" | "body3";
-  text: string;
+  text: string | JSX.Element;
 };
 export const TextStyle: FunctionComponent<TextStyleProps> = ({
   variant,
