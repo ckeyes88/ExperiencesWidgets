@@ -1,23 +1,32 @@
 /** @jsx h */
 import { h } from "preact";
-import { TextField, TextFieldProps } from "./TextField";
+import { SelectField, SelectFieldProps } from "./SelectField";
 
 export default {
-  title: "Full Page Booking Form/Common/Inputs/Text Field",
-  component: TextField,
+  title: "Full Page Booking Form/Common/Inputs/Select Field",
+  component: SelectField,
 };
 
-const Template = (args: TextFieldProps) => <TextField {...args} />;
+const Template = (args: SelectFieldProps) => <SelectField {...args} />;
 
-const defaultArgs: TextFieldProps = {
+const defaultArgs: SelectFieldProps = {
   name: "test-input",
-  label: "First Name",
-  placeholder: "Enter your first name",
+  label: "Option",
+  placeholder: "Select an option",
   required: true,
   disabled: false,
-  textCentered: false,
   fullWidth: false,
   value: "",
+  options: [
+    {
+      value: "option_a",
+      text: "Option A",
+    },
+    {
+      value: "option_b",
+      text: "Option B",
+    },
+  ],
 };
 
 export const Default = Template.bind({});

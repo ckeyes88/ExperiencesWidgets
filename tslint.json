@@ -5,7 +5,8 @@
     "no-any": false,
     "prefer-method-signature": false,
     "no-default-export": false,
-    "no-object-literal-type-assertion": false
+    "no-object-literal-type-assertion": false,
+    "jsx-wrap-multiline": false
   }
   
 }

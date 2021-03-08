@@ -6,6 +6,11 @@
   font-family: "Montserrat";
 }
 
+.input--full-width {
+  display: flex;
+  flex-direction: column;
+}
+
 .input__label {
   display: flex;
   justify-content: space-between;

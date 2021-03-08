@@ -1,33 +1,31 @@
 /** @jsx h */
 import { h, Fragment, FunctionComponent } from "preact";
 import { JSXInternal } from "preact/src/jsx";
+import { TextFieldProps } from "./TextField";
 import "./Input.scss";
 
-export type TextFieldProps = {
-  name: string;
-  label: string;
-  placeholder?: string;
-  required?: boolean;
-  disabled?: boolean;
-  fullWidth?: boolean;
-  textCentered?: boolean;
-  value?: string;
-  onChange?: (value: string) => void;
+export type SelectOption = {
+  value: string;
+  text: string;
 };
 
-export const TextField: FunctionComponent<TextFieldProps> = ({
+export type SelectFieldProps = Omit<TextFieldProps, "textCentered"> & {
+  options: SelectOption[];
+};
+
+export const SelectField: FunctionComponent<SelectFieldProps> = ({
   name,
   label,
   placeholder,
   required,
   disabled,
   fullWidth,
-  textCentered,
   value,
+  options,
   onChange,
 }) => {
   const handleChange: JSXInternal.DOMAttributes<
-    HTMLInputElement
+    HTMLSelectElement
   >["onChange"] = (event) => {
     if (onChange) {
       onChange(event.currentTarget.value);
@@ -35,10 +33,6 @@ export const TextField: FunctionComponent<TextFieldProps> = ({
   };
 
   const inputFieldClassNames = ["input__field"];
-
-  if (textCentered) {
-    inputFieldClassNames.push("input__field--text-centered");
-  }
 
   if (disabled) {
     inputFieldClassNames.push("input__field--disabled");
@@ -57,7 +51,7 @@ export const TextField: FunctionComponent<TextFieldProps> = ({
           <span className="input__label__text">{label}</span>
           {!required && <span className="input__label__marker">opt</span>}
         </label>
-        <input
+        <select
           className={inputFieldClassNames.join(" ")}
           id={name}
           name={name}
@@ -65,9 +59,17 @@ export const TextField: FunctionComponent<TextFieldProps> = ({
           required={required}
           disabled={disabled}
           value={value}
-          type="text"
           onChange={handleChange}
-        />
+        >
+          <option disabled={required} value="" selected>
+            {placeholder || "Make selection"}
+          </option>
+          {options.map(({ value, text }) => (
+            <option key={value} value={value}>
+              {text}
+            </option>
+          ))}
+        </select>
       </div>
     </Fragment>
   );
