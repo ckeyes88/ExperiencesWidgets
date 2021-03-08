@@ -535,7 +535,7 @@ export class CalendarWidgetMain extends Component<
     // remove attendee info from custom form fields
     const filteredCustomFormFieldValues = customFormFieldValues
       ? customFormFieldValues.filter(
-          ({ label }) => !Object.values(CUSTOM_FIELDS_TO_SKIP).includes(label)
+          ({ label }) => !(Object.values(CUSTOM_FIELDS_TO_SKIP) as string[]).includes(label)
         )
       : undefined;
 

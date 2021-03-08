@@ -155,7 +155,7 @@ export default [{
     ],
   },
   {
-    input: 'src/fullPageBookingForm/index.tsx',
+    input: 'src/fullPageBookingForm/index.ts',
     output: {
       file: "./dist/fullPageBookingForm.js",
       format: 'iife',
