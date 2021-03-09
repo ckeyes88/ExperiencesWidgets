@@ -5,12 +5,14 @@ export type CloseIconProps = {
   color?: string;
   width?: number;
   height?: number;
+  strokeSize?: number;
 };
 
 export const CloseIcon: FunctionComponent<CloseIconProps> = ({
   color = "#000",
   width = 16,
   height = 16,
+  strokeSize = 3,
 }) => (
   <svg
     className="icon"
@@ -23,12 +25,12 @@ export const CloseIcon: FunctionComponent<CloseIconProps> = ({
     <path
       d="M8.48511 8.48532L25.4557 25.4559"
       stroke={color}
-      stroke-width="3"
+      stroke-width={strokeSize}
     />
     <path
       d="M8.48511 25.4558L25.4557 8.48528"
       stroke={color}
-      stroke-width="3"
+      stroke-width={strokeSize}
     />
   </svg>
 );

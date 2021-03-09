@@ -17,7 +17,7 @@ export const DialogExample: FunctionComponent = () => {
 
   return (
     <Fragment>
-      <Button text="Open modal" onClick={handleClick} />
+      <Button text="Open dialog" onClick={handleClick} />
       <Dialog
         open={open}
         title="Dialog Title"
