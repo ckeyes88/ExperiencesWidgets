@@ -1,7 +1,7 @@
 /** @jsx h */
 import { h } from "preact";
 import { Card } from "./Card";
-import { TextStyle } from "../TextStyle/TextStyle";
+import { TextStyle } from "../TextStyle";
 
 export default {
   title: "Full Page Booking Form/Common/Card",

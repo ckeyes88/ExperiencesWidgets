@@ -1,7 +1,7 @@
 /** @jsx h */
 import { h, Fragment, FunctionComponent } from "preact";
 import { useState } from "preact/hooks";
-import { Button } from "../Button/Button";
+import { Button } from "../Button";
 import { Dialog } from "./Dialog";
 
 export const DialogExample: FunctionComponent = () => {

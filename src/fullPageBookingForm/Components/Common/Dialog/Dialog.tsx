@@ -1,8 +1,8 @@
 /** @jsx h */
 import { h, FunctionComponent } from "preact";
-import { Button, ButtonProps } from "../Button/Button";
-import { Card } from "../Card/Card";
-import { TextStyle } from "../TextStyle/TextStyle";
+import { Button, ButtonProps } from "../Button";
+import { Card } from "../Card";
+import { TextStyle } from "../TextStyle";
 import { CloseIcon } from "../Icon/CloseIcon";
 import "./Dialog.scss";
 

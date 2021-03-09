@@ -2,8 +2,8 @@
 /** @jsx h */
 import { h, Fragment, FunctionComponent } from "preact";
 import { useState } from "preact/hooks";
-import { Button } from "../Button/Button";
-import { TextStyle } from "../TextStyle/TextStyle";
+import { Button } from "../Button";
+import { TextStyle } from "../TextStyle";
 import { WizardModal } from "./WizardModal";
 import { useWizardModalAction } from "./WizardModalProvider";
 
