@@ -378,7 +378,7 @@ export class CalendarWidgetMain extends Component<
 
     //if the event payment type is prepay, order will be added to cart
     if (paymentType === PaymentType.Prepay) {
-      const { event, quantitiesMap, selectedTimeslot } = this.state;
+      const { event, quantitiesMap, selectedTimeslot, labels } = this.state;
       const { name: eventName, variants } = event;
 
       //set up arguments for adding to cart
@@ -400,7 +400,7 @@ export class CalendarWidgetMain extends Component<
         //Parse fields in custom order form, if they exist.
         fields = fields.concat(
           ...this.state.lineItems.map((lineItem) => {
-            return lineItem.customOrderDetailsValues.filter(({ label }) => !Object.values(CUSTOM_FIELDS_TO_SKIP).includes(label)).map((det) => ({
+            return lineItem.customOrderDetailsValues.filter(({ label }) => !Object.values({...CUSTOM_FIELDS_TO_SKIP,...labels}).includes(label)).map((det) => ({
               label: det.label,
               value: det.value,
             }));
@@ -408,11 +408,18 @@ export class CalendarWidgetMain extends Component<
         );
       } else {
         this.state.lineItems.forEach(li => {
-          const firstNameField = li.customOrderDetailsValues.find(f => f.label === CUSTOM_FIELDS_TO_SKIP.firstName);
-          const lastNameField = li.customOrderDetailsValues.find(f => f.label === CUSTOM_FIELDS_TO_SKIP.lastName);
-          const emailField = li.customOrderDetailsValues.find(f => f.label === CUSTOM_FIELDS_TO_SKIP.email);
+          const firstNameField = li.customOrderDetailsValues.find(f => {
+            return (f.label === CUSTOM_FIELDS_TO_SKIP.firstName) || (f.label === labels.firstNameLabel);
+          });
+          const lastNameField = li.customOrderDetailsValues.find(f => {
+            return (f.label === CUSTOM_FIELDS_TO_SKIP.lastName) || (f.label === labels.lastNameLabel);
+          });
+          const emailField = li.customOrderDetailsValues.find(f => {
+            return (f.label === CUSTOM_FIELDS_TO_SKIP.email) || (f.label === labels.emailLabel);
+          });
+
           const attendee: FormAttendee = {
-            fields: li.customOrderDetailsValues.filter(({ label }) => !Object.values(CUSTOM_FIELDS_TO_SKIP).includes(label)).map((det) => ({
+            fields: li.customOrderDetailsValues.filter(({ label }) => !Object.values({...CUSTOM_FIELDS_TO_SKIP,...labels}).includes(label)).map((det) => ({
               label: det.label,
               value: det.value,
             })),
