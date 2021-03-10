@@ -8,6 +8,11 @@ export type FormField = {
   value?: string;
 };
 
+export type FormFieldValue = {
+  label: string;
+  value: string;
+};
+
 export enum OrderDetailsFormType {
   None = "None",
   PerOrder = "PerOrder",

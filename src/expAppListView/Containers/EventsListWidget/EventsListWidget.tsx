@@ -212,8 +212,6 @@ export class EventsListWidget extends Component<EventsListWidgetProps, EventsLis
         const data = monthData.data;
         for (let j = 0; j < data.length; j++) {
           const { _id, name, handle, images, imageLinks, shopifyProductId } = data[j];
-          // console.log(name, _id, shopifyProductId);
-          
           // Only add to our lookup if it's not a draft
           if (!!shopifyProductId) {            
             this.eventLookup[_id] = {
