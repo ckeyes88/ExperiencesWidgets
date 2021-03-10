@@ -1,9 +1,11 @@
 @import "../../../base";
 
-// @todo: implement slide up/down animation
+.dialog,
+.dialog__content {
+  transition: all 0.4s ease;
+}
 
 .dialog {
-  display: none;
   position: fixed;
   top: 0;
   right: 0;
@@ -11,19 +13,27 @@
   left: 0;
   background: rgba(0, 0, 0, 0.3);
   z-index: 1;
+  visibility: hidden;
+  opacity: 0;
 }
 
 .dialog--open {
-  display: block;
+  visibility: visible;
+  opacity: 1;
+
+  .dialog__content {
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .dialog__content {
   display: inline-block;
   max-width: 459px;
   position: absolute;
-  top: 50%;
+  top: 100%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0);
 }
 
 .dialog__title {
