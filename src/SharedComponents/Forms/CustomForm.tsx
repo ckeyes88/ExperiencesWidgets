@@ -23,12 +23,12 @@ export class CustomForm extends Component<ICustomFormProps> {
   /** Renders a single field */
   renderFormField = (field: FormFieldDBO, i: number) => {
     const { labels } = this.props;
-
+    // Changed this to combine field and value using %%% since a dash causes problems if the customer inputs a field name with a dash i.e. T-Shirt
     return (
       <div className="FormField-Container">
         <FormField
           optionalLabel={labels.optionalFieldLabel}
-          key={`${field.label}-${i}`}
+          key={`${field.label}%%%${i}`}
           type={field.type}
           label={field.label}
           required={field.required}
@@ -36,7 +36,7 @@ export class CustomForm extends Component<ICustomFormProps> {
           placeholder={field.placeholder}
           defaultValue={field.defaultValue}
           value={field.value}
-          id={`${field.label}-${i}`}
+          id={`${field.label}%%%${i}`}
           onFieldChange={this.props.handleChange}
         />
       </div>

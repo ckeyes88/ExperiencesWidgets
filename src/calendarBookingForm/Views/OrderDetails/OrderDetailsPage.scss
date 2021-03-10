@@ -81,9 +81,15 @@
   margin: 1rem 0 0.5rem 0;
 }
 
-.CustomOrderDetails-Ticket {
+.CustomOrderDetails-Ticket,
+.CustomOrderDetails-Description {
   font-size: 1.5rem;
 }
+
+.CustomOrderDetails-Title {
+  font-size: 2.0rem;
+}
+
 .CustomOrderDetails-VariantName {
   display: block;
 }
