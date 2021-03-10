@@ -11,7 +11,8 @@ import copy from "rollup-plugin-copy";
 
 dotenv.config();
 
-export default [{
+export default [
+  {
     input: "src/widgets.ts",
     output: {
       file: "./dist/widgets.js",
@@ -133,6 +134,12 @@ export default [{
         ]
       }),
       typescript(),
+      alias({
+        entries: [
+          { find: 'react', replacement: 'preact/compat' },
+          { find: 'react-dom', replacement: 'preact/compat' }
+        ]
+      }),
       nodeResolve({browser: true, preferBuiltins: true}),
       json(),
       commonjs({
@@ -140,12 +147,6 @@ export default [{
         namedExports: {
           'node_modules/preact/dist/preact.js': ['h', 'render', 'Component', 'cloneElement', 'options'],
         },
-      }),
-      alias({
-        entries: [
-          { find: 'react', replacement: 'preact/compat' },
-          { find: 'react-dom', replacement: 'preact/compat' }
-        ]
       }),
       copy({
         targets: [
@@ -177,6 +178,12 @@ export default [{
         ]
       }),
       typescript(),
+      alias({
+        entries: [
+          { find: 'react', replacement: 'preact/compat' },
+          { find: 'react-dom', replacement: 'preact/compat' }
+        ]
+      }),
       nodeResolve({browser: true, preferBuiltins: true}),
       json(),
       commonjs({
@@ -184,12 +191,6 @@ export default [{
         namedExports: {
           'node_modules/preact/dist/preact.js': ['h', 'render', 'Component', 'cloneElement', 'options'],
         },
-      }),
-      alias({
-        entries: [
-          { find: 'react', replacement: 'preact/compat' },
-          { find: 'react-dom', replacement: 'preact/compat' }
-        ]
       }),
       // copy({
       //   targets: [
