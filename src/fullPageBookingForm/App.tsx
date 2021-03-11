@@ -1,10 +1,18 @@
 /** @jsx h */
 import { h, FunctionComponent } from "preact";
-import { useEffect } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
+import { BookingFormPage } from "./Typings/BookingFormPage";
+import { WizardModal } from "./Components/Common/WizardModal";
+import { TimeslotSelection } from "./Components/Views/TimeslotSelection";
+import { OrderDetails } from "./Components/Views/OrderDetails";
+import { SubmissionLoader } from "./Components/Views/SubmissionLoader";
+import { Confirmation } from "./Components/Views/Confirmation";
 
 const useConnectActivators = () => {
+  const [open, setOpen] = useState(false);
+
   const handleClick = () => {
-    alert("This is where the booking modal appears.");
+    setOpen(true);
   };
 
   useEffect(() => {
@@ -22,6 +30,11 @@ const useConnectActivators = () => {
       });
     };
   }, []);
+
+  return {
+    open,
+    setOpen,
+  };
 };
 
 export type AppProps = {
@@ -32,12 +45,30 @@ export type AppProps = {
 };
 
 export const App: FunctionComponent<AppProps> = (props) => {
-  useConnectActivators();
+  const { open, setOpen } = useConnectActivators();
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
-    <div>
-      <h1>Full page booking form</h1>
-      <code>{JSON.stringify(props, null, 2)}</code>
-    </div>
+    <WizardModal
+      open={open}
+      initialPage={BookingFormPage.TIMESLOT_SELECTION}
+      onClose={handleClose}
+    >
+      <WizardModal.Page page={BookingFormPage.TIMESLOT_SELECTION}>
+        <TimeslotSelection />
+      </WizardModal.Page>
+      <WizardModal.Page page={BookingFormPage.ORDER_DETAILS}>
+        <OrderDetails />
+      </WizardModal.Page>
+      <WizardModal.Page page={BookingFormPage.SUBMISSION_LOADER}>
+        <SubmissionLoader />
+      </WizardModal.Page>
+      <WizardModal.Page page={BookingFormPage.CONFIRMATION}>
+        <Confirmation />
+      </WizardModal.Page>
+    </WizardModal>
   );
 };

@@ -1,0 +1,6 @@
+export enum BookingFormPage {
+  TIMESLOT_SELECTION,
+  ORDER_DETAILS,
+  SUBMISSION_LOADER,
+  CONFIRMATION,
+}
