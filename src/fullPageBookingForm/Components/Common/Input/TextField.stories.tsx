@@ -20,8 +20,8 @@ const defaultArgs: TextFieldProps = {
   value: "",
 };
 
-export const Default = Template.bind({});
-Default.args = {
+export const Basic = Template.bind({});
+Basic.args = {
   ...defaultArgs,
 };
 

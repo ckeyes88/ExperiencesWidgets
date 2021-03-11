@@ -7,4 +7,4 @@ export default {
   component: DialogExample,
 };
 
-export const Default = () => <DialogExample />;
+export const Basic = () => <DialogExample />;

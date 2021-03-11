@@ -14,4 +14,4 @@ const Template = () => (
   </Card>
 );
 
-export const Default = Template.bind({});
+export const Basic = Template.bind({});
