@@ -1,6 +1,6 @@
 /** @jsx h */
 import { h, createContext, FunctionComponent } from "preact";
-import { useContext, useState } from "preact/hooks";
+import { useContext, useEffect, useState } from "preact/hooks";
 
 type WizardModalStateContextValue = {
   currentPage: number;
@@ -21,11 +21,13 @@ const WizardModalActionContext = createContext<
 
 export type WizardModalProviderProps = {
   initialPage: number;
+  open: boolean;
   onClose: () => void;
 };
 
 export const WizardModalProvider: FunctionComponent<WizardModalProviderProps> = ({
   initialPage,
+  open,
   children,
   onClose,
 }) => {
@@ -34,10 +36,15 @@ export const WizardModalProvider: FunctionComponent<WizardModalProviderProps> = 
   };
   const [stateValue, setStateValue] = useState(initialStateValue);
 
+  useEffect(() => {
+    if (open) {
+      setStateValue({ currentPage: initialPage });
+    }
+  }, [open]);
+
   const actionValue: WizardModalActionContextValue = {
     setPage: (pageNumber) => setStateValue({ currentPage: pageNumber }),
     close: () => {
-      setStateValue(initialStateValue);
       onClose();
     },
   };

@@ -20,7 +20,11 @@ export const WizardModal: FunctionComponent<WizardModalProps> & {
   }
 
   return (
-    <WizardModalProvider initialPage={initialPage} onClose={onClose}>
+    <WizardModalProvider
+      open={open}
+      initialPage={initialPage}
+      onClose={onClose}
+    >
       <div role="dialog" className={wizardModalClassNames.join(" ")}>
         {children}
       </div>
