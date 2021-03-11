@@ -10,6 +10,14 @@ module.exports = {
       include: path.resolve(__dirname, "../"),
     });
 
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        react: "preact/compat",
+        "react-dom": "preact/compat",
+      },
+    };
+
     return config;
   },
 };
