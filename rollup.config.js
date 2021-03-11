@@ -8,6 +8,7 @@ import json from "rollup-plugin-json";
 import dotenv from "dotenv";
 import alias from '@rollup/plugin-alias';
 import copy from "rollup-plugin-copy";
+import scssSmartAsset from 'rollup-plugin-scss-smart-asset';
 
 dotenv.config();
 
@@ -169,7 +170,12 @@ export default [
         __ENV_NAME__: process.env.ENV_NAME,
         __BASE_URL__: process.env.BASE_WIDGET_URL
       }),
-      scss(),
+      scssSmartAsset({
+        output: true,
+        postcssUrlConfig: {
+          url: "inline"
+        }
+      }),
       babel({
         exclude: [
           'node_modules/!(' +
@@ -192,11 +198,7 @@ export default [
           'node_modules/preact/dist/preact.js': ['h', 'render', 'Component', 'cloneElement', 'options'],
         },
       }),
-      // copy({
-      //   targets: [
-      //     { src: 'src/assets/**/*', dest: 'dist/assets' }
-      //   ],
-      // })
+      
     ],
   },
 ];

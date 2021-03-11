@@ -96,6 +96,7 @@
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-replace": "2.2.0",
     "rollup-plugin-scss": "1.0.2",
+    "rollup-plugin-scss-smart-asset": "0.0.2",
     "rollup-plugin-typescript3": "1.1.2",
     "rollup-plugin-uglify": "6.0.2",
     "rollup-watch": "4.3.1",

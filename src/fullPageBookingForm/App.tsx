@@ -1,6 +1,10 @@
 /** @jsx h */
 import { h, FunctionComponent } from "preact";
 import { useEffect, useState } from "preact/hooks";
+import "@fontsource/montserrat/400.css";
+import "@fontsource/montserrat/500.css";
+import "@fontsource/montserrat/600.css";
+import "@fontsource/montserrat/700.css";
 import { BookingFormPage } from "./Typings/BookingFormPage";
 import { WizardModal } from "./Components/Common/WizardModal";
 import { TimeslotSelection } from "./Components/Views/TimeslotSelection";

@@ -1,5 +1,4 @@
 import "ts-polyfill";
-import "@fontsource/montserrat/600.css";
 import { App, AppProps } from "./App";
 import { mountComponent } from "../Utils/mount";
 
