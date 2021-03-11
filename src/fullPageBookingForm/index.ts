@@ -1,9 +1,9 @@
 import "ts-polyfill";
 import "@fontsource/montserrat/600.css";
-import { App } from "./App";
+import { App, AppProps } from "./App";
 import { mountComponent } from "../Utils/mount";
 
-mountComponent({
+mountComponent<AppProps>({
   dataName: "expapp-full-page-booking-form",
   formatData(data) {
     if (!data.fullPageBookingFormShopUrl) {
@@ -25,7 +25,6 @@ mountComponent({
     }
 
     return {
-      ...data,
       baseUrl: data.fullPageBookingFormBaseUrl,
       shopUrl: data.fullPageBookingFormShopUrl,
       shopifyProductId: parseInt(data.fullPageBookingFormProductId),

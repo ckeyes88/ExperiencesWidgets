@@ -1,5 +1,6 @@
+/** @jsx h */
+import { h, FunctionComponent } from "preact";
 import { useEffect } from "preact/hooks";
-import { FunctionComponent } from "preact";
 
 const useConnectActivators = () => {
   const handleClick = () => {
@@ -23,8 +24,20 @@ const useConnectActivators = () => {
   }, []);
 };
 
-export const App: FunctionComponent = () => {
+export type AppProps = {
+  baseUrl: string;
+  languageCode: string;
+  shopUrl: string;
+  shopifyProductId: number;
+};
+
+export const App: FunctionComponent<AppProps> = (props) => {
   useConnectActivators();
 
-  return null;
+  return (
+    <div>
+      <h1>Full page booking form</h1>
+      <code>{JSON.stringify(props, null, 2)}</code>
+    </div>
+  );
 };
