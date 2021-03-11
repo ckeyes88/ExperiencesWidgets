@@ -4,9 +4,11 @@ import { BookingFormPage } from "../../../Typings/BookingFormPage";
 import { Button } from "../../Common/Button";
 import { TextStyle } from "../../Common/TextStyle";
 import { useWizardModalAction } from "../../Common/WizardModal";
+import { useWidgetData } from "../../../WidgetDataProvider";
 
 export const TimeslotSelection: FunctionComponent = () => {
   const { setPage } = useWizardModalAction();
+  const widgetData = useWidgetData();
 
   return (
     <Fragment>
@@ -19,6 +21,9 @@ export const TimeslotSelection: FunctionComponent = () => {
         text="Next"
         onClick={() => setPage(BookingFormPage.ORDER_DETAILS)}
       />
+      <pre>
+        <code>{JSON.stringify(widgetData, null, 2)}</code>
+      </pre>
     </Fragment>
   );
 };

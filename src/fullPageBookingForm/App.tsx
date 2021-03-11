@@ -11,6 +11,7 @@ import { TimeslotSelection } from "./Components/Views/TimeslotSelection";
 import { OrderDetails } from "./Components/Views/OrderDetails";
 import { SubmissionLoader } from "./Components/Views/SubmissionLoader";
 import { Confirmation } from "./Components/Views/Confirmation";
+import { WidgetDataProvider } from "./WidgetDataProvider";
 
 const useConnectActivators = () => {
   const [open, setOpen] = useState(false);
@@ -56,23 +57,25 @@ export const App: FunctionComponent<AppProps> = (props) => {
   };
 
   return (
-    <WizardModal
-      open={open}
-      initialPage={BookingFormPage.TIMESLOT_SELECTION}
-      onClose={handleClose}
-    >
-      <WizardModal.Page page={BookingFormPage.TIMESLOT_SELECTION}>
-        <TimeslotSelection />
-      </WizardModal.Page>
-      <WizardModal.Page page={BookingFormPage.ORDER_DETAILS}>
-        <OrderDetails />
-      </WizardModal.Page>
-      <WizardModal.Page page={BookingFormPage.SUBMISSION_LOADER}>
-        <SubmissionLoader />
-      </WizardModal.Page>
-      <WizardModal.Page page={BookingFormPage.CONFIRMATION}>
-        <Confirmation />
-      </WizardModal.Page>
-    </WizardModal>
+    <WidgetDataProvider data={props}>
+      <WizardModal
+        open={open}
+        initialPage={BookingFormPage.TIMESLOT_SELECTION}
+        onClose={handleClose}
+      >
+        <WizardModal.Page page={BookingFormPage.TIMESLOT_SELECTION}>
+          <TimeslotSelection />
+        </WizardModal.Page>
+        <WizardModal.Page page={BookingFormPage.ORDER_DETAILS}>
+          <OrderDetails />
+        </WizardModal.Page>
+        <WizardModal.Page page={BookingFormPage.SUBMISSION_LOADER}>
+          <SubmissionLoader />
+        </WizardModal.Page>
+        <WizardModal.Page page={BookingFormPage.CONFIRMATION}>
+          <Confirmation />
+        </WizardModal.Page>
+      </WizardModal>
+    </WidgetDataProvider>
   );
 };
