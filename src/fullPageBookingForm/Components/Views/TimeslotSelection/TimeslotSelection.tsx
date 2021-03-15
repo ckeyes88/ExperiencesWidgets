@@ -1,10 +1,10 @@
 /** @jsx h */
 import { h, FunctionComponent, Fragment } from "preact";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
+import { useWidgetData } from "../../WidgetDataProvider";
 import { Button } from "../../Common/Button";
 import { TextStyle } from "../../Common/TextStyle";
 import { useWizardModalAction } from "../../Common/WizardModal";
-import { useWidgetData } from "../../../WidgetDataProvider";
 
 export const TimeslotSelection: FunctionComponent = () => {
   const { setPage } = useWizardModalAction();

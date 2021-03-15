@@ -1,5 +1,5 @@
 import "ts-polyfill";
-import { App, AppProps } from "./App";
+import { App, AppProps } from "./Components/App";
 import { mountComponent } from "../Utils/mount";
 
 mountComponent<AppProps>({

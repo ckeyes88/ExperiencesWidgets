@@ -5,12 +5,12 @@ import "@fontsource/montserrat/400.css";
 import "@fontsource/montserrat/500.css";
 import "@fontsource/montserrat/600.css";
 import "@fontsource/montserrat/700.css";
-import { BookingFormPage } from "./Typings/BookingFormPage";
-import { WizardModal } from "./Components/Common/WizardModal";
-import { TimeslotSelection } from "./Components/Views/TimeslotSelection";
-import { OrderDetails } from "./Components/Views/OrderDetails";
-import { SubmissionLoader } from "./Components/Views/SubmissionLoader";
-import { Confirmation } from "./Components/Views/Confirmation";
+import { BookingFormPage } from "../Typings/BookingFormPage";
+import { WizardModal } from "./Common/WizardModal";
+import { TimeslotSelection } from "./Views/TimeslotSelection";
+import { OrderDetails } from "./Views/OrderDetails";
+import { SubmissionLoader } from "./Views/SubmissionLoader";
+import { Confirmation } from "./Views/Confirmation";
 import { WidgetDataProvider } from "./WidgetDataProvider";
 
 const useConnectActivators = () => {
