@@ -1,10 +1,6 @@
 /** @jsx h */
 import { h, FunctionComponent } from "preact";
-import { useEffect, useState } from "preact/hooks";
-import "@fontsource/montserrat/400.css";
-import "@fontsource/montserrat/500.css";
-import "@fontsource/montserrat/600.css";
-import "@fontsource/montserrat/700.css";
+import { useConnectActivators } from "../Hooks/useConnectActivators";
 import { BookingFormPage } from "../Typings/BookingFormPage";
 import { WizardModal } from "./Common/WizardModal";
 import { TimeslotSelection } from "./Views/TimeslotSelection";
@@ -12,35 +8,6 @@ import { OrderDetails } from "./Views/OrderDetails";
 import { SubmissionLoader } from "./Views/SubmissionLoader";
 import { Confirmation } from "./Views/Confirmation";
 import { WidgetDataProvider } from "./WidgetDataProvider";
-
-const useConnectActivators = () => {
-  const [open, setOpen] = useState(false);
-
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  useEffect(() => {
-    const seeDatesButtons = document.querySelectorAll(
-      ".expapp-booking-form-activator",
-    );
-
-    seeDatesButtons.forEach((button) => {
-      button.addEventListener("click", handleClick);
-    });
-
-    return () => {
-      seeDatesButtons.forEach((button) => {
-        button.removeEventListener("click", handleClick);
-      });
-    };
-  }, []);
-
-  return {
-    open,
-    setOpen,
-  };
-};
 
 export type AppProps = {
   baseUrl: string;
