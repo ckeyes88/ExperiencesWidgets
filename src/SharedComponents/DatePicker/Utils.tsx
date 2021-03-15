@@ -55,11 +55,9 @@ export const getMonthHeaderTemplate = (locale: string = "en-US", weekStartsOn: W
   if (!Array.isArray(dayNameCache[locale])) {
     dayNameCache[locale] = [...Array(7)].map((_, i) => {
       // Get a date object set to i+[random sunday offset]th day.
-      const baseDate = new Date(Date.UTC(2017, 0, i + 2 + weekStartsOn)); // if +2 week starts on Sunday, if +3 then on Monday
-
+      const baseDate = new Date(2017, 0, i + 1 + weekStartsOn); // if +2 week starts on Sunday, if +3 then on Monday
       // Get full name of this day.
       const dayName = baseDate.toLocaleDateString(locale, { weekday: "long" });
-
       return {
         dayName,
         style: {
@@ -69,6 +67,7 @@ export const getMonthHeaderTemplate = (locale: string = "en-US", weekStartsOn: W
       };
     });
   }
+
   return dayNameCache[locale];
 };
 
@@ -78,6 +77,7 @@ export const getMonthTemplate = (month: number, year: number, weekStartsOn: Week
   const numDaysInMonth = daysInMonth(month, year);
   // Days between Sunday and start of month.
   const offset = (new Date(year, month - 1, 1)).getDay() + (weekStartsOn === 0 ? 1 : 0);
+  
   // Fill in array with days of month.
   let monthTemplates: MonthTemplate[] = [];
   for (let i = 0; i < numDaysInMonth; i++) {
@@ -91,6 +91,7 @@ export const getMonthTemplate = (month: number, year: number, weekStartsOn: Week
       },
     });
   }
+
   return monthTemplates;
 };
 

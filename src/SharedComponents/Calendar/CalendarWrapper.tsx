@@ -6,7 +6,7 @@ import locales from "@fullcalendar/core/locales-all";
 import { AssetDBO } from "@helpfulhuman/expapp-shared-libs";
 import { Component, ComponentClass, h, JSX } from "preact";
 import { CalendarEventClick, DateClickEvent } from "../../typings/Calendar";
-import { LanguageCodes } from "../../typings/Languages";
+import { LanguageCodes, languageCodeToLocaleCode } from "../../typings/Languages";
 
 type CalendarViewType = {
   [key: string]: string;
@@ -89,7 +89,7 @@ export class Calendar extends Component<ICalendarProps, any> {
     return (
       <FullCalendarAsComponent
         locales={locales}
-        locale={languageCode || "en-US"} // not actual locale package, but its literal code
+        locale={languageCodeToLocaleCode[languageCode] || "en"} // not actual locale package, but its literal code
         showNonCurrentDates={showNonCurrentDates}
         plugins={[dayGridPlugin, listPlugin, interactionPlugin]}
         initialView={view}

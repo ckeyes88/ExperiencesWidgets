@@ -1,4 +1,4 @@
-import { FormField } from "./CustomForm";
+import { FormFieldValue } from "./CustomForm";
 
 export enum PaymentType {
   Free = "free",
@@ -7,7 +7,7 @@ export enum PaymentType {
 }
 
 export type FormAttendee = {
-  fields: FormField[];
+  fields: FormFieldValue[];
   variantId: number;
   email: string;
   firstName: string;

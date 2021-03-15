@@ -12,6 +12,16 @@ export const localeMap: { [key: string]: Locale } = {
   "ja": ja,
 };
 
+export const languageCodeToLocaleCode: { [key: string]: string } = {
+  "en-US": "en",
+  "es": "es",
+  "ger": "de",
+  "swe": "sv",
+  "fr": "fr",
+  "nl": "nl",
+  "ja": "ja",
+};
+
 /**
  * Month names; zero-indexed. Useful for grab Date month and converting to app dictionary 
  * month property.
@@ -87,6 +97,7 @@ export type AppDictionary = { [key: string]: any } & {
   emailReminderLabel: string;
   getEmailReminderDaysLabel(days: number): string;
   /** General dictionary */
+  calendarHeader: string;
   singularUnitLabel: string;
   pluralUnitLabel: string;
   free: string;
@@ -116,6 +127,7 @@ export type AppDictionary = { [key: string]: any } & {
   addLabel: string;
   nothingIsAvailableTodayLabel: string;
   goToNextAvailableLabel: string;
+  goToNextAvailableMessage: string;
   month: string;
   list: string;
   today: string;
@@ -131,6 +143,8 @@ export type LanguageDictionaryType = {
  */
 export const languageDictionary: LanguageDictionaryType = {
   "en-US": {
+    goToNextAvailableMessage: "No events to display",
+    calendarHeader: "Events Calendar",
     selectDatesLabel: "Select Dates",
     selectDatesAriaLabel:
       "Select Dates, this will open the calendar dropdown.",
@@ -263,6 +277,8 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Today",
   },
   es: {
+    goToNextAvailableMessage: "No hay eventos para mostrar",
+    calendarHeader: "Calendario de eventos",
     selectDatesLabel: "Seleccionar fechas",
     selectDatesAriaLabel:
       "Selecciona fechas, esto abrirá un calendario.",
@@ -399,6 +415,8 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Hoy dia",
   },
   ja: {
+    goToNextAvailableMessage: "表示するイベントはありません",
+    calendarHeader: "イベントカレンダー",
     selectDatesLabel: "希望日時を選択",
     selectDatesAriaLabel: "日時を選択（カレンダーのウィンドウが開きます）",
     totalLabel: "合計",
@@ -539,6 +557,8 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "今日",
   },
   ger: {
+    goToNextAvailableMessage: "Keine Ereignisse zum Anzeigen",
+    calendarHeader: "Veranstaltungskalender",
     selectDatesLabel: "Bitte Datum wählen",
     selectDatesAriaLabel:
       "Wähle das Datum aus. Dadurch wird die Dropdown-Liste für den Kalender geöffnet.",
@@ -672,6 +692,8 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Heute",
   },
   swe: {
+    goToNextAvailableMessage: "Inga händelser att visa",
+    calendarHeader: "Evenemangskalender",
     selectDatesLabel: "Välj Datum",
     selectDatesAriaLabel: "Välj Datum, detta öppnar kalendervyn.",
     totalLabel: "Total",
@@ -802,6 +824,8 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "I dag",
   },
   fr: {
+    goToNextAvailableMessage: "Aucun événement à afficher",
+    calendarHeader: "Calendrier des événements",
     selectDatesLabel: "Sélectionnez vos dates",
     selectDatesAriaLabel:
       "Sélectionnez vos dates, cela ouvrira la fenêtre déroulante avec le calendrier",
@@ -934,6 +958,8 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Aujourd'hui",
   },
   nl: {
+    goToNextAvailableMessage: "Geen evenementen om weer te geven",
+    calendarHeader: "Evenementen kalender",
     selectDatesLabel: "Selecteer datum",
     selectDatesAriaLabel:
       "Selecteer datum, dit opent kalender.",
@@ -1066,6 +1092,8 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Vandaag",
   },
   it: {
+    goToNextAvailableMessage: "Nessun evento da visualizzare",
+    calendarHeader: "Calendario eventi",
     selectDatesLabel: "Scegli le date",
     selectDatesAriaLabel: "Scegli le date, questo aprirà il menù a tendina del calendario",
     quantityLabel: "Quanti partecipanti",

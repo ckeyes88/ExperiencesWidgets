@@ -8,7 +8,7 @@ import { Modal } from "../../../SharedComponents/Modal/Modal";
 import { Availability } from "../../../typings/Availability";
 import { OrderInputData } from "../../../typings/CreateOrderInput";
 import { CustomerInputData } from "../../../typings/CustomerInput";
-import { EventDBO, EventVariantDBO, PaymentType } from "../../../typings/Event";
+import { EventDBO, EventVariantDBO, OrderDetailsFormType, PaymentType } from "../../../typings/Event";
 import { FirstAvailability } from "../../../typings/FirstAvailability";
 import { FormFieldValueInput } from "../../../typings/FormFieldValueInput";
 import {
@@ -42,6 +42,7 @@ import { OrderDetailsPage } from "../OrderDetails/OrderDetailsPage";
 import "./CalendarWidgetMain.scss";
 import { FormField } from "../../../typings/CustomForm";
 import { Weekdays } from "../../../Utils/Constants";
+import { FormAttendee } from "../../../typings/FormAttendee";
 
 enum CUSTOM_FIELDS_TO_SKIP {
   firstName = "First Name",
@@ -377,7 +378,7 @@ export class CalendarWidgetMain extends Component<
 
     //if the event payment type is prepay, order will be added to cart
     if (paymentType === PaymentType.Prepay) {
-      const { event, quantitiesMap, selectedTimeslot } = this.state;
+      const { event, quantitiesMap, selectedTimeslot, labels } = this.state;
       const { name: eventName, variants } = event;
 
       //set up arguments for adding to cart
@@ -393,17 +394,45 @@ export class CalendarWidgetMain extends Component<
           price: v.price,
         });
       }
+      let fields: FormFieldValueInput[] = [];
+      let attendees: FormAttendee[] = [];
+      if(event.customOrderDetails.formType === OrderDetailsFormType.PerOrder) {
+        //Parse fields in custom order form, if they exist.
+        fields = fields.concat(
+          ...this.state.lineItems.map((lineItem) => {
+            return lineItem.customOrderDetailsValues.filter(({ label }) => !Object.values({...CUSTOM_FIELDS_TO_SKIP,...labels}).includes(label)).map((det) => ({
+              label: det.label,
+              value: det.value,
+            }));
+          })
+        );
+      } else {
+        this.state.lineItems.forEach(li => {
+          const firstNameField = li.customOrderDetailsValues.find(f => {
+            return (f.label === CUSTOM_FIELDS_TO_SKIP.firstName) || (f.label === labels.firstNameLabel);
+          });
+          const lastNameField = li.customOrderDetailsValues.find(f => {
+            return (f.label === CUSTOM_FIELDS_TO_SKIP.lastName) || (f.label === labels.lastNameLabel);
+          });
+          const emailField = li.customOrderDetailsValues.find(f => {
+            return (f.label === CUSTOM_FIELDS_TO_SKIP.email) || (f.label === labels.emailLabel);
+          });
 
-      //Parse fields in custom order form, if they exist.
-      let fields: FormFieldValueInput[] = [].concat(
-        ...this.state.lineItems.map((lineItem) => {
-          return lineItem.customOrderDetailsValues.map((det) => ({
-            label: det.label,
-            value: det.value,
-          }));
-        })
-      );
+          const attendee: FormAttendee = {
+            fields: li.customOrderDetailsValues.filter(({ label }) => !Object.values({...CUSTOM_FIELDS_TO_SKIP,...labels}).includes(label)).map((det) => ({
+              label: det.label,
+              value: det.value,
+            })),
+            variantId: li.productVariantId,
+            firstName: firstNameField.value,
+            lastName: lastNameField.value,
+            email: emailField.value,
+          };
 
+          attendees.push(attendee);
+        });
+      }
+      
       // Define order object
       const order: AddToCartArgs = {
         variants: shopifyVariants,
@@ -411,6 +440,7 @@ export class CalendarWidgetMain extends Component<
         quantities: quantitiesMap,
         fields: fields.length > 0 ? fields : undefined,
         shopUrl: this.props.shopUrl,
+        attendees: attendees.length > 0 ? attendees : undefined,
       };
 
       //add the order to the cart
@@ -505,7 +535,7 @@ export class CalendarWidgetMain extends Component<
 
   /** Creates an order line item  */
   handleAddLineItem = (
-    variant: EventVariantDBO,
+    variant: EventVariantDBO & {quantity: number},
     customFormFieldValues?: FormFieldValueInput[],
     index?: number
   ) => {
@@ -534,9 +564,7 @@ export class CalendarWidgetMain extends Component<
 
     // remove attendee info from custom form fields
     const filteredCustomFormFieldValues = customFormFieldValues
-      ? customFormFieldValues.filter(
-          ({ label }) => !(Object.values(CUSTOM_FIELDS_TO_SKIP) as string[]).includes(label)
-        )
+      ? customFormFieldValues
       : undefined;
 
     const eventId = event._id.toString();
@@ -550,7 +578,7 @@ export class CalendarWidgetMain extends Component<
       startsAt: selectedTimeslot.startsAt,
       endsAt: selectedTimeslot.endsAt,
       timezone: selectedTimeslot.timezone,
-      quantity: 1,
+      quantity: event.customOrderDetails.formType === OrderDetailsFormType.PerOrder ? variant.quantity : 1,
       customOrderDetailsValues: filteredCustomFormFieldValues,
       attendee: {
         // @ts-ignore
