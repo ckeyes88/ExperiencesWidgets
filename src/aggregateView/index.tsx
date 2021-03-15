@@ -25,6 +25,7 @@ mountComponent({
         shopUrl: data.aggregateViewShopUrl,
         //shopifyProductId: parseInt(data.aggregateViewProductId),
         languageCode: data.aggregateViewLanguageCode || "en-US",
+        mainHeader: data.aggregateViewMainHeader,
     };
   },
   component: CalendarContainer,

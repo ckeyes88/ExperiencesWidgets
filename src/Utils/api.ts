@@ -414,7 +414,7 @@ export async function addToCart(
 
       // Populate formatted SDK/Shopify-approved line items list
       const sdkLineItems: SdkLineItemInput[] = [];
-
+      
       // For per-attendee events
       if (Array.isArray(attendees) && attendees.length > 0) {
         for (const attendee of attendees) {
@@ -503,7 +503,6 @@ export async function addToCart(
      */
     // Store request bodies in array to shoot off sequentially later
     const requests: AddToCartRequestBody[] = [];
-
     // If attendees exist, each will become separate line items
     if (Array.isArray(attendees) && attendees.length > 0) {
       for (let attendee of attendees) {

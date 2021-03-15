@@ -18,7 +18,7 @@ import { CalendarEventClick, DateClickEvent } from "../../typings/Calendar";
 import { CalendarNoEventsMessage } from "../../SharedComponents/Calendar/CalendarNoEventsMessage";
 import { Loading } from "../../SharedComponents/loading/Loading";
 import { Weekdays } from "../../Utils/Constants";
-import { AppDictionary, defineLanguageDictionary, LanguageCodes, localeMap } from "../../typings/Languages";
+import { AppDictionary, defineLanguageDictionary, LanguageCodes, languageDictionary, localeMap } from "../../typings/Languages";
 
 interface ICalendarContainerProps {
   aggregateViewBaseUrl?: string;
@@ -27,6 +27,7 @@ interface ICalendarContainerProps {
   defaultVew?: string;
   baseUrl?: string;
   languageCode?: string;
+  mainHeader?: string;
   shopUrl?: string;
   storefrontAccessToken?: string;
 }
@@ -134,6 +135,8 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
     return (
       <CalendarNoEventsMessage
         onNextAvailableClick={this.navigateToNextAvailableTS}
+        nextAvailableLabel={languageDictionary[this.props.languageCode].goToNextAvailableLabel}
+        message={languageDictionary[this.props.languageCode].goToNextAvailableMessage}
       />
     );
   }
@@ -159,10 +162,11 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   handleClose = () => this.setState({ daySelected: null });
 
   render() {
-    const { languageCode } = this.props;
+    const { languageCode, mainHeader } = this.props;
     const { fullCalendarEvents, view, daySelected, daySelectedEvents, loading, weekStartsOn, labels } = this.state;
     const titleFormat = window && window.innerWidth >= 1024 ? null : { month: "short", year: "numeric" };
 
+    const calendarHeader = mainHeader || languageDictionary[languageCode].calendarHeader || "Events Calendar";
     return (
       <div className="CalendarAggregate-Container">
         {loading && <Loading
@@ -171,7 +175,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
             zIndex: 1000,
           }}
         />}
-        <div className="main-heading">Events Calendar</div>
+        <div className="main-heading">{calendarHeader}</div>
         <div id="AggregateCalendar-Main" className="AggregateCalendar-Main">
           <CalendarViewSelector labels={labels} view={view} selectView={this.selectView} />
           <CalendarDaySchedule

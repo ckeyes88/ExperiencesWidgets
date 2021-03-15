@@ -104,14 +104,17 @@ export class OrderDetailsPage extends Component<
   /** Assembles an array of variants used in the creation of line items */
   get variants() {
     const { quantities, event } = this.props;
-    let variants: EventVariantDBO[] = [];
+    let variants: (EventVariantDBO & {quantity: number})[] = [];
     Object.keys(quantities).forEach(function (k) {
       const variant = parseInt(k);
       for (let i = 0; i < quantities[variant]; i++) {
         variants.push(
-          event.variants.find(function (v) {
-            return v.shopifyVariantId === variant;
-          })
+          {
+            ...event.variants.find(function (v) {
+              return v.shopifyVariantId === variant;
+            }),
+            quantity: quantities[variant],
+          }
         );
       }
     });
@@ -129,31 +132,45 @@ export class OrderDetailsPage extends Component<
 
   /** Passes current custom form values up to main level to be stored as a line item */
   onAddLineItem = async () => {
+    const { event } = this.props;
     const { currentCustomFormValues, currentLineItemIndex } = this.state;
 
     // Establishes the current values stored in state
     let newCustomFormValues: FormFieldValueInput[] = [
       ...currentCustomFormValues,
     ];
+    if(event.customOrderDetails.formType === OrderDetailsFormType.PerAttendee) {
+      // Use the current line item index to determine the correct variant
+      const currentVariant = this.variants[currentLineItemIndex];
 
-    // Use the current line item index to determine the correct variant
-    const currentVariant = this.variants[currentLineItemIndex];
+      // Pass the variant and the form values up to the top level
+      await this.props.onAddCustomFormValues(
+        currentVariant,
+        newCustomFormValues,
+        currentLineItemIndex
+      );
 
-    // Pass the variant and the form values up to the top level
-    await this.props.onAddCustomFormValues(
-      currentVariant,
-      newCustomFormValues,
-      currentLineItemIndex
-    );
+      // Increment the current line item index in stateR
+      const newLineItemIndex = currentLineItemIndex + 1;
 
-    // Increment the current line item index in stateR
-    const newLineItemIndex = currentLineItemIndex + 1;
+      // Reset the form values in state
+      this.setState({
+        currentCustomFormValues: [],
+        currentLineItemIndex: newLineItemIndex,
+      });
+    } else {
+      let lineItemPromises: Promise<any>[] = [];
+      let newCustomFormValues: FormFieldValueInput[] = [
+        ...currentCustomFormValues,
+      ];
+      // loop over each variant
+      this.variants.forEach((v, i) => {
+        lineItemPromises.push(this.props.onAddCustomFormValues(v, newCustomFormValues, i))
+      });
 
-    // Reset the form values in state
-    this.setState({
-      currentCustomFormValues: [],
-      currentLineItemIndex: newLineItemIndex,
-    });
+      await Promise.all(lineItemPromises);
+    }
+    
   };
 
   onPreviousClick = async () => {
@@ -195,10 +212,10 @@ export class OrderDetailsPage extends Component<
     this.state.currentCustomFormValues.forEach((v, i) => {
       newCurrentCustomFormValues[i] = v;
     });
-
     //fieldLabelIndex is the field label/name and its index position joined by a hyphen
     //Split the values apart here
-    const [label, index] = fieldLabelIndex.split("-");
+    // Changed this to split on %%% since a dash causes problems if the customer inputs a field name with a dash i.e. T-Shirt
+    const [label, index] = fieldLabelIndex.split("%%%");
 
     //Create a new custom form value of type FormFieldValueInput
     const oldVal = newCurrentCustomFormValues[parseInt(index)] || {};
@@ -375,24 +392,21 @@ export class OrderDetailsPage extends Component<
       return (
         <div className="CustomOrderDetails">
           <div className="CustomOrderDetails-Header">
-            <p>
-              <span className="CustomOrderDetails-Ticket">
-                {labels.getPerAttendeeStepLabel(
-                  currentLineItemIndex + 1,
-                  this.variants.length
-                )}
-              </span>
-              <span className="CustomOrderDetails-VariantName">
-                {variant.name}
-              </span>
-            </p>
-            <button
-              id="MobileView-OrderDetails-CloseBtn"
-              onClick={this.props.closeModal}
-              type="button"
-            >
-              <CloseIcon />
-            </button>
+            <h1 className="CustomOrderDetails-Title">{event.customOrderDetails.formTitle}</h1>
+            <h4 className="CustomOrderDetails-Description">{event.customOrderDetails.formDescription}</h4> 
+            <div>
+              <p>
+                <span className="CustomOrderDetails-Ticket">
+                  {labels.getPerAttendeeStepLabel(
+                    currentLineItemIndex + 1,
+                    this.variants.length
+                  )}
+                </span>
+                <span className="CustomOrderDetails-VariantName">
+                  {variant.name}
+                </span>
+              </p>
+            </div>
           </div>
           <form id="CustomOrder-Details" onSubmit={this.handleSubmitCustomForm}>
             <CustomForm
@@ -426,9 +440,8 @@ export class OrderDetailsPage extends Component<
       return (
         <div className="CustomOrderDetails">
           <div className="CustomOrderDetails-Header">
-            <span className="CustomOrderDetails-VariantName">
-              {variant.name}
-            </span>
+            <h1 className="CustomOrderDetails-Title">{event.customOrderDetails.formTitle}</h1>
+            <h4 className="CustomOrderDetails-Description">{event.customOrderDetails.formDescription}</h4> 
           </div>
           <form id="CustomOrder-Details" onSubmit={this.handleSubmitCustomForm}>
             <CustomForm
