@@ -44,10 +44,10 @@ import { FormField } from "../../../typings/CustomForm";
 import { Weekdays } from "../../../Utils/Constants";
 import { FormAttendee } from "../../../typings/FormAttendee";
 
-enum CUSTOM_FIELDS_TO_SKIP {
-  firstName = "First Name",
-  lastName = "Last Name",
-  email = "Email",
+let CUSTOM_FIELDS_TO_SKIP = {
+  firstName: "First Name",
+  lastName: "Last Name",
+  email: "Email",
 }
 
 /** 32 days expressed in seconds, used to fetch new availability */
@@ -396,11 +396,15 @@ export class CalendarWidgetMain extends Component<
       }
       let fields: FormFieldValueInput[] = [];
       let attendees: FormAttendee[] = [];
+      CUSTOM_FIELDS_TO_SKIP.firstName = labels.firstNameLabel || CUSTOM_FIELDS_TO_SKIP.firstName;
+      CUSTOM_FIELDS_TO_SKIP.lastName = labels.lastNameLabel || CUSTOM_FIELDS_TO_SKIP.lastName;
+      CUSTOM_FIELDS_TO_SKIP.lastName = labels.emailLabel || CUSTOM_FIELDS_TO_SKIP.email;
+      
       if(event.customOrderDetails.formType === OrderDetailsFormType.PerOrder) {
         //Parse fields in custom order form, if they exist.
         fields = fields.concat(
           ...this.state.lineItems.map((lineItem) => {
-            return lineItem.customOrderDetailsValues.filter(({ label }) => !Object.values({...CUSTOM_FIELDS_TO_SKIP,...labels}).includes(label)).map((det) => ({
+            return lineItem.customOrderDetailsValues.filter(({ label }) => !Object.values({...CUSTOM_FIELDS_TO_SKIP}).includes(label)).map((det) => ({
               label: det.label,
               value: det.value,
             }));
@@ -417,9 +421,8 @@ export class CalendarWidgetMain extends Component<
           const emailField = li.customOrderDetailsValues.find(f => {
             return (f.label === CUSTOM_FIELDS_TO_SKIP.email) || (f.label === labels.emailLabel);
           });
-
           const attendee: FormAttendee = {
-            fields: li.customOrderDetailsValues.filter(({ label }) => !Object.values({...CUSTOM_FIELDS_TO_SKIP,...labels}).includes(label)).map((det) => ({
+            fields: li.customOrderDetailsValues.filter(({ label }) => !Object.values({...CUSTOM_FIELDS_TO_SKIP}).includes(label)).map((det) => ({
               label: det.label,
               value: det.value,
             })),
