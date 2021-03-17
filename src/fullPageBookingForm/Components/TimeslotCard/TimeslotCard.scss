@@ -1,0 +1,12 @@
+.timeslot-card {
+  display: flex;
+  align-items: center;
+}
+
+.timeslot-card__details {
+  flex-grow: 1;
+}
+
+.timeslot-card__details__pricing span {
+  font-size: 16px;
+}
