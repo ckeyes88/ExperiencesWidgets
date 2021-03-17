@@ -2,7 +2,12 @@
   "extends": "@helpfulhuman/tslint-rules",
   "rules": {
     "completed-docs": false,
-    "no-any": false
+    "no-any": false,
+    "prefer-method-signature": false,
+    "no-default-export": false,
+    "no-object-literal-type-assertion": false,
+    "jsx-wrap-multiline": false,
+    "trailing-comma": true
   }
   
 }

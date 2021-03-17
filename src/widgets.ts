@@ -33,3 +33,4 @@ loadExpAppWidget(
   `${baseUrl}/calendarBookingForm.js`,
 );
 loadExpAppWidget("[data-expapp-aggregate-view]", `${baseUrl}/aggregateView.js`);
+loadExpAppWidget("[data-expapp-full-page-booking-form]", `${baseUrl}/fullPageBookingForm.js`);
