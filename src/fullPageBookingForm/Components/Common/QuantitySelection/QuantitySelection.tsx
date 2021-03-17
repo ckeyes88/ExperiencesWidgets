@@ -33,7 +33,7 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
             </td>
             <td />
             <td>
-              <TextStyle variant="body1" text="$0" />
+              <TextStyle variant="body2" text="$0" />
             </td>
           </tr>
         </tbody>

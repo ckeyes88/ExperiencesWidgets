@@ -17,8 +17,10 @@ const defaultArgs: QuantitySelectionProps = {
 };
 
 const Template = (args: QuantitySelectionProps) => (
-  <QuantitySelection {...defaultArgs} />
+  <QuantitySelection {...args} />
 );
 
 export const Default = Template.bind({});
-Default.args = {};
+Default.args = {
+  ...defaultArgs,
+};
