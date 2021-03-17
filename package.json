@@ -13,7 +13,9 @@
     "test": "jest --maxWorkers=4",
     "tdd": "jest --watch",
     "lint": "tslint -p .",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "jest": {
     "verbose": true,
@@ -24,15 +26,22 @@
       "js",
       "jsx"
     ],
+    "moduleNameMapper": {
+      "^.+\\.(css|less|scss)$": "babel-jest"
+    },
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
     "testMatch": [
       "**/__tests__/**/*.(ts|tsx)",
       "**/?(*.)(spec|test).(ts|tsx)"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/src/setupTests.ts"
     ]
   },
   "dependencies": {
+    "@fontsource/montserrat": "^4.2.2",
     "@fullcalendar/core": "5.3.1",
     "@fullcalendar/daygrid": "5.3.2",
     "@fullcalendar/interaction": "5.3.1",
@@ -55,17 +64,27 @@
     "ts-polyfill": "^3.8.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.13.8",
     "@helpfulhuman/tslint-rules": "1.0.0",
     "@rollup/plugin-alias": "3.1.1",
+    "@storybook/addon-actions": "^6.1.21",
+    "@storybook/addon-essentials": "^6.1.21",
+    "@storybook/addon-links": "^6.1.21",
+    "@storybook/preact": "^6.1.21",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/preact": "^2.0.1",
     "@types/bugsnag": "2.5.28",
     "@types/dotenv": "^8.2.0",
-    "@types/jest": "24.0.18",
+    "@types/jest": "^26.0.20",
     "@types/moment-timezone": "^0.5.12",
     "@types/node": "^14.14.22",
     "@types/shopify-buy": "^1.4.3",
+    "@types/testing-library__jest-dom": "^5.9.5",
+    "babel-loader": "^8.2.2",
     "browser-sync": "2.26.7",
+    "core-js": "^3.9.1",
     "dotenv": "^8.1.0",
-    "jest": "24.9.0",
+    "jest": "^26.6.3",
     "node-sass": "^4.12.0",
     "npm-run-all": "4.1.5",
     "rollup": "1.20.0",
@@ -77,12 +96,14 @@
     "rollup-plugin-node-resolve": "5.2.0",
     "rollup-plugin-replace": "2.2.0",
     "rollup-plugin-scss": "1.0.2",
+    "rollup-plugin-scss-smart-asset": "0.0.2",
     "rollup-plugin-typescript3": "1.1.2",
     "rollup-plugin-uglify": "6.0.2",
     "rollup-watch": "4.3.1",
-    "ts-jest": "24.0.2",
-    "tslint": "5.19.0",
+    "sass-loader": "^10.1.1",
     "timemachine": "0.3.2",
-    "typescript": "3.5.3"
+    "ts-jest": "26.5.3",
+    "tslint": "5.19.0",
+    "typescript": "3.9.4"
   }
 }

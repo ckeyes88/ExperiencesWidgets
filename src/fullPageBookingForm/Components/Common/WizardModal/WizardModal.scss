@@ -1,0 +1,28 @@
+@import "../../../base";
+
+.wizard-modal {
+  color: $color-default;
+  font-family: "Montserrat";
+  background-color: #fff;
+  position: fixed;
+  top: 100%;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 40px 30px;
+  transition: all 0.4s ease;
+}
+
+.wizard-modal--open {
+  top: 0;
+}
+
+.wizard-modal__close-button {
+  cursor: pointer;
+  position: absolute;
+}
+
+.wizard-modal__body {
+  max-width: 1100px;
+  margin: 0 auto;
+}

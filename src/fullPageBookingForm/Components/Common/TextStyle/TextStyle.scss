@@ -1,0 +1,37 @@
+@import "../../../base";
+
+.text-style {
+  color: $color-default;
+  font-family: "Montserrat";
+}
+
+.text-style--display1 {
+  font-weight: 700;
+  font-size: 28px;
+}
+
+.text-style--display2 {
+  font-weight: 500;
+  font-size: 24px;
+}
+
+.text-style--body1,
+.text-style--body2,
+.text-style--body3 {
+  line-height: 26px;
+}
+
+.text-style--body1 {
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.text-style--body2 {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.text-style--body3 {
+  font-weight: 400;
+  font-size: 12px;
+}

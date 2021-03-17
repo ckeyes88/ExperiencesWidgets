@@ -8,10 +8,12 @@ import json from "rollup-plugin-json";
 import dotenv from "dotenv";
 import alias from '@rollup/plugin-alias';
 import copy from "rollup-plugin-copy";
+import scssSmartAsset from 'rollup-plugin-scss-smart-asset';
 
 dotenv.config();
 
-export default [{
+export default [
+  {
     input: "src/widgets.ts",
     output: {
       file: "./dist/widgets.js",
@@ -133,6 +135,12 @@ export default [{
         ]
       }),
       typescript(),
+      alias({
+        entries: [
+          { find: 'react', replacement: 'preact/compat' },
+          { find: 'react-dom', replacement: 'preact/compat' }
+        ]
+      }),
       nodeResolve({browser: true, preferBuiltins: true}),
       json(),
       commonjs({
@@ -141,17 +149,56 @@ export default [{
           'node_modules/preact/dist/preact.js': ['h', 'render', 'Component', 'cloneElement', 'options'],
         },
       }),
-      alias({
-        entries: [
-          { find: 'react', replacement: 'preact/compat' },
-          { find: 'react-dom', replacement: 'preact/compat' }
-        ]
-      }),
       copy({
         targets: [
           { src: 'src/assets/**/*', dest: 'dist/assets' }
         ],
       })
     ],
-  }
+  },
+  {
+    input: 'src/fullPageBookingForm/index.ts',
+    output: {
+      file: "./dist/fullPageBookingForm.js",
+      format: 'iife',
+      name: 'fullPageBookingForm',
+    },
+    treeshake: true,
+    plugins: [
+      replace({
+        'process.env.NODE_ENV': JSON.stringify('production'),
+        __ENV_NAME__: process.env.ENV_NAME,
+        __BASE_URL__: process.env.BASE_WIDGET_URL
+      }),
+      scssSmartAsset({
+        output: true,
+        postcssUrlConfig: {
+          url: "inline"
+        }
+      }),
+      babel({
+        exclude: [
+          'node_modules/!(' +
+          'google-map-react|preact|preact-compat|react-redux' +
+          ')/**',
+        ]
+      }),
+      typescript(),
+      alias({
+        entries: [
+          { find: 'react', replacement: 'preact/compat' },
+          { find: 'react-dom', replacement: 'preact/compat' }
+        ]
+      }),
+      nodeResolve({browser: true, preferBuiltins: true}),
+      json(),
+      commonjs({
+        include: 'node_modules/**',
+        namedExports: {
+          'node_modules/preact/dist/preact.js': ['h', 'render', 'Component', 'cloneElement', 'options'],
+        },
+      }),
+      
+    ],
+  },
 ];
