@@ -4,11 +4,17 @@ import { JSXInternal } from "preact/src/jsx";
 import "./NumberCarousel.scss";
 
 export type NumberCarouselProps = {
+  /** Name of variant. */
   variantName: string;
+  /**Current qty of tickets for variant. */
   variantQty: number;
+  /**Maximum qty of tickets for variant. */
   variantQtyMaximum: number;
+  /**Callback for increasing qty click. */
   onIncreaseClick: () => void;
+  /**Callback for decreasing qty click. */
   onDecreaseClick: () => void;
+  /**Callback for updating ticket qty of variant on text change. */
   onChange: (value: string) => void;
 };
 
@@ -49,6 +55,7 @@ export const NumberCarousel: FunctionComponent<NumberCarouselProps> = ({
         type="number"
         name={variantName}
         min={0}
+        max={variantQtyMaximum}
         value={variantQty}
         onChange={handleChange}
       />
