@@ -1,5 +1,5 @@
 /** @jsx h */
-import { h, FunctionComponent } from "preact";
+import { h, FunctionComponent, JSX } from "preact";
 import "./TextStyle.scss";
 
 export type TextStyleProps = {
