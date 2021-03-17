@@ -27,6 +27,11 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
     <Fragment>
       <TextStyle variant="display2" text="Quantity" />
       <table className="quantity-selection__table">
+        <colgroup>
+          <col span={1} style="width: 30%" />
+          <col span={1} style="width: 30%" />
+          <col span={1} style="width: 40%" />
+        </colgroup>
         <tbody>
           {variants.map((variant, idx) => (
             <tr key={`QuantitySelection-Table-Row-${idx}`}>
@@ -36,7 +41,7 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
               <td className="quantity-selection__table-cell">
                 <TextStyle variant="body1" text={`$${variant.cost}`} />
               </td>
-              <td className="quantity-selection__table-cell">
+              <td className="quantity-selection__table-cell quantity-selection__table-cell__input">
                 <NumberCarousel
                   variantName={variant.name}
                   onDecreaseClick={variant.onDecreaseClick}
@@ -53,7 +58,7 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
               <TextStyle variant="body2" text="Total" />
             </td>
             <td />
-            <td>
+            <td className="quantity-selection__total">
               <TextStyle variant="body2" text={`$${total}`} />
             </td>
           </tr>

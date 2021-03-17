@@ -14,3 +14,13 @@ $base-table-width: 460px;
   width: $base-table-width;
   border-top: 1px solid #d1d1d1;
 }
+
+/* Center align contents of input field in table cell. */
+.quantity-selection__table-cell__input > div {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.quantity-selection__total {
+  text-align: center;
+}
