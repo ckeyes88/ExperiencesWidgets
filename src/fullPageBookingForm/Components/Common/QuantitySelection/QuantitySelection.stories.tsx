@@ -8,11 +8,39 @@ export default {
   argTypes: {},
 };
 
+const defaultOnChange = (value: string) => {};
+const defaultOnIncreaseClick = () => {};
+const defaultOnDecreaseClick = () => {};
+
 const defaultArgs: QuantitySelectionProps = {
   variants: [
-    { name: "Adult", cost: 100 },
-    { name: "Senior", cost: 75 },
-    { name: "Child", cost: 50 },
+    {
+      name: "Adult",
+      cost: 100,
+      onChange: defaultOnChange,
+      onDecreaseClick: defaultOnDecreaseClick,
+      onIncreaseClick: defaultOnIncreaseClick,
+      qty: 0,
+      qtyMaximum: 5,
+    },
+    {
+      name: "Senior",
+      cost: 75,
+      onChange: defaultOnChange,
+      onDecreaseClick: defaultOnDecreaseClick,
+      onIncreaseClick: defaultOnIncreaseClick,
+      qty: 0,
+      qtyMaximum: 5,
+    },
+    {
+      name: "Child",
+      cost: 50,
+      onChange: defaultOnChange,
+      onDecreaseClick: defaultOnDecreaseClick,
+      onIncreaseClick: defaultOnIncreaseClick,
+      qty: 0,
+      qtyMaximum: 5,
+    },
   ],
 };
 
