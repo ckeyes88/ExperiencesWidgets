@@ -1,24 +1,77 @@
 /** @jsx h */
-import { h, FunctionComponent, Fragment } from "preact";
+import { h, FunctionComponent } from "preact";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
 import { Button } from "../../Common/Button";
 import { TextStyle } from "../../Common/TextStyle";
 import { useWizardModalAction } from "../../Common/WizardModal";
+import "./OrderDetails.scss";
 
-export const OrderDetails: FunctionComponent = () => {
-  const { setPage } = useWizardModalAction();
+export type OrderDetailsProps = {
+  /**Date of event. */
+  dateOfEvent: string;
+  /**Start time of event. */
+  startTimeEvent: string;
+  /**End time of event. */
+  endTimeEvent: string;
+  /**Remaining spots in event. */
+  remainingSpots: number;
+  /**Cost of event. */
+  cost: number;
+  /**Quantity associated with cost (e.g. "/ person") */
+  costQuantity: string;
+  /**Whether component is undergoing storybook testing.  */
+  isStorybookTest?: boolean;
+  /**Callback  */
+  onBackClick: () => void;
+};
+
+export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
+  dateOfEvent,
+  startTimeEvent,
+  endTimeEvent,
+  remainingSpots,
+  isStorybookTest,
+  cost,
+  costQuantity,
+}) => {
+  //Define set page function.
+  let setPage = isStorybookTest
+    ? (temp: number) => {}
+    : useWizardModalAction().setPage;
 
   return (
-    <Fragment>
-      <h1>
-        <TextStyle variant="display1" text="Order details" />
-      </h1>
+    <div className="OrderDetails">
+      <div className="OrderDetails__Summary">
+        <TextStyle variant="display2" text={dateOfEvent} />
+        <div>
+          <TextStyle
+            variant="body1"
+            text={`${startTimeEvent} - ${endTimeEvent}`}
+          />
+          <TextStyle variant="body1" text="|" />
+          <TextStyle
+            variant="body3"
+            text={
+              remainingSpots > 1
+                ? `${remainingSpots} spots left`
+                : `${remainingSpots} spot left`
+            }
+          />
+        </div>
+        <div>
+          <TextStyle variant="body2" text={`From $${cost}`} />
+          <TextStyle variant="body1" text={costQuantity} />
+        </div>
+      </div>
+
       <Button
         variant="contained"
         color="primary"
-        text="Next"
-        onClick={() => setPage(BookingFormPage.SUBMISSION_LOADER)}
+        text="Save and Continue"
+        onClick={() => {
+          setPage(BookingFormPage.SUBMISSION_LOADER);
+        }}
       />
-    </Fragment>
+    </div>
   );
 };
