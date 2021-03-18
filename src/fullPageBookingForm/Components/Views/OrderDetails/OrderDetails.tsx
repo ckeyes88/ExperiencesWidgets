@@ -57,19 +57,21 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       <div className="OrderDetails__Summary">
         <TextStyle variant="display2" text={dateOfEvent} />
         <div>
-          <TextStyle
-            variant="body1"
-            text={`${startTimeEvent} - ${endTimeEvent}`}
-          />
-          <TextStyle variant="body1" text="|" />
-          <TextStyle
-            variant="body3"
-            text={
-              remainingSpots > 1
-                ? `${remainingSpots} spots left`
-                : `${remainingSpots} spot left`
-            }
-          />
+          <div className="OrderDetails__Summary__Time-Slot">
+            <TextStyle
+              variant="body1"
+              text={`${startTimeEvent} - ${endTimeEvent}`}
+            />
+            <TextStyle variant="body1" text="|" />
+            <TextStyle
+              variant="body3"
+              text={
+                remainingSpots > 1
+                  ? `${remainingSpots} spots left`
+                  : `${remainingSpots} spot left`
+              }
+            />
+          </div>
         </div>
         <div>
           <TextStyle variant="body2" text={`From $${cost}`} />

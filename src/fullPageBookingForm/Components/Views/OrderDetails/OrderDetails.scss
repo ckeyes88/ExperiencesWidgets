@@ -1,10 +1,21 @@
-.OrderDetails {
-  display: flex;
-  flex-direction: row;
-}
-
 .OrderDetails__Input {
   width: 460px;
+  margin-left: 35vw;
+}
+
+.OrderDetails__Summary {
+  height: max-content;
+  position: fixed;
+  top: 0;
+  margin-top: 5rem;
+}
+.OrderDetails__Summary__Time-Slot {
+  margin-top: 22px;
+}
+
+/* Apply margin to middle element in time slot detail list.*/
+.OrderDetails__Summary__Time-Slot > span:nth-child(2) {
+  margin: 0 8px;
 }
 
 .OrderDetails__Input__Customer-Form {
