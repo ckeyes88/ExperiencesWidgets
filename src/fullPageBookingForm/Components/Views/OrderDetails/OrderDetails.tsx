@@ -13,6 +13,10 @@ import { useWizardModalAction } from "../../Common/WizardModal";
 import "./OrderDetails.scss";
 
 export type OrderDetailsProps = {
+  /**Title of event. */
+  eventTitle: string;
+  /**URL associated with event. */
+  eventImageUrl: string;
   /**Date of event. */
   dateOfEvent: string;
   /**Start time of event. */
@@ -36,6 +40,8 @@ export type OrderDetailsProps = {
 };
 
 export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
+  eventTitle,
+  eventImageUrl,
   dateOfEvent,
   startTimeEvent,
   endTimeEvent,
@@ -46,7 +52,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   quantitySelections,
   customerFormFields,
 }) => {
-  const [saveContinueDisabled, setSaveContinueDisabled] = useState(true);
+  const [isSaveContinueDisabled, setIsSaveContinueDisabled] = useState(true);
   //Define set page function, with stub if testing.
   let setPage = isStorybookTest
     ? (temp: number) => {}
@@ -55,6 +61,14 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   return (
     <div className="OrderDetails">
       <div className="OrderDetails__Summary">
+        <div className="OrderDetails__Summary__Title">
+          <img
+            className="OrderDetails__Summary__Image"
+            href={eventImageUrl}
+            alt="Experience image"
+          />
+          <TextStyle text={eventTitle} variant="display1" />
+        </div>
         <TextStyle variant="display2" text={dateOfEvent} />
         <div>
           <div className="OrderDetails__Summary__Time-Slot">
@@ -74,13 +88,16 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           </div>
         </div>
         <div>
-          <TextStyle variant="body2" text={`From $${cost}`} />
+          <TextStyle variant="body2" text={`From $${cost} `} />
           <TextStyle variant="body1" text={costQuantity} />
         </div>
       </div>
 
       <div className="OrderDetails__Input">
-        <QuantitySelection {...quantitySelections} />
+        <div className="OrderDetails__Input__Quantity-Selection">
+          <QuantitySelection {...quantitySelections} />
+        </div>
+
         <div className="OrderDetails__Input__Customer-Form">
           <Form {...customerFormFields} />
         </div>
@@ -88,9 +105,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           <Button
             variant="contained"
             color="primary"
-            text="Save and Continue"
+            text="Save & continue"
             fullWidth
-            disabled={saveContinueDisabled}
+            disabled={isSaveContinueDisabled}
             onClick={() => {
               setPage(BookingFormPage.SUBMISSION_LOADER);
             }}

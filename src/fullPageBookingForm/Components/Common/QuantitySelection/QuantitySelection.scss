@@ -1,17 +1,14 @@
-$base-table-width: 460px;
-
 .quantity-selection__table-cell {
   padding-bottom: 34px;
 }
 
 .quantity-selection__table {
   margin-top: 18px;
-  width: $base-table-width;
+  width: 100%;
 }
 
 .quantity-selection__header-rule {
   margin-top: 42px;
-  width: $base-table-width;
   border-top: 1px solid #d1d1d1;
 }
 

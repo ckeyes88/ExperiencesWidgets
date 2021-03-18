@@ -1,16 +1,45 @@
+$image-width: 54px;
+$image-right-margin: 16px;
+$title-max-width: 322px;
+$column-gutter-width: 100px;
+
 .OrderDetails__Input {
   width: 460px;
-  margin-left: 35vw;
+  margin-left: $image-width + $image-right-margin + $title-max-width +
+    $column-gutter-width;
 }
 
 .OrderDetails__Summary {
   height: max-content;
   position: fixed;
   top: 0;
-  margin-top: 5rem;
 }
+
+@media only screen and (max-width: 990px) {
+  .OrderDetails__Summary {
+    position: relative;
+  }
+
+  .OrderDetails__Input {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+.OrderDetails__Summary__Image {
+  width: $image-width;
+  height: $image-width;
+  margin-right: $image-right-margin;
+  object-fit: cover;
+}
+
 .OrderDetails__Summary__Time-Slot {
   margin-top: 22px;
+}
+
+.OrderDetails__Summary__Title {
+  max-width: $title-max-width;
+  margin-bottom: 50px;
 }
 
 /* Apply margin to middle element in time slot detail list.*/

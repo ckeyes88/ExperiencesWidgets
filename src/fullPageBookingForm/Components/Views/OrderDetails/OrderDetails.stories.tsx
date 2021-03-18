@@ -29,6 +29,7 @@ const defaultQuantitySelections: QuantitySelectionProps = {
 
 const defaultCustomerFormFields: FormProps = {
   title: "Customer Info",
+  disabled: true,
   fields: object("Customer Form Fields", [
     {
       name: "First",
@@ -53,6 +54,8 @@ const defaultCustomerFormFields: FormProps = {
 };
 
 const defaultArgs: OrderDetailsProps = {
+  eventTitle: "Conquer Mount Storm King",
+  eventImageUrl: "test",
   cost: 50,
   costQuantity: "/ person",
   dateOfEvent: "Monday, January 13",
