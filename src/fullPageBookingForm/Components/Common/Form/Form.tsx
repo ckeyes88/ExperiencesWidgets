@@ -1,5 +1,6 @@
 /* @jsx h */
 import { h, FunctionComponent, Fragment } from "preact";
+import { JSXInternal } from "preact/src/jsx";
 import { TextStyle } from "../TextStyle";
 import "./Form.scss";
 
@@ -33,16 +34,28 @@ export const Form: FunctionComponent<FormProps> = ({
   disabled,
 }) => {
   const formClassNames = ["FullPage__form"];
+  const titleClassNames = ["FullPage__form__title"];
 
   if (disabled) {
     formClassNames.push("FullPage__form--disabled");
+    titleClassNames.push("FullPage__form--disabled");
   }
 
   return (
     <Fragment>
-      {title && <TextStyle variant="display2" text={title} />}
+      {title && (
+        <div className={titleClassNames.join(" ")}>
+          <TextStyle variant="display2" text={title} />
+        </div>
+      )}
       <form className={formClassNames.join(" ")} onSubmit={onSubmit}>
         {fields.map((field, idx) => {
+          const handleChange: JSXInternal.DOMAttributes<
+            HTMLInputElement
+          >["onChange"] = (event) => {
+            field.onChange(event.currentTarget.value);
+          };
+
           const inputClassNames = ["FullPage__form__input"];
 
           // Add disabled styling to disabled form.
@@ -70,11 +83,13 @@ export const Form: FunctionComponent<FormProps> = ({
                 placeholder={field.placeholder}
                 disabled={disabled || field.disabled}
                 required={field.required}
+                onChange={handleChange}
               />
             </div>
           );
         })}
       </form>
+      <div className="FullPage__form__header-rule" />
     </Fragment>
   );
 };

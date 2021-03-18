@@ -2,13 +2,15 @@
   opacity: 0.5;
 }
 
+.FullPage__form__title {
+  padding-bottom: 31px;
+}
 .FullPage__form-fields {
   display: flex;
   flex-direction: column;
 }
 
 .FullPage__form__input {
-  width: 100%;
   height: 36px;
   border: 1px solid #bfbfbf;
   border-radius: 5px;
@@ -17,9 +19,18 @@
   padding: 6px 13px;
   font-weight: 500;
   color: #424242;
+  margin-bottom: 16px;
+}
+
+.FullPage__form__input:disabled {
+  background-color: #f8f8f8;
 }
 
 .FullPage__form__input--disabled {
   opacity: 0.5;
-  background-color: #f8f8f8;
+}
+
+.FullPage__form__header-rule {
+  margin-top: 42px;
+  border-top: 1px solid #d1d1d1;
 }

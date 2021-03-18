@@ -35,7 +35,24 @@ const defaultArgs: FormProps = {
 
 const Template = (args: FormProps) => <Form {...args} />;
 
+export const BasicForm = Template.bind({});
+BasicForm.args = {
+  ...defaultArgs,
+};
+
+export const BasicFormNoTitle = Template.bind({});
+BasicFormNoTitle.args = {
+  ...defaultArgs,
+  title: undefined,
+};
+
 export const BasicCustomerInfo = Template.bind({});
 BasicCustomerInfo.args = {
   ...defaultArgs,
+};
+
+export const DisabledForm = Template.bind({});
+DisabledForm.args = {
+  ...defaultArgs,
+  disabled: true,
 };
