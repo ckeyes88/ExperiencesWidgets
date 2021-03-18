@@ -20,7 +20,7 @@ const defaultArgs: QuantitySelectionProps = {
       onChange: defaultOnChange,
       onDecreaseClick: defaultOnDecreaseClick,
       onIncreaseClick: defaultOnIncreaseClick,
-      qty: 0,
+      currentQty: 0,
       qtyMaximum: 5,
     },
     {
@@ -29,7 +29,7 @@ const defaultArgs: QuantitySelectionProps = {
       onChange: defaultOnChange,
       onDecreaseClick: defaultOnDecreaseClick,
       onIncreaseClick: defaultOnIncreaseClick,
-      qty: 0,
+      currentQty: 0,
       qtyMaximum: 5,
     },
     {
@@ -38,7 +38,7 @@ const defaultArgs: QuantitySelectionProps = {
       onChange: defaultOnChange,
       onDecreaseClick: defaultOnDecreaseClick,
       onIncreaseClick: defaultOnIncreaseClick,
-      qty: 0,
+      currentQty: 0,
       qtyMaximum: 5,
     },
   ],

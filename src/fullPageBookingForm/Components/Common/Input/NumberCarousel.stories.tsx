@@ -8,9 +8,9 @@ export default {
 };
 
 const defaultArgs: NumberCarouselProps = {
-  variantName: "Senior",
-  variantQty: 0,
-  variantQtyMaximum: 5,
+  name: "Senior",
+  currentQty: 0,
+  qtyMaximum: 5,
   onDecreaseClick: () => {},
   onIncreaseClick: () => {},
   onChange: (value: string) => {},
