@@ -2,6 +2,10 @@
 import { h, FunctionComponent } from "preact";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
 import { Button } from "../../Common/Button";
+import {
+  QuantitySelection,
+  QuantitySelectionProps,
+} from "../../Common/QuantitySelection";
 import { TextStyle } from "../../Common/TextStyle";
 import { useWizardModalAction } from "../../Common/WizardModal";
 import "./OrderDetails.scss";
@@ -23,6 +27,8 @@ export type OrderDetailsProps = {
   isStorybookTest?: boolean;
   /**Callback  */
   onBackClick: () => void;
+  /**Quantity selection information for variant in experience.*/
+  quantitySelections: QuantitySelectionProps;
 };
 
 export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
@@ -33,6 +39,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   isStorybookTest,
   cost,
   costQuantity,
+  quantitySelections,
 }) => {
   //Define set page function.
   let setPage = isStorybookTest
@@ -64,14 +71,17 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         </div>
       </div>
 
-      <Button
+      <div className="OrderDetails__Input">
+        <QuantitySelection {...quantitySelections} />
+      </div>
+      {/* <Button
         variant="contained"
         color="primary"
         text="Save and Continue"
         onClick={() => {
           setPage(BookingFormPage.SUBMISSION_LOADER);
         }}
-      />
+      /> */}
     </div>
   );
 };

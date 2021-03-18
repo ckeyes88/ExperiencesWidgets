@@ -1,5 +1,6 @@
 /** @jsx h */
 import { h } from "preact";
+import { QuantitySelectionProps } from "../../Common/QuantitySelection";
 import { OrderDetails, OrderDetailsProps } from "../OrderDetails";
 
 export default {
@@ -10,6 +11,20 @@ export default {
 
 const Template = (args: OrderDetailsProps) => <OrderDetails {...args} />;
 
+const defaultQuantitySelections: QuantitySelectionProps = {
+  variants: [
+    {
+      name: "Adult",
+      cost: 150,
+      currentQty: 0,
+      qtyMaximum: 5,
+      onDecreaseClick: () => {},
+      onIncreaseClick: () => {},
+      onChange: () => {},
+    },
+  ],
+};
+
 const defaultArgs: OrderDetailsProps = {
   cost: 50,
   costQuantity: "/ person",
@@ -19,6 +34,7 @@ const defaultArgs: OrderDetailsProps = {
   remainingSpots: 4,
   isStorybookTest: true,
   onBackClick: () => {},
+  quantitySelections: defaultQuantitySelections,
 };
 
 export const Primary = Template.bind({});
