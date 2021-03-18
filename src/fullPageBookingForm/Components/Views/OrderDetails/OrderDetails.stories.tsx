@@ -29,7 +29,7 @@ const defaultQuantitySelections: QuantitySelectionProps = {
 
 const defaultCustomerFormFields: FormProps = {
   title: "Customer Info",
-  fields: object("List of input fields", [
+  fields: object("Customer Form Fields", [
     {
       name: "First",
       type: "text",

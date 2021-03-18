@@ -1,5 +1,6 @@
 /** @jsx h */
 import { h, FunctionComponent } from "preact";
+import { useState } from "preact/hooks";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
 import { Button } from "../../Common/Button";
 import { Form, FormProps } from "../../Common/Form";
@@ -45,6 +46,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   quantitySelections,
   customerFormFields,
 }) => {
+  const [saveContinueDisabled, setSaveContinueDisabled] = useState(true);
   //Define set page function, with stub if testing.
   let setPage = isStorybookTest
     ? (temp: number) => {}
@@ -80,15 +82,19 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         <div className="OrderDetails__Input__Customer-Form">
           <Form {...customerFormFields} />
         </div>
+        <div className="OrderDetails__Input__Save">
+          <Button
+            variant="contained"
+            color="primary"
+            text="Save and Continue"
+            fullWidth
+            disabled={saveContinueDisabled}
+            onClick={() => {
+              setPage(BookingFormPage.SUBMISSION_LOADER);
+            }}
+          />
+        </div>
       </div>
-      {/* <Button
-        variant="contained"
-        color="primary"
-        text="Save and Continue"
-        onClick={() => {
-          setPage(BookingFormPage.SUBMISSION_LOADER);
-        }}
-      /> */}
     </div>
   );
 };
