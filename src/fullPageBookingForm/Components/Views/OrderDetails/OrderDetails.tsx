@@ -2,6 +2,7 @@
 import { h, FunctionComponent } from "preact";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
 import { Button } from "../../Common/Button";
+import { Form, FormProps } from "../../Common/Form";
 import {
   QuantitySelection,
   QuantitySelectionProps,
@@ -29,6 +30,8 @@ export type OrderDetailsProps = {
   onBackClick: () => void;
   /**Quantity selection information for variant in experience.*/
   quantitySelections: QuantitySelectionProps;
+  /**Default customer form fields. */
+  customerFormFields: FormProps;
 };
 
 export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
@@ -40,8 +43,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   cost,
   costQuantity,
   quantitySelections,
+  customerFormFields,
 }) => {
-  //Define set page function.
+  //Define set page function, with stub if testing.
   let setPage = isStorybookTest
     ? (temp: number) => {}
     : useWizardModalAction().setPage;
@@ -73,6 +77,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
       <div className="OrderDetails__Input">
         <QuantitySelection {...quantitySelections} />
+        <div className="OrderDetails__Input__Customer-Form">
+          <Form {...customerFormFields} />
+        </div>
       </div>
       {/* <Button
         variant="contained"

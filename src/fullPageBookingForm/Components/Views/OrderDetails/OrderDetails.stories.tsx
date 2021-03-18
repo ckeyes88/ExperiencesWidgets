@@ -1,5 +1,7 @@
 /** @jsx h */
 import { h } from "preact";
+import { object } from "@storybook/addon-knobs";
+import { FormProps } from "../../Common/Form";
 import { QuantitySelectionProps } from "../../Common/QuantitySelection";
 import { OrderDetails, OrderDetailsProps } from "../OrderDetails";
 
@@ -25,6 +27,31 @@ const defaultQuantitySelections: QuantitySelectionProps = {
   ],
 };
 
+const defaultCustomerFormFields: FormProps = {
+  title: "Customer Info",
+  fields: object("List of input fields", [
+    {
+      name: "First",
+      type: "text",
+      value: "",
+      onChange: () => {},
+    },
+    {
+      name: "Last",
+      type: "text",
+      value: "",
+      onChange: () => {},
+    },
+    {
+      name: "Email",
+      type: "email",
+      value: "",
+      onChange: () => {},
+    },
+  ]),
+  onSubmit: () => {},
+};
+
 const defaultArgs: OrderDetailsProps = {
   cost: 50,
   costQuantity: "/ person",
@@ -35,6 +62,7 @@ const defaultArgs: OrderDetailsProps = {
   isStorybookTest: true,
   onBackClick: () => {},
   quantitySelections: defaultQuantitySelections,
+  customerFormFields: defaultCustomerFormFields,
 };
 
 export const Primary = Template.bind({});
