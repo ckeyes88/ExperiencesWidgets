@@ -1,26 +1,22 @@
 /** @jsx h */
 import { h, FunctionComponent, Fragment } from "preact";
-import { NumberCarousel } from "../Input/NumberCarousel";
+import { NumberCarousel, NumberCarouselProps } from "../Input/NumberCarousel";
 import { TextStyle } from "../TextStyle";
 import "./QuantitySelection.scss";
 
 export type QuantitySelectionProps = {
-  variants: {
-    name: string;
-    cost: number;
-    qty: number;
-    qtyMaximum: number;
-    onIncreaseClick: () => void;
-    onDecreaseClick: () => void;
-    onChange: (value: string) => void;
-  }[];
+  variants: Array<
+    NumberCarouselProps & {
+      cost: number;
+    }
+  >;
 };
 export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
   variants,
 }) => {
   /**Calculates total of order. */
   const total = variants
-    .map((variant) => variant.cost * variant.qty)
+    .map((variant) => variant.cost * variant.currentQty)
     .reduce((a, b) => a + b);
 
   return (
@@ -43,11 +39,11 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
               </td>
               <td className="quantity-selection__table-cell quantity-selection__table-cell__input">
                 <NumberCarousel
-                  variantName={variant.name}
+                  name={variant.name}
                   onDecreaseClick={variant.onDecreaseClick}
                   onIncreaseClick={variant.onIncreaseClick}
-                  variantQty={variant.qty}
-                  variantQtyMaximum={variant.qtyMaximum}
+                  currentQty={variant.currentQty}
+                  qtyMaximum={variant.qtyMaximum}
                   onChange={variant.onChange}
                 />
               </td>

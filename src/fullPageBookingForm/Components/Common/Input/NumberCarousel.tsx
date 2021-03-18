@@ -5,11 +5,11 @@ import "./NumberCarousel.scss";
 
 export type NumberCarouselProps = {
   /** Name of variant. */
-  variantName: string;
+  name: string;
   /**Current qty of tickets for variant. */
-  variantQty: number;
+  currentQty: number;
   /**Maximum qty of tickets for variant. */
-  variantQtyMaximum: number;
+  qtyMaximum: number;
   /**Callback for increasing qty click. */
   onIncreaseClick: () => void;
   /**Callback for decreasing qty click. */
@@ -19,9 +19,9 @@ export type NumberCarouselProps = {
 };
 
 export const NumberCarousel: FunctionComponent<NumberCarouselProps> = ({
-  variantName,
-  variantQty,
-  variantQtyMaximum,
+  name,
+  currentQty,
+  qtyMaximum,
   onIncreaseClick,
   onDecreaseClick,
   onChange,
@@ -34,11 +34,11 @@ export const NumberCarousel: FunctionComponent<NumberCarouselProps> = ({
   const decreasingButtonClassNames = ["number-carousel__button"];
   const increasingButtonClassNames = [...decreasingButtonClassNames];
 
-  if (variantQty <= 0) {
+  if (currentQty <= 0) {
     decreasingButtonClassNames.push("number-carousel__button--disabled");
   }
 
-  if (variantQty >= variantQtyMaximum) {
+  if (currentQty >= qtyMaximum) {
     increasingButtonClassNames.push("number-carousel__button--disabled");
   }
   return (
@@ -46,23 +46,23 @@ export const NumberCarousel: FunctionComponent<NumberCarouselProps> = ({
       <button
         className={decreasingButtonClassNames.join(" ")}
         onClick={onIncreaseClick}
-        disabled={variantQty <= 0}
+        disabled={currentQty <= 0}
       >
         -
       </button>
       <input
         className="number-carousel__input"
         type="number"
-        name={variantName}
+        name={name}
         min={0}
-        max={variantQtyMaximum}
-        value={variantQty}
+        max={qtyMaximum}
+        value={currentQty}
         onChange={handleChange}
       />
       <button
         className={increasingButtonClassNames.join(" ")}
         onClick={onDecreaseClick}
-        disabled={variantQty >= variantQtyMaximum}
+        disabled={currentQty >= qtyMaximum}
       >
         +
       </button>
