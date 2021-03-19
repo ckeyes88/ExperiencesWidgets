@@ -15,6 +15,9 @@ const defaultArgs: CustomerInfoFormProps = {
     lastNameLabel: "Last",
     optionalFieldLabel: "Optional",
   },
+  firstNameValue: "Jacob",
+  lastNameValue: "Shannon",
+  emailValue: "jacob@test.com",
   handleChange: (fieldName, value) => {},
 };
 
@@ -25,21 +28,4 @@ const Template = (args: CustomerInfoFormProps) => (
 export const BasicForm = Template.bind({});
 BasicForm.args = {
   ...defaultArgs,
-};
-
-export const BasicFormNoTitle = Template.bind({});
-BasicFormNoTitle.args = {
-  ...defaultArgs,
-  title: undefined,
-};
-
-export const BasicCustomerInfo = Template.bind({});
-BasicCustomerInfo.args = {
-  ...defaultArgs,
-};
-
-export const DisabledForm = Template.bind({});
-DisabledForm.args = {
-  ...defaultArgs,
-  disabled: true,
 };
