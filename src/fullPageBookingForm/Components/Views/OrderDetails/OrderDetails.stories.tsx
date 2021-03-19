@@ -1,9 +1,14 @@
 /** @jsx h */
 import { h } from "preact";
 import { object } from "@storybook/addon-knobs";
-import { FormProps } from "../../Common/Form";
 import { QuantitySelectionProps } from "../../Common/QuantitySelection";
 import { OrderDetails, OrderDetailsProps } from "../OrderDetails";
+import { Availability } from "../../../../typings/Availability";
+import { FormFieldValueInput } from "../../../../typings/FormFieldValueInput";
+import { CustomerInputData } from "../../../../typings/CustomerInput";
+import { AppDictionary } from "../../../../typings/Languages";
+import { EventDBO } from "@helpfulhuman/expapp-shared-libs";
+import { OrderLineItemInputData } from "../../../../typings/OrderLineItemInput";
 
 export default {
   title: "Full Page Booking Form/Views/Order Details",
@@ -17,7 +22,7 @@ const defaultQuantitySelections: QuantitySelectionProps = {
   variants: [
     {
       name: "Adult",
-      cost: 150,
+      price: 150,
       currentQty: 0,
       qtyMaximum: 5,
       onDecreaseClick: () => {},
@@ -27,49 +32,48 @@ const defaultQuantitySelections: QuantitySelectionProps = {
   ],
 };
 
-const defaultCustomerFormFields: FormProps = {
-  title: "Customer Info",
-  disabled: false,
-  fields: object("Customer Form Fields", [
-    {
-      name: "First",
-      type: "text",
-      value: "",
-      required: true,
-      onChange: () => {},
-    },
-    {
-      name: "Last",
-      type: "text",
-      value: "",
-      required: true,
-      onChange: () => {},
-    },
-    {
-      name: "Email",
-      type: "email",
-      value: "",
-      required: true,
-      onChange: () => {},
-    },
-  ]),
-  onSubmit: () => {},
+const defaultTimeslot: Availability = {
+  endsAt: new Date(2021, 1, 13),
+  startsAt: new Date(2021, 1, 13),
+  productId: "0",
+  totalUnits: 5,
+  unitsLeft: 4,
+  timezone: "UTC",
+  formattedTimeslot: {
+    time: "11:00am-1:00pm",
+    dateStamp: "Date Stamp",
+    date: "",
+    isoWithoutTZ: "",
+    when: "When",
+  },
 };
 
+const defaultEvent: EventDBO = {};
+
+const defaultLabels: Partial<AppDictionary> = {};
+
+const defaultOrderLineItemData: OrderLineItemInputData = {};
+
 const defaultArgs: OrderDetailsProps = {
-  eventTitle: "Conquer Mount Storm King",
-  eventType: "free",
-  eventImageUrl: "test",
-  cost: 50,
-  costQuantity: "/ person",
-  dateOfEvent: "Monday, January 13",
-  startTimeEvent: "11:00am",
-  endTimeEvent: "1:00pm",
-  remainingSpots: 4,
+  selectedDate: new Date(2021, 1, 13),
+  selectedTimeslot: defaultTimeslot,
+  event: defaultEvent,
+  error: "",
+  onAddCustomFormValues: async (
+    variant,
+    newCustomFormFieldValues: FormFieldValueInput[],
+    index: number,
+  ) => {
+    return {};
+  },
+  onAddCustomerInfo: async (customerInfo: CustomerInputData) => {},
+  onConfirmOrder: () => {},
+  onClickBack: () => {},
+  closeModal: () => {},
+  lineItems: defaultOrderLineItemData,
+  labels: defaultLabels,
   isStorybookTest: true,
-  onBackClick: () => {},
-  quantitySelections: defaultQuantitySelections,
-  customerFormFields: defaultCustomerFormFields,
+  quantitySelectionProps: defaultQuantitySelections,
 };
 
 export const Primary = Template.bind({});

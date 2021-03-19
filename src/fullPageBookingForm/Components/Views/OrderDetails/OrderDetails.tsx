@@ -86,9 +86,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   const minCost = Math.min(...event.variants.map((variant) => variant.price));
 
   //If required by event type, render customer form.
-  const renderCustomerForm: FunctionComponent<typeof customerInfo> = (
-    customerInfo,
-  ) => {
+  const renderCustomerForm = () => {
     //Update state of customer form on change.
     const handleCustomerFormChange = (
       fieldName: string,
@@ -162,7 +160,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
          */}
         {customerInfo &&
           event.paymentType !== PaymentType.Prepay &&
-          renderCustomerForm(customerInfo)}
+          renderCustomerForm()}
       </div>
     </div>
   );
