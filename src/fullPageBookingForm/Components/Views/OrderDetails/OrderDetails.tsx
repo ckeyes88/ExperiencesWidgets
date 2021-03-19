@@ -1,6 +1,12 @@
 /** @jsx h */
 import { h, FunctionComponent } from "preact";
 import { useState } from "preact/hooks";
+import { Availability } from "../../../../typings/Availability";
+import { CustomerInputData } from "../../../../typings/CustomerInput";
+import { EventDBO, EventVariantDBO } from "../../../../typings/Event";
+import { FormFieldValueInput } from "../../../../typings/FormFieldValueInput";
+import { AppDictionary } from "../../../../typings/Languages";
+import { OrderLineItemInputData } from "../../../../typings/OrderLineItemInput";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
 import { Button } from "../../Common/Button";
 import { Form, FormProps } from "../../Common/Form";
@@ -13,50 +19,54 @@ import { useWizardModalAction } from "../../Common/WizardModal";
 import "./OrderDetails.scss";
 
 export type OrderDetailsProps = {
-  /**Title of event. */
-  eventTitle: string;
-  /**URL associated with event. */
-  eventImageUrl: string;
-  /**Date of event. */
-  dateOfEvent: string;
-  /**Start time of event. */
-  startTimeEvent: string;
-  /**End time of event. */
-  endTimeEvent: string;
-  /**Remaining spots in event. */
-  remainingSpots: number;
-  /**Cost of event. */
-  cost: number;
-  /**Quantity associated with cost (e.g. "/ person") */
-  costQuantity: string;
-  /**Whether component is undergoing storybook testing.  */
-  isStorybookTest?: boolean;
-  /**Callback  */
-  onBackClick: () => void;
-  /**Quantity selection information for variant in experience.*/
-  quantitySelections: QuantitySelectionProps;
-  /**Default customer form fields. */
-  customerFormFields: FormProps;
+  /** Quantities by event variant */
+  quantities: { [variantId: number]: number };
+  /** This is the date that the user has selected for the order */
+  selectedDate: Date;
+  /** This is the timeslot that the user has selected for the order */
+  selectedTimeslot: Availability;
+  /** This is the event for which the order is being created */
+  event: EventDBO;
+  /** Any errors that should be displayed on the form */
+  error: string;
+  /** This is the customer info, if it is needed and has been inputted */
+  customerInfo: CustomerInputData;
+  /** Method passed in and triggered upon submission of a custom form, passes values up to the top level */
+  onAddCustomFormValues(
+    variant: EventVariantDBO,
+    newCustomFormFieldValues?: FormFieldValueInput[],
+    index?: number,
+  ): Promise<any>;
+  /** Method passed in and triggered upon submission of customer info, passes values up to the top level */
+  onAddCustomerInfo(customerInfo: CustomerInputData): Promise<any>;
+  /** Method passed in to trigger upon confirmation of order */
+  onConfirmOrder(): void;
+  /** Method passed in to trigger a click back */
+  onClickBack(): void;
+  /** Method passed in to trigger a close modal */
+  closeModal(): void;
+  /** Array of line item objects, used to create the order upon confirmation */
+  lineItems: OrderLineItemInputData[];
+  /** Event custom labels set in admin experience interface */
+  labels: Partial<AppDictionary>;
 };
 
-export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
-  eventTitle,
-  eventImageUrl,
-  dateOfEvent,
-  startTimeEvent,
-  endTimeEvent,
-  remainingSpots,
-  isStorybookTest,
-  cost,
-  costQuantity,
-  quantitySelections,
-  customerFormFields,
-}) => {
+export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({}) => {
   const [isSaveContinueDisabled, setIsSaveContinueDisabled] = useState(true);
+
   //Define set page function, with stub if testing.
   let setPage = isStorybookTest
     ? (temp: number) => {}
     : useWizardModalAction().setPage;
+
+  //If required by event type, render customer form.
+  const renderCustomerForm: FunctionComponent<typeof customerFormFields> = (
+    customerFormFields,
+  ) => (
+    <div className="OrderDetails__Input__Customer-Form">
+      <Form {...customerFormFields} />
+    </div>
+  );
 
   return (
     <div className="OrderDetails">
@@ -98,9 +108,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           <QuantitySelection {...quantitySelections} />
         </div>
 
-        <div className="OrderDetails__Input__Customer-Form">
-          <Form {...customerFormFields} />
-        </div>
+        {renderCustomerForm(customerFormFields)}
         <div className="OrderDetails__Input__Save">
           <Button
             variant="contained"

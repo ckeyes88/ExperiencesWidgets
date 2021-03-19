@@ -58,6 +58,7 @@ const defaultCustomerFormFields: FormProps = {
 
 const defaultArgs: OrderDetailsProps = {
   eventTitle: "Conquer Mount Storm King",
+  eventType: "free",
   eventImageUrl: "test",
   cost: 50,
   costQuantity: "/ person",
