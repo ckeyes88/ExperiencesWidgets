@@ -9,7 +9,7 @@ export type ButtonProps = {
   disabled?: boolean;
   text: string;
   onClick?: () => void;
-  type: "button" | "submit";
+  type?: "button" | "submit";
 };
 
 export const Button: FunctionComponent<ButtonProps> = ({
@@ -40,7 +40,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
       className={classNames.join(" ")}
       disabled={disabled}
       onClick={!disabled ? onClick : undefined}
-      type={type}
+      type={type ? type : "button"}
     >
       {text}
     </button>
