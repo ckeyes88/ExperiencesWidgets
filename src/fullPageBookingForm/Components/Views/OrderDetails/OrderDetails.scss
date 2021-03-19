@@ -50,3 +50,20 @@ $column-gutter-width: 100px;
 .OrderDetails__Input__Customer-Form {
   margin-top: 42px;
 }
+
+.OrderDetails__Input__Customer-Form--disabled {
+  opacity: 0.5;
+}
+
+.OrderDetails__Input__Customer-Form__Submit {
+  margin-top: 42px;
+}
+
+.OrderDetails__Input__Customer-Form__Title {
+  padding-bottom: 31px;
+}
+
+.OrderDetails__Header-Rule {
+  margin-top: 42px;
+  border-top: 1px solid #d1d1d1;
+}

@@ -137,6 +137,7 @@ const defaultArgs: OrderDetailsProps = {
   labels: defaultLabels,
   isStorybookTest: true,
   quantitySelectionProps: defaultQuantitySelections,
+  saveButtonState: "visible",
 };
 
 export const Primary = Template.bind({});

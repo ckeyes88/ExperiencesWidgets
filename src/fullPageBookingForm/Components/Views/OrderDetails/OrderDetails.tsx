@@ -56,6 +56,8 @@ export type OrderDetailsProps = {
   isStorybookTest?: boolean;
   /**Quantity selection props. */
   quantitySelectionProps: QuantitySelectionProps;
+  /** The state of the save button per the parent component. */
+  saveButtonState: "visible" | "hidden" | "disabled";
 };
 
 export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
@@ -66,6 +68,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   quantitySelectionProps,
   onAddCustomerInfo,
   labels,
+  saveButtonState,
 }) => {
   const [customerData, setCustomerInfo] = useState<CustomerInputData>({
     firstName: "",
@@ -82,7 +85,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   //Calculate minimum cost of the event.
   const minCost = Math.min(...event.variants.map((variant) => variant.price));
 
-  //If required by event type, render customer form.
+  /*
+   * If required by event type, render customer form.
+   */
   const renderCustomerForm = () => {
     //Update state of customer form on change.
     const handleCustomerFormChange = (
@@ -95,16 +100,48 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       }));
     };
 
+    //Handle submission of form, and pass data in form to parent component.
+    const handleFormSubmit = (event: Event) => {
+      event.preventDefault();
+
+      //Pass data to parent.
+      onAddCustomerInfo(customerData);
+    };
+
     const customerFormProps: CustomerInfoFormProps = {
       customerData,
       handleChange: handleCustomerFormChange,
       labels,
     };
 
+    const formClassNames = ["OrderDetails__Input__Customer-Form"];
+
+    //If the save button is hidden, the customer form should be disabled.
+    if (saveButtonState === "hidden") {
+      formClassNames.push("OrderDetails__Input__Customer-Form--disabled");
+    }
+
     return (
-      <div className="OrderDetails__Input__Customer-Form">
+      <form className={formClassNames.join(" ")} onSubmit={handleFormSubmit}>
+        <div className="OrderDetails__Input__Customer-Form__Title">
+          <TextStyle variant="display2" text="Customer info" />
+        </div>
+
         <CustomerInfoForm {...customerFormProps} />
-      </div>
+        <div className="OrderDetails__Header-Rule" />
+        {saveButtonState !== "hidden" && (
+          <div className="OrderDetails__Input__Customer-Form__Submit">
+            <Button
+              variant="contained"
+              color="primary"
+              text="Save & continue"
+              fullWidth
+              type="submit"
+              disabled={saveButtonState === "disabled"}
+            />
+          </div>
+        )}
+      </form>
     );
   };
 
