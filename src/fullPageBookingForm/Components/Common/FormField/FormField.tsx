@@ -16,16 +16,14 @@ export type FormFieldProps = {
   type: InputTypes | SelectType;
   /** The label for this input field must be unique as it's used for the id */
   label: string;
-  /** Indicate whether the form field is required */
-  required: boolean;
-  /** (optional) sublabel, by default is taken from Languages.ts */
-  optionalLabel: string;
+  /** the value that is currently set in this field */
+  value: string;
+  /** If form field is required, an optional label is not specified. */
+  optionalLabel?: string;
   /** Optional placeholder */
   placeholder?: string;
   /** default value given to this field */
   defaultValue?: string;
-  /** the value that is currently set in this field */
-  value: string;
   /** Optional id for the field */
   id?: string;
   /** Method to trigger when the value of the field changes */
@@ -37,7 +35,6 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
   label,
   value,
   optionalLabel,
-  required,
   type,
   placeholder,
   onFieldChange,
@@ -63,7 +60,7 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
       <div className="FullPage__FormField__RenderSelect">
         <label className="FullPage__FormField__SelectLabel" for={id}>
           <TextStyle variant="body3" text={label} />
-          {!required ? (
+          {optionalLabel ? (
             <TextStyle variant="body3" text={`(${optionalLabel})`} />
           ) : (
             <TextStyle
@@ -89,7 +86,7 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
       <div className="FullPage__FormField__RenderInput">
         <label className="FullPage__FormField__Label" for={id}>
           <TextStyle variant="body3" text={label} />
-          {!required ? (
+          {optionalLabel ? (
             <TextStyle variant="body3" text={`(${optionalLabel})`} />
           ) : (
             <TextStyle
@@ -100,7 +97,7 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
         </label>
         <input
           className="FullPage__FormField__Input"
-          required={required}
+          required={optionalLabel && true}
           placeholder={placeholder}
           onChange={handleChange}
           id={id}

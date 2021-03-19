@@ -11,8 +11,6 @@ export default {
 const defaultArgs: FormFieldProps = {
   type: "Text",
   label: "First",
-  required: true,
-  optionalLabel: "optional",
   value: "Test",
   onFieldChange: (fieldName, fieldValue) => {},
 };
@@ -30,4 +28,19 @@ BasicSelectField.args = {
   type: {
     options: ["This one A", "this one B"],
   },
+};
+
+export const OptionalFormField = Template.bind({});
+OptionalFormField.args = {
+  ...defaultArgs,
+  optionalLabel: "Optional",
+};
+
+export const OptionalSelectField = Template.bind({});
+OptionalSelectField.args = {
+  ...defaultArgs,
+  type: {
+    options: ["This one A", "this one B"],
+  },
+  optionalLabel: "Optional",
 };
