@@ -15,6 +15,7 @@ const defaultArgs: FormProps = {
       label: "First",
       type: "Text",
       value: "",
+      required: true,
     },
     {
       label: "Last",
