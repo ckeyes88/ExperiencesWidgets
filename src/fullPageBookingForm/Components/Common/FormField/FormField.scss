@@ -1,0 +1,28 @@
+.FullPage__FormField__RenderInput {
+  display: flex;
+  flex-direction: column;
+}
+
+.FullPage__FormField__Input {
+  height: 36px;
+  border: 1px solid #bfbfbf;
+  border-radius: 5px;
+  font-family: "Montserrat";
+  font-size: 16px;
+  padding: 6px 13px;
+  font-weight: 500;
+  color: #424242;
+  margin-bottom: 16px;
+}
+
+.FullPage__form__input:disabled {
+  background-color: #f8f8f8;
+}
+
+.FullPage__FormField__Input--disabled {
+  opacity: 0.5;
+}
+
+.FullPage__FormField__Required {
+  color: red;
+}

@@ -8,7 +8,14 @@ export default {
   component: FormField,
 };
 
-const defaultArgs: FormFieldProps = {};
+const defaultArgs: FormFieldProps = {
+  type: "Text",
+  label: "First",
+  required: true,
+  optionalLabel: "optional",
+  value: "Test",
+  onFieldChange: (fieldName, fieldValue) => {},
+};
 
 const Template = (args: FormFieldProps) => <FormField {...args} />;
 
