@@ -12,20 +12,20 @@ const defaultArgs: FormProps = {
   title: "Customer Info",
   fields: object("List of input fields", [
     {
-      name: "First",
-      type: "text",
+      label: "First",
+      type: "Text",
       value: "",
       onChange: () => {},
     },
     {
-      name: "Last",
-      type: "text",
+      label: "Last",
+      type: "Text",
       value: "",
       onChange: () => {},
     },
     {
-      name: "Email",
-      type: "email",
+      label: "Email",
+      type: "Email",
       value: "",
       onChange: () => {},
     },
