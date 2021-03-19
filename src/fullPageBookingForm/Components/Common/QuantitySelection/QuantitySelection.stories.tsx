@@ -16,7 +16,7 @@ const defaultArgs: QuantitySelectionProps = {
   variants: [
     {
       name: "Adult",
-      cost: 100,
+      price: 100,
       onChange: defaultOnChange,
       onDecreaseClick: defaultOnDecreaseClick,
       onIncreaseClick: defaultOnIncreaseClick,
@@ -25,7 +25,7 @@ const defaultArgs: QuantitySelectionProps = {
     },
     {
       name: "Senior",
-      cost: 75,
+      price: 75,
       onChange: defaultOnChange,
       onDecreaseClick: defaultOnDecreaseClick,
       onIncreaseClick: defaultOnIncreaseClick,
@@ -34,7 +34,7 @@ const defaultArgs: QuantitySelectionProps = {
     },
     {
       name: "Child",
-      cost: 50,
+      price: 50,
       onChange: defaultOnChange,
       onDecreaseClick: defaultOnDecreaseClick,
       onIncreaseClick: defaultOnIncreaseClick,

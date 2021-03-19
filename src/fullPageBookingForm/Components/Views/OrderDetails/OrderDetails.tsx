@@ -49,15 +49,28 @@ export type OrderDetailsProps = {
   lineItems: OrderLineItemInputData[];
   /** Event custom labels set in admin experience interface */
   labels: Partial<AppDictionary>;
+  /**Whether this view is being tested in storybook or not. */
+  isStorybookTest?: boolean;
+  /**Quantity selection props. */
+  quantitySelectionProps: QuantitySelectionProps;
 };
 
-export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({}) => {
+export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
+  event,
+  selectedTimeslot,
+  selectedDate,
+  isStorybookTest,
+  quantitySelectionProps,
+}) => {
   const [isSaveContinueDisabled, setIsSaveContinueDisabled] = useState(true);
 
   //Define set page function, with stub if testing.
   let setPage = isStorybookTest
     ? (temp: number) => {}
     : useWizardModalAction().setPage;
+
+  //Calculate minimum cost of the event.
+  const minCost = Math.min(...event.variants.map((variant) => variant.price));
 
   //If required by event type, render customer form.
   const renderCustomerForm: FunctionComponent<typeof customerFormFields> = (
@@ -72,40 +85,44 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({}) => {
     <div className="OrderDetails">
       <div className="OrderDetails__Summary">
         <div className="OrderDetails__Summary__Title">
-          <img
-            className="OrderDetails__Summary__Image"
-            href={eventImageUrl}
-            alt="Experience image"
-          />
-          <TextStyle text={eventTitle} variant="display1" />
+          {/* Render first image of event, if it exists. */}
+          {event.images.length > 0 && (
+            <img
+              className="OrderDetails__Summary__Image"
+              href={event.images[0].id.toString()}
+              alt="Experience image"
+            />
+          )}
+
+          <TextStyle text={event.name} variant="display1" />
         </div>
-        <TextStyle variant="display2" text={dateOfEvent} />
+        <TextStyle variant="display2" text={selectedDate.toISOString()} />
         <div>
           <div className="OrderDetails__Summary__Time-Slot">
             <TextStyle
               variant="body1"
-              text={`${startTimeEvent} - ${endTimeEvent}`}
+              text={`${selectedTimeslot.startsAt.toISOString()} - ${selectedTimeslot.endsAt.toISOString()}`}
             />
             <TextStyle variant="body1" text="|" />
             <TextStyle
               variant="body3"
               text={
-                remainingSpots > 1
-                  ? `${remainingSpots} spots left`
-                  : `${remainingSpots} spot left`
+                selectedTimeslot.unitsLeft > 1
+                  ? `${selectedTimeslot.unitsLeft} spots left`
+                  : `${selectedTimeslot.unitsLeft} spot left`
               }
             />
           </div>
         </div>
         <div>
-          <TextStyle variant="body2" text={`From $${cost} `} />
-          <TextStyle variant="body1" text={costQuantity} />
+          <TextStyle variant="body2" text={`From $${minCost} `} />
+          <TextStyle variant="body1" text={"/ person"} />
         </div>
       </div>
 
       <div className="OrderDetails__Input">
         <div className="OrderDetails__Input__Quantity-Selection">
-          <QuantitySelection {...quantitySelections} />
+          <QuantitySelection {...quantitySelectionProps} />
         </div>
 
         {renderCustomerForm(customerFormFields)}

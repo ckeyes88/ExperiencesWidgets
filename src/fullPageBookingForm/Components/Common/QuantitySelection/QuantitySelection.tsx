@@ -7,7 +7,7 @@ import "./QuantitySelection.scss";
 export type QuantitySelectionProps = {
   variants: Array<
     NumberCarouselProps & {
-      cost: number;
+      price: number;
     }
   >;
 };
@@ -16,7 +16,7 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
 }) => {
   /**Calculates total of order. */
   const total = variants
-    .map((variant) => variant.cost * variant.currentQty)
+    .map((variant) => variant.price * variant.currentQty)
     .reduce((a, b) => a + b);
 
   return (
@@ -35,7 +35,7 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
                 <TextStyle variant="body1" text={variant.name} />
               </td>
               <td className="quantity-selection__table-cell">
-                <TextStyle variant="body1" text={`$${variant.cost}`} />
+                <TextStyle variant="body1" text={`$${variant.price}`} />
               </td>
               <td className="quantity-selection__table-cell quantity-selection__table-cell__input">
                 <NumberCarousel
