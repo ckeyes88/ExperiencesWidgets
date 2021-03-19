@@ -1,6 +1,7 @@
 /* @jsx h */
 import { h, FunctionComponent, Fragment } from "preact";
 import { JSXInternal } from "preact/src/jsx";
+import { FormFieldDBO } from "../../../../types";
 import { TextStyle } from "../TextStyle";
 import "./Form.scss";
 
@@ -9,14 +10,16 @@ export type FormProps = {
   title?: string;
   /**Fields shown in form. */
   fields: {
-    name: string;
-    type: "text" | "number" | "email" | "hidden" | "password";
+    label: FormFieldDBO["label"];
+    type: FormFieldDBO["type"];
     value: string | number;
     min?: number;
     max?: number;
     maxLength?: number;
     minLength?: number;
     placeholder?: string;
+    options?: string[];
+    defaultValue?: string;
     onChange: (value: string) => void;
     disabled?: boolean;
     required?: boolean;
@@ -65,15 +68,15 @@ export const Form: FunctionComponent<FormProps> = ({
 
           return (
             <div
-              key={`FullPage__form__${field.name}__${idx}`}
+              key={`FullPage__form__${field.label}__${idx}`}
               className="FullPage__form-fields"
             >
-              <label for={field.name}>
-                <TextStyle variant="body3" text={field.name} />
+              <label for={field.label}>
+                <TextStyle variant="body3" text={field.label} />
               </label>
               <input
                 className={inputClassNames.join(" ")}
-                name={field.name}
+                name={field.label}
                 type={field.type}
                 value={field.value}
                 min={field.min}
