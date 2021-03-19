@@ -23,3 +23,11 @@ export const BasicFormField = Template.bind({});
 BasicFormField.args = {
   ...defaultArgs,
 };
+
+export const BasicSelectField = Template.bind({});
+BasicSelectField.args = {
+  ...defaultArgs,
+  type: {
+    options: ["This one A", "this one B"],
+  },
+};

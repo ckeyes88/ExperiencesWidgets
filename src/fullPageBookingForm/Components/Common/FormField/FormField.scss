@@ -1,8 +1,10 @@
-.FullPage__FormField__RenderInput {
+.FullPage__FormField__RenderInput,
+.FullPage__FormField__RenderSelect {
   display: flex;
   flex-direction: column;
 }
 
+.FullPage__FormField__Select,
 .FullPage__FormField__Input {
   height: 36px;
   border: 1px solid #bfbfbf;

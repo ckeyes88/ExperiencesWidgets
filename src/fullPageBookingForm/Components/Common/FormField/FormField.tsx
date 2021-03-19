@@ -3,9 +3,17 @@ import { h, FunctionComponent, JSX } from "preact";
 import { TextStyle } from "../TextStyle";
 import "./FormField.scss";
 
+/**Generic input types for HTML Input element. */
+type InputTypes = "Text" | "Email" | "Phone";
+
+/**HTML input element options if a select type is required. */
+type SelectType = {
+  options: string[];
+};
+
 export type FormFieldProps = {
   /** Designate what type of an input this is */
-  type: "Text" | "Select" | "Email" | "Phone";
+  type: InputTypes | SelectType;
   /** The label for this input field must be unique as it's used for the id */
   label: string;
   /** Indicate whether the form field is required */
@@ -14,8 +22,6 @@ export type FormFieldProps = {
   optionalLabel: string;
   /** Optional placeholder */
   placeholder?: string;
-  /** options in the event that this is select field */
-  options?: string[];
   /** default value given to this field */
   defaultValue?: string;
   /** the value that is currently set in this field */
@@ -30,7 +36,6 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
   id,
   label,
   value,
-  options,
   optionalLabel,
   required,
   type,
@@ -67,8 +72,12 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
             />
           )}
         </label>
-        <select id={id} onChange={handleChange}>
-          {options.map(renderOption)}
+        <select
+          id={id}
+          onChange={handleChange}
+          className="FullPage__FormField__Select"
+        >
+          {typeof type !== "string" && type.options.map(renderOption)}
         </select>
       </div>
     );
@@ -95,7 +104,7 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
           placeholder={placeholder}
           onChange={handleChange}
           id={id}
-          type={type.toLowerCase()}
+          type={typeof type !== "string" ? "select" : type.toLowerCase()}
           value={value}
         />
       </div>
@@ -103,7 +112,7 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
   };
 
   /** Main render method, returns a select or an input. */
-  if (type === "Select") {
+  if (typeof type !== "string") {
     return renderSelect();
   } else {
     return renderInput();
