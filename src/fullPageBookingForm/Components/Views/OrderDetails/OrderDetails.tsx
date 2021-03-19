@@ -3,7 +3,11 @@ import { h, FunctionComponent } from "preact";
 import { useState } from "preact/hooks";
 import { Availability } from "../../../../typings/Availability";
 import { CustomerInputData } from "../../../../typings/CustomerInput";
-import { EventDBO, EventVariantDBO } from "../../../../typings/Event";
+import {
+  EventDBO,
+  EventVariantDBO,
+  PaymentType,
+} from "../../../../typings/Event";
 import { FormFieldValueInput } from "../../../../typings/FormFieldValueInput";
 import { AppDictionary } from "../../../../typings/Languages";
 import { OrderLineItemInputData } from "../../../../typings/OrderLineItemInput";
@@ -19,8 +23,6 @@ import { useWizardModalAction } from "../../Common/WizardModal";
 import "./OrderDetails.scss";
 
 export type OrderDetailsProps = {
-  /** Quantities by event variant */
-  quantities: { [variantId: number]: number };
   /** This is the date that the user has selected for the order */
   selectedDate: Date;
   /** This is the timeslot that the user has selected for the order */
@@ -30,7 +32,7 @@ export type OrderDetailsProps = {
   /** Any errors that should be displayed on the form */
   error: string;
   /** This is the customer info, if it is needed and has been inputted */
-  customerInfo: CustomerInputData;
+  customerInfo?: CustomerInputData;
   /** Method passed in and triggered upon submission of a custom form, passes values up to the top level */
   onAddCustomFormValues(
     variant: EventVariantDBO,
@@ -61,6 +63,8 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   selectedDate,
   isStorybookTest,
   quantitySelectionProps,
+  customerInfo,
+  onAddCustomerInfo,
 }) => {
   const [isSaveContinueDisabled, setIsSaveContinueDisabled] = useState(true);
 
@@ -73,13 +77,45 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   const minCost = Math.min(...event.variants.map((variant) => variant.price));
 
   //If required by event type, render customer form.
-  const renderCustomerForm: FunctionComponent<typeof customerFormFields> = (
-    customerFormFields,
-  ) => (
-    <div className="OrderDetails__Input__Customer-Form">
-      <Form {...customerFormFields} />
-    </div>
-  );
+  const renderCustomerForm: FunctionComponent<typeof customerInfo> = (
+    customerInfo,
+  ) => {
+    const formProps: FormProps = {
+      title: "Customer Info",
+      fields: [
+        {
+          label: "Email",
+          value: customerInfo.email,
+          type: "Email",
+        },
+        {
+          label: "First",
+          value: customerInfo.firstName,
+          type: "Text",
+        },
+        {
+          label: "Last",
+          type: "Text",
+          value: customerInfo.lastName,
+        },
+      ],
+      disabled: isSaveContinueDisabled,
+      onSubmit: () => {},
+    };
+
+    if (customerInfo.phone) {
+      formProps.fields.push({
+        label: "Phone",
+        value: customerInfo.phone,
+        type: "Phone",
+      });
+    }
+    return (
+      <div className="OrderDetails__Input__Customer-Form">
+        <Form {...formProps} />
+      </div>
+    );
+  };
 
   return (
     <div className="OrderDetails">
@@ -125,7 +161,13 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           <QuantitySelection {...quantitySelectionProps} />
         </div>
 
-        {renderCustomerForm(customerFormFields)}
+        {/** Render customer info if customer info has been provided and
+         * event is not a prepaid one.
+         */}
+        {customerInfo &&
+          event.paymentType !== PaymentType.Prepay &&
+          renderCustomerForm(customerInfo)}
+
         <div className="OrderDetails__Input__Save">
           <Button
             variant="contained"

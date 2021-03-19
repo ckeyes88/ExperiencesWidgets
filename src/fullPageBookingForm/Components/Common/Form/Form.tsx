@@ -1,6 +1,5 @@
 /* @jsx h */
 import { h, FunctionComponent, Fragment } from "preact";
-import { JSXInternal } from "preact/src/jsx";
 import { FormFieldDBO } from "../../../../types";
 import { TextStyle } from "../TextStyle";
 import "./Form.scss";
@@ -20,7 +19,6 @@ export type FormProps = {
     placeholder?: string;
     options?: string[];
     defaultValue?: string;
-    onChange: (value: string) => void;
     disabled?: boolean;
     required?: boolean;
   }[];
@@ -53,12 +51,6 @@ export const Form: FunctionComponent<FormProps> = ({
       )}
       <form className={formClassNames.join(" ")} onSubmit={onSubmit}>
         {fields.map((field, idx) => {
-          const handleChange: JSXInternal.DOMAttributes<
-            HTMLInputElement
-          >["onChange"] = (event) => {
-            field.onChange(event.currentTarget.value);
-          };
-
           const inputClassNames = ["FullPage__form__input"];
 
           // Add disabled styling to disabled form.
@@ -86,7 +78,6 @@ export const Form: FunctionComponent<FormProps> = ({
                 placeholder={field.placeholder}
                 disabled={disabled || field.disabled}
                 required={field.required}
-                onChange={handleChange}
               />
             </div>
           );
