@@ -1,6 +1,8 @@
 /* @jsx h */
 import { h, FunctionComponent, Fragment } from "preact";
+import { useState } from "preact/hooks";
 import { FormFieldDBO } from "../../../../types";
+import { FormFieldValue } from "../../../../typings/CustomForm";
 import { Button } from "../Button";
 import { TextStyle } from "../TextStyle";
 import "./Form.scss";
@@ -12,7 +14,7 @@ export type FormProps = {
   fields: {
     label: FormFieldDBO["label"];
     type: FormFieldDBO["type"];
-    value: string | number;
+    value: string;
     min?: number;
     max?: number;
     maxLength?: number;
@@ -30,7 +32,7 @@ export type FormProps = {
   /**Whether submit button should be shown on form per parent logic, if applicable. */
   showSubmitButton: boolean;
   /**Callback to handle submission of form. */
-  onSubmit: () => void;
+  onSubmit: (values: FormFieldValue[]) => void;
 };
 
 export const Form: FunctionComponent<FormProps> = ({
@@ -41,6 +43,16 @@ export const Form: FunctionComponent<FormProps> = ({
   isSubmitDisabled,
   showSubmitButton,
 }) => {
+  //Initialize state of form with initial values in parent component.
+  const [formValues, setFormValues] = useState<FormFields>(
+    fields.map((field) => ({
+      label: field.label,
+      value: field.value,
+      required: field.required,
+      disabled: field.disabled,
+    })),
+  );
+
   const formClassNames = ["FullPage__form"];
   const titleClassNames = ["FullPage__form__title"];
 
@@ -49,6 +61,8 @@ export const Form: FunctionComponent<FormProps> = ({
     titleClassNames.push("FullPage__form--disabled");
   }
 
+  const handleSubmit;
+
   return (
     <Fragment>
       {title && (
@@ -56,8 +70,8 @@ export const Form: FunctionComponent<FormProps> = ({
           <TextStyle variant="display2" text={title} />
         </div>
       )}
-      <form className={formClassNames.join(" ")} onSubmit={onSubmit}>
-        {fields.map((field, idx) => {
+      <form className={formClassNames.join(" ")} onSubmit={handleSubmit}>
+        {formValues.map((field, idx) => {
           const inputClassNames = ["FullPage__form__input"];
 
           // Add disabled styling to disabled form.
@@ -99,7 +113,6 @@ export const Form: FunctionComponent<FormProps> = ({
               fullWidth
               type="submit"
               disabled={isSubmitDisabled}
-              onClick={onSubmit}
             />
           </div>
         )}
