@@ -17,6 +17,11 @@
   margin-bottom: 16px;
 }
 
+/** Handles discrepancy between select/input heights. */
+.FullPage__FormField__Select {
+  min-height: 50px;
+}
+
 .FullPage__form__input:disabled {
   background-color: #f8f8f8;
 }
