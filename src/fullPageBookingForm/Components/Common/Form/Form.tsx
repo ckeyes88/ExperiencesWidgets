@@ -1,6 +1,7 @@
 /* @jsx h */
 import { h, FunctionComponent, Fragment } from "preact";
 import { FormFieldDBO } from "../../../../types";
+import { Button } from "../Button";
 import { TextStyle } from "../TextStyle";
 import "./Form.scss";
 
@@ -24,6 +25,10 @@ export type FormProps = {
   }[];
   /**Whether entire form is disabled. */
   disabled?: boolean;
+  /**Whether the parent of the form is disabling the submit button of the form. */
+  isSubmitDisabled: boolean;
+  /**Whether submit button should be shown on form per parent logic, if applicable. */
+  showSubmitButton: boolean;
   /**Callback to handle submission of form. */
   onSubmit: () => void;
 };
@@ -33,6 +38,8 @@ export const Form: FunctionComponent<FormProps> = ({
   fields,
   onSubmit,
   disabled,
+  isSubmitDisabled,
+  showSubmitButton,
 }) => {
   const formClassNames = ["FullPage__form"];
   const titleClassNames = ["FullPage__form__title"];
@@ -82,8 +89,21 @@ export const Form: FunctionComponent<FormProps> = ({
             </div>
           );
         })}
+        <div className="FullPage__form__header-rule" />
+        {showSubmitButton && (
+          <div className="FullPage__form__submit">
+            <Button
+              variant="contained"
+              color="primary"
+              text="Save & continue"
+              fullWidth
+              type="submit"
+              disabled={isSubmitDisabled}
+              onClick={onSubmit}
+            />
+          </div>
+        )}
       </form>
-      <div className="FullPage__form__header-rule" />
     </Fragment>
   );
 };

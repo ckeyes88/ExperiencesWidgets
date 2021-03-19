@@ -100,6 +100,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         },
       ],
       disabled: isSaveContinueDisabled,
+      isSubmitDisabled: !isSaveContinueDisabled,
       onSubmit: () => {},
     };
 
@@ -167,19 +168,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         {customerInfo &&
           event.paymentType !== PaymentType.Prepay &&
           renderCustomerForm(customerInfo)}
-
-        <div className="OrderDetails__Input__Save">
-          <Button
-            variant="contained"
-            color="primary"
-            text="Save & continue"
-            fullWidth
-            disabled={isSaveContinueDisabled}
-            onClick={() => {
-              setPage(BookingFormPage.SUBMISSION_LOADER);
-            }}
-          />
-        </div>
       </div>
     </div>
   );

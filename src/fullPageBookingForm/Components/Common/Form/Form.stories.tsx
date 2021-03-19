@@ -15,21 +15,20 @@ const defaultArgs: FormProps = {
       label: "First",
       type: "Text",
       value: "",
-      onChange: () => {},
     },
     {
       label: "Last",
       type: "Text",
       value: "",
-      onChange: () => {},
     },
     {
       label: "Email",
       type: "Email",
       value: "",
-      onChange: () => {},
     },
   ]),
+  isSubmitDisabled: false,
+  showSubmitButton: true,
   onSubmit: () => {},
 };
 
