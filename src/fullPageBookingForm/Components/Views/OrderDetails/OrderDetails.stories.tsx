@@ -29,24 +29,27 @@ const defaultQuantitySelections: QuantitySelectionProps = {
 
 const defaultCustomerFormFields: FormProps = {
   title: "Customer Info",
-  disabled: true,
+  disabled: false,
   fields: object("Customer Form Fields", [
     {
       name: "First",
       type: "text",
       value: "",
+      required: true,
       onChange: () => {},
     },
     {
       name: "Last",
       type: "text",
       value: "",
+      required: true,
       onChange: () => {},
     },
     {
       name: "Email",
       type: "email",
       value: "",
+      required: true,
       onChange: () => {},
     },
   ]),
