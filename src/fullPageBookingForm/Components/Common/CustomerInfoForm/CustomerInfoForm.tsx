@@ -1,15 +1,12 @@
 /** @jsx h */
 import { h, FunctionComponent } from "preact";
+import { CustomerInputData } from "../../../../typings/CustomerInput";
 import { AppDictionary } from "../../../../typings/Languages";
 import { FormField } from "../FormField";
 
 export type CustomerInfoFormProps = {
   /**Value of first name. */
-  firstNameValue: string;
-  /**Value of last name. */
-  lastNameValue: string;
-  /**Value of email.*/
-  emailValue: string;
+  customerData: CustomerInputData;
   /** this function gets called everytime one of the form values changes */
   handleChange(fieldName: string, value: string): void;
   /** Event custom labels set in admin experience interface */
@@ -17,9 +14,7 @@ export type CustomerInfoFormProps = {
 };
 
 export const CustomerInfoForm: FunctionComponent<CustomerInfoFormProps> = ({
-  firstNameValue,
-  lastNameValue,
-  emailValue,
+  customerData,
   labels,
   handleChange,
 }) => {
@@ -27,14 +22,14 @@ export const CustomerInfoForm: FunctionComponent<CustomerInfoFormProps> = ({
     <div className="CustomerInfo-Grid">
       <div className="CustomerInfo-Name">
         <FormField
-          value={firstNameValue}
+          value={customerData.firstName}
           onFieldChange={handleChange}
           type="Text"
           label={labels.firstNameLabel}
           id="firstName"
         />
         <FormField
-          value={lastNameValue}
+          value={customerData.lastName}
           onFieldChange={handleChange}
           type="Text"
           label={labels.lastNameLabel}
@@ -43,7 +38,7 @@ export const CustomerInfoForm: FunctionComponent<CustomerInfoFormProps> = ({
       </div>
       <div className="CustomerInfo-Email">
         <FormField
-          value={emailValue}
+          value={customerData.email}
           onFieldChange={handleChange}
           type="Email"
           label={labels.emailLabel}

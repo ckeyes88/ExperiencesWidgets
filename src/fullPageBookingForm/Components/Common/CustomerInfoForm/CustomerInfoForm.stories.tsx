@@ -2,12 +2,18 @@
 import { h } from "preact";
 import { CustomerInfoForm, CustomerInfoFormProps } from "./CustomerInfoForm";
 import { object } from "@storybook/addon-knobs";
+import { CustomerInputData } from "../../../../typings/CustomerInput";
 
 export default {
   title: "Full Page Booking Form/Common/Customer Info Form",
   component: CustomerInfoForm,
 };
 
+const defaultCustomerData: CustomerInputData = {
+  firstName: "Jacob",
+  lastName: "Shannon",
+  email: "jacob@test.com",
+};
 const defaultArgs: CustomerInfoFormProps = {
   labels: {
     firstNameLabel: "First",
@@ -15,9 +21,7 @@ const defaultArgs: CustomerInfoFormProps = {
     lastNameLabel: "Last",
     optionalFieldLabel: "Optional",
   },
-  firstNameValue: "Jacob",
-  lastNameValue: "Shannon",
-  emailValue: "jacob@test.com",
+  customerData: defaultCustomerData,
   handleChange: (fieldName, value) => {},
 };
 

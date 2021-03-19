@@ -13,7 +13,10 @@ import { AppDictionary } from "../../../../typings/Languages";
 import { OrderLineItemInputData } from "../../../../typings/OrderLineItemInput";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
 import { Button } from "../../Common/Button";
-import { Form, FormProps } from "../../Common/Form";
+import {
+  CustomerInfoForm,
+  CustomerInfoFormProps,
+} from "../../Common/CustomerInfoForm";
 import {
   QuantitySelection,
   QuantitySelectionProps,
@@ -65,7 +68,13 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   quantitySelectionProps,
   customerInfo,
   onAddCustomerInfo,
+  labels,
 }) => {
+  const [customerData, setCustomerInfo] = useState<CustomerInputData>({
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
   const [isSaveContinueDisabled, setIsSaveContinueDisabled] = useState(true);
 
   //Define set page function, with stub if testing.
@@ -80,40 +89,26 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   const renderCustomerForm: FunctionComponent<typeof customerInfo> = (
     customerInfo,
   ) => {
-    const formProps: FormProps = {
-      title: "Customer Info",
-      fields: [
-        {
-          label: "Email",
-          value: customerInfo.email,
-          type: "Email",
-        },
-        {
-          label: "First",
-          value: customerInfo.firstName,
-          type: "Text",
-        },
-        {
-          label: "Last",
-          type: "Text",
-          value: customerInfo.lastName,
-        },
-      ],
-      disabled: isSaveContinueDisabled,
-      isSubmitDisabled: !isSaveContinueDisabled,
-      onSubmit: () => {},
+    //Update state of customer form on change.
+    const handleCustomerFormChange = (
+      fieldName: string,
+      fieldValue: string,
+    ) => {
+      return setCustomerInfo((prevState) => ({
+        ...prevState,
+        [fieldName]: fieldValue,
+      }));
     };
 
-    if (customerInfo.phone) {
-      formProps.fields.push({
-        label: "Phone",
-        value: customerInfo.phone,
-        type: "Phone",
-      });
-    }
+    const customerFormProps: CustomerInfoFormProps = {
+      customerData,
+      handleChange: handleCustomerFormChange,
+      labels,
+    };
+
     return (
       <div className="OrderDetails__Input__Customer-Form">
-        <Form {...formProps} />
+        <CustomerInfoForm {...customerFormProps} />
       </div>
     );
   };
