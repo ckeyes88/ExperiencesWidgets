@@ -34,8 +34,6 @@ export type OrderDetailsProps = {
   event: EventDBO;
   /** Any errors that should be displayed on the form */
   error: string;
-  /** This is the customer info, if it is needed and has been inputted */
-  customerInfo?: CustomerInputData;
   /** Method passed in and triggered upon submission of a custom form, passes values up to the top level */
   onAddCustomFormValues(
     variant: EventVariantDBO,
@@ -66,7 +64,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   selectedDate,
   isStorybookTest,
   quantitySelectionProps,
-  customerInfo,
   onAddCustomerInfo,
   labels,
 }) => {
@@ -158,7 +155,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         {/** Render customer info if customer info has been provided and
          * event is not a prepaid one.
          */}
-        {customerInfo &&
+        {customerData &&
           event.paymentType !== PaymentType.Prepay &&
           renderCustomerForm()}
       </div>
