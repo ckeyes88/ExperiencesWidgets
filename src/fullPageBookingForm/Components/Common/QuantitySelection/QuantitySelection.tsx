@@ -5,6 +5,7 @@ import { TextStyle } from "../TextStyle";
 import "./QuantitySelection.scss";
 
 export type QuantitySelectionProps = {
+  /**Map of variant IDs and information of variant to be shown in table. */
   variants: {
     [variantId: number]: NumberCarouselProps & {
       price: number;
