@@ -99,15 +99,18 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     return variants;
   };
 
+  /**
+   * State tracking in component.
+   */
   const [customerData, setCustomerInfo] = useState<CustomerInputData>({
     firstName: "",
     lastName: "",
     email: "",
   });
   const [variants, setVariants] = useState(getVariants);
-
   const [currentLineItemIndex, setCurrentLineItemIndex] = useState(0);
   const [isSaveContinueDisabled, setIsSaveContinueDisabled] = useState(true);
+  const [currentCustomFormValues, setCustomFormValues] = useState([]);
 
   //Define set page function, with stub if testing.
   let setPage = isStorybookTest
@@ -175,6 +178,53 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         )}
       </form>
     );
+  };
+
+  //Update state of form when clicking back in custom form order.
+  const onPreviousClick = async () => {
+    // decrement lineItem index
+    const newLineItemIndex =
+      currentLineItemIndex > 0
+        ? currentLineItemIndex - 1
+        : currentLineItemIndex;
+
+    // switch to a previous line item
+    const storedLineItem = lineItems[newLineItemIndex];
+
+    setCurrentLineItemIndex(newLineItemIndex);
+    setCustomFormValues(storedLineItem.customOrderDetailsValues);
+  };
+
+  /** Passed down to the custom form and triggered on changes to store the values in state */
+  const handleCustomFormChange = (
+    fieldLabelIndex: string,
+    fieldValue: string,
+  ) => {
+    const newCurrentCustomFormValues: FormFieldValueInput[] = event.customOrderDetails.fields.map(
+      (field) => ({ ...field, value: field.defaultValue }),
+    );
+
+    //Copy the current values to a new array
+    currentCustomFormValues.forEach((v, i) => {
+      newCurrentCustomFormValues[i] = v;
+    });
+    //fieldLabelIndex is the field label/name and its index position joined by a hyphen
+    //Split the values apart here
+    // Changed this to split on %%% since a dash causes problems if the customer inputs a field name with a dash i.e. T-Shirt
+    const [label, index] = fieldLabelIndex.split("%%%");
+
+    //Create a new custom form value of type FormFieldValueInput
+    const oldVal = newCurrentCustomFormValues[parseInt(index)] || {};
+
+    //Index into the form values array using the index from the field ID
+    newCurrentCustomFormValues[parseInt(index)] = {
+      ...oldVal,
+      label,
+      value: fieldValue,
+    };
+
+    //Set state with the updated value
+    setCustomFormValues(newCurrentCustomFormValues);
   };
 
   /** Renders a custom order form as set up by the merchant
