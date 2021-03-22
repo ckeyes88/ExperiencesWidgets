@@ -8,9 +8,9 @@ export type CustomFormProps = {
   /** Array of fields that the form will display */
   fields: FormFieldDBO[];
   /** A string to display that descibe the purpose of the form */
-  formDescription: string;
+  formDescription?: string;
   /** A string to display the title of this form */
-  formTitle: string;
+  formTitle?: string;
   /** Method passed in to handle changes to the value of a field */
   handleChange(fieldName: string, value: string): void;
   /** Event custom labels set in admin experience interface */
@@ -33,11 +33,14 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
             options: field.options,
           }
         : field.type;
-    // Changed this to combine field and value using %%% since a dash causes problems if the customer inputs a field name with a dash i.e. T-Shirt
+
+    //Only supply optional label if field is not required.
+    const optionalLabel = !field.required && labels.optionalFieldLabel;
+
     return (
       <div className="FormField-Container">
         <FormField
-          optionalLabel={labels.optionalFieldLabel}
+          optionalLabel={optionalLabel}
           key={`${field.label}%%%${i}`}
           type={type}
           label={field.label}
