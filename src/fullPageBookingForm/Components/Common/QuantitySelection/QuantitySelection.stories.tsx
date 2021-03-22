@@ -13,9 +13,18 @@ const defaultOnIncreaseClick = () => {};
 const defaultOnDecreaseClick = () => {};
 
 const defaultArgs: QuantitySelectionProps = {
-  variants: [
-    {
+  variants: {
+    0: {
       name: "Adult",
+      price: 150,
+      onChange: defaultOnChange,
+      onDecreaseClick: defaultOnDecreaseClick,
+      onIncreaseClick: defaultOnIncreaseClick,
+      currentQty: 0,
+      qtyMaximum: 5,
+    },
+    1: {
+      name: "Child",
       price: 100,
       onChange: defaultOnChange,
       onDecreaseClick: defaultOnDecreaseClick,
@@ -23,17 +32,8 @@ const defaultArgs: QuantitySelectionProps = {
       currentQty: 0,
       qtyMaximum: 5,
     },
-    {
+    2: {
       name: "Senior",
-      price: 75,
-      onChange: defaultOnChange,
-      onDecreaseClick: defaultOnDecreaseClick,
-      onIncreaseClick: defaultOnIncreaseClick,
-      currentQty: 0,
-      qtyMaximum: 5,
-    },
-    {
-      name: "Child",
       price: 50,
       onChange: defaultOnChange,
       onDecreaseClick: defaultOnDecreaseClick,
@@ -41,7 +41,7 @@ const defaultArgs: QuantitySelectionProps = {
       currentQty: 0,
       qtyMaximum: 5,
     },
-  ],
+  },
 };
 
 const Template = (args: QuantitySelectionProps) => (
