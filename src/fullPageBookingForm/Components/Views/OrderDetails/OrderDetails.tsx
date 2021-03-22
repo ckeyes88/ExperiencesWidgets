@@ -77,6 +77,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   saveButtonState,
   lineItems,
   onConfirmOrder,
+  onAddCustomFormValues,
 }) => {
   /** Assembles an array of variants used in the creation of line items */
   const getVariants = () => {
@@ -230,9 +231,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
   /** Passes current custom form values up to main level to be stored as a line item */
   const onAddLineItem = async () => {
-    const { event } = this.props;
-    const { currentCustomFormValues, currentLineItemIndex } = this.state;
-
     // Establishes the current values stored in state
     let newCustomFormValues: FormFieldValueInput[] = [
       ...currentCustomFormValues,
@@ -241,10 +239,10 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       event.customOrderDetails.formType === OrderDetailsFormType.PerAttendee
     ) {
       // Use the current line item index to determine the correct variant
-      const currentVariant = this.variants[currentLineItemIndex];
+      const currentVariant = variants[currentLineItemIndex];
 
       // Pass the variant and the form values up to the top level
-      await this.props.onAddCustomFormValues(
+      await onAddCustomFormValues(
         currentVariant,
         newCustomFormValues,
         currentLineItemIndex,
@@ -254,20 +252,16 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       const newLineItemIndex = currentLineItemIndex + 1;
 
       // Reset the form values in state
-      this.setState({
-        currentCustomFormValues: [],
-        currentLineItemIndex: newLineItemIndex,
-      });
+      setCustomFormValues([]);
+      setCurrentLineItemIndex(newLineItemIndex);
     } else {
       let lineItemPromises: Promise<any>[] = [];
       let newCustomFormValues: FormFieldValueInput[] = [
         ...currentCustomFormValues,
       ];
       // loop over each variant
-      this.variants.forEach((v, i) => {
-        lineItemPromises.push(
-          this.props.onAddCustomFormValues(v, newCustomFormValues, i),
-        );
+      variants.forEach((v, i) => {
+        lineItemPromises.push(onAddCustomFormValues(v, newCustomFormValues, i));
       });
 
       await Promise.all(lineItemPromises);
