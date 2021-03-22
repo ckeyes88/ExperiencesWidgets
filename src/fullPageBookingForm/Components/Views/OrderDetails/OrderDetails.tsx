@@ -28,7 +28,6 @@ import {
 import { TextStyle } from "../../Common/TextStyle";
 import { useWizardModalAction } from "../../Common/WizardModal";
 import "./OrderDetails.scss";
-import { RequiredWarning } from "../../../../SharedComponents/Forms/RequiredWarning";
 import { CustomForm } from "../../Common/CustomForm";
 
 export type OrderDetailsProps = {
@@ -89,7 +88,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       const variant = parseInt(k);
       for (
         let i = 0;
-        i < quantitySelectionProps.variants[variant].currentQty;
+        i < Object.values(quantitySelectionProps.variants).length;
         i++
       ) {
         variants.push({
@@ -112,10 +111,12 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     email: "",
   });
   const [variants, _] = useState(getVariants);
+
   const [currentLineItemIndex, setCurrentLineItemIndex] = useState(0);
   const [isSaveContinueDisabled, setIsSaveContinueDisabled] = useState(
     isStorybookTest ? isStorybookTest.isSaveContinueDisabled : false,
   );
+  console.log(isSaveContinueDisabled);
   const [currentCustomFormValues, setCustomFormValues] = useState([]);
 
   //Define set page function, with stub if testing.
@@ -294,7 +295,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     const { customOrderDetails } = event;
 
     const currentLineItem = lineItems[currentLineItemIndex];
-
+    console.log(variant);
     //If the custom form is per attendee, add name/email fields and render attendee-specific info per form (ex. Attendee 1 of 3)
     if (customOrderDetails.formType === OrderDetailsFormType.PerAttendee) {
       //Adds first, last, and email to any custom form by default
@@ -359,7 +360,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               formTitle={customOrderDetails.formTitle}
               handleChange={handleCustomFormChange}
             />
-            <RequiredWarning message={labels.requiredWarningLabel} />
             <span className="CustomOrderDetails-SubmitBtn">
               <button
                 type="button"
@@ -398,7 +398,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               formTitle={customOrderDetails.formTitle}
               handleChange={handleCustomFormChange}
             />
-            <RequiredWarning message={labels.requiredWarningLabel} />
             <span className="CustomOrderDetails-SubmitBtn centered">
               <button type="submit">
                 {labels.confirmReservationButtonLabel}
@@ -475,7 +474,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         {isSaveContinueDisabled &&
           event.customOrderDetails.fields &&
           Array.isArray(event.customOrderDetails.fields) &&
-          event.customOrderDetails.fields.length &&
           currentLineItemIndex < variants.length &&
           renderCustomOrderDetails(variants[currentLineItemIndex])}
       </div>

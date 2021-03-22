@@ -1,6 +1,5 @@
 /** @jsx h */
 import { h } from "preact";
-import { object } from "@storybook/addon-knobs";
 import { QuantitySelectionProps } from "../../Common/QuantitySelection";
 import { OrderDetails, OrderDetailsProps } from "../OrderDetails";
 import { Availability } from "../../../../typings/Availability";
@@ -77,7 +76,9 @@ const defaultEvent: EventDBO = {
   archivedAt: null,
   createdAt: new Date(2021, 1, 1),
   customOrderDetails: {
-    formType: OrderDetailsFormType.None,
+    formType: OrderDetailsFormType.PerOrder,
+    formTitle: "Custom Form",
+
     fields: [
       {
         label: "Snack type",
@@ -156,14 +157,9 @@ const defaultArgs: OrderDetailsProps = {
   saveButtonState: "disabled",
 };
 
-export const Default = Template.bind({});
-Default.args = {
-  ...defaultArgs,
-};
-
 const disabledQuantitySelection: QuantitySelectionProps = {
-  variants: [
-    {
+  variants: {
+    0: {
       name: "Adult",
       price: 150,
       currentQty: 0,
@@ -173,14 +169,22 @@ const disabledQuantitySelection: QuantitySelectionProps = {
       onChange: () => {},
       isDisabled: true,
     },
-  ],
+  },
 };
 
-export const CustomForm = Template.bind({});
-CustomForm.args = {
+export const Default = Template.bind({});
+Default.args = {
   ...defaultArgs,
+  isStorybookTest: {
+    isSaveContinueDisabled: false,
+  },
+};
+
+export const CustomFormPerOrder = Template.bind({});
+CustomFormPerOrder.args = {
+  ...defaultArgs,
+  quantitySelectionProps: disabledQuantitySelection,
   isStorybookTest: {
     isSaveContinueDisabled: true,
   },
-  quantitySelectionProps: disabledQuantitySelection,
 };
