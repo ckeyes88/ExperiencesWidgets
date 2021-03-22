@@ -5,17 +5,18 @@ import { TextStyle } from "../TextStyle";
 import "./QuantitySelection.scss";
 
 export type QuantitySelectionProps = {
-  variants: Array<
-    NumberCarouselProps & {
+  variants: {
+    [variantId: number]: NumberCarouselProps & {
       price: number;
-    }
-  >;
+    };
+  };
 };
 export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
   variants,
 }) => {
+  variants;
   /**Calculates total of order. */
-  const total = variants
+  const total = Object.values(variants)
     .map((variant) => variant.price * variant.currentQty)
     .reduce((a, b) => a + b);
 
@@ -29,7 +30,7 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
           <col span={1} style="width: 40%" />
         </colgroup>
         <tbody>
-          {variants.map((variant, idx) => (
+          {Object.values(variants).map((variant, idx) => (
             <tr key={`QuantitySelection-Table-Row-${idx}`}>
               <td className="quantity-selection__table-cell">
                 <TextStyle variant="body1" text={variant.name} />
