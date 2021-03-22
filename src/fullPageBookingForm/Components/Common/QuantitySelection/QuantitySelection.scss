@@ -1,3 +1,11 @@
+.quantity-selection {
+  opacity: 1;
+}
+
+.quantity-selection--is-disabled {
+  opacity: 0.5;
+}
+
 .quantity-selection__table-cell {
   padding-bottom: 34px;
 }

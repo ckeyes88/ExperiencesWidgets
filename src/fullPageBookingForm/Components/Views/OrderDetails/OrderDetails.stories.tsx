@@ -14,6 +14,7 @@ import {
   PaymentType,
   OrderDetailsFormType,
   LanguageCode,
+  FormFieldType,
 } from "../../../../typings/Event";
 
 export default {
@@ -34,6 +35,7 @@ const defaultQuantitySelections: QuantitySelectionProps = {
       onDecreaseClick: () => {},
       onIncreaseClick: () => {},
       onChange: () => {},
+      isDisabled: false,
     },
   ],
 };
@@ -76,6 +78,13 @@ const defaultEvent: EventDBO = {
   createdAt: new Date(2021, 1, 1),
   customOrderDetails: {
     formType: OrderDetailsFormType.None,
+    fields: [
+      {
+        label: "Snack type",
+        required: true,
+        type: FormFieldType.Text,
+      },
+    ],
   },
   description: "Hike mount storm king.",
   handle: "handle",
@@ -140,12 +149,38 @@ const defaultArgs: OrderDetailsProps = {
   closeModal: () => {},
   lineItems: [defaultOrderLineItemData],
   labels: defaultLabels,
-  isStorybookTest: true,
+  isStorybookTest: {
+    isSaveContinueDisabled: false,
+  },
   quantitySelectionProps: defaultQuantitySelections,
-  saveButtonState: "visible",
+  saveButtonState: "disabled",
 };
 
-export const Primary = Template.bind({});
-Primary.args = {
+export const Default = Template.bind({});
+Default.args = {
   ...defaultArgs,
+};
+
+const disabledQuantitySelection: QuantitySelectionProps = {
+  variants: [
+    {
+      name: "Adult",
+      price: 150,
+      currentQty: 0,
+      qtyMaximum: 5,
+      onDecreaseClick: () => {},
+      onIncreaseClick: () => {},
+      onChange: () => {},
+      isDisabled: true,
+    },
+  ],
+};
+
+export const CustomForm = Template.bind({});
+CustomForm.args = {
+  ...defaultArgs,
+  isStorybookTest: {
+    isSaveContinueDisabled: true,
+  },
+  quantitySelectionProps: disabledQuantitySelection,
 };

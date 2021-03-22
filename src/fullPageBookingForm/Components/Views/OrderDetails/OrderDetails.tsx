@@ -58,8 +58,10 @@ export type OrderDetailsProps = {
   lineItems: OrderLineItemInputData[];
   /** Event custom labels set in admin experience interface */
   labels: Partial<AppDictionary>;
-  /**Whether this view is being tested in storybook or not. */
-  isStorybookTest?: boolean;
+  /**Whether this view is being tested in storybook or not. Inject state for testing purposes. */
+  isStorybookTest?: {
+    isSaveContinueDisabled: boolean;
+  };
   /**Quantity selection props. */
   quantitySelectionProps: QuantitySelectionProps;
   /** The state of the save button per the parent component. */
@@ -109,9 +111,11 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     lastName: "",
     email: "",
   });
-  const [variants, setVariants] = useState(getVariants);
+  const [variants, _] = useState(getVariants);
   const [currentLineItemIndex, setCurrentLineItemIndex] = useState(0);
-  const [isSaveContinueDisabled, setIsSaveContinueDisabled] = useState(true);
+  const [isSaveContinueDisabled, setIsSaveContinueDisabled] = useState(
+    isStorybookTest ? isStorybookTest.isSaveContinueDisabled : false,
+  );
   const [currentCustomFormValues, setCustomFormValues] = useState([]);
 
   //Define set page function, with stub if testing.
@@ -461,11 +465,15 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
          * Render customer info if customer info has been provided and
          * event is not a prepaid one.
          */}
-        {event.paymentType !== PaymentType.Prepay && renderCustomerForm()}
+        {!isSaveContinueDisabled &&
+          event.paymentType !== PaymentType.Prepay &&
+          renderCustomerForm()}
         {/**
-         * Render custom info form if custom info has been provided.
+         * Render custom info form if custom info has been provided and customer
+         * form has been completed.
          */}
-        {event.customOrderDetails.fields &&
+        {isSaveContinueDisabled &&
+          event.customOrderDetails.fields &&
           Array.isArray(event.customOrderDetails.fields) &&
           event.customOrderDetails.fields.length &&
           currentLineItemIndex < variants.length &&

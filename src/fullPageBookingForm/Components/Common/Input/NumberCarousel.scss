@@ -17,6 +17,10 @@
   margin: 0 8px;
 }
 
+.number-carousel__input:disabled {
+  background-color: transparent;
+}
+
 .number-carousel__input::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }

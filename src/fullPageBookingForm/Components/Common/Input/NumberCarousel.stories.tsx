@@ -14,6 +14,7 @@ const defaultArgs: NumberCarouselProps = {
   onDecreaseClick: () => {},
   onIncreaseClick: () => {},
   onChange: (value: string) => {},
+  isDisabled: false,
 };
 
 const Template = (args: NumberCarouselProps) => <NumberCarousel {...args} />;
@@ -22,4 +23,11 @@ export const Basic = Template.bind({});
 
 Basic.args = {
   ...defaultArgs,
+};
+
+export const Disabled = Template.bind({});
+
+Disabled.args = {
+  ...defaultArgs,
+  isDisabled: true,
 };

@@ -1,5 +1,5 @@
 /** @jsx h */
-import { h, FunctionComponent, Fragment } from "preact";
+import { h, FunctionComponent } from "preact";
 import { NumberCarousel, NumberCarouselProps } from "../Input/NumberCarousel";
 import { TextStyle } from "../TextStyle";
 import "./QuantitySelection.scss";
@@ -21,8 +21,18 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
     .map((variant) => variant.price * variant.currentQty)
     .reduce((a, b) => a + b);
 
+  const classNames = ["quantity-selection"];
+
+  //Entire form is disabled if all variant inputs are disabled.
+  const isDisabled = Object.values(variants).every(
+    (variant) => variant.isDisabled,
+  );
+  if (isDisabled) {
+    classNames.push("quantity-selection--is-disabled");
+  }
+
   return (
-    <Fragment>
+    <div className={classNames.join(" ")}>
       <TextStyle variant="display2" text="Quantity" />
       <table className="quantity-selection__table">
         <colgroup>
@@ -47,6 +57,7 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
                   currentQty={variant.currentQty}
                   qtyMaximum={variant.qtyMaximum}
                   onChange={variant.onChange}
+                  isDisabled={variant.isDisabled}
                 />
               </td>
             </tr>
@@ -63,6 +74,6 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
         </tbody>
       </table>
       <div className="quantity-selection__header-rule" />
-    </Fragment>
+    </div>
   );
 };

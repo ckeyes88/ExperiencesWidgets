@@ -4,6 +4,8 @@ import { JSXInternal } from "preact/src/jsx";
 import "./NumberCarousel.scss";
 
 export type NumberCarouselProps = {
+  /**Whether component is disabled in parent. */
+  isDisabled: boolean;
   /** Name of variant. */
   name: string;
   /**Current qty of tickets for variant. */
@@ -20,6 +22,7 @@ export type NumberCarouselProps = {
 
 export const NumberCarousel: FunctionComponent<NumberCarouselProps> = ({
   name,
+  isDisabled,
   currentQty,
   qtyMaximum,
   onIncreaseClick,
@@ -33,6 +36,7 @@ export const NumberCarousel: FunctionComponent<NumberCarouselProps> = ({
   };
   const decreasingButtonClassNames = ["number-carousel__button"];
   const increasingButtonClassNames = [...decreasingButtonClassNames];
+  const carouselClassNames = ["number-carousel"];
 
   if (currentQty <= 0) {
     decreasingButtonClassNames.push("number-carousel__button--disabled");
@@ -42,11 +46,11 @@ export const NumberCarousel: FunctionComponent<NumberCarouselProps> = ({
     increasingButtonClassNames.push("number-carousel__button--disabled");
   }
   return (
-    <div className="number-carousel">
+    <div className={carouselClassNames.join(" ")}>
       <button
         className={decreasingButtonClassNames.join(" ")}
         onClick={onIncreaseClick}
-        disabled={currentQty <= 0}
+        disabled={currentQty <= 0 || isDisabled}
       >
         -
       </button>
@@ -58,6 +62,7 @@ export const NumberCarousel: FunctionComponent<NumberCarouselProps> = ({
         max={qtyMaximum}
         value={currentQty}
         onChange={handleChange}
+        disabled={isDisabled}
       />
       <button
         className={increasingButtonClassNames.join(" ")}

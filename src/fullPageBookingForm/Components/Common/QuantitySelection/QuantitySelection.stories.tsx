@@ -22,6 +22,7 @@ const defaultArgs: QuantitySelectionProps = {
       onIncreaseClick: defaultOnIncreaseClick,
       currentQty: 0,
       qtyMaximum: 5,
+      isDisabled: false,
     },
     1: {
       name: "Child",
@@ -31,6 +32,7 @@ const defaultArgs: QuantitySelectionProps = {
       onIncreaseClick: defaultOnIncreaseClick,
       currentQty: 0,
       qtyMaximum: 5,
+      isDisabled: false,
     },
     2: {
       name: "Senior",
@@ -40,6 +42,7 @@ const defaultArgs: QuantitySelectionProps = {
       onIncreaseClick: defaultOnIncreaseClick,
       currentQty: 0,
       qtyMaximum: 5,
+      isDisabled: false,
     },
   },
 };
@@ -51,4 +54,24 @@ const Template = (args: QuantitySelectionProps) => (
 export const Default = Template.bind({});
 Default.args = {
   ...defaultArgs,
+};
+
+const disabledArgs = {
+  variants: {
+    0: {
+      name: "Adult",
+      price: 150,
+      onChange: defaultOnChange,
+      onDecreaseClick: defaultOnDecreaseClick,
+      onIncreaseClick: defaultOnIncreaseClick,
+      currentQty: 0,
+      qtyMaximum: 5,
+      isDisabled: true,
+    },
+  },
+};
+
+export const Disabled = Template.bind({});
+Disabled.args = {
+  ...disabledArgs,
 };
