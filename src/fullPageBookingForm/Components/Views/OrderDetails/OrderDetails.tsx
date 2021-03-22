@@ -457,10 +457,19 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           <QuantitySelection {...quantitySelectionProps} />
         </div>
 
-        {/** Render customer info if customer info has been provided and
+        {/**
+         * Render customer info if customer info has been provided and
          * event is not a prepaid one.
          */}
         {event.paymentType !== PaymentType.Prepay && renderCustomerForm()}
+        {/**
+         * Render custom info form if custom info has been provided.
+         */}
+        {event.customOrderDetails.fields &&
+          Array.isArray(event.customOrderDetails.fields) &&
+          event.customOrderDetails.fields.length &&
+          currentLineItemIndex < variants.length &&
+          renderCustomOrderDetails(variants[currentLineItemIndex])}
       </div>
     </div>
   );
