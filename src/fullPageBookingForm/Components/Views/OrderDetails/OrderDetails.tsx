@@ -76,6 +76,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   labels,
   saveButtonState,
   lineItems,
+  onConfirmOrder,
 }) => {
   /** Assembles an array of variants used in the creation of line items */
   const getVariants = () => {
@@ -225,6 +226,67 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
     //Set state with the updated value
     setCustomFormValues(newCurrentCustomFormValues);
+  };
+
+  /** Passes current custom form values up to main level to be stored as a line item */
+  const onAddLineItem = async () => {
+    const { event } = this.props;
+    const { currentCustomFormValues, currentLineItemIndex } = this.state;
+
+    // Establishes the current values stored in state
+    let newCustomFormValues: FormFieldValueInput[] = [
+      ...currentCustomFormValues,
+    ];
+    if (
+      event.customOrderDetails.formType === OrderDetailsFormType.PerAttendee
+    ) {
+      // Use the current line item index to determine the correct variant
+      const currentVariant = this.variants[currentLineItemIndex];
+
+      // Pass the variant and the form values up to the top level
+      await this.props.onAddCustomFormValues(
+        currentVariant,
+        newCustomFormValues,
+        currentLineItemIndex,
+      );
+
+      // Increment the current line item index in stateR
+      const newLineItemIndex = currentLineItemIndex + 1;
+
+      // Reset the form values in state
+      this.setState({
+        currentCustomFormValues: [],
+        currentLineItemIndex: newLineItemIndex,
+      });
+    } else {
+      let lineItemPromises: Promise<any>[] = [];
+      let newCustomFormValues: FormFieldValueInput[] = [
+        ...currentCustomFormValues,
+      ];
+      // loop over each variant
+      this.variants.forEach((v, i) => {
+        lineItemPromises.push(
+          this.props.onAddCustomFormValues(v, newCustomFormValues, i),
+        );
+      });
+
+      await Promise.all(lineItemPromises);
+    }
+  };
+
+  /** Triggered on submission of a custom form */
+  const handleSubmitCustomForm = async (ev: Event) => {
+    ev.preventDefault();
+    //Pass the values up to create a new line item
+    await onAddLineItem();
+
+    //If the form is only per order, or if this is the final attendee, call onConfirmOrder
+    if (
+      event.customOrderDetails.formType === OrderDetailsFormType.PerOrder ||
+      currentLineItemIndex >= variants.length
+    ) {
+      onConfirmOrder();
+    }
   };
 
   /** Renders a custom order form as set up by the merchant
