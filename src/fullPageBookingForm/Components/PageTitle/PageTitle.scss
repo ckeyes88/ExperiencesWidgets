@@ -1,0 +1,14 @@
+@import "../../base";
+
+.page-title__thumbnail {
+  width: 54px;
+  height: 54px;
+  border-radius: 5px;
+  object-fit: cover;
+  background-color: $color-default;
+}
+
+.page-title__text {
+  margin: 0;
+  max-width: 230px;
+}
