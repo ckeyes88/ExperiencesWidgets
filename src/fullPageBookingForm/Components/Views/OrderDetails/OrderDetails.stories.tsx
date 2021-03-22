@@ -39,8 +39,8 @@ const defaultQuantitySelections: QuantitySelectionProps = {
 };
 
 const defaultTimeslot: Availability = {
-  endsAt: new Date(2021, 1, 13),
-  startsAt: new Date(2021, 1, 13),
+  endsAt: new Date(2021, 1, 13, 13),
+  startsAt: new Date(2021, 1, 13, 11),
   productId: "0",
   totalUnits: 5,
   unitsLeft: 4,
@@ -96,7 +96,12 @@ const defaultEvent: EventDBO = {
   tags: [],
   taxStatus: TaxStatus.NoTax,
   updatedAt: new Date(2021, 1, 2),
-  variants: [],
+  variants: [
+    {
+      name: "Child",
+      price: 50,
+    },
+  ],
   ticketedEvent: true,
   ticketTemplateId: null,
 };
@@ -110,15 +115,15 @@ const defaultLabels: Partial<AppDictionary> = {
 
 const defaultOrderLineItemData: OrderLineItemInputData = {
   customOrderDetailsValues: [],
-  endsAt: new Date(2021, 1, 13),
+  endsAt: new Date(2021, 1, 13, 13),
   eventVariantName: "Conquer Mount Storm King",
   quantity: 1,
-  startsAt: new Date(2021, 1, 13),
+  startsAt: new Date(2021, 1, 13, 11),
   timezone: "UTC",
 };
 
 const defaultArgs: OrderDetailsProps = {
-  selectedDate: new Date(2021, 1, 13),
+  selectedDate: new Date(2021, 0, 13),
   selectedTimeslot: defaultTimeslot,
   event: defaultEvent,
   error: "",

@@ -1,4 +1,6 @@
 /** @jsx h */
+import { parseISO } from "date-fns/fp";
+import { format } from "date-fns";
 import { h, FunctionComponent } from "preact";
 import { useState } from "preact/hooks";
 import { Availability } from "../../../../typings/Availability";
@@ -6,6 +8,8 @@ import { CustomerInputData } from "../../../../typings/CustomerInput";
 import {
   EventDBO,
   EventVariantDBO,
+  FormFieldType,
+  OrderDetailsFormType,
   PaymentType,
 } from "../../../../typings/Event";
 import { FormFieldValueInput } from "../../../../typings/FormFieldValueInput";
@@ -24,6 +28,8 @@ import {
 import { TextStyle } from "../../Common/TextStyle";
 import { useWizardModalAction } from "../../Common/WizardModal";
 import "./OrderDetails.scss";
+import { RequiredWarning } from "../../../../SharedComponents/Forms/RequiredWarning";
+import { CustomForm } from "../../Common/CustomForm";
 
 export type OrderDetailsProps = {
   /** This is the date that the user has selected for the order */
@@ -69,12 +75,38 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   onAddCustomerInfo,
   labels,
   saveButtonState,
+  lineItems,
 }) => {
+  /** Assembles an array of variants used in the creation of line items */
+  const getVariants = () => {
+    let variants: (EventVariantDBO & { quantity: number })[] = [];
+
+    Object.keys(quantitySelectionProps.variants).forEach(function (k) {
+      const variant = parseInt(k);
+      for (
+        let i = 0;
+        i < quantitySelectionProps.variants[variant].currentQty;
+        i++
+      ) {
+        variants.push({
+          ...event.variants.find(function (v) {
+            return v.shopifyVariantId === variant;
+          }),
+          quantity: quantitySelectionProps.variants[variant].currentQty,
+        });
+      }
+    });
+    return variants;
+  };
+
   const [customerData, setCustomerInfo] = useState<CustomerInputData>({
     firstName: "",
     lastName: "",
     email: "",
   });
+  const [variants, setVariants] = useState(getVariants);
+
+  const [currentLineItemIndex, setCurrentLineItemIndex] = useState(0);
   const [isSaveContinueDisabled, setIsSaveContinueDisabled] = useState(true);
 
   //Define set page function, with stub if testing.
@@ -145,6 +177,130 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     );
   };
 
+  /** Renders a custom order form as set up by the merchant
+   * This form is either per attendee or per order
+   */
+  const renderCustomOrderDetails = (variant?: EventVariantDBO) => {
+    const { customOrderDetails } = event;
+
+    const currentLineItem = lineItems[currentLineItemIndex];
+
+    //If the custom form is per attendee, add name/email fields and render attendee-specific info per form (ex. Attendee 1 of 3)
+    if (customOrderDetails.formType === OrderDetailsFormType.PerAttendee) {
+      //Adds first, last, and email to any custom form by default
+      let fields = customOrderDetails.fields.concat([
+        {
+          type: FormFieldType.Text,
+          label: labels.firstNameLabel,
+          required: true,
+        },
+        {
+          type: FormFieldType.Text,
+          label: labels.lastNameLabel,
+          required: true,
+        },
+        { type: FormFieldType.Email, label: labels.emailLabel, required: true },
+      ]);
+
+      if (currentLineItem && currentLineItem.customOrderDetailsValues) {
+        fields = fields.map((f) => {
+          // if there is a value stored from the previous step, use it
+          const existingFieldData = currentLineItem.customOrderDetailsValues.filter(
+            (l) => l.label === f.label,
+          )[0];
+          return {
+            ...f,
+            value: !!existingFieldData ? existingFieldData.value : undefined,
+          };
+        });
+      }
+
+      //Render the form
+      //The custom form for per attendee, renders on how many tickets are bought
+      return (
+        <div className="CustomOrderDetails">
+          <div className="CustomOrderDetails-Header">
+            <h1 className="CustomOrderDetails-Title">
+              {event.customOrderDetails.formTitle}
+            </h1>
+            <h4 className="CustomOrderDetails-Description">
+              {event.customOrderDetails.formDescription}
+            </h4>
+            <div>
+              <p>
+                <span className="CustomOrderDetails-Ticket">
+                  {labels.getPerAttendeeStepLabel(
+                    currentLineItemIndex + 1,
+                    variants.length,
+                  )}
+                </span>
+                <span className="CustomOrderDetails-VariantName">
+                  {variant.name}
+                </span>
+              </p>
+            </div>
+          </div>
+          <form id="CustomOrder-Details" onSubmit={handleSubmitCustomForm}>
+            <CustomForm
+              labels={labels}
+              key={currentLineItemIndex}
+              fields={fields}
+              formDescription={customOrderDetails.formDescription}
+              formTitle={customOrderDetails.formTitle}
+              handleChange={handleCustomFormChange}
+            />
+            <RequiredWarning message={labels.requiredWarningLabel} />
+            <span className="CustomOrderDetails-SubmitBtn">
+              <button
+                type="button"
+                onClick={onPreviousClick}
+                disabled={!currentLineItemIndex}
+              >
+                {labels.previousLabel}
+              </button>
+              <button type="submit">
+                {currentLineItemIndex + 1 === variants.length
+                  ? labels.confirmReservationButtonLabel
+                  : labels.nextLabel}
+              </button>
+            </span>
+          </form>
+        </div>
+      );
+    } else {
+      //The custom form is per order, render only once
+      return (
+        <div className="CustomOrderDetails">
+          <div className="CustomOrderDetails-Header">
+            <h1 className="CustomOrderDetails-Title">
+              {event.customOrderDetails.formTitle}
+            </h1>
+            <h4 className="CustomOrderDetails-Description">
+              {event.customOrderDetails.formDescription}
+            </h4>
+          </div>
+          <form id="CustomOrder-Details" onSubmit={handleSubmitCustomForm}>
+            <CustomForm
+              labels={labels}
+              key={currentLineItemIndex}
+              fields={customOrderDetails.fields}
+              formDescription={customOrderDetails.formDescription}
+              formTitle={customOrderDetails.formTitle}
+              handleChange={handleCustomFormChange}
+            />
+            <RequiredWarning message={labels.requiredWarningLabel} />
+            <span className="CustomOrderDetails-SubmitBtn centered">
+              <button type="submit">
+                {labels.confirmReservationButtonLabel}
+              </button>
+            </span>
+          </form>
+        </div>
+      );
+    }
+  };
+
+  /** Main render method. */
   return (
     <div className="OrderDetails">
       <div className="OrderDetails__Summary">
@@ -160,12 +316,18 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
           <TextStyle text={event.name} variant="display1" />
         </div>
-        <TextStyle variant="display2" text={selectedDate.toISOString()} />
+        <TextStyle variant="display2" text={"Monday, January 13th"} />
         <div>
           <div className="OrderDetails__Summary__Time-Slot">
             <TextStyle
               variant="body1"
-              text={`${selectedTimeslot.startsAt.toISOString()} - ${selectedTimeslot.endsAt.toISOString()}`}
+              text={`${format(
+                parseISO(selectedTimeslot.startsAt.toISOString()),
+                "h:mm",
+              )} - ${format(
+                parseISO(selectedTimeslot.endsAt.toISOString()),
+                "h:mm",
+              )}`}
             />
             <TextStyle variant="body1" text="|" />
             <TextStyle
@@ -192,9 +354,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         {/** Render customer info if customer info has been provided and
          * event is not a prepaid one.
          */}
-        {customerData &&
-          event.paymentType !== PaymentType.Prepay &&
-          renderCustomerForm()}
+        {event.paymentType !== PaymentType.Prepay && renderCustomerForm()}
       </div>
     </div>
   );
