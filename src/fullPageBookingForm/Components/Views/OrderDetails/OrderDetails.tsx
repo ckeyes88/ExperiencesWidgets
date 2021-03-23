@@ -409,6 +409,13 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     }
   };
 
+  //Whether a custom form should be rendered in the view.
+  const shouldRenderCustomForm =
+    isSaveContinueDisabled &&
+    event.customOrderDetails.fields &&
+    Array.isArray(event.customOrderDetails.fields) &&
+    currentLineItemIndex < variants.length;
+
   /** Main render method. */
   return (
     <div className="OrderDetails">
@@ -464,17 +471,18 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
          * Render customer info if customer info has been provided and
          * event is not a prepaid one.
          */}
-        {!isSaveContinueDisabled &&
-          event.paymentType !== PaymentType.Prepay &&
-          renderCustomerForm()}
+        {event.paymentType !== PaymentType.Prepay && renderCustomerForm()}
+        {/**
+         * Allow edits of customer form when populated
+         */}
+        {shouldRenderCustomForm && (
+          <Button text="Edit" variant="outlined" fullWidth color="primary" />
+        )}
         {/**
          * Render custom info form if custom info has been provided and customer
          * form has been completed.
          */}
-        {isSaveContinueDisabled &&
-          event.customOrderDetails.fields &&
-          Array.isArray(event.customOrderDetails.fields) &&
-          currentLineItemIndex < variants.length &&
+        {shouldRenderCustomForm &&
           renderCustomOrderDetails(variants[currentLineItemIndex])}
       </div>
     </div>
