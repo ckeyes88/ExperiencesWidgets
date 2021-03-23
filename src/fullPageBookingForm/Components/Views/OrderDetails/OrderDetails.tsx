@@ -29,6 +29,7 @@ import { TextStyle } from "../../Common/TextStyle";
 import { useWizardModalAction } from "../../Common/WizardModal";
 import "./OrderDetails.scss";
 import { CustomForm } from "../../Common/CustomForm";
+import { FormFieldDBO } from "../../../../types";
 
 export type OrderDetailsProps = {
   /** This is the date that the user has selected for the order */
@@ -65,6 +66,8 @@ export type OrderDetailsProps = {
   quantitySelectionProps: QuantitySelectionProps;
   /** The state of the save button per the parent component. */
   saveButtonState: "visible" | "hidden" | "disabled";
+  /**Sets the save button state in parent component. */
+  setSaveButtonState: (state: "visible" | "hidden" | "disabled") => void;
 };
 
 export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
@@ -76,6 +79,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   onAddCustomerInfo,
   labels,
   saveButtonState,
+  setSaveButtonState,
   lineItems,
   onConfirmOrder,
   onAddCustomFormValues,
@@ -301,7 +305,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     //If the custom form is per attendee, add name/email fields and render attendee-specific info per form (ex. Attendee 1 of 3)
     if (customOrderDetails.formType === OrderDetailsFormType.PerAttendee) {
       //Adds first, last, and email to any custom form by default
-      let fields = customOrderDetails.fields.concat([
+      let fields: FormFieldDBO[] = customOrderDetails.fields.concat([
         {
           type: FormFieldType.Text,
           label: labels.firstNameLabel,
@@ -327,6 +331,12 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           };
         });
       }
+
+      //Whether the user is allowed to confirm order by populating
+      //all required custom form fields.
+      const canConfirm = fields.every(
+        (field) => !field.required || (field.required && field.value),
+      );
 
       //Render the form
       //The custom form for per attendee, renders on how many tickets are bought
@@ -379,6 +389,12 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         </div>
       );
     } else {
+      //Whether the user is allowed to confirm order by populating
+      //all required custom form fields.
+      const canConfirm = (customOrderDetails.fields as FormFieldDBO[]).every(
+        (field) => !field.required || (field.required && field.value),
+      );
+
       //The custom form is per order, render only once
       return (
         <div className="CustomOrder">
@@ -411,6 +427,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
                 color="primary"
                 text={labels.confirmReservationButtonLabel}
                 type="submit"
+                disabled={!canConfirm}
               />
             </div>
           </form>
@@ -487,7 +504,16 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
          */}
         {shouldRenderCustomForm && (
           <div className="OrderDetails__Button">
-            <Button text="Edit" variant="outlined" fullWidth color="primary" />
+            <Button
+              text="Edit"
+              variant="outlined"
+              fullWidth
+              color="primary"
+              onClick={() => {
+                setIsSaveContinueDisabled(true);
+                setSaveButtonState("visible");
+              }}
+            />
           </div>
         )}
         {/**

@@ -156,6 +156,7 @@ const defaultArgs: OrderDetailsProps = {
   },
   quantitySelectionProps: defaultQuantitySelections,
   saveButtonState: "disabled",
+  setSaveButtonState: () => {},
 };
 
 const disabledQuantitySelection: QuantitySelectionProps = {

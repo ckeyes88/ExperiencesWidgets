@@ -75,6 +75,7 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
         <select
           id={id}
           onChange={handleChange}
+          value={value}
           className="FullPage__FormField__Select"
         >
           {typeof type !== "string" && type.options.map(renderOption)}
