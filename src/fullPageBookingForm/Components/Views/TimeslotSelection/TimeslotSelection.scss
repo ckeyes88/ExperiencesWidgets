@@ -1,18 +1,24 @@
+$timeslot-list-margin: 245px;
+
 .timeslot-selection {
   display: flex;
   justify-content: space-between;
   margin-top: 83px;
 }
 
+.timeslot-selection__calendar {
+  width: 350px;
+}
+
 .timeslot-selection__timeslot-list__margin {
-  height: 319px;
+  height: $timeslot-list-margin;
 }
 
 .timeslot-selection__timeslot-list {
   max-width: 460px;
   flex: 1;
   position: relative;
-  top: -319px;
+  top: -$timeslot-list-margin;
   overflow-y: scroll;
   height: 100vh;
 

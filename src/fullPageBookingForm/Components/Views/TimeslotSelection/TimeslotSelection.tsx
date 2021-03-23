@@ -1,7 +1,7 @@
 /** @jsx h */
 import { h, FunctionComponent, Fragment } from "preact";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
-import { TextStyle } from "../../Common/TextStyle";
+import { Calendar } from "../../Common/Calendar";
 import { useWizardModalAction } from "../../Common/WizardModal";
 import { PageTitle } from "../../PageTitle";
 import { TimeslotGroup } from "../../TimeslotGroup";
@@ -17,12 +17,13 @@ export const TimeslotSelection: FunctionComponent = () => {
   return (
     <Fragment>
       <PageTitle
+        inlineWithThumbnail
         title="Conquer Mount Storm King"
         thumbnailSrc="https://f6d3w8j9.rocketcdn.me/wp-content/uploads/2019/09/Hiking-Packing-List.sq.jpg"
       />
       <div className="timeslot-selection">
         <div className="timeslot-selection__calendar">
-          <TextStyle variant="body1" text="Calendar here..." />
+          <Calendar date={new Date()} />
         </div>
         <div className="timeslot-selection__timeslot-list">
           <div className="timeslot-selection__timeslot-list__margin" />
