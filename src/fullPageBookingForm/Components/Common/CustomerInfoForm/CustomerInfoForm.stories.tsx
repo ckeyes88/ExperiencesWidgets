@@ -22,6 +22,7 @@ const defaultArgs: CustomerInfoFormProps = {
     optionalFieldLabel: "Optional",
   },
   customerData: defaultCustomerData,
+
   handleChange: (fieldName, value) => {},
 };
 
@@ -32,4 +33,10 @@ const Template = (args: CustomerInfoFormProps) => (
 export const BasicForm = Template.bind({});
 BasicForm.args = {
   ...defaultArgs,
+};
+
+export const DisabledForm = Template.bind({});
+DisabledForm.args = {
+  ...defaultArgs,
+  isCustomerInfoFormDisabled: true,
 };

@@ -169,7 +169,10 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           <TextStyle variant="display2" text="Customer info" />
         </div>
 
-        <CustomerInfoForm {...customerFormProps} />
+        <CustomerInfoForm
+          {...customerFormProps}
+          isCustomerInfoFormDisabled={saveButtonState === "hidden"}
+        />
         <div className="OrderDetails__Header-Rule" />
         {saveButtonState !== "hidden" && (
           <div className="OrderDetails__Input__Customer-Form__Submit">
@@ -295,7 +298,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     const { customOrderDetails } = event;
 
     const currentLineItem = lineItems[currentLineItemIndex];
-    console.log(variant);
     //If the custom form is per attendee, add name/email fields and render attendee-specific info per form (ex. Attendee 1 of 3)
     if (customOrderDetails.formType === OrderDetailsFormType.PerAttendee) {
       //Adds first, last, and email to any custom form by default
@@ -329,27 +331,26 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       //Render the form
       //The custom form for per attendee, renders on how many tickets are bought
       return (
-        <div className="CustomOrderDetails">
-          <div className="CustomOrderDetails-Header">
-            <h1 className="CustomOrderDetails-Title">
-              {event.customOrderDetails.formTitle}
-            </h1>
-            <h4 className="CustomOrderDetails-Description">
-              {event.customOrderDetails.formDescription}
-            </h4>
-            <div>
-              <p>
-                <span className="CustomOrderDetails-Ticket">
-                  {labels.getPerAttendeeStepLabel(
-                    currentLineItemIndex + 1,
-                    variants.length,
-                  )}
-                </span>
-                <span className="CustomOrderDetails-VariantName">
-                  {variant.name}
-                </span>
-              </p>
-            </div>
+        <div>
+          <TextStyle
+            variant="display2"
+            text={event.customOrderDetails.formTitle}
+          />
+          <h4 className="CustomOrderDetails-Description">
+            {event.customOrderDetails.formDescription}
+          </h4>
+          <div>
+            <p>
+              <span className="CustomOrderDetails-Ticket">
+                {labels.getPerAttendeeStepLabel(
+                  currentLineItemIndex + 1,
+                  variants.length,
+                )}
+              </span>
+              <span className="CustomOrderDetails-VariantName">
+                {variant.name}
+              </span>
+            </p>
           </div>
           <form id="CustomOrder-Details" onSubmit={handleSubmitCustomForm}>
             <CustomForm
@@ -357,7 +358,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               key={currentLineItemIndex}
               fields={fields}
               formDescription={customOrderDetails.formDescription}
-              formTitle={customOrderDetails.formTitle}
+              formTitle={customOrderDetails.formTitle || "Custom Form"}
               handleChange={handleCustomFormChange}
             />
             <span className="CustomOrderDetails-SubmitBtn">
@@ -380,15 +381,20 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     } else {
       //The custom form is per order, render only once
       return (
-        <div className="CustomOrderDetails">
-          <div className="CustomOrderDetails-Header">
-            <h1 className="CustomOrderDetails-Title">
-              {event.customOrderDetails.formTitle}
-            </h1>
-            <h4 className="CustomOrderDetails-Description">
-              {event.customOrderDetails.formDescription}
-            </h4>
-          </div>
+        <div className="CustomOrder">
+          <TextStyle
+            variant="display2"
+            text={event.customOrderDetails.formTitle}
+          />
+          {event.customOrderDetails.formDescription && (
+            <div className="CustomOrder__Description">
+              <TextStyle
+                variant="body1"
+                text={event.customOrderDetails.formDescription}
+              />
+            </div>
+          )}
+
           <form id="CustomOrder-Details" onSubmit={handleSubmitCustomForm}>
             <CustomForm
               labels={labels}
@@ -476,7 +482,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
          * Allow edits of customer form when populated
          */}
         {shouldRenderCustomForm && (
-          <Button text="Edit" variant="outlined" fullWidth color="primary" />
+          <div className="OrderDetails__Edit-Button">
+            <Button text="Edit" variant="outlined" fullWidth color="primary" />
+          </div>
         )}
         {/**
          * Render custom info form if custom info has been provided and customer

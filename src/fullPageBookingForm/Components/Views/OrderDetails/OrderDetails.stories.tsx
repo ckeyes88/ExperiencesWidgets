@@ -77,8 +77,8 @@ const defaultEvent: EventDBO = {
   createdAt: new Date(2021, 1, 1),
   customOrderDetails: {
     formType: OrderDetailsFormType.PerOrder,
-    formTitle: "Custom Form",
-
+    formTitle: "Additional Details",
+    formDescription: "Add some details.",
     fields: [
       {
         label: "Snack type",
@@ -187,4 +187,5 @@ CustomFormPerOrder.args = {
   isStorybookTest: {
     isSaveContinueDisabled: true,
   },
+  saveButtonState: "hidden",
 };

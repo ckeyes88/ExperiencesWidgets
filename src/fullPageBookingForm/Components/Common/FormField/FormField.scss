@@ -21,9 +21,12 @@
 .FullPage__FormField__Select {
   min-height: 50px;
 }
+.FullPage__FormField__Select:disabled {
+  background-color: transparent;
+}
 
-.FullPage__form__input:disabled {
-  background-color: #f8f8f8;
+.FullPage__FormField__Input:disabled {
+  background-color: transparent;
 }
 
 .FullPage__FormField__Input--disabled {

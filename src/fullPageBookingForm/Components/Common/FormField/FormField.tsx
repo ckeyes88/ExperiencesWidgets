@@ -24,6 +24,8 @@ export type FormFieldProps = {
   placeholder?: string;
   /** default value given to this field */
   defaultValue?: string;
+  /**Whether form field should be disabled. */
+  disabled?: boolean;
   /** Optional id for the field */
   id?: string;
   /** Method to trigger when the value of the field changes */
@@ -33,6 +35,7 @@ export type FormFieldProps = {
 export const FormField: FunctionComponent<FormFieldProps> = ({
   id,
   label,
+  disabled,
   value,
   optionalLabel,
   type,
@@ -103,6 +106,7 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
           id={id}
           type={typeof type !== "string" ? "select" : type.toLowerCase()}
           value={value}
+          disabled={disabled}
         />
       </div>
     );

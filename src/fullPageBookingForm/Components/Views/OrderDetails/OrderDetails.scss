@@ -4,6 +4,10 @@ $title-max-width: 322px;
 $column-gutter-width: 100px;
 
 .OrderDetails__Input {
+  font-family: "Montserrat", "San Serif";
+}
+
+.OrderDetails__Input {
   width: 460px;
   margin-left: $image-width + $image-right-margin + $title-max-width +
     $column-gutter-width;
@@ -66,4 +70,22 @@ $column-gutter-width: 100px;
 .OrderDetails__Header-Rule {
   margin-top: 42px;
   border-top: 1px solid #d1d1d1;
+}
+
+.OrderDetails__Edit-Button {
+  margin-top: 42px;
+  margin-bottom: 90px;
+}
+
+.CustomOrder {
+  display: flex;
+  flex-direction: column;
+}
+
+.CustomOrder__Description {
+  margin-top: 31px;
+}
+
+#CustomOrder-Details {
+  margin-top: 31px;
 }
