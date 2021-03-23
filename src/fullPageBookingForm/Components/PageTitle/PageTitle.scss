@@ -1,14 +1,21 @@
 @import "../../base";
 
+.page-title--inline {
+  display: flex;
+  align-items: center;
+}
+
 .page-title__thumbnail {
   width: 54px;
   height: 54px;
   border-radius: 5px;
   object-fit: cover;
   background-color: $color-default;
+  margin-right: 15px;
 }
 
 .page-title__text {
   margin: 0;
   max-width: 230px;
+  line-height: 30px;
 }
