@@ -404,11 +404,15 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               formTitle={customOrderDetails.formTitle}
               handleChange={handleCustomFormChange}
             />
-            <span className="CustomOrderDetails-SubmitBtn centered">
-              <button type="submit">
-                {labels.confirmReservationButtonLabel}
-              </button>
-            </span>
+            <div className="OrderDetails__Header-Rule" />
+            <div className="OrderDetails__Button">
+              <Button
+                fullWidth
+                color="primary"
+                text={labels.confirmReservationButtonLabel}
+                type="submit"
+              />
+            </div>
           </form>
         </div>
       );
@@ -482,7 +486,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
          * Allow edits of customer form when populated
          */}
         {shouldRenderCustomForm && (
-          <div className="OrderDetails__Edit-Button">
+          <div className="OrderDetails__Button">
             <Button text="Edit" variant="outlined" fullWidth color="primary" />
           </div>
         )}

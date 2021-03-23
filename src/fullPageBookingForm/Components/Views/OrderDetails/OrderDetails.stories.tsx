@@ -121,6 +121,7 @@ const defaultLabels: Partial<AppDictionary> = {
   emailLabel: "Email",
   lastNameLabel: "Last",
   optionalFieldLabel: "Optional",
+  confirmReservationButtonLabel: "Confirm & Reserve",
 };
 
 const defaultOrderLineItemData: OrderLineItemInputData = {
