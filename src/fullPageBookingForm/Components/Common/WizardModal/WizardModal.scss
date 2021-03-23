@@ -20,9 +20,11 @@
 .wizard-modal__close-button {
   cursor: pointer;
   position: absolute;
+  z-index: 1;
 }
 
 .wizard-modal__body {
   max-width: 1100px;
   margin: 0 auto;
+  padding-top: 60px;
 }

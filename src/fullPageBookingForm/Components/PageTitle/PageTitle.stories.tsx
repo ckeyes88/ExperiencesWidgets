@@ -10,6 +10,6 @@ export default {
 export const Basic = () => (
   <PageTitle
     title="Conquer Mount Storm King"
-    thumbnailSrc="https://www.helpguide.org/wp-content/uploads/table-with-grains-vegetables-fruit-768.jpg"
+    thumbnailSrc="https://f6d3w8j9.rocketcdn.me/wp-content/uploads/2019/09/Hiking-Packing-List.sq.jpg"
   />
 );

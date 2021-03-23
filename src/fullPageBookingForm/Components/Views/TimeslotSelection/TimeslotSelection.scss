@@ -1,0 +1,47 @@
+.timeslot-selection {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 83px;
+}
+
+.timeslot-selection__timeslot-list__margin {
+  height: 319px;
+}
+
+.timeslot-selection__timeslot-list {
+  max-width: 460px;
+  flex: 1;
+  position: relative;
+  top: -319px;
+  overflow-y: scroll;
+  height: 100vh;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .timeslot-group {
+    margin-bottom: 60px;
+
+    &:last-child {
+      margin-bottom: 30px;
+    }
+  }
+}
+
+@media (max-width: 854px) {
+  .page-title,
+  .timeslot-selection__timeslot-list__margin {
+    display: none;
+  }
+
+  .timeslot-selection {
+    flex-direction: column;
+    margin-top: 0;
+  }
+
+  .timeslot-selection__timeslot-list {
+    max-width: none;
+    position: static;
+  }
+}
