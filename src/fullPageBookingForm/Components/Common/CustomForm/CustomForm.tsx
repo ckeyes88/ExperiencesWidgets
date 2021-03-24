@@ -1,16 +1,29 @@
 /** @jsx h */
-import { h, FunctionComponent } from "preact";
+import { h, FunctionComponent, Fragment } from "preact";
 import { FormFieldDBO } from "../../../../types";
 import { AppDictionary } from "../../../../typings/Languages";
 import { FormField } from "../FormField";
+import { TextStyle } from "../TextStyle";
 
-export type CustomFormProps = {
+export type PerOrderTypeProps = {
   /** Array of fields that the form will display */
   fields: FormFieldDBO[];
   /** A string to display that descibe the purpose of the form */
   formDescription?: string;
   /** A string to display the title of this form */
   formTitle?: string;
+};
+
+export type PerAttendeeTypeProps = {
+  /** Array of fields that the form will display */
+  fields: FormFieldDBO[];
+  /**Number of fields per variant, to be separated by header rule. */
+  fieldsPerVariant: number;
+};
+
+export type CustomFormProps = {
+  /**Type of custom form rendered in checkout flow. */
+  formType: PerAttendeeTypeProps | PerOrderTypeProps;
   /** Method passed in to handle changes to the value of a field */
   handleChange(fieldName: string, value: string): void;
   /** Event custom labels set in admin experience interface */
@@ -19,9 +32,7 @@ export type CustomFormProps = {
 
 /** This is the component that renders a custom form with merchant-defined fields */
 export const CustomForm: FunctionComponent<CustomFormProps> = ({
-  fields,
-  formDescription,
-  formTitle,
+  formType,
   handleChange,
   labels,
 }) => {
@@ -54,17 +65,34 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
     );
   };
 
-  /** Renders each indivual field in the fields prop */
-  const renderFormFields = () => {
-    //null
-    return fields.map(renderFormField);
+  /**Renders each individual field in the form for a per order form. */
+  const renderPerOrderForm = (formValues: PerOrderTypeProps) => {
+    return (
+      <Fragment>
+        {formValues.formTitle && <TextStyle variant="display2" text={"Test"} />}
+        {formValues.formDescription && (
+          <div className="CustomOrder__Description">
+            <TextStyle variant="body1" text={formValues.formDescription} />
+          </div>
+        )}
+        {formValues.fields.map(renderFormField)}
+      </Fragment>
+    );
+  };
+
+  /**Renders each individual field in the form, for each
+   * individual attendee.
+   */
+  const renderPerAttendeeForm = (formValues: PerAttendeeTypeProps) => {
+    return <Fragment>{formValues.fields.map(renderFormField)}</Fragment>;
   };
 
   /** Main render method */
   return (
     <div className="CustomForm-Container">
-      {/** custom detail email, name etc */}
-      {renderFormFields()}
+      {formType.hasOwnProperty("fieldsPerVariant")
+        ? renderPerAttendeeForm(formType as PerAttendeeTypeProps)
+        : renderPerOrderForm(formType as PerOrderTypeProps)}
     </div>
   );
 };

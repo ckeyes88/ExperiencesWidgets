@@ -1,13 +1,19 @@
 /** @jsx h */
-import { h, FunctionComponent } from "preact";
+import { h } from "preact";
 import { FormFieldDBO } from "../../../../types";
-import { CustomForm, CustomFormProps } from "./CustomForm";
+import {
+  CustomForm,
+  CustomFormProps,
+  PerAttendeeTypeProps,
+  PerOrderTypeProps,
+} from "./CustomForm";
 
 export default {
   title: "Full Page Booking Form/Common/Custom Form",
   component: CustomForm,
   argTypes: {},
 };
+
 const defaultFields: FormFieldDBO[] = [
   {
     label: "First",
@@ -32,8 +38,17 @@ const defaultFields: FormFieldDBO[] = [
   },
 ];
 
-const defaultArgs: CustomFormProps = {
+const defaultPerOrderFormProps: PerOrderTypeProps = {
   fields: defaultFields,
+};
+
+const defaultPerAttendeeFormProps: PerAttendeeTypeProps = {
+  fields: defaultFields,
+  fieldsPerVariant: 2,
+};
+
+const defaultArgs: CustomFormProps = {
+  formType: defaultPerOrderFormProps,
   handleChange: () => {},
   labels: {
     optionalFieldLabel: "Optional",
@@ -42,7 +57,13 @@ const defaultArgs: CustomFormProps = {
 
 const Template = (args: CustomFormProps) => <CustomForm {...args} />;
 
-export const Primary = Template.bind({});
-Primary.args = {
+export const PerOrderForm = Template.bind({});
+PerOrderForm.args = {
   ...defaultArgs,
+};
+
+export const PerAttendeeForm = Template.bind({});
+PerAttendeeForm.args = {
+  ...defaultArgs,
+  formType: defaultPerAttendeeFormProps,
 };
