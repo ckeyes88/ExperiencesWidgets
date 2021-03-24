@@ -28,7 +28,11 @@ import {
 import { TextStyle } from "../../Common/TextStyle";
 import { useWizardModalAction } from "../../Common/WizardModal";
 import "./OrderDetails.scss";
-import { CustomForm } from "../../Common/CustomForm";
+import {
+  CustomForm,
+  PerAttendeeTypeProps,
+  PerOrderTypeProps,
+} from "../../Common/CustomForm";
 import { FormFieldDBO } from "../../../../types";
 import { clone } from "ramda";
 
@@ -196,6 +200,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     );
   };
 
+  /**Handles the removal of a variant from a custom form. */
+  const handleRemoveVariant = (variantName: string, variantIdx: number) => {};
+
   /** Passed down to the custom form and triggered on changes to store the values in state */
   const handleCustomFormChange = (
     fieldLabelIndex: string,
@@ -309,25 +316,20 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         { type: FormFieldType.Email, label: labels.emailLabel, required: true },
       ].concat(customOrderDetails.fields);
 
-      //Determine total variant quantity selected, so that custom form can be built with
-      //a custom form for each attendee. Exclude variants with a selected quantity of zero.
-      const totalVariantsSelected = Object.values(
+      //Determine all variants that have been selected in view (where ticket quantity is > 0)
+      const selectedVariants = Object.values(
         quantitySelectionProps.variants,
-      )
-        .filter((variant) => variant.currentQty > 0)
-        .map((variant) => variant.currentQty)
-        .reduce((total, variantQty) => total + variantQty, 0);
+      ).filter((variant) => variant.currentQty > 0);
 
       //Create per attendee form details object, used to populate
       //all fields for a per attendee custom form.
-      const perAttendeeFormDetails = {
+      const perAttendeeFormType: PerAttendeeTypeProps = {
         //Fields for each variant selected in custom form.
-        fields: [].concat(
-          Array(totalVariantsSelected).map((_) => clone(fields)),
-        ),
+        fields,
+        variantNames: selectedVariants.map((variant) => variant.name),
         //Total fields per variant selected, to be separated by header rule
         //in form.
-        fieldsPerVariant: Math.round(totalVariantsSelected / fields.length),
+        removeVariant: handleRemoveVariant,
       };
 
       //Whether the user is allowed to confirm order by populating
@@ -344,9 +346,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
             <CustomForm
               labels={labels}
               key={currentLineItemIndex}
-              fields={fields}
-              formDescription={customOrderDetails.formDescription}
-              formTitle={customOrderDetails.formTitle || "Custom Form"}
+              formType={perAttendeeFormType}
               handleChange={handleCustomFormChange}
             />
             <div className="OrderDetails__Button">
@@ -368,6 +368,13 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         (field) => !field.required || (field.required && field.value),
       );
 
+      //Create data structure for per order form.
+      const perOrderFormType: PerOrderTypeProps = {
+        fields: customOrderDetails.fields,
+        formDescription: customOrderDetails.formDescription,
+        formTitle: customOrderDetails.formTitle,
+      };
+
       //The custom form is per order, render only once
       return (
         <div className="CustomOrder">
@@ -375,9 +382,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
             <CustomForm
               labels={labels}
               key={currentLineItemIndex}
-              fields={customOrderDetails.fields}
-              formDescription={customOrderDetails.formDescription}
-              formTitle={customOrderDetails.formTitle}
+              formType={perOrderFormType}
               handleChange={handleCustomFormChange}
             />
             <div className="OrderDetails__Button">
