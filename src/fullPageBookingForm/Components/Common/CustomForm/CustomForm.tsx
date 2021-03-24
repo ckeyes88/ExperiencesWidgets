@@ -1,9 +1,11 @@
 /** @jsx h */
 import { h, FunctionComponent, Fragment } from "preact";
+import { clone } from "ramda";
 import { FormFieldDBO } from "../../../../types";
 import { AppDictionary } from "../../../../typings/Languages";
 import { FormField } from "../FormField";
 import { TextStyle } from "../TextStyle";
+import "./CustomForm.scss";
 
 export type PerOrderTypeProps = {
   /** Array of fields that the form will display */
@@ -18,7 +20,7 @@ export type PerAttendeeTypeProps = {
   /** Array of fields that the form will display */
   fields: FormFieldDBO[];
   /**Number of fields per variant, to be separated by header rule. */
-  fieldsPerVariant: number;
+  variantNames: string[];
 };
 
 export type CustomFormProps = {
@@ -76,6 +78,7 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
           </div>
         )}
         {formValues.fields.map(renderFormField)}
+        <div className="CustomForm__Header-Rule" />
       </Fragment>
     );
   };
@@ -84,13 +87,26 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
    * individual attendee.
    */
   const renderPerAttendeeForm = (formValues: PerAttendeeTypeProps) => {
-    return <Fragment>{formValues.fields.map(renderFormField)}</Fragment>;
+    return (
+      <Fragment>
+        {formValues.variantNames.map((variantName, idx) => (
+          <div
+            className="CustomForm__Attendee"
+            key={`CustomForm_${variantName}_${idx}`}
+          >
+            <TextStyle variant="display2" text={variantName} />
+            {formValues.fields.map(renderFormField)}
+            <div className="CustomForm__Header-Rule" />
+          </div>
+        ))}
+      </Fragment>
+    );
   };
 
   /** Main render method */
   return (
     <div className="CustomForm-Container">
-      {formType.hasOwnProperty("fieldsPerVariant")
+      {formType.hasOwnProperty("variantNames")
         ? renderPerAttendeeForm(formType as PerAttendeeTypeProps)
         : renderPerOrderForm(formType as PerOrderTypeProps)}
     </div>

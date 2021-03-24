@@ -44,7 +44,7 @@ const defaultPerOrderFormProps: PerOrderTypeProps = {
 
 const defaultPerAttendeeFormProps: PerAttendeeTypeProps = {
   fields: defaultFields,
-  fieldsPerVariant: 2,
+  variantNames: ["Adult", "Child"],
 };
 
 const defaultArgs: CustomFormProps = {

@@ -289,7 +289,10 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     const { customOrderDetails } = event;
 
     const currentLineItem = lineItems[currentLineItemIndex];
-    //If the custom form is per attendee, add name/email fields and render attendee-specific info per form (ex. Attendee 1 of 3)
+
+    //If the custom form is per attendee,
+    //add name/email fields and render attendee-specific
+    //info per form (ex. Attendee 1 of 3)
     if (customOrderDetails.formType === OrderDetailsFormType.PerAttendee) {
       //Adds first, last, and email to any custom form by default
       let fields: FormFieldDBO[] = [
@@ -311,9 +314,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       const totalVariantsSelected = Object.values(
         quantitySelectionProps.variants,
       )
-        .filter((variant) => variant.currentQty !== 0)
+        .filter((variant) => variant.currentQty > 0)
         .map((variant) => variant.currentQty)
-        .reduce((total, variantQty) => total + variantQty);
+        .reduce((total, variantQty) => total + variantQty, 0);
 
       //Create per attendee form details object, used to populate
       //all fields for a per attendee custom form.
@@ -337,7 +340,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       //The custom form for per attendee, renders on how many tickets are bought
       return (
         <div className="CustomOrder">
-          <TextStyle variant="display2" text={"Test"} />
           <form id="CustomOrder-Details" onSubmit={handleSubmitCustomForm}>
             <CustomForm
               labels={labels}
@@ -347,7 +349,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               formTitle={customOrderDetails.formTitle || "Custom Form"}
               handleChange={handleCustomFormChange}
             />
-            <div className="OrderDetails__Header-Rule" />
             <div className="OrderDetails__Button">
               <Button
                 fullWidth
@@ -370,19 +371,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       //The custom form is per order, render only once
       return (
         <div className="CustomOrder">
-          <TextStyle
-            variant="display2"
-            text={event.customOrderDetails.formTitle}
-          />
-          {event.customOrderDetails.formDescription && (
-            <div className="CustomOrder__Description">
-              <TextStyle
-                variant="body1"
-                text={event.customOrderDetails.formDescription}
-              />
-            </div>
-          )}
-
           <form id="CustomOrder-Details" onSubmit={handleSubmitCustomForm}>
             <CustomForm
               labels={labels}
@@ -392,7 +380,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               formTitle={customOrderDetails.formTitle}
               handleChange={handleCustomFormChange}
             />
-            <div className="OrderDetails__Header-Rule" />
             <div className="OrderDetails__Button">
               <Button
                 fullWidth
