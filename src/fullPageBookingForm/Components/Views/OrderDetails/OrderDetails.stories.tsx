@@ -164,7 +164,17 @@ const disabledQuantitySelection: QuantitySelectionProps = {
     0: {
       name: "Adult",
       price: 150,
-      currentQty: 0,
+      currentQty: 1,
+      qtyMaximum: 5,
+      onDecreaseClick: () => {},
+      onIncreaseClick: () => {},
+      onChange: () => {},
+      isDisabled: true,
+    },
+    1: {
+      name: "Child",
+      price: 150,
+      currentQty: 2,
       qtyMaximum: 5,
       onDecreaseClick: () => {},
       onIncreaseClick: () => {},
