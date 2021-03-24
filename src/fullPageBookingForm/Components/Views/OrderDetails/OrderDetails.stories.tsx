@@ -191,3 +191,28 @@ CustomFormPerOrder.args = {
   },
   saveButtonState: "hidden",
 };
+
+export const CustomFormPerCustomer = Template.bind({});
+CustomFormPerCustomer.args = {
+  ...defaultArgs,
+  quantitySelectionProps: disabledQuantitySelection,
+  isStorybookTest: {
+    isSaveContinueDisabled: true,
+  },
+  saveButtonState: "hidden",
+  event: {
+    ...defaultEvent,
+    customOrderDetails: {
+      formType: OrderDetailsFormType.PerAttendee,
+      formTitle: "Additional Details",
+      formDescription: "Add some details.",
+      fields: [
+        {
+          label: "Snack type",
+          required: true,
+          type: FormFieldType.Text,
+        },
+      ],
+    },
+  },
+};

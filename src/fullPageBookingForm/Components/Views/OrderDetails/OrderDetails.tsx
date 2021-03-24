@@ -120,7 +120,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   const [isSaveContinueDisabled, setIsSaveContinueDisabled] = useState(
     isStorybookTest ? isStorybookTest.isSaveContinueDisabled : false,
   );
-  console.log(isSaveContinueDisabled);
   const [currentCustomFormValues, setCustomFormValues] = useState([]);
 
   //Define set page function, with stub if testing.
@@ -192,21 +191,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         )}
       </form>
     );
-  };
-
-  //Update state of form when clicking back in custom form order.
-  const onPreviousClick = async () => {
-    // decrement lineItem index
-    const newLineItemIndex =
-      currentLineItemIndex > 0
-        ? currentLineItemIndex - 1
-        : currentLineItemIndex;
-
-    // switch to a previous line item
-    const storedLineItem = lineItems[newLineItemIndex];
-
-    setCurrentLineItemIndex(newLineItemIndex);
-    setCustomFormValues(storedLineItem.customOrderDetailsValues);
   };
 
   /** Passed down to the custom form and triggered on changes to store the values in state */
@@ -305,7 +289,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     //If the custom form is per attendee, add name/email fields and render attendee-specific info per form (ex. Attendee 1 of 3)
     if (customOrderDetails.formType === OrderDetailsFormType.PerAttendee) {
       //Adds first, last, and email to any custom form by default
-      let fields: FormFieldDBO[] = customOrderDetails.fields.concat([
+      let fields: FormFieldDBO[] = [
         {
           type: FormFieldType.Text,
           label: labels.firstNameLabel,
@@ -317,7 +301,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           required: true,
         },
         { type: FormFieldType.Email, label: labels.emailLabel, required: true },
-      ]);
+      ].concat(customOrderDetails.fields);
 
       if (currentLineItem && currentLineItem.customOrderDetailsValues) {
         fields = fields.map((f) => {
@@ -341,27 +325,19 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       //Render the form
       //The custom form for per attendee, renders on how many tickets are bought
       return (
-        <div>
+        <div className="CustomOrder">
           <TextStyle
             variant="display2"
             text={event.customOrderDetails.formTitle}
           />
-          <h4 className="CustomOrderDetails-Description">
-            {event.customOrderDetails.formDescription}
-          </h4>
-          <div>
-            <p>
-              <span className="CustomOrderDetails-Ticket">
-                {labels.getPerAttendeeStepLabel(
-                  currentLineItemIndex + 1,
-                  variants.length,
-                )}
-              </span>
-              <span className="CustomOrderDetails-VariantName">
-                {variant.name}
-              </span>
-            </p>
-          </div>
+          {event.customOrderDetails.formDescription && (
+            <div className="CustomOrder__Description">
+              <TextStyle
+                variant="body1"
+                text={event.customOrderDetails.formDescription}
+              />
+            </div>
+          )}
           <form id="CustomOrder-Details" onSubmit={handleSubmitCustomForm}>
             <CustomForm
               labels={labels}
@@ -371,20 +347,16 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               formTitle={customOrderDetails.formTitle || "Custom Form"}
               handleChange={handleCustomFormChange}
             />
-            <span className="CustomOrderDetails-SubmitBtn">
-              <button
-                type="button"
-                onClick={onPreviousClick}
-                disabled={!currentLineItemIndex}
-              >
-                {labels.previousLabel}
-              </button>
-              <button type="submit">
-                {currentLineItemIndex + 1 === variants.length
-                  ? labels.confirmReservationButtonLabel
-                  : labels.nextLabel}
-              </button>
-            </span>
+            <div className="OrderDetails__Header-Rule" />
+            <div className="OrderDetails__Button">
+              <Button
+                fullWidth
+                color="primary"
+                text={labels.confirmReservationButtonLabel}
+                type="submit"
+                disabled={!canConfirm}
+              />
+            </div>
           </form>
         </div>
       );
