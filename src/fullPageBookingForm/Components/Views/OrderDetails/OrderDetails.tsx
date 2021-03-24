@@ -326,7 +326,13 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       const perAttendeeFormType: PerAttendeeTypeProps = {
         //Fields for each variant selected in custom form.
         fields,
-        variantNames: selectedVariants.map((variant) => variant.name),
+        //Create 1D string array of variant names, one name
+        //per one quantity selected in view.
+        variantNames: [].concat(
+          ...selectedVariants.map((variant) =>
+            Array(variant.currentQty).fill(variant.name),
+          ),
+        ),
         //Total fields per variant selected, to be separated by header rule
         //in form.
         removeVariant: handleRemoveVariant,
