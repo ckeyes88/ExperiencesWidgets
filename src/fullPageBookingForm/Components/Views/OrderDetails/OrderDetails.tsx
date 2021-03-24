@@ -417,16 +417,15 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   return (
     <div className="OrderDetails">
       <div className="OrderDetails__Summary">
+        {/* Render first image of event, if it exists. */}
+        {event.images.length > 0 && (
+          <img
+            className="OrderDetails__Summary__Image"
+            href={event.images[0].id.toString()}
+            alt="Experience image"
+          />
+        )}
         <div className="OrderDetails__Summary__Title">
-          {/* Render first image of event, if it exists. */}
-          {event.images.length > 0 && (
-            <img
-              className="OrderDetails__Summary__Image"
-              href={event.images[0].id.toString()}
-              alt="Experience image"
-            />
-          )}
-
           <TextStyle text={event.name} variant="display1" />
         </div>
         <TextStyle variant="display2" text={"Monday, January 13th"} />
