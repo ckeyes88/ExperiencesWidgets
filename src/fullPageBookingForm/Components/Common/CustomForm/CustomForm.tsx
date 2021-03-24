@@ -1,9 +1,10 @@
 /** @jsx h */
 import { h, FunctionComponent, Fragment } from "preact";
-import { clone } from "ramda";
+import { Person } from "../../../../SharedComponents/Icons/Person";
 import { FormFieldDBO } from "../../../../types";
 import { AppDictionary } from "../../../../typings/Languages";
 import { FormField } from "../FormField";
+import { CloseIcon } from "../Icon/CloseIcon";
 import { TextStyle } from "../TextStyle";
 import "./CustomForm.scss";
 
@@ -21,6 +22,8 @@ export type PerAttendeeTypeProps = {
   fields: FormFieldDBO[];
   /**Number of fields per variant, to be separated by header rule. */
   variantNames: string[];
+  /**Callback passed by parent to remove a variant from per attendee list on click. */
+  removeVariant: (variantName: string, variantNumber: number) => void;
 };
 
 export type CustomFormProps = {
@@ -69,15 +72,16 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
 
   /**Renders each individual field in the form for a per order form. */
   const renderPerOrderForm = (formValues: PerOrderTypeProps) => {
+    const { formTitle, formDescription, fields } = formValues;
     return (
       <Fragment>
-        {formValues.formTitle && <TextStyle variant="display2" text={"Test"} />}
-        {formValues.formDescription && (
+        {formTitle && <TextStyle variant="display2" text={"Test"} />}
+        {formDescription && (
           <div className="CustomOrder__Description">
-            <TextStyle variant="body1" text={formValues.formDescription} />
+            <TextStyle variant="body1" text={formDescription} />
           </div>
         )}
-        {formValues.fields.map(renderFormField)}
+        {fields.map(renderFormField)}
         <div className="CustomForm__Header-Rule" />
       </Fragment>
     );
@@ -87,15 +91,31 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
    * individual attendee.
    */
   const renderPerAttendeeForm = (formValues: PerAttendeeTypeProps) => {
+    const { fields, variantNames, removeVariant } = formValues;
     return (
       <Fragment>
-        {formValues.variantNames.map((variantName, idx) => (
+        {variantNames.map((variantName, idx) => (
           <div
             className="CustomForm__Attendee"
             key={`CustomForm_${variantName}_${idx}`}
           >
-            <TextStyle variant="display2" text={variantName} />
-            {formValues.fields.map(renderFormField)}
+            <div className="CustomForm__Attendee__Variant">
+              <div className="CustomForm__Attendee__Icon">
+                <Person />
+              </div>
+
+              <TextStyle variant="display2" text={variantName} />
+              <button
+                className="CustomForm__Attendee__Remove"
+                onClick={() => {
+                  removeVariant(variantName, idx);
+                }}
+              >
+                <CloseIcon height={30} color="#888888" />
+              </button>
+            </div>
+
+            {fields.map(renderFormField)}
             <div className="CustomForm__Header-Rule" />
           </div>
         ))}
