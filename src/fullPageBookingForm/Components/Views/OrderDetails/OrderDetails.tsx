@@ -30,6 +30,7 @@ import { useWizardModalAction } from "../../Common/WizardModal";
 import "./OrderDetails.scss";
 import { CustomForm } from "../../Common/CustomForm";
 import { FormFieldDBO } from "../../../../types";
+import { clone } from "ramda";
 
 export type OrderDetailsProps = {
   /** This is the date that the user has selected for the order */
@@ -120,7 +121,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   const [isSaveContinueDisabled, setIsSaveContinueDisabled] = useState(
     isStorybookTest ? isStorybookTest.isSaveContinueDisabled : false,
   );
-  const [currentCustomFormValues, setCustomFormValues] = useState([]);
+  const [currentCustomFormValues, setCustomFormValues] = useState<
+    FormFieldValueInput[]
+  >([]);
 
   //Define set page function, with stub if testing.
   let setPage = isStorybookTest
@@ -303,18 +306,26 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         { type: FormFieldType.Email, label: labels.emailLabel, required: true },
       ].concat(customOrderDetails.fields);
 
-      if (currentLineItem && currentLineItem.customOrderDetailsValues) {
-        fields = fields.map((f) => {
-          // if there is a value stored from the previous step, use it
-          const existingFieldData = currentLineItem.customOrderDetailsValues.filter(
-            (l) => l.label === f.label,
-          )[0];
-          return {
-            ...f,
-            value: !!existingFieldData ? existingFieldData.value : undefined,
-          };
-        });
-      }
+      //Determine total variant quantity selected, so that custom form can be built with
+      //a custom form for each attendee. Exclude variants with a selected quantity of zero.
+      const totalVariantsSelected = Object.values(
+        quantitySelectionProps.variants,
+      )
+        .filter((variant) => variant.currentQty !== 0)
+        .map((variant) => variant.currentQty)
+        .reduce((total, variantQty) => total + variantQty);
+
+      //Create per attendee form details object, used to populate
+      //all fields for a per attendee custom form.
+      const perAttendeeFormDetails = {
+        //Fields for each variant selected in custom form.
+        fields: [].concat(
+          Array(totalVariantsSelected).map((_) => clone(fields)),
+        ),
+        //Total fields per variant selected, to be separated by header rule
+        //in form.
+        fieldsPerVariant: Math.round(totalVariantsSelected / fields.length),
+      };
 
       //Whether the user is allowed to confirm order by populating
       //all required custom form fields.
@@ -326,18 +337,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       //The custom form for per attendee, renders on how many tickets are bought
       return (
         <div className="CustomOrder">
-          <TextStyle
-            variant="display2"
-            text={event.customOrderDetails.formTitle}
-          />
-          {event.customOrderDetails.formDescription && (
-            <div className="CustomOrder__Description">
-              <TextStyle
-                variant="body1"
-                text={event.customOrderDetails.formDescription}
-              />
-            </div>
-          )}
+          <TextStyle variant="display2" text={"Test"} />
           <form id="CustomOrder-Details" onSubmit={handleSubmitCustomForm}>
             <CustomForm
               labels={labels}
