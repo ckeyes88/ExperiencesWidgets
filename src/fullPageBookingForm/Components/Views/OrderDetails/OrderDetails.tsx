@@ -1,7 +1,7 @@
 /** @jsx h */
 import { parseISO } from "date-fns/fp";
 import { format } from "date-fns";
-import { h, FunctionComponent } from "preact";
+import { h, FunctionComponent, Fragment } from "preact";
 import { useState } from "preact/hooks";
 import { Availability } from "../../../../typings/Availability";
 import { CustomerInputData } from "../../../../typings/CustomerInput";
@@ -413,6 +413,12 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     Array.isArray(event.customOrderDetails.fields) &&
     currentLineItemIndex < variants.length;
 
+  //Calculate current total of order.
+  const variantTotal = Object.values(quantitySelectionProps.variants)
+    .filter((variant) => variant.currentQty > 0)
+    .map((variant) => variant.price * variant.currentQty)
+    .reduce((total, value) => total + value, 0);
+
   /** Main render method. */
   return (
     <div className="OrderDetails">
@@ -456,6 +462,31 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           <TextStyle variant="body2" text={`From $${minCost} `} />
           <TextStyle variant="body1" text={"/ person"} />
         </div>
+        {isSaveContinueDisabled && (
+          <div className="OrderDetails__Overview">
+            {Object.values(quantitySelectionProps.variants)
+              .filter((variant) => variant.currentQty > 0)
+              .map((variant) => (
+                <div
+                  className="OrderDetails__Overview__Values"
+                  key={`VariantTotal_${variant.name}_${variant.price}`}
+                >
+                  <TextStyle variant="body1" text={variant.name} />
+                  <TextStyle variant="body1" text={`${variant.currentQty}x`} />
+                  <div className="OrderDetails__Overview__Values__Total">
+                    <TextStyle
+                      variant="body1"
+                      text={`$${variant.currentQty * variant.price}`}
+                    />
+                  </div>
+                </div>
+              ))}
+            <div className="OrderDetails__Overview__Total">
+              <TextStyle variant="body2" text="Total" />
+              <TextStyle variant="body2" text={`$${variantTotal}`} />
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="OrderDetails__Input">
