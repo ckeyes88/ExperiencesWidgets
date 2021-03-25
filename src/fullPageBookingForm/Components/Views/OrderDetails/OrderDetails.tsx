@@ -171,6 +171,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     setCustomFormValues(newCurrentCustomFormValues);
   };
 
+  //TODO: Examine entire function.
   /** Passes current custom form values up to main level to be stored as a line item */
   const onAddLineItem = async () => {
     // Establishes the current values stored in state
@@ -228,7 +229,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   /*
    * If required by event type, render customer form.
    */
-  const renderCustomerForm = () => {
+  const renderCustomerForm = (hasConfirmButton: boolean) => {
     //Update state of customer form on change.
     const handleCustomerFormChange = (
       fieldName: string,
@@ -274,14 +275,18 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         <div className="OrderDetails__Header-Rule" />
         {saveButtonState !== "hidden" && (
           <div className="OrderDetails__Input__Customer-Form__Submit">
-            <Button
-              variant="contained"
-              color="primary"
-              text="Save & continue"
-              fullWidth
-              type="submit"
-              disabled={saveButtonState === "disabled"}
-            />
+            {hasConfirmButton ? (
+              renderConfirmButton()
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                text="Save & continue"
+                fullWidth
+                type="submit"
+                disabled={saveButtonState === "disabled"}
+              />
+            )}
           </div>
         )}
       </form>
@@ -407,9 +412,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
   //Whether the merchant has provided a custom form for this experience.
   const hasCustomForm =
+    event.customOrderDetails.formType !== OrderDetailsFormType.None &&
     event.customOrderDetails.fields &&
-    Array.isArray(event.customOrderDetails.fields) &&
-    currentLineItemIndex < variants.length;
+    Array.isArray(event.customOrderDetails.fields);
 
   //Custom form provided is per attendee.
   const hasPerAttendeeCustomForm =
@@ -510,7 +515,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       </Fragment>
     );
   };
-
   //Renders pre-pay flow.
   const renderNonPrePayFlow = () => {
     return (
@@ -519,14 +523,18 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
          * and customer form.
          */}
         {renderQtySelection()}
-        {renderCustomerForm()}
+        {/**Render confirm button if no custom form is provided. */}
+        {renderCustomerForm(!hasCustomForm)}
 
         {/* If custom form is provided, render custom form
         after variant quantities and customer details are provided.
          */}
-        {hasPerAttendeeCustomForm &&
-          shouldRenderCustomForm &&
-          renderCustomOrderDetails()}
+        {shouldRenderCustomForm && (
+          <Fragment>
+            {renderEditButton()}
+            {renderCustomOrderDetails()}
+          </Fragment>
+        )}
       </Fragment>
     );
   };

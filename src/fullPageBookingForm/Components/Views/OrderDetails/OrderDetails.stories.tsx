@@ -15,6 +15,7 @@ import {
   LanguageCode,
   FormFieldType,
 } from "../../../../typings/Event";
+import { CustomOrderDetailsDBO } from "@helpfulhuman/expapp-shared-libs";
 
 export default {
   title: "Full Page Booking Form/Views/Order Details",
@@ -76,16 +77,10 @@ const defaultEvent: EventDBO = {
   archivedAt: null,
   createdAt: new Date(2021, 1, 1),
   customOrderDetails: {
-    formType: OrderDetailsFormType.PerOrder,
+    formType: OrderDetailsFormType.None,
     formTitle: "Additional Details",
     formDescription: "Add some details.",
-    fields: [
-      {
-        label: "Snack type",
-        required: true,
-        type: FormFieldType.Text,
-      },
-    ],
+    fields: [],
   },
   description: "Hike mount storm king.",
   handle: "handle",
@@ -184,6 +179,57 @@ const disabledQuantitySelection: QuantitySelectionProps = {
   },
 };
 
+const enabledQuantitySelection: QuantitySelectionProps = {
+  variants: {
+    0: {
+      name: "Adult",
+      price: 150,
+      currentQty: 1,
+      qtyMaximum: 5,
+      onDecreaseClick: () => {},
+      onIncreaseClick: () => {},
+      onChange: () => {},
+      isDisabled: false,
+    },
+    1: {
+      name: "Child",
+      price: 150,
+      currentQty: 2,
+      qtyMaximum: 5,
+      onDecreaseClick: () => {},
+      onIncreaseClick: () => {},
+      onChange: () => {},
+      isDisabled: false,
+    },
+  },
+};
+
+const defaultPerOrderCustomerDetails: CustomOrderDetailsDBO = {
+  formType: OrderDetailsFormType.PerOrder,
+  formTitle: "Additional Details",
+  formDescription: "Add some details.",
+  fields: [
+    {
+      label: "Snack type",
+      required: true,
+      type: FormFieldType.Text,
+    },
+  ],
+};
+
+const defaultPerAttendeeCustomerDetails: CustomOrderDetailsDBO = {
+  formType: OrderDetailsFormType.PerAttendee,
+  formTitle: "Additional Details",
+  formDescription: "Add some details.",
+  fields: [
+    {
+      label: "Snack type",
+      required: true,
+      type: FormFieldType.Text,
+    },
+  ],
+};
+
 export const Default = Template.bind({});
 Default.args = {
   ...defaultArgs,
@@ -195,34 +241,36 @@ Default.args = {
 export const NonPrePayNoCustomForm = Template.bind({});
 NonPrePayNoCustomForm.args = {
   ...defaultArgs,
+  quantitySelectionProps: enabledQuantitySelection,
+  isStorybookTest: {
+    isSaveContinueDisabled: false,
+  },
+};
+
+export const NonPrePayPerOrderForm = Template.bind({});
+NonPrePayPerOrderForm.args = {
+  ...defaultArgs,
   quantitySelectionProps: disabledQuantitySelection,
   isStorybookTest: {
     isSaveContinueDisabled: true,
   },
-  saveButtonState: "visible",
+  saveButtonState: "hidden",
+  event: {
+    ...defaultEvent,
+    customOrderDetails: defaultPerOrderCustomerDetails,
+  },
 };
 
-// export const CustomFormPerCustomer = Template.bind({});
-// CustomFormPerCustomer.args = {
-//   ...defaultArgs,
-//   quantitySelectionProps: disabledQuantitySelection,
-//   isStorybookTest: {
-//     isSaveContinueDisabled: true,
-//   },
-//   saveButtonState: "hidden",
-//   event: {
-//     ...defaultEvent,
-//     customOrderDetails: {
-//       formType: OrderDetailsFormType.PerAttendee,
-//       formTitle: "Additional Details",
-//       formDescription: "Add some details.",
-//       fields: [
-//         {
-//           label: "Snack type",
-//           required: true,
-//           type: FormFieldType.Text,
-//         },
-//       ],
-//     },
-//   },
-// };
+export const NonPrePayPerAttendeeForm = Template.bind({});
+NonPrePayPerAttendeeForm.args = {
+  ...defaultArgs,
+  quantitySelectionProps: disabledQuantitySelection,
+  isStorybookTest: {
+    isSaveContinueDisabled: true,
+  },
+  saveButtonState: "hidden",
+  event: {
+    ...defaultEvent,
+    customOrderDetails: defaultPerAttendeeCustomerDetails,
+  },
+};
