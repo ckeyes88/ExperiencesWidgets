@@ -3,3 +3,4 @@ export {
   useWizardModalAction,
   useWizardModalState,
 } from "./WizardModalProvider";
+export * from "./WizardModalTitleBar";
