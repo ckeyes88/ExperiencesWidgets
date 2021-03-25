@@ -274,3 +274,45 @@ NonPrePayPerAttendeeForm.args = {
     customOrderDetails: defaultPerAttendeeCustomerDetails,
   },
 };
+
+export const PrePayNoCustomForm = Template.bind({});
+PrePayNoCustomForm.args = {
+  ...defaultArgs,
+  quantitySelectionProps: enabledQuantitySelection,
+  isStorybookTest: {
+    isSaveContinueDisabled: false,
+  },
+  event: {
+    ...defaultEvent,
+    paymentType: PaymentType.Prepay,
+  },
+};
+
+export const PrePayPerOrderForm = Template.bind({});
+PrePayPerOrderForm.args = {
+  ...defaultArgs,
+  quantitySelectionProps: enabledQuantitySelection,
+  isStorybookTest: {
+    isSaveContinueDisabled: false,
+  },
+  event: {
+    ...defaultEvent,
+    paymentType: PaymentType.Prepay,
+    customOrderDetails: defaultPerOrderCustomerDetails,
+  },
+};
+
+export const PrePayPerAttendeeForm = Template.bind({});
+PrePayPerAttendeeForm.args = {
+  ...defaultArgs,
+  quantitySelectionProps: disabledQuantitySelection,
+  isStorybookTest: {
+    isSaveContinueDisabled: true,
+  },
+  saveButtonState: "hidden",
+  event: {
+    ...defaultEvent,
+    paymentType: PaymentType.Prepay,
+    customOrderDetails: defaultPerAttendeeCustomerDetails,
+  },
+};
