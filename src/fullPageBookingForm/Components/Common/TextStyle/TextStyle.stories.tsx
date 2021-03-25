@@ -9,7 +9,14 @@ export default {
     variant: {
       control: {
         type: "select",
-        options: ["display1", "display2", "body1"],
+        options: [
+          "display1",
+          "display2",
+          "display3",
+          "body1",
+          "body2",
+          "body3",
+        ],
       },
     },
   },
