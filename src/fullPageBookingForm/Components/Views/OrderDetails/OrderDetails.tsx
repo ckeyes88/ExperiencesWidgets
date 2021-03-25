@@ -34,7 +34,6 @@ import {
   PerOrderTypeProps,
 } from "../../Common/CustomForm";
 import { FormFieldDBO } from "../../../../types";
-import { clone } from "ramda";
 
 export type OrderDetailsProps = {
   /** This is the date that the user has selected for the order */
@@ -137,69 +136,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   //Calculate minimum cost of the event.
   const minCost = Math.min(...event.variants.map((variant) => variant.price));
 
-  /*
-   * If required by event type, render customer form.
-   */
-  const renderCustomerForm = () => {
-    //Update state of customer form on change.
-    const handleCustomerFormChange = (
-      fieldName: string,
-      fieldValue: string,
-    ) => {
-      return setCustomerInfo((prevState) => ({
-        ...prevState,
-        [fieldName]: fieldValue,
-      }));
-    };
-
-    //Handle submission of form, and pass data in form to parent component.
-    const handleFormSubmit = (event: Event) => {
-      event.preventDefault();
-
-      //Pass data to parent.
-      onAddCustomerInfo(customerData);
-    };
-
-    const customerFormProps: CustomerInfoFormProps = {
-      customerData,
-      handleChange: handleCustomerFormChange,
-      labels,
-    };
-
-    const formClassNames = ["OrderDetails__Input__Customer-Form"];
-
-    //If the save button is hidden, the customer form should be disabled.
-    if (saveButtonState === "hidden") {
-      formClassNames.push("OrderDetails__Input__Customer-Form--disabled");
-    }
-
-    return (
-      <form className={formClassNames.join(" ")} onSubmit={handleFormSubmit}>
-        <div className="OrderDetails__Input__Customer-Form__Title">
-          <TextStyle variant="display2" text="Customer info" />
-        </div>
-
-        <CustomerInfoForm
-          {...customerFormProps}
-          isCustomerInfoFormDisabled={saveButtonState === "hidden"}
-        />
-        <div className="OrderDetails__Header-Rule" />
-        {saveButtonState !== "hidden" && (
-          <div className="OrderDetails__Input__Customer-Form__Submit">
-            <Button
-              variant="contained"
-              color="primary"
-              text="Save & continue"
-              fullWidth
-              type="submit"
-              disabled={saveButtonState === "disabled"}
-            />
-          </div>
-        )}
-      </form>
-    );
-  };
-
   /**Handles the removal of a variant from a custom form. */
   const handleRemoveVariant = (variantName: string, variantIdx: number) => {};
 
@@ -289,6 +225,69 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     }
   };
 
+  /*
+   * If required by event type, render customer form.
+   */
+  const renderCustomerForm = () => {
+    //Update state of customer form on change.
+    const handleCustomerFormChange = (
+      fieldName: string,
+      fieldValue: string,
+    ) => {
+      return setCustomerInfo((prevState) => ({
+        ...prevState,
+        [fieldName]: fieldValue,
+      }));
+    };
+
+    //Handle submission of form, and pass data in form to parent component.
+    const handleFormSubmit = (event: Event) => {
+      event.preventDefault();
+
+      //Pass data to parent.
+      onAddCustomerInfo(customerData);
+    };
+
+    const customerFormProps: CustomerInfoFormProps = {
+      customerData,
+      handleChange: handleCustomerFormChange,
+      labels,
+    };
+
+    const formClassNames = ["OrderDetails__Input__Customer-Form"];
+
+    //If the save button is hidden, the customer form should be disabled.
+    if (saveButtonState === "hidden") {
+      formClassNames.push("OrderDetails__Input__Customer-Form--disabled");
+    }
+
+    return (
+      <form className={formClassNames.join(" ")} onSubmit={handleFormSubmit}>
+        <div className="OrderDetails__Input__Customer-Form__Title">
+          <TextStyle variant="display2" text="Customer info" />
+        </div>
+
+        <CustomerInfoForm
+          {...customerFormProps}
+          isCustomerInfoFormDisabled={saveButtonState === "hidden"}
+        />
+        <div className="OrderDetails__Header-Rule" />
+        {saveButtonState !== "hidden" && (
+          <div className="OrderDetails__Input__Customer-Form__Submit">
+            <Button
+              variant="contained"
+              color="primary"
+              text="Save & continue"
+              fullWidth
+              type="submit"
+              disabled={saveButtonState === "disabled"}
+            />
+          </div>
+        )}
+      </form>
+    );
+  };
+
   /** Renders a custom order form as set up by the merchant
    * This form is either per attendee or per order
    */
@@ -344,8 +343,8 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         (field) => !field.required || (field.required && field.value),
       );
 
-      //Render the form
-      //The custom form for per attendee, renders on how many tickets are bought
+      //Render the custom form for per attendee,
+      //renders on how many tickets are bought
       return (
         <div className="CustomOrder">
           <form id="CustomOrder-Details" onSubmit={handleSubmitCustomForm}>
@@ -406,18 +405,131 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     }
   };
 
-  //Whether a custom form should be rendered in the view.
-  const shouldRenderCustomForm =
-    isSaveContinueDisabled &&
+  //Whether the merchant has provided a custom form for this experience.
+  const hasCustomForm =
     event.customOrderDetails.fields &&
     Array.isArray(event.customOrderDetails.fields) &&
     currentLineItemIndex < variants.length;
+
+  //Custom form provided is per attendee.
+  const hasPerAttendeeCustomForm =
+    hasCustomForm &&
+    event.customOrderDetails.formType === OrderDetailsFormType.PerAttendee;
+
+  //Custom form provided is per order.
+  const hasPerOrderCustomForm =
+    hasCustomForm &&
+    event.customOrderDetails.formType === OrderDetailsFormType.PerOrder;
+
+  //Whether a custom form should be rendered in the view.
+  const shouldRenderCustomForm = isSaveContinueDisabled && hasCustomForm;
 
   //Calculate current total of order.
   const variantTotal = Object.values(quantitySelectionProps.variants)
     .filter((variant) => variant.currentQty > 0)
     .map((variant) => variant.price * variant.currentQty)
     .reduce((total, value) => total + value, 0);
+
+  /**Renders the quantity selection component in the view. */
+  const renderQtySelection = () => (
+    <div className="OrderDetails__Input__Quantity-Selection">
+      <QuantitySelection {...quantitySelectionProps} />
+    </div>
+  );
+
+  //Renders confirm button in view.
+  const renderConfirmButton = () => (
+    <Button
+      text={labels.confirmReservationButtonLabel}
+      variant="outlined"
+      fullWidth
+      color="primary"
+      //TODO: Update this to move to next page in modal.
+      onClick={() => {
+        setIsSaveContinueDisabled(true);
+        setSaveButtonState("visible");
+      }}
+    />
+  );
+
+  //Renders confirm button in view.
+  const renderSaveButton = () => (
+    <Button
+      text={"Save & continue"}
+      variant="outlined"
+      fullWidth
+      color="primary"
+      onClick={() => {
+        setPage(BookingFormPage.CONFIRMATION);
+      }}
+    />
+  );
+
+  const renderEditButton = () => (
+    <div className="OrderDetails__Button">
+      <Button
+        text="Edit"
+        variant="outlined"
+        fullWidth
+        color="primary"
+        onClick={() => {
+          setIsSaveContinueDisabled(true);
+          setSaveButtonState("visible");
+        }}
+      />
+    </div>
+  );
+
+  //Renders pre-pay flow.
+  const renderPrePayFlow = () => {
+    return (
+      <Fragment>
+        {/**Always render the quantity selection component. */}
+        {renderQtySelection()}
+        {/** If no custom form is provided, render confirm button
+         * to go to checkout after variants are selected.
+         */}
+        {!hasCustomForm && renderConfirmButton()}
+        {/** If per order custom form is provided, render it
+         * directly beneath quantity selection to go to checkout afterwards.
+         */}
+        {hasPerOrderCustomForm && renderCustomOrderDetails()}
+
+        {/* If custom per attendee form, render save button to capture variant quantities,
+        then render custom per attendee form.
+         */}
+        {hasPerAttendeeCustomForm &&
+          !shouldRenderCustomForm &&
+          renderSaveButton()}
+        {hasPerAttendeeCustomForm && shouldRenderCustomForm && (
+          <Fragment>
+            {renderEditButton()}
+            {renderCustomOrderDetails()}
+          </Fragment>
+        )}
+      </Fragment>
+    );
+  };
+
+  //Renders pre-pay flow.
+  const renderNonPrePayFlow = () => {
+    return (
+      <Fragment>
+        {/**Always render the quantity selection component
+         * and customer form.
+         */}
+        {renderQtySelection()}
+        {renderCustomerForm()}
+
+        {/* If custom form is provided, render custom form
+        after variant quantities and customer details are provided.
+         */}
+        {hasPerAttendeeCustomForm &&
+          shouldRenderCustomForm &&
+          renderCustomOrderDetails()}
+      </Fragment>
+    );
+  };
 
   /** Main render method. */
   return (
@@ -490,38 +602,13 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       </div>
 
       <div className="OrderDetails__Input">
-        <div className="OrderDetails__Input__Quantity-Selection">
-          <QuantitySelection {...quantitySelectionProps} />
-        </div>
-
         {/**
-         * Render customer info if customer info has been provided and
-         * event is not a prepaid one.
+         * Flow for rendering forms on page by default.
+         * Review .png file in directory for state diagram of flow.
          */}
-        {event.paymentType !== PaymentType.Prepay && renderCustomerForm()}
-        {/**
-         * Allow edits of customer form when populated
-         */}
-        {shouldRenderCustomForm && (
-          <div className="OrderDetails__Button">
-            <Button
-              text="Edit"
-              variant="outlined"
-              fullWidth
-              color="primary"
-              onClick={() => {
-                setIsSaveContinueDisabled(true);
-                setSaveButtonState("visible");
-              }}
-            />
-          </div>
-        )}
-        {/**
-         * Render custom info form if custom info has been provided and customer
-         * form has been completed.
-         */}
-        {shouldRenderCustomForm &&
-          renderCustomOrderDetails(variants[currentLineItemIndex])}
+        {event.paymentType === PaymentType.Prepay
+          ? renderPrePayFlow()
+          : renderNonPrePayFlow()}
       </div>
     </div>
   );

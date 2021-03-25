@@ -192,37 +192,37 @@ Default.args = {
   },
 };
 
-export const CustomFormPerOrder = Template.bind({});
-CustomFormPerOrder.args = {
+export const NonPrePayNoCustomForm = Template.bind({});
+NonPrePayNoCustomForm.args = {
   ...defaultArgs,
   quantitySelectionProps: disabledQuantitySelection,
   isStorybookTest: {
     isSaveContinueDisabled: true,
   },
-  saveButtonState: "hidden",
+  saveButtonState: "visible",
 };
 
-export const CustomFormPerCustomer = Template.bind({});
-CustomFormPerCustomer.args = {
-  ...defaultArgs,
-  quantitySelectionProps: disabledQuantitySelection,
-  isStorybookTest: {
-    isSaveContinueDisabled: true,
-  },
-  saveButtonState: "hidden",
-  event: {
-    ...defaultEvent,
-    customOrderDetails: {
-      formType: OrderDetailsFormType.PerAttendee,
-      formTitle: "Additional Details",
-      formDescription: "Add some details.",
-      fields: [
-        {
-          label: "Snack type",
-          required: true,
-          type: FormFieldType.Text,
-        },
-      ],
-    },
-  },
-};
+// export const CustomFormPerCustomer = Template.bind({});
+// CustomFormPerCustomer.args = {
+//   ...defaultArgs,
+//   quantitySelectionProps: disabledQuantitySelection,
+//   isStorybookTest: {
+//     isSaveContinueDisabled: true,
+//   },
+//   saveButtonState: "hidden",
+//   event: {
+//     ...defaultEvent,
+//     customOrderDetails: {
+//       formType: OrderDetailsFormType.PerAttendee,
+//       formTitle: "Additional Details",
+//       formDescription: "Add some details.",
+//       fields: [
+//         {
+//           label: "Snack type",
+//           required: true,
+//           type: FormFieldType.Text,
+//         },
+//       ],
+//     },
+//   },
+// };
