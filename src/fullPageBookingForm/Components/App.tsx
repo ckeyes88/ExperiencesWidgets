@@ -16,7 +16,6 @@ import { defaultArgs, defaultEvent } from "../__mocks__/Event";
 import { clone } from "ramda";
 import { CustomerInputData } from "../../typings/CustomerInput";
 import { FormFieldValueInput } from "../../typings/FormFieldValueInput";
-
 export type AppProps = {
   baseUrl: string;
   languageCode: string;
@@ -142,10 +141,30 @@ export type OrderDetailsStore = {
   setSaveButtonVisibility: (
     buttonVisibility: "visible" | "hidden" | "disabled",
   ) => void;
+  isStorybookTest: boolean;
+  isSaveContinueDisabled: boolean;
+  setIsSaveContinueDisabled: (isDisabled: boolean) => void;
+  setPage: (page: number) => void;
 };
 
 export const useOrderDetailsStore = create<OrderDetailsStore>((set) => ({
   saveButtonVisibility: "visible",
+  isSaveContinueDisabled: false,
+  setIsSaveContinueDisabled: (isDisabled: boolean) =>
+    set((_) => ({
+      isSaveContinueDisabled: isDisabled,
+    })),
+  isStorybookTest: false,
+  setPage: () =>
+    set((state) => {
+      const setPage = state.isStorybookTest
+        ? (pageNumber: number) => {}
+        : useWizardModalAction().setPage;
+
+      return {
+        setPage: setPage,
+      };
+    }),
   onClickBack: () => {
     //TODO: Determine if we want to reset data here too.
     useWizardModalAction().setPage(BookingFormPage.TIMESLOT_SELECTION);

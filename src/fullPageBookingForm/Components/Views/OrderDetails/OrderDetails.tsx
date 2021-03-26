@@ -2,7 +2,6 @@
 import { parseISO } from "date-fns/fp";
 import { format } from "date-fns";
 import { h, FunctionComponent, Fragment } from "preact";
-import { useState } from "preact/hooks";
 import { Availability } from "../../../../typings/Availability";
 import {
   EventDBO,
@@ -19,7 +18,6 @@ import {
 } from "../../Common/CustomerInfoForm";
 import { QuantitySelection } from "../../Common/QuantitySelection";
 import { TextStyle } from "../../Common/TextStyle";
-import { useWizardModalAction } from "../../Common/WizardModal";
 import "./OrderDetails.scss";
 import {
   CustomForm,
@@ -45,17 +43,12 @@ export type OrderDetailsProps = {
   error: string;
   /** Event custom labels set in admin experience interface */
   labels: Partial<AppDictionary>;
-  /**Whether this view is being tested in storybook or not. Inject state for testing purposes. */
-  isStorybookTest?: {
-    isSaveContinueDisabled: boolean;
-  };
 };
 
 export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   event,
   selectedTimeslot,
   selectedDate,
-  isStorybookTest,
   labels,
 }) => {
   //Get variants associated with event
@@ -63,14 +56,11 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   /**
    * State tracking in component.
    */
-  const [isSaveContinueDisabled, setIsSaveContinueDisabled] = useState(
-    isStorybookTest ? isStorybookTest.isSaveContinueDisabled : false,
+  const isSaveContinueDisabled = useOrderDetailsStore(
+    (state) => state.isSaveContinueDisabled,
   );
 
   //Define set page function, with stub if testing.
-  let setPage = isStorybookTest
-    ? (temp: number) => {}
-    : useWizardModalAction().setPage;
 
   //Calculate minimum cost of the event.
   const minCost = Math.min(...event.variants.map((variant) => variant.price));
@@ -310,7 +300,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       color="primary"
       //TODO: Update this to move to next page in modal.
       onClick={() => {
-        setIsSaveContinueDisabled(true);
+        useOrderDetailsStore((state) => state.setIsSaveContinueDisabled)(true);
         useOrderDetailsStore((state) => state.setSaveButtonVisibility)(
           "visible",
         );
@@ -326,7 +316,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       fullWidth
       color="primary"
       onClick={() => {
-        setPage(BookingFormPage.CONFIRMATION);
+        useOrderDetailsStore((state) => state.setPage)(
+          BookingFormPage.CONFIRMATION,
+        );
       }}
     />
   );
@@ -339,7 +331,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         fullWidth
         color="primary"
         onClick={() => {
-          setIsSaveContinueDisabled(true);
+          useOrderDetailsStore((state) => state.setIsSaveContinueDisabled)(
+            true,
+          );
           useOrderDetailsStore((state) => state.setSaveButtonVisibility)(
             "visible",
           );
