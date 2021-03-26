@@ -4,7 +4,6 @@ import { format } from "date-fns";
 import { h, FunctionComponent, Fragment } from "preact";
 import { useState } from "preact/hooks";
 import { Availability } from "../../../../typings/Availability";
-import { CustomerInputData } from "../../../../typings/CustomerInput";
 import {
   EventDBO,
   EventVariantDBO,
@@ -31,7 +30,7 @@ import {
   PerOrderTypeProps,
 } from "../../Common/CustomForm";
 import { FormFieldDBO } from "../../../../types";
-import { useQtySelectionStore } from "../../App";
+import { useCustomerFormStore, useQtySelectionStore } from "../../App";
 
 export type OrderDetailsProps = {
   /** This is the date that the user has selected for the order */
@@ -48,8 +47,6 @@ export type OrderDetailsProps = {
     newCustomFormFieldValues?: FormFieldValueInput[],
     index?: number,
   ): Promise<any>;
-  /** Method passed in and triggered upon submission of customer info, passes values up to the top level */
-  onAddCustomerInfo(customerInfo: CustomerInputData): Promise<any>;
   /** Method passed in to trigger upon confirmation of order */
   onConfirmOrder(): void;
   /** Method passed in to trigger a click back */
@@ -75,7 +72,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   selectedTimeslot,
   selectedDate,
   isStorybookTest,
-  onAddCustomerInfo,
   labels,
   saveButtonState,
   setSaveButtonState,
@@ -92,11 +88,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   /**
    * State tracking in component.
    */
-  const [customerData, setCustomerInfo] = useState<CustomerInputData>({
-    firstName: "",
-    lastName: "",
-    email: "",
-  });
   const [variants, _] = useState(getVariants);
 
   const [currentLineItemIndex, setCurrentLineItemIndex] = useState(0);
@@ -210,22 +201,20 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
    */
   const renderCustomerForm = (hasConfirmButton: boolean) => {
     //Update state of customer form on change.
-    const handleCustomerFormChange = (
-      fieldName: string,
-      fieldValue: string,
-    ) => {
-      return setCustomerInfo((prevState) => ({
-        ...prevState,
-        [fieldName]: fieldValue,
-      }));
-    };
+    const handleCustomerFormChange = useCustomerFormStore(
+      (state) => state.handleCustomerFormChange,
+    );
+    const customerData = useCustomerFormStore((state) => state.customerData);
 
     //Handle submission of form, and pass data in form to parent component.
     const handleFormSubmit = (event: Event) => {
       event.preventDefault();
+      const onAddCustomerInfo = useCustomerFormStore(
+        (state) => state.onAddCustomerInfo,
+      );
 
       //Pass data to parent.
-      onAddCustomerInfo(customerData);
+      onAddCustomerInfo();
     };
 
     const customerFormProps: CustomerInfoFormProps = {

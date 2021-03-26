@@ -70,6 +70,7 @@ export const useQtySelectionStore = create<QuantitySelectionStore>((set) => ({
 export type CustomerFormStore = {
   customerData: CustomerInputData;
   handleCustomerFormChange: (fieldName: string, fieldValue: string) => void;
+  onAddCustomerInfo: () => void;
 };
 
 export const useCustomerFormStore = create<CustomerFormStore>((set) => ({
@@ -87,6 +88,7 @@ export const useCustomerFormStore = create<CustomerFormStore>((set) => ({
         },
       };
     }),
+  onAddCustomerInfo: () => {},
 }));
 
 export const App: FunctionComponent<AppProps> = (props) => {
