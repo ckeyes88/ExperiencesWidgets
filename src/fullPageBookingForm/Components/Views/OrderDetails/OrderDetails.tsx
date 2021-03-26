@@ -79,16 +79,11 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   onConfirmOrder,
   onAddCustomFormValues,
 }) => {
-  /** Assembles an array of variants used in the creation of line items */
-  const getVariants = () => {
-    const variants = useQtySelectionStore((state) => state.variants);
-    return variants;
-  };
-
+  //Get variants associated with event
+  const variants = useQtySelectionStore((state) => state.variants);
   /**
    * State tracking in component.
    */
-  const [variants, _] = useState(getVariants);
 
   const [currentLineItemIndex, setCurrentLineItemIndex] = useState(0);
   const [isSaveContinueDisabled, setIsSaveContinueDisabled] = useState(
@@ -266,7 +261,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
    */
   const renderCustomOrderDetails = () => {
     const { customOrderDetails } = event;
-    const variants = useQtySelectionStore((state) => state.variants);
 
     //If the custom form is per attendee,
     //add name/email fields and render attendee-specific
