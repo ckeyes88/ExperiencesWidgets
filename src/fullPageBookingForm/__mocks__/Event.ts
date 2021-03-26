@@ -8,8 +8,6 @@ import {
   FormFieldType,
 } from "../../typings/Event";
 import { Availability } from "../../typings/Availability";
-import { CustomerInputData } from "../../typings/CustomerInput";
-import { FormFieldValueInput } from "../../typings/FormFieldValueInput";
 import { AppDictionary } from "../../typings/Languages";
 import { OrderLineItemInputData } from "../../typings/OrderLineItemInput";
 import { QuantitySelectionProps } from "../Components/Common/QuantitySelection";
@@ -124,25 +122,10 @@ export const defaultArgs: OrderDetailsProps = {
   selectedTimeslot: defaultTimeslot,
   event: defaultEvent,
   error: "",
-  onAddCustomFormValues: async (
-    variant,
-    newCustomFormFieldValues: FormFieldValueInput[],
-    index: number,
-  ) => {
-    return {};
-  },
-  onAddCustomerInfo: async (customerInfo: CustomerInputData) => {},
-  onConfirmOrder: () => {},
-  onClickBack: () => {},
-  closeModal: () => {},
-  lineItems: [defaultOrderLineItemData],
   labels: defaultLabels,
   isStorybookTest: {
     isSaveContinueDisabled: false,
   },
-  quantitySelectionProps: defaultQuantitySelections,
-  saveButtonState: "disabled",
-  setSaveButtonState: () => {},
 };
 
 export const disabledQuantitySelection: QuantitySelectionProps = {
