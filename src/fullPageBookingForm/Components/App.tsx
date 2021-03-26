@@ -26,7 +26,7 @@ export type AppProps = {
 export type QuantitySelectionStore = {
   onDecreaseClick: (variantIdx: number) => void;
   onIncreaseClick: (variantIdx: number) => void;
-  onChangeVariantQty: (variantIdx: number, variantQty: string) => void;
+  onChange: (variantIdx: number, variantQty: string) => void;
   variants: NumberCarouselVariants;
 };
 
@@ -49,7 +49,7 @@ export const useQtySelectionStore = create<QuantitySelectionStore>((set) => ({
         variants: oldArray,
       };
     }),
-  onChangeVariantQty: (variantIdx: number, variantQty: string) =>
+  onChange: (variantIdx: number, variantQty: string) =>
     set((state) => {
       let oldArray = clone(state.variants);
       oldArray[variantIdx].currentQty = parseInt(variantQty);

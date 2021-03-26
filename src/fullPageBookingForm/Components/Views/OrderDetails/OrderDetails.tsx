@@ -21,10 +21,7 @@ import {
   CustomerInfoForm,
   CustomerInfoFormProps,
 } from "../../Common/CustomerInfoForm";
-import {
-  QuantitySelection,
-  QuantitySelectionProps,
-} from "../../Common/QuantitySelection";
+import { QuantitySelection } from "../../Common/QuantitySelection";
 import { TextStyle } from "../../Common/TextStyle";
 import { useWizardModalAction } from "../../Common/WizardModal";
 import "./OrderDetails.scss";
@@ -34,6 +31,7 @@ import {
   PerOrderTypeProps,
 } from "../../Common/CustomForm";
 import { FormFieldDBO } from "../../../../types";
+import { useQtySelectionStore } from "../../App";
 
 export type OrderDetailsProps = {
   /** This is the date that the user has selected for the order */
@@ -66,8 +64,6 @@ export type OrderDetailsProps = {
   isStorybookTest?: {
     isSaveContinueDisabled: boolean;
   };
-  /**Quantity selection props. */
-  quantitySelectionProps: QuantitySelectionProps;
   /** The state of the save button per the parent component. */
   saveButtonState: "visible" | "hidden" | "disabled";
   /**Sets the save button state in parent component. */
@@ -79,7 +75,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   selectedTimeslot,
   selectedDate,
   isStorybookTest,
-  quantitySelectionProps,
   onAddCustomerInfo,
   labels,
   saveButtonState,
@@ -90,23 +85,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 }) => {
   /** Assembles an array of variants used in the creation of line items */
   const getVariants = () => {
-    let variants: (EventVariantDBO & { quantity: number })[] = [];
-
-    Object.keys(quantitySelectionProps.variants).forEach(function (k) {
-      const variant = parseInt(k);
-      for (
-        let i = 0;
-        i < Object.values(quantitySelectionProps.variants).length;
-        i++
-      ) {
-        variants.push({
-          ...event.variants.find(function (v) {
-            return v.shopifyVariantId === variant;
-          }),
-          quantity: quantitySelectionProps.variants[variant].currentQty,
-        });
-      }
-    });
+    const variants = useQtySelectionStore((state) => state.variants);
     return variants;
   };
 
@@ -296,10 +275,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   /** Renders a custom order form as set up by the merchant
    * This form is either per attendee or per order
    */
-  const renderCustomOrderDetails = (variant?: EventVariantDBO) => {
+  const renderCustomOrderDetails = () => {
     const { customOrderDetails } = event;
-
-    const currentLineItem = lineItems[currentLineItemIndex];
+    const variants = useQtySelectionStore((state) => state.variants);
 
     //If the custom form is per attendee,
     //add name/email fields and render attendee-specific
@@ -321,9 +299,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       ].concat(customOrderDetails.fields);
 
       //Determine all variants that have been selected in view (where ticket quantity is > 0)
-      const selectedVariants = Object.values(
-        quantitySelectionProps.variants,
-      ).filter((variant) => variant.currentQty > 0);
+      const selectedVariants = Object.values(variants).filter(
+        (variant) => variant.currentQty > 0,
+      );
 
       //Create per attendee form details object, used to populate
       //all fields for a per attendee custom form.
@@ -430,7 +408,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   const shouldRenderCustomForm = isSaveContinueDisabled && hasCustomForm;
 
   //Calculate current total of order.
-  const variantTotal = Object.values(quantitySelectionProps.variants)
+  const variantTotal = Object.values(variants)
     .filter((variant) => variant.currentQty > 0)
     .map((variant) => variant.price * variant.currentQty)
     .reduce((total, value) => total + value, 0);
@@ -438,7 +416,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   /**Renders the quantity selection component in the view. */
   const renderQtySelection = () => (
     <div className="OrderDetails__Input__Quantity-Selection">
-      <QuantitySelection {...quantitySelectionProps} />
+      <QuantitySelection {...useQtySelectionStore()} />
     </div>
   );
 
@@ -584,7 +562,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         </div>
         {isSaveContinueDisabled && (
           <div className="OrderDetails__Overview">
-            {Object.values(quantitySelectionProps.variants)
+            {Object.values(variants)
               .filter((variant) => variant.currentQty > 0)
               .map((variant) => (
                 <div
