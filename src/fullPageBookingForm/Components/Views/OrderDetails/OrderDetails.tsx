@@ -30,6 +30,7 @@ import { FormFieldDBO } from "../../../../types";
 import {
   useCustomerFormStore,
   useCustomFormStore,
+  useOrderDetailsStore,
   useQtySelectionStore,
 } from "../../App";
 
@@ -42,20 +43,12 @@ export type OrderDetailsProps = {
   event: EventDBO;
   /** Any errors that should be displayed on the form */
   error: string;
-  /** Method passed in to trigger a click back */
-  onClickBack(): void;
-  /** Method passed in to trigger a close modal */
-  closeModal(): void;
   /** Event custom labels set in admin experience interface */
   labels: Partial<AppDictionary>;
   /**Whether this view is being tested in storybook or not. Inject state for testing purposes. */
   isStorybookTest?: {
     isSaveContinueDisabled: boolean;
   };
-  /** The state of the save button per the parent component. */
-  saveButtonState: "visible" | "hidden" | "disabled";
-  /**Sets the save button state in parent component. */
-  setSaveButtonState: (state: "visible" | "hidden" | "disabled") => void;
 };
 
 export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
@@ -64,8 +57,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   selectedDate,
   isStorybookTest,
   labels,
-  saveButtonState,
-  setSaveButtonState,
 }) => {
   //Get variants associated with event
   const variants = useQtySelectionStore((state) => state.variants);
@@ -120,8 +111,11 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
     const formClassNames = ["OrderDetails__Input__Customer-Form"];
 
+    const saveButtonVisibility = useOrderDetailsStore(
+      (state) => state.saveButtonVisibility,
+    );
     //If the save button is hidden, the customer form should be disabled.
-    if (saveButtonState === "hidden") {
+    if (saveButtonVisibility === "hidden") {
       formClassNames.push("OrderDetails__Input__Customer-Form--disabled");
     }
 
@@ -133,10 +127,10 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
         <CustomerInfoForm
           {...customerFormProps}
-          isCustomerInfoFormDisabled={saveButtonState === "hidden"}
+          isCustomerInfoFormDisabled={saveButtonVisibility === "hidden"}
         />
         <div className="OrderDetails__Header-Rule" />
-        {saveButtonState !== "hidden" && (
+        {saveButtonVisibility !== "hidden" && (
           <div className="OrderDetails__Input__Customer-Form__Submit">
             {hasConfirmButton ? (
               renderConfirmButton()
@@ -147,7 +141,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
                 text="Save & continue"
                 fullWidth
                 type="submit"
-                disabled={saveButtonState === "disabled"}
+                disabled={saveButtonVisibility === "disabled"}
               />
             )}
           </div>
@@ -317,7 +311,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       //TODO: Update this to move to next page in modal.
       onClick={() => {
         setIsSaveContinueDisabled(true);
-        setSaveButtonState("visible");
+        useOrderDetailsStore((state) => state.setSaveButtonVisibility)(
+          "visible",
+        );
       }}
     />
   );
@@ -344,7 +340,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         color="primary"
         onClick={() => {
           setIsSaveContinueDisabled(true);
-          setSaveButtonState("visible");
+          useOrderDetailsStore((state) => state.setSaveButtonVisibility)(
+            "visible",
+          );
         }}
       />
     </div>

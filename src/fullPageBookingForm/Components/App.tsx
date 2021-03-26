@@ -2,7 +2,7 @@
 import { h, FunctionComponent } from "preact";
 import { useConnectActivators } from "../Hooks/useConnectActivators";
 import { BookingFormPage } from "../Typings/BookingFormPage";
-import { WizardModal } from "./Common/WizardModal";
+import { useWizardModalAction, WizardModal } from "./Common/WizardModal";
 import { TimeslotSelection } from "./Views/TimeslotSelection";
 import { OrderDetails } from "./Views/OrderDetails";
 import { SubmissionLoader } from "./Views/SubmissionLoader";
@@ -131,6 +131,33 @@ export const useCustomFormStore = create<CustomFormStore>((set) => ({
   //TODO: update logic
   handleRemoveVariant: (variantName: string, variantIdx: number) => {},
   onConfirmOrder: () => {},
+}));
+
+export type OrderDetailsStore = {
+  onClickBack: () => void;
+  closeModal: () => void;
+  saveButtonVisibility: "visible" | "hidden" | "disabled";
+  setSaveButtonVisibility: (
+    buttonVisibility: "visible" | "hidden" | "disabled",
+  ) => void;
+};
+
+export const useOrderDetailsStore = create<OrderDetailsStore>((set) => ({
+  saveButtonVisibility: "visible",
+  onClickBack: () => {
+    //TODO: Determine if we want to reset data here too.
+    useWizardModalAction().setPage(BookingFormPage.TIMESLOT_SELECTION);
+  },
+  closeModal: () => {
+    //TODO: Determine if we want to reset data here too.
+    useConnectActivators().setOpen(false);
+  },
+  setSaveButtonVisibility: (
+    buttonVisiblity: "visible" | "hidden" | "disabled",
+  ) =>
+    set((_) => ({
+      saveButtonVisibility: buttonVisiblity,
+    })),
 }));
 
 export const App: FunctionComponent<AppProps> = (props) => {
