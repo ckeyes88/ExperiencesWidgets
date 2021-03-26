@@ -31,9 +31,12 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
 }) => {
   variants;
   /**Calculates total of order. */
-  const total = variants
+  let total = variants
     .map((variant) => variant.price * variant.currentQty)
-    .reduce((a, b) => a + b);
+    .reduce((a, b) => a + b, 0);
+
+  //Ensures total never shows NaN.
+  total = isNaN(total) ? 0 : total;
 
   const classNames = ["quantity-selection"];
 

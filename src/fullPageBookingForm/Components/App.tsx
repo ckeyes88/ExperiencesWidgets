@@ -44,7 +44,7 @@ export const useQtySelectionStore = create<QuantitySelectionStore>((set) => ({
   onIncreaseClick: (variantIdx: number) =>
     set((state) => {
       let oldArray = clone(state.variants);
-      oldArray[variantIdx].currentQty += 1;
+      oldArray[variantIdx].currentQty = oldArray[variantIdx].currentQty + 1;
 
       return {
         variants: oldArray,
@@ -53,7 +53,10 @@ export const useQtySelectionStore = create<QuantitySelectionStore>((set) => ({
   onChange: (variantIdx: number, variantQty: string) =>
     set((state) => {
       let oldArray = clone(state.variants);
-      oldArray[variantIdx].currentQty = parseInt(variantQty);
+      const qtyMaximum = oldArray[variantIdx].qtyMaximum;
+      /**Ensure maximum qty typed in is at most the maximum variant quantity. */
+      oldArray[variantIdx].currentQty =
+        parseInt(variantQty) > qtyMaximum ? qtyMaximum : parseInt(variantQty);
 
       return {
         variants: oldArray,
