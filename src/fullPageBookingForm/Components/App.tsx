@@ -15,6 +15,8 @@ import { NumberCarouselVariants } from "./Common/QuantitySelection";
 import { defaultEvent } from "../__mocks__/Event";
 import { clone } from "ramda";
 import { CustomerInputData } from "../../typings/CustomerInput";
+import { FormFieldValueInput } from "../../typings/FormFieldValueInput";
+import { EventVariantDBO } from "../../typings/Event";
 
 export type AppProps = {
   baseUrl: string;
@@ -89,6 +91,46 @@ export const useCustomerFormStore = create<CustomerFormStore>((set) => ({
       };
     }),
   onAddCustomerInfo: () => {},
+}));
+
+export type CustomFormStore = {
+  customFormValues: FormFieldValueInput[];
+  handleCustomFormChange: (fieldLabelIndex: string, fieldValue: string) => void;
+  handleRemoveVariant: (variantName: string, variantIdx: number) => void;
+  onConfirmOrder: () => void;
+};
+
+export const useCustomFormStore = create<CustomFormStore>((set) => ({
+  customFormValues: defaultEvent.customOrderDetails.fields.map((field) => ({
+    ...field,
+    value: field.defaultValue,
+  })),
+  handleCustomFormChange: (fieldLabelIndex: string, fieldValue: string) =>
+    set((state) => {
+      //fieldLabelIndex is the field label/name and its index position joined by a hyphen
+      //Split the values apart here
+      // Changed this to split on %%% since a dash causes problems if the customer inputs a field name with a dash i.e. T-Shirt
+      const [label, index] = fieldLabelIndex.split("%%%");
+
+      //Create a new custom form value of type FormFieldValueInput
+      const oldVal = state.customFormValues[parseInt(index)] || {};
+
+      let newCurrentCustomFormValues = clone(state.customFormValues);
+      //Index into the form values array using the index from the field ID
+      newCurrentCustomFormValues[parseInt(index)] = {
+        ...oldVal,
+        label,
+        value: fieldValue,
+      };
+
+      //Set state with the updated value
+      return {
+        customFormValues: newCurrentCustomFormValues,
+      };
+    }),
+  //TODO: update logic
+  handleRemoveVariant: (variantName: string, variantIdx: number) => {},
+  onConfirmOrder: () => {},
 }));
 
 export const App: FunctionComponent<AppProps> = (props) => {

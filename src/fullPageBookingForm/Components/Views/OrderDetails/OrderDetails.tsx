@@ -6,14 +6,11 @@ import { useState } from "preact/hooks";
 import { Availability } from "../../../../typings/Availability";
 import {
   EventDBO,
-  EventVariantDBO,
   FormFieldType,
   OrderDetailsFormType,
   PaymentType,
 } from "../../../../typings/Event";
-import { FormFieldValueInput } from "../../../../typings/FormFieldValueInput";
 import { AppDictionary } from "../../../../typings/Languages";
-import { OrderLineItemInputData } from "../../../../typings/OrderLineItemInput";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
 import { Button } from "../../Common/Button";
 import {
@@ -30,7 +27,11 @@ import {
   PerOrderTypeProps,
 } from "../../Common/CustomForm";
 import { FormFieldDBO } from "../../../../types";
-import { useCustomerFormStore, useQtySelectionStore } from "../../App";
+import {
+  useCustomerFormStore,
+  useCustomFormStore,
+  useQtySelectionStore,
+} from "../../App";
 
 export type OrderDetailsProps = {
   /** This is the date that the user has selected for the order */
@@ -41,20 +42,10 @@ export type OrderDetailsProps = {
   event: EventDBO;
   /** Any errors that should be displayed on the form */
   error: string;
-  /** Method passed in and triggered upon submission of a custom form, passes values up to the top level */
-  onAddCustomFormValues(
-    variant: EventVariantDBO,
-    newCustomFormFieldValues?: FormFieldValueInput[],
-    index?: number,
-  ): Promise<any>;
-  /** Method passed in to trigger upon confirmation of order */
-  onConfirmOrder(): void;
   /** Method passed in to trigger a click back */
   onClickBack(): void;
   /** Method passed in to trigger a close modal */
   closeModal(): void;
-  /** Array of line item objects, used to create the order upon confirmation */
-  lineItems: OrderLineItemInputData[];
   /** Event custom labels set in admin experience interface */
   labels: Partial<AppDictionary>;
   /**Whether this view is being tested in storybook or not. Inject state for testing purposes. */
@@ -75,23 +66,15 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   labels,
   saveButtonState,
   setSaveButtonState,
-  lineItems,
-  onConfirmOrder,
-  onAddCustomFormValues,
 }) => {
   //Get variants associated with event
   const variants = useQtySelectionStore((state) => state.variants);
   /**
    * State tracking in component.
    */
-
-  const [currentLineItemIndex, setCurrentLineItemIndex] = useState(0);
   const [isSaveContinueDisabled, setIsSaveContinueDisabled] = useState(
     isStorybookTest ? isStorybookTest.isSaveContinueDisabled : false,
   );
-  const [currentCustomFormValues, setCustomFormValues] = useState<
-    FormFieldValueInput[]
-  >([]);
 
   //Define set page function, with stub if testing.
   let setPage = isStorybookTest
@@ -101,94 +84,11 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   //Calculate minimum cost of the event.
   const minCost = Math.min(...event.variants.map((variant) => variant.price));
 
-  /**Handles the removal of a variant from a custom form. */
-  const handleRemoveVariant = (variantName: string, variantIdx: number) => {};
-
-  /** Passed down to the custom form and triggered on changes to store the values in state */
-  const handleCustomFormChange = (
-    fieldLabelIndex: string,
-    fieldValue: string,
-  ) => {
-    const newCurrentCustomFormValues: FormFieldValueInput[] = event.customOrderDetails.fields.map(
-      (field) => ({ ...field, value: field.defaultValue }),
-    );
-
-    //Copy the current values to a new array
-    currentCustomFormValues.forEach((v, i) => {
-      newCurrentCustomFormValues[i] = v;
-    });
-    //fieldLabelIndex is the field label/name and its index position joined by a hyphen
-    //Split the values apart here
-    // Changed this to split on %%% since a dash causes problems if the customer inputs a field name with a dash i.e. T-Shirt
-    const [label, index] = fieldLabelIndex.split("%%%");
-
-    //Create a new custom form value of type FormFieldValueInput
-    const oldVal = newCurrentCustomFormValues[parseInt(index)] || {};
-
-    //Index into the form values array using the index from the field ID
-    newCurrentCustomFormValues[parseInt(index)] = {
-      ...oldVal,
-      label,
-      value: fieldValue,
-    };
-
-    //Set state with the updated value
-    setCustomFormValues(newCurrentCustomFormValues);
-  };
-
-  //TODO: Examine entire function.
-  /** Passes current custom form values up to main level to be stored as a line item */
-  const onAddLineItem = async () => {
-    // Establishes the current values stored in state
-    let newCustomFormValues: FormFieldValueInput[] = [
-      ...currentCustomFormValues,
-    ];
-    if (
-      event.customOrderDetails.formType === OrderDetailsFormType.PerAttendee
-    ) {
-      // Use the current line item index to determine the correct variant
-      const currentVariant = variants[currentLineItemIndex];
-
-      // Pass the variant and the form values up to the top level
-      await onAddCustomFormValues(
-        currentVariant,
-        newCustomFormValues,
-        currentLineItemIndex,
-      );
-
-      // Increment the current line item index in stateR
-      const newLineItemIndex = currentLineItemIndex + 1;
-
-      // Reset the form values in state
-      setCustomFormValues([]);
-      setCurrentLineItemIndex(newLineItemIndex);
-    } else {
-      let lineItemPromises: Promise<any>[] = [];
-      let newCustomFormValues: FormFieldValueInput[] = [
-        ...currentCustomFormValues,
-      ];
-      // loop over each variant
-      variants.forEach((v, i) => {
-        lineItemPromises.push(onAddCustomFormValues(v, newCustomFormValues, i));
-      });
-
-      await Promise.all(lineItemPromises);
-    }
-  };
-
   /** Triggered on submission of a custom form */
-  const handleSubmitCustomForm = async (ev: Event) => {
+  const handleSubmitCustomForm = (ev: Event) => {
     ev.preventDefault();
-    //Pass the values up to create a new line item
-    await onAddLineItem();
-
-    //If the form is only per order, or if this is the final attendee, call onConfirmOrder
-    if (
-      event.customOrderDetails.formType === OrderDetailsFormType.PerOrder ||
-      currentLineItemIndex >= variants.length
-    ) {
-      onConfirmOrder();
-    }
+    const onConfirmOrder = useCustomFormStore((state) => state.onConfirmOrder);
+    onConfirmOrder();
   };
 
   /*
@@ -300,7 +200,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         ),
         //Total fields per variant selected, to be separated by header rule
         //in form.
-        removeVariant: handleRemoveVariant,
+        removeVariant: useCustomFormStore((state) => state.handleRemoveVariant),
       };
 
       //Whether the user is allowed to confirm order by populating
@@ -316,9 +216,11 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           <form id="CustomOrder-Details" onSubmit={handleSubmitCustomForm}>
             <CustomForm
               labels={labels}
-              key={currentLineItemIndex}
+              key={`CustomForm`}
               formType={perAttendeeFormType}
-              handleChange={handleCustomFormChange}
+              handleChange={useCustomFormStore(
+                (state) => state.handleCustomFormChange,
+              )}
             />
             <div className="OrderDetails__Button">
               <Button
@@ -352,9 +254,11 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           <form id="CustomOrder-Details" onSubmit={handleSubmitCustomForm}>
             <CustomForm
               labels={labels}
-              key={currentLineItemIndex}
+              key={"CustomForm"}
               formType={perOrderFormType}
-              handleChange={handleCustomFormChange}
+              handleChange={useCustomFormStore(
+                (state) => state.handleCustomFormChange,
+              )}
             />
             <div className="OrderDetails__Button">
               <Button
