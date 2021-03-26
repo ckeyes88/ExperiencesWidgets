@@ -9,14 +9,12 @@ import { SubmissionLoader } from "./Views/SubmissionLoader";
 import { Confirmation } from "./Views/Confirmation";
 import { WidgetDataProvider } from "./WidgetDataProvider";
 import create from "zustand";
-import {
-  NumberCarouselVariants,
-  QuantitySelectionProps,
-} from "./Common/QuantitySelection";
+import { NumberCarouselVariants } from "./Common/QuantitySelection";
 
 //Use mock data for now.
 import { defaultEvent } from "../__mocks__/Event";
 import { clone } from "ramda";
+import { CustomerInputData } from "../../typings/CustomerInput";
 
 export type AppProps = {
   baseUrl: string;
@@ -67,6 +65,28 @@ export const useQtySelectionStore = create<QuantitySelectionStore>((set) => ({
     price: variant.price,
     qtyMaximum: defaultEvent.maxLimit,
   })),
+}));
+
+export type CustomerFormStore = {
+  customerData: CustomerInputData;
+  handleCustomerFormChange: (fieldName: string, fieldValue: string) => void;
+};
+
+export const useCustomerFormStore = create<CustomerFormStore>((set) => ({
+  customerData: {
+    email: "",
+    firstName: "",
+    lastName: "",
+  },
+  handleCustomerFormChange: (fieldName: string, fieldValue: string) =>
+    set((state) => {
+      return {
+        customerData: {
+          ...state.customerData,
+          [fieldName]: fieldValue,
+        },
+      };
+    }),
 }));
 
 export const App: FunctionComponent<AppProps> = (props) => {
