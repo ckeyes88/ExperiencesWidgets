@@ -15,6 +15,7 @@ type CalendarViewType = {
 export const calendarViewType: CalendarViewType = {
   dayGrid: "dayGridMonth",
   list: "listWeek",
+  listMonth: "listMonth",
 };
 
 export interface ICalendarProps {
