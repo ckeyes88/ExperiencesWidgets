@@ -4,20 +4,34 @@ import { NumberCarousel, NumberCarouselProps } from "../Input/NumberCarousel";
 import { TextStyle } from "../TextStyle";
 import "./QuantitySelection.scss";
 
+export type NumberCarouselVariants = Array<
+  Omit<
+    NumberCarouselProps,
+    "onIncreaseClick" | "onDecreaseClick" | "onChange"
+  > & {
+    price: number;
+  }
+>;
+
 export type QuantitySelectionProps = {
-  /**Map of variant IDs and information of variant to be shown in table. */
-  variants: {
-    [variantId: number]: NumberCarouselProps & {
-      price: number;
-    };
-  };
+  /**Array of variants to be shown in table.*/
+  variants: NumberCarouselVariants;
+  /**Callback for increasing variant quantity at variantIdx. */
+  onIncreaseClick: (variantIdx: number) => void;
+  /**Callback for decreasing variant quantity at variantIdx */
+  onDecreaseClick: (variantIdx: number) => void;
+  /**Callback for changing variant quantity at variantIdx. */
+  onChange: (variantIdx: number, variantQty: string) => void;
 };
 export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
   variants,
+  onIncreaseClick,
+  onChange,
+  onDecreaseClick,
 }) => {
   variants;
   /**Calculates total of order. */
-  const total = Object.values(variants)
+  const total = variants
     .map((variant) => variant.price * variant.currentQty)
     .reduce((a, b) => a + b);
 
@@ -52,11 +66,11 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
               <td className="quantity-selection__table-cell quantity-selection__table-cell__input">
                 <NumberCarousel
                   name={variant.name}
-                  onDecreaseClick={variant.onDecreaseClick}
-                  onIncreaseClick={variant.onIncreaseClick}
+                  onDecreaseClick={() => onDecreaseClick(idx)}
+                  onIncreaseClick={() => onIncreaseClick(idx)}
                   currentQty={variant.currentQty}
                   qtyMaximum={variant.qtyMaximum}
-                  onChange={variant.onChange}
+                  onChange={(value) => onChange(idx, value)}
                   isDisabled={variant.isDisabled}
                 />
               </td>

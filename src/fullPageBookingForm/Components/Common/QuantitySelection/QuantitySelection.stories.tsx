@@ -8,43 +8,37 @@ export default {
   argTypes: {},
 };
 
-const defaultOnChange = (value: string) => {};
+const defaultOnChange = (value: number) => {};
 const defaultOnIncreaseClick = () => {};
 const defaultOnDecreaseClick = () => {};
 
 const defaultArgs: QuantitySelectionProps = {
-  variants: {
-    0: {
+  variants: [
+    {
       name: "Adult",
       price: 150,
-      onChange: defaultOnChange,
-      onDecreaseClick: defaultOnDecreaseClick,
-      onIncreaseClick: defaultOnIncreaseClick,
       currentQty: 0,
       qtyMaximum: 5,
       isDisabled: false,
     },
-    1: {
+    {
       name: "Child",
       price: 100,
-      onChange: defaultOnChange,
-      onDecreaseClick: defaultOnDecreaseClick,
-      onIncreaseClick: defaultOnIncreaseClick,
       currentQty: 0,
       qtyMaximum: 5,
       isDisabled: false,
     },
-    2: {
+    {
       name: "Senior",
       price: 50,
-      onChange: defaultOnChange,
-      onDecreaseClick: defaultOnDecreaseClick,
-      onIncreaseClick: defaultOnIncreaseClick,
       currentQty: 0,
       qtyMaximum: 5,
       isDisabled: false,
     },
-  },
+  ],
+  onChange: defaultOnChange,
+  onDecreaseClick: defaultOnDecreaseClick,
+  onIncreaseClick: defaultOnIncreaseClick,
 };
 
 const Template = (args: QuantitySelectionProps) => (
@@ -57,8 +51,8 @@ Default.args = {
 };
 
 const disabledArgs = {
-  variants: {
-    0: {
+  variants: [
+    {
       name: "Adult",
       price: 150,
       onChange: defaultOnChange,
@@ -68,7 +62,7 @@ const disabledArgs = {
       qtyMaximum: 5,
       isDisabled: true,
     },
-  },
+  ],
 };
 
 export const Disabled = Template.bind({});
