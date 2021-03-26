@@ -12,11 +12,10 @@ import create from "zustand";
 import { NumberCarouselVariants } from "./Common/QuantitySelection";
 
 //Use mock data for now.
-import { defaultEvent } from "../__mocks__/Event";
+import { defaultArgs, defaultEvent } from "../__mocks__/Event";
 import { clone } from "ramda";
 import { CustomerInputData } from "../../typings/CustomerInput";
 import { FormFieldValueInput } from "../../typings/FormFieldValueInput";
-import { EventVariantDBO } from "../../typings/Event";
 
 export type AppProps = {
   baseUrl: string;
@@ -178,7 +177,7 @@ export const App: FunctionComponent<AppProps> = (props) => {
           <TimeslotSelection />
         </WizardModal.Page>
         <WizardModal.Page page={BookingFormPage.ORDER_DETAILS}>
-          <OrderDetails />
+          <OrderDetails {...defaultArgs} />
         </WizardModal.Page>
         <WizardModal.Page page={BookingFormPage.SUBMISSION_LOADER}>
           <SubmissionLoader />
