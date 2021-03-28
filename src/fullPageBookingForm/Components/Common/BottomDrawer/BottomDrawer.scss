@@ -1,0 +1,48 @@
+@import "../../../base";
+
+.bottom-drawer,
+.bottom-drawer__body {
+  transition: all 0.4s ease;
+}
+
+.bottom-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+  visibility: hidden;
+  opacity: 0;
+}
+
+.bottom-drawer--open {
+  visibility: visible;
+  opacity: 1;
+
+  .bottom-drawer__body {
+    bottom: -1px;
+    transform: translate(-50%, 0);
+  }
+}
+
+.bottom-drawer__body {
+  display: inline-block;
+  width: 100vw;
+  position: absolute;
+  bottom: -50%;
+  left: 50%;
+  transform: translate(-50%, 0);
+
+  .card {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+}
+
+.bottom-drawer__close-button {
+  cursor: pointer;
+  margin-bottom: 15px;
+  display: inline-block;
+}
