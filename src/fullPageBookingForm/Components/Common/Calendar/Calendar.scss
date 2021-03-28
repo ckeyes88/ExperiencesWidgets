@@ -38,6 +38,14 @@
   &:last-child {
     margin-right: -6px;
   }
+
+  &:disabled {
+    pointer-events: none;
+
+    svg path {
+      fill: #b9b9b9;
+    }
+  }
 }
 
 .calendar__matrix {

@@ -15,6 +15,8 @@ export type CalendarProps = {
   date: Date;
 };
 
+const today = new Date();
+
 export const Calendar: FunctionComponent<CalendarProps> = ({
   month: initialMonth,
   year: initialYear,
@@ -57,8 +59,6 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
   };
 
   const handleTodayClick = () => {
-    const today = new Date();
-
     setCurrentMonth(today.getMonth());
     setCurrentYear(today.getFullYear());
     setCurrentDate(today);
@@ -142,7 +142,10 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
           />
         </div>
         <div className="calendar__header__month-navigator">
-          <button onClick={handlePreviousMonthClick}>
+          <button
+            disabled={moment(today).month() === currentMonth}
+            onClick={handlePreviousMonthClick}
+          >
             <LeftIcon />
           </button>
           <button onClick={handleNextMonthClick}>
