@@ -1,7 +1,6 @@
 /** @jsx h */
 import { h, FunctionComponent } from "preact";
-import { useState } from "preact/hooks";
-import { useMemo } from "preact/hooks";
+import { useState, useMemo } from "preact/hooks";
 import moment from "moment-timezone";
 import { Button } from "../Button";
 import { TextStyle } from "../TextStyle";
@@ -128,7 +127,10 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
     <div className="calendar">
       <div className="calendar__header">
         <div className="calendar__header__month">
-          <TextStyle variant="display2" text={moment.months()[currentMonth]} />
+          <TextStyle
+            variant="display2"
+            text={`${moment.months()[currentMonth]} ${currentYear}`}
+          />
         </div>
         <div className="calendar__header__today-btn">
           <Button

@@ -12,7 +12,7 @@ export const Basic = () => (
     <Calendar
       month={2}
       year={2021}
-      date={new Date("March 26, 2021 06:00:00")}
+      date={new Date()}
     />
   </div>
 );
