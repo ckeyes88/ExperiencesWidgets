@@ -3,7 +3,7 @@ import { h } from "preact";
 import { TimeslotCard, TimeslotCardProps } from "./TimeslotCard";
 
 export default {
-  title: "Full Page Booking Form/App/TimeslotCard",
+  title: "Full Page Booking Form/App/Timeslot Card",
   component: TimeslotCard,
 };
 

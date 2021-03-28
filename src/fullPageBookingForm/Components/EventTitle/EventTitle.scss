@@ -1,11 +1,11 @@
 @import "../../base";
 
-.page-title--inline {
+.event-title--inline {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 }
 
-.page-title__thumbnail {
+.event-title__thumbnail {
   width: 54px;
   height: 54px;
   border-radius: 5px;
@@ -14,8 +14,9 @@
   margin-right: 15px;
 }
 
-.page-title__text {
+.event-title__text {
   margin: 0;
+  margin-top: -5px;
   max-width: 230px;
   line-height: 30px;
 }

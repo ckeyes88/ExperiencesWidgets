@@ -3,7 +3,7 @@ import { h } from "preact";
 import { TimeslotGroup } from "./TimeslotGroup";
 
 export default {
-  title: "Full Page Booking Form/App/TimeslotGroup",
+  title: "Full Page Booking Form/App/Timeslot Group",
   component: TimeslotGroup,
 };
 

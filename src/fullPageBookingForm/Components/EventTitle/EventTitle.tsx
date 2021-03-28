@@ -1,29 +1,29 @@
 /** @jsx h */
 import { h, FunctionComponent } from "preact";
 import { TextStyle } from "../Common/TextStyle";
-import "./PageTitle.scss";
+import "./EventTitle.scss";
 
-export type PageTitleProps = {
+export type EventTitleProps = {
   title: string;
   thumbnailSrc: string;
   inlineWithThumbnail?: boolean;
 };
 
-export const PageTitle: FunctionComponent<PageTitleProps> = ({
+export const EventTitle: FunctionComponent<EventTitleProps> = ({
   title,
   thumbnailSrc,
   inlineWithThumbnail,
 }) => {
-  const classNames = ["page-title"];
+  const classNames = ["event-title"];
 
   if (inlineWithThumbnail) {
-    classNames.push("page-title--inline");
+    classNames.push("event-title--inline");
   }
 
   return (
     <div className={classNames.join(" ")}>
-      <img className="page-title__thumbnail" src={thumbnailSrc} />
-      <h1 className="page-title__text">
+      <img className="event-title__thumbnail" src={thumbnailSrc} />
+      <h1 className="event-title__text">
         <TextStyle variant="display1" text={title} />
       </h1>
     </div>

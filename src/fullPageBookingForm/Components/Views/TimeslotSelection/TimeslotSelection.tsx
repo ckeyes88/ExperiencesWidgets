@@ -8,7 +8,7 @@ import {
   useWizardModalAction,
   WizardModalTitleBar,
 } from "../../Common/WizardModal";
-import { PageTitle } from "../../PageTitle";
+import { EventTitle } from "../../EventTitle";
 import { TimeslotGroup } from "../../TimeslotGroup";
 import { CalendarIcon } from "./CalendarIcon";
 import "./TimeslotSelection.scss";
@@ -32,11 +32,14 @@ export const TimeslotSelection: FunctionComponent = () => {
   return (
     <Fragment>
       <WizardModalTitleBar title="Select dates" onBack={handleClose}>
-        <button className="timeslot-selection__calendar-button" onClick={handleCalendarDrawerToggle}>
+        <button
+          className="timeslot-selection__calendar-button"
+          onClick={handleCalendarDrawerToggle}
+        >
           <CalendarIcon />
         </button>
       </WizardModalTitleBar>
-      <PageTitle
+      <EventTitle
         inlineWithThumbnail
         title="Conquer Mount Storm King"
         thumbnailSrc="https://f6d3w8j9.rocketcdn.me/wp-content/uploads/2019/09/Hiking-Packing-List.sq.jpg"
