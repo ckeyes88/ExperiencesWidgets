@@ -4,8 +4,6 @@ import { OrderDetails, OrderDetailsProps } from "../OrderDetails";
 import { PaymentType } from "../../../../typings/Event";
 import {
   defaultArgs,
-  enabledQuantitySelection,
-  disabledQuantitySelection,
   defaultEvent,
   defaultPerOrderCustomerDetails,
   defaultPerAttendeeCustomerDetails,
@@ -54,7 +52,6 @@ const Template = (args: OrderDetailsProps, seedState?: () => void) => {
 export const NonPrepayNoCustomForm = Template.bind({});
 NonPrepayNoCustomForm.args = {
   ...defaultArgs,
-  quantitySelectionProps: enabledQuantitySelection,
 };
 
 export const NonPrepayPerOrderForm = Template.bind({});

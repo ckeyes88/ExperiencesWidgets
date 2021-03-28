@@ -125,51 +125,6 @@ export const defaultArgs: OrderDetailsProps = {
   labels: defaultLabels,
 };
 
-export const disabledQuantitySelection: QuantitySelectionProps = {
-  variants: [
-    {
-      name: "Adult",
-      price: 150,
-      currentQty: 1,
-      qtyMaximum: 5,
-      isDisabled: true,
-    },
-    {
-      name: "Child",
-      price: 150,
-      currentQty: 2,
-      qtyMaximum: 5,
-      isDisabled: true,
-    },
-  ],
-  onDecreaseClick: () => {},
-  onIncreaseClick: () => {},
-  onChange: () => {},
-};
-
-export const enabledQuantitySelection: QuantitySelectionProps = {
-  variants: [
-    {
-      name: "Adult",
-      price: 150,
-      currentQty: 1,
-      qtyMaximum: 5,
-      isDisabled: false,
-    },
-    {
-      name: "Child",
-      price: 150,
-      currentQty: 2,
-      qtyMaximum: 5,
-
-      isDisabled: false,
-    },
-  ],
-  onDecreaseClick: () => {},
-  onIncreaseClick: () => {},
-  onChange: () => {},
-};
-
 export const defaultPerOrderCustomerDetails: CustomOrderDetailsDBO = {
   formType: OrderDetailsFormType.PerOrder,
   formTitle: "Additional Details",
