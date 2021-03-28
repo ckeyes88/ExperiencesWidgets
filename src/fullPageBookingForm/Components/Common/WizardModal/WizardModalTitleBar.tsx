@@ -14,6 +14,7 @@ export type WizardModalTitleBarProps = {
 
 export const WizardModalTitleBar: FunctionComponent<WizardModalTitleBarProps> = ({
   title,
+  children,
   onBack,
 }) => {
   const [container, setContainer] = useState<Element>(null);
@@ -36,6 +37,7 @@ export const WizardModalTitleBar: FunctionComponent<WizardModalTitleBarProps> = 
           <TextStyle variant="display3" text={title} />
         </div>
       )}
+      {children}
     </Fragment>,
     container,
   );

@@ -1,4 +1,4 @@
-$timeslot-list-margin: 245px;
+$timeslot-list-margin: 205px;
 
 .timeslot-selection {
   display: flex;
@@ -35,10 +35,22 @@ $timeslot-list-margin: 245px;
   }
 }
 
+.timeslot-selection__calendar-button {
+  position: absolute;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+
+  &:focus {
+    outline: 0;
+  }
+}
+
 @media (max-width: 854px) {
   .page-title,
-  .timeslot-selection__timeslot-list__margin {
-    display: none;
+  .timeslot-selection__timeslot-list__margin,
+  .timeslot-selection__calendar {
+    display: none !important;
   }
 
   .timeslot-selection {
@@ -49,5 +61,12 @@ $timeslot-list-margin: 245px;
   .timeslot-selection__timeslot-list {
     max-width: none;
     position: static;
+    overflow-y: unset;
+
+    .timeslot-group {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
   }
 }
