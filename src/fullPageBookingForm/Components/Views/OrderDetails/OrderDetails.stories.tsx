@@ -10,6 +10,12 @@ import {
   defaultPerOrderCustomerDetails,
   defaultPerAttendeeCustomerDetails,
 } from "../../../__mocks__/Event";
+import {
+  useCustomerFormStore,
+  useCustomFormStore,
+  useOrderDetailsStore,
+  useQtySelectionStore,
+} from "../../App";
 
 export default {
   title: "Full Page Booking Form/Views/Order Details",
@@ -17,73 +23,70 @@ export default {
   argTypes: {},
 };
 
-const Template = (args: OrderDetailsProps) => <OrderDetails {...args} />;
+//Get initial store state.
+const initialOrderDetailsState = useOrderDetailsStore.getState();
+const initialCustomFormState = useCustomFormStore.getState();
+const initialCustomerFormState = useCustomerFormStore.getState();
+const initialQtySelectionState = useQtySelectionStore.getState();
 
-export const Default = Template.bind({});
-Default.args = {
-  ...defaultArgs,
-  isStorybookTest: {
-    isSaveContinueDisabled: false,
-  },
+/**Resets state of all stores. */
+const resetStoreState = () => {
+  useOrderDetailsStore.setState(initialOrderDetailsState, true);
+  useCustomFormStore.setState(initialCustomFormState, true);
+  useCustomerFormStore.setState(initialCustomerFormState, true);
+  useQtySelectionStore.setState(initialQtySelectionState, true);
 };
 
-export const NonPrePayNoCustomForm = Template.bind({});
-NonPrePayNoCustomForm.args = {
+//Create template component for all testing, with the ability
+//to seed the state of the component if needed.
+const Template = (args: OrderDetailsProps, seedState?: () => void) => {
+  if (typeof seedState === "function" && seedState !== undefined) {
+    seedState();
+  }
+  return (
+    <div>
+      {resetStoreState()}
+      <OrderDetails {...args} />
+    </div>
+  );
+};
+
+export const NonPrepayNoCustomForm = Template.bind({});
+NonPrepayNoCustomForm.args = {
   ...defaultArgs,
   quantitySelectionProps: enabledQuantitySelection,
-  isStorybookTest: {
-    isSaveContinueDisabled: false,
-  },
 };
 
-export const NonPrePayPerOrderForm = Template.bind({});
-NonPrePayPerOrderForm.args = {
+export const NonPrepayPerOrderForm = Template.bind({});
+NonPrepayPerOrderForm.args = {
   ...defaultArgs,
-  quantitySelectionProps: disabledQuantitySelection,
-  isStorybookTest: {
-    isSaveContinueDisabled: true,
-  },
-  saveButtonState: "hidden",
   event: {
     ...defaultEvent,
     customOrderDetails: defaultPerOrderCustomerDetails,
   },
 };
 
-export const NonPrePayPerAttendeeForm = Template.bind({});
-NonPrePayPerAttendeeForm.args = {
+export const NonPrepayPerAttendeeForm = Template.bind({});
+NonPrepayPerAttendeeForm.args = {
   ...defaultArgs,
-  quantitySelectionProps: disabledQuantitySelection,
-  isStorybookTest: {
-    isSaveContinueDisabled: true,
-  },
-  saveButtonState: "hidden",
   event: {
     ...defaultEvent,
     customOrderDetails: defaultPerAttendeeCustomerDetails,
   },
 };
 
-export const PrePayNoCustomForm = Template.bind({});
-PrePayNoCustomForm.args = {
+export const PrepayNoCustomForm = Template.bind({});
+PrepayNoCustomForm.args = {
   ...defaultArgs,
-  quantitySelectionProps: enabledQuantitySelection,
-  isStorybookTest: {
-    isSaveContinueDisabled: false,
-  },
   event: {
     ...defaultEvent,
     paymentType: PaymentType.Prepay,
   },
 };
 
-export const PrePayPerOrderForm = Template.bind({});
-PrePayPerOrderForm.args = {
+export const PrepayPerOrderForm = Template.bind({});
+PrepayPerOrderForm.args = {
   ...defaultArgs,
-  quantitySelectionProps: enabledQuantitySelection,
-  isStorybookTest: {
-    isSaveContinueDisabled: false,
-  },
   event: {
     ...defaultEvent,
     paymentType: PaymentType.Prepay,
@@ -91,14 +94,9 @@ PrePayPerOrderForm.args = {
   },
 };
 
-export const PrePayPerAttendeeForm = Template.bind({});
-PrePayPerAttendeeForm.args = {
+export const PrepayPerAttendeeForm = Template.bind({});
+PrepayPerAttendeeForm.args = {
   ...defaultArgs,
-  quantitySelectionProps: disabledQuantitySelection,
-  isStorybookTest: {
-    isSaveContinueDisabled: true,
-  },
-  saveButtonState: "hidden",
   event: {
     ...defaultEvent,
     paymentType: PaymentType.Prepay,

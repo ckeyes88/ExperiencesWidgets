@@ -123,9 +123,6 @@ export const defaultArgs: OrderDetailsProps = {
   event: defaultEvent,
   error: "",
   labels: defaultLabels,
-  isStorybookTest: {
-    isSaveContinueDisabled: false,
-  },
 };
 
 export const disabledQuantitySelection: QuantitySelectionProps = {
