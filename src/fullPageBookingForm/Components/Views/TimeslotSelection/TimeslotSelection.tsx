@@ -2,6 +2,7 @@
 import { h, FunctionComponent, Fragment } from "preact";
 import { useState } from "preact/hooks";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
+import { getTimeslotsByDate } from "../../../../Utils/helpers";
 import { Calendar } from "../../Common/Calendar";
 import { BottomDrawer } from "../../Common/BottomDrawer";
 import { TextStyle } from "../../Common/TextStyle";
@@ -19,15 +20,14 @@ import "./TimeslotSelection.scss";
 export const TimeslotSelection: FunctionComponent = () => {
   const { setPage, close } = useWizardModalAction();
   const [calendarDrawerOpen, setCalendarOpen] = useState(false);
-  const [currentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
+  const [currentYear, setCurrentYear] = useState(currentDate.getFullYear());
   const { isFetchingEvent, event } = useEvent();
-  const { isFetchingAvailabilities, availabilities } = useAvailabilities(
-    currentDate,
-  );
-
-  console.log({
-    isFetchingAvailabilities,
-    availabilities,
+  const { isFetchingAvailabilities, availabilities } = useAvailabilities({
+    date: currentDate,
+    month: currentMonth,
+    year: currentYear,
   });
 
   const handleSelect = () => {
@@ -40,12 +40,36 @@ export const TimeslotSelection: FunctionComponent = () => {
 
   const handleCalendarDrawerToggle = () => setCalendarOpen((prev) => !prev);
 
-  const calendar = <Calendar date={new Date()} />;
+  const handleDateChange = (date: Date) => setCurrentDate(date);
+
+  const handleMonthChange = (month: number) => setCurrentMonth(month);
+
+  const handleYearChange = (year: number) => setCurrentYear(year);
+
+  const dateIsDisabled = (date: Date) => {
+    const timeslots = getTimeslotsByDate(availabilities, date);
+    const disabled = !timeslots.length;
+
+    return disabled;
+  };
+
+  const calendar = (
+    <Calendar
+      date={currentDate}
+      dateIsDisabled={dateIsDisabled}
+      loading={isFetchingAvailabilities}
+      onDateChange={handleDateChange}
+      onMonthChange={handleMonthChange}
+      onYearChange={handleYearChange}
+    />
+  );
+
+  const isLoading = isFetchingEvent;
 
   return (
     <Fragment>
       <WizardModalTitleBar title="Select dates" onBack={handleClose}>
-        {!isFetchingEvent && (
+        {!isLoading && (
           <button
             className="timeslot-selection__calendar-button"
             onClick={handleCalendarDrawerToggle}
@@ -54,7 +78,7 @@ export const TimeslotSelection: FunctionComponent = () => {
           </button>
         )}
       </WizardModalTitleBar>
-      {isFetchingEvent ? (
+      {isLoading ? (
         <div style={{ textAlign: "center" }}>
           <TextStyle variant="display2" text="Loading experience data..." />
         </div>

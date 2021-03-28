@@ -147,20 +147,19 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
 
             const classNames = ["calendar__matrix__day"];
 
-            const today = moment().isSame(date, "day");
             const selected = moment(currentDate).isSame(date, "day");
 
             classNames.push(
               `calendar__matrix__day--${
-                selected
-                  ? "selected"
-                  : disabled
-                  ? "disabled"
-                  : today
-                  ? "current"
-                  : "default"
+                selected ? "selected" : disabled ? "disabled" : "default"
               }`,
             );
+
+            const today = moment().isSame(date, "day");
+
+            if (today) {
+              classNames.push("calendar__matrix__day--current");
+            }
 
             return (
               <div key={day} className={classNames.join(" ")}>
