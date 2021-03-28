@@ -1,6 +1,6 @@
 /** @jsx h */
 import { h, FunctionComponent } from "preact";
-import { useState, useMemo } from "preact/hooks";
+import { useEffect, useState, useMemo } from "preact/hooks";
 import moment from "moment-timezone";
 import { Button } from "../Button";
 import { TextStyle } from "../TextStyle";
@@ -13,22 +13,46 @@ export type CalendarProps = {
   month?: number;
   year?: number;
   date: Date;
+  loading?: boolean;
+  dateIsDisabled?: (date: Date) => boolean;
+  onDateChange?: (date: Date) => void;
+  onMonthChange?: (month: number) => void;
+  onYearChange?: (year: number) => void;
 };
 
 const today = new Date();
 
 export const Calendar: FunctionComponent<CalendarProps> = ({
-  month: initialMonth,
-  year: initialYear,
-  date: initialDate,
+  month,
+  year,
+  date,
+  loading,
+  dateIsDisabled,
+  onDateChange,
+  onMonthChange,
+  onYearChange,
 }) => {
   const [currentMonth, setCurrentMonth] = useState(
-    initialMonth || moment(initialDate).month(),
+    month || moment(date).month(),
   );
-  const [currentYear, setCurrentYear] = useState(
-    initialYear || moment(initialDate).year(),
-  );
-  const [currentDate, setCurrentDate] = useState(initialDate);
+  const [currentYear, setCurrentYear] = useState(year || moment(date).year());
+  const [currentDate, setCurrentDate] = useState(date);
+
+  useEffect(() => {
+    setCurrentDate(date);
+  }, [date.getTime()]);
+
+  useEffect(() => {
+    if (month) {
+      setCurrentMonth(month);
+    }
+  }, [month]);
+
+  useEffect(() => {
+    if (year) {
+      setCurrentYear(year);
+    }
+  }, [year]);
 
   const handlePreviousMonthClick = () => {
     setCurrentMonth((prev) => {
@@ -40,28 +64,51 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
     });
 
     if (currentMonth === 0) {
-      setCurrentYear((prev) => prev - 1);
+      setCurrentYear((prev) => {
+        const newYear = prev - 1;
+
+        onYearChange?.(newYear);
+
+        return newYear;
+      });
     }
   };
 
   const handleNextMonthClick = () => {
     setCurrentMonth((prev) => {
+      let newMonth = prev + 1;
+
       if (prev === 11) {
-        return 0;
+        newMonth = 0;
       }
 
-      return prev + 1;
+      onMonthChange?.(newMonth);
+
+      return newMonth;
     });
 
     if (currentMonth === 11) {
-      setCurrentYear((prev) => prev + 1);
+      setCurrentYear((prev) => {
+        const newYear = prev + 1;
+
+        onYearChange?.(newYear);
+
+        return newYear;
+      });
     }
   };
 
   const handleTodayClick = () => {
+    const newMonth = today.getMonth();
     setCurrentMonth(today.getMonth());
-    setCurrentYear(today.getFullYear());
+    onMonthChange?.(newMonth);
+
+    const newYear = today.getFullYear();
+    setCurrentYear(newYear);
+    onYearChange?.(newYear);
+
     setCurrentDate(today);
+    onDateChange?.(today);
   };
 
   const renderWeekdays = () =>
@@ -89,10 +136,12 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
             }
 
             const before = moment(date).isBefore(moment(), "day");
+            const disabled = before || dateIsDisabled?.(date) || loading;
 
             const handleClick = () => {
-              if (!before) {
+              if (!disabled) {
                 setCurrentDate(date);
+                onDateChange?.(date);
               }
             };
 
@@ -105,7 +154,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
               `calendar__matrix__day--${
                 selected
                   ? "selected"
-                  : before
+                  : disabled
                   ? "disabled"
                   : today
                   ? "current"
@@ -120,10 +169,12 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
             );
           }),
         ),
-      [currentMonth, currentDate.getTime()],
+      [currentMonth, currentYear, currentDate.getTime(), loading],
     );
 
-  const inMonthOfToday = moment(today).month() === currentMonth;
+  const withinCurrentMonthAndYear =
+    moment(today).month() === currentMonth &&
+    moment(today).year() === currentYear;
 
   return (
     <div className="calendar">
@@ -133,6 +184,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
             variant="display2"
             text={`${moment.months()[currentMonth]} ${currentYear}`}
           />
+          {loading && <div className="calendar__loader" />}
         </div>
         <div className="calendar__header__today-btn">
           <Button
@@ -140,16 +192,21 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
             color="primary"
             text="Today"
             disabled={
-              moment(today).isSame(currentDate, "date") && inMonthOfToday
+              (moment(today).isSame(currentDate, "date") &&
+                withinCurrentMonthAndYear) ||
+              loading
             }
             onClick={handleTodayClick}
           />
         </div>
         <div className="calendar__header__month-navigator">
-          <button disabled={inMonthOfToday} onClick={handlePreviousMonthClick}>
+          <button
+            disabled={withinCurrentMonthAndYear || loading}
+            onClick={handlePreviousMonthClick}
+          >
             <LeftIcon />
           </button>
-          <button onClick={handleNextMonthClick}>
+          <button disabled={loading} onClick={handleNextMonthClick}>
             <RightIcon />
           </button>
         </div>
