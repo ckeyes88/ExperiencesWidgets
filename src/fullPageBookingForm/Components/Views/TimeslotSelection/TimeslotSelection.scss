@@ -1,4 +1,4 @@
-$timeslot-list-margin: 205px;
+$timeslot-list-margin: 235px;
 
 .timeslot-selection {
   display: flex;
@@ -21,6 +21,7 @@ $timeslot-list-margin: 205px;
   top: -$timeslot-list-margin;
   overflow-y: scroll;
   height: 100vh;
+  padding: 0 10px;
 
   &::-webkit-scrollbar {
     display: none;
@@ -62,6 +63,7 @@ $timeslot-list-margin: 205px;
     max-width: none;
     position: static;
     overflow-y: unset;
+    padding: 0;
 
     .timeslot-group {
       &:last-child {

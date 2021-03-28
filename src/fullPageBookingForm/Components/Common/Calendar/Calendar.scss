@@ -50,8 +50,6 @@
 
 .calendar__matrix {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr;
   gap: 15px 0px;
   grid-template-areas: ". . . . . . .";
   text-align: center;
