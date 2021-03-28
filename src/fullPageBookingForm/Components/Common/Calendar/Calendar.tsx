@@ -123,6 +123,8 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
       [currentMonth, currentDate.getTime()],
     );
 
+  const inMonthOfToday = moment(today).month() === currentMonth;
+
   return (
     <div className="calendar">
       <div className="calendar__header">
@@ -137,15 +139,14 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
             variant="text"
             color="primary"
             text="Today"
-            disabled={moment().isSame(currentDate, "date")}
+            disabled={
+              moment(today).isSame(currentDate, "date") && inMonthOfToday
+            }
             onClick={handleTodayClick}
           />
         </div>
         <div className="calendar__header__month-navigator">
-          <button
-            disabled={moment(today).month() === currentMonth}
-            onClick={handlePreviousMonthClick}
-          >
+          <button disabled={inMonthOfToday} onClick={handlePreviousMonthClick}>
             <LeftIcon />
           </button>
           <button onClick={handleNextMonthClick}>
