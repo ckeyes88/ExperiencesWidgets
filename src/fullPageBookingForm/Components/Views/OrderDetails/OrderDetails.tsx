@@ -31,6 +31,7 @@ import {
   useOrderDetailsStore,
   useQtySelectionStore,
 } from "../../App";
+import { useEffect } from "preact/hooks";
 
 export type OrderDetailsProps = {
   /** This is the date that the user has selected for the order */
@@ -53,6 +54,12 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 }) => {
   //Get variants associated with event
   const variants = useQtySelectionStore((state) => state.variants);
+
+  //Populate custom form details on mount of component.
+  useEffect(() => {
+    useCustomFormStore((state) => state.setCustomFormValues)(event);
+  }, []);
+
   /**
    * State tracking in component.
    */
@@ -130,18 +137,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         <div className="OrderDetails__Header-Rule" />
         {saveButtonVisibility !== "hidden" && (
           <div className="OrderDetails__Input__Customer-Form__Submit">
-            {hasConfirmButton ? (
-              renderConfirmButton(!canConfirm)
-            ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                text="Save & continue"
-                fullWidth
-                type="submit"
-                disabled={!canConfirm}
-              />
-            )}
+            {hasConfirmButton
+              ? renderConfirmButton(!canConfirm)
+              : renderSaveButton(!canConfirm)}
           </div>
         )}
       </form>
@@ -197,9 +195,14 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
       //Whether the user is allowed to confirm order by populating
       //all required custom form fields.
-      const canConfirm = fields.every(
-        (field) => !field.required || (field.required && field.value),
+      const canConfirm = useCustomFormStore(
+        (state) => state.customFormValues,
+      ).every(
+        (field) =>
+          !field.isRequired || (field.isRequired && field.value !== ""),
       );
+
+      console.log(canConfirm);
 
       //Render the custom form for per attendee,
       //renders on how many tickets are bought
@@ -229,9 +232,14 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     } else {
       //Whether the user is allowed to confirm order by populating
       //all required custom form fields.
-      const canConfirm = (customOrderDetails.fields as FormFieldDBO[]).every(
-        (field) => !field.required || (field.required && field.value),
+      const canConfirm = useCustomFormStore(
+        (state) => state.customFormValues,
+      ).every(
+        (field) =>
+          !field.isRequired || (field.isRequired && field.value !== ""),
       );
+
+      console.log(useCustomFormStore((state) => state.customFormValues));
 
       //Create data structure for per order form.
       const perOrderFormType: PerOrderTypeProps = {
@@ -259,6 +267,11 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
                 text={labels.confirmReservationButtonLabel}
                 type="submit"
                 disabled={!canConfirm}
+                onClick={() =>
+                  useOrderDetailsStore((state) =>
+                    state.setPage(BookingFormPage.CONFIRMATION),
+                  )
+                }
               />
             </div>
           </form>

@@ -16,6 +16,7 @@ import { defaultArgs, defaultEvent } from "../__mocks__/Event";
 import { clone } from "ramda";
 import { CustomerInputData } from "../../typings/CustomerInput";
 import { FormFieldValueInput } from "../../typings/FormFieldValueInput";
+import { EventDBO } from "../../typings/Event";
 export type AppProps = {
   baseUrl: string;
   languageCode: string;
@@ -113,7 +114,8 @@ export const useCustomerFormStore = create<CustomerFormStore>((set, get) => ({
 }));
 
 export type CustomFormStore = {
-  customFormValues: FormFieldValueInput[];
+  customFormValues: Array<FormFieldValueInput & { isRequired: boolean }>;
+  setCustomFormValues: (event: EventDBO) => void;
   canConfirmOrder: () => boolean;
   handleCustomFormChange: (fieldLabelIndex: string, fieldValue: string) => void;
   handleRemoveVariant: (variantName: string, variantIdx: number) => void;
@@ -121,10 +123,17 @@ export type CustomFormStore = {
 };
 
 export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
-  customFormValues: defaultEvent.customOrderDetails.fields.map((field) => ({
-    ...field,
-    value: field.defaultValue,
-  })),
+  customFormValues: [],
+  setCustomFormValues: (event: EventDBO) =>
+    set((_) => {
+      return {
+        customFormValues: event.customOrderDetails.fields.map((field) => ({
+          ...field,
+          value: field.defaultValue || "",
+          isRequired: field.required,
+        })),
+      };
+    }),
   canConfirmOrder: () => {
     const values = get().customFormValues;
 
@@ -146,6 +155,7 @@ export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
         ...oldVal,
         label,
         value: fieldValue,
+        isRequired: newCurrentCustomFormValues[parseInt(index)].isRequired,
       };
 
       //Set state with the updated value
