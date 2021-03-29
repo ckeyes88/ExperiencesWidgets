@@ -174,10 +174,22 @@ export type CustomFormStore = {
   canConfirmOrder: () => boolean;
   handleCustomFormChange: (fieldLabelIndex: string, fieldValue: string) => void;
   onConfirmOrder: () => void;
+  isModalOpen: boolean;
+  removeVariantName: string;
+  setIsModalOpen: (isOpen: boolean, variantName: string) => void;
 };
 
 export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
   customFormValues: [],
+  isModalOpen: false,
+  removeVariantName: "",
+  setIsModalOpen: (isOpen: boolean, variantName: string) =>
+    set((_) => {
+      return {
+        isModalOpen: isOpen,
+        removeVariantName: variantName,
+      };
+    }),
   setCustomFormValues: (event: EventDBO, labels: Partial<AppDictionary>) =>
     set((_) => {
       let fields = clone(event.customOrderDetails.fields);

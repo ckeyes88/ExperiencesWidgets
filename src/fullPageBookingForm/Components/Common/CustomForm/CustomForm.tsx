@@ -5,6 +5,7 @@ import { FormFieldDBO } from "../../../../types";
 import { AppDictionary } from "../../../../typings/Languages";
 import { FormField } from "../FormField";
 import { CloseIcon } from "../Icon/CloseIcon";
+import { Modal } from "../Modal";
 import { TextStyle } from "../TextStyle";
 import "./CustomForm.scss";
 
@@ -25,8 +26,15 @@ export type PerAttendeeTypeProps = {
    * this array will contain ["Parent", "Parent", etc.]
    */
   variantNames: string[];
-  /**Callback passed by parent to remove a variant from per attendee list on click. */
-  removeVariant: (variantName: string) => void;
+  /**Attributes associated with the remove variant modal. */
+  removeVariantModal: {
+    /**Whether the modal is open. */
+    isOpen: boolean;
+    /**Setting if the variant modal is open, with the name of variant to be removed. */
+    setIsRemoveVariantModalOpen: (isOpen: boolean, variantName: string) => void;
+    /**Callback passed by parent to remove a variant from per attendee list on click. */
+    removeVariant: () => void;
+  };
 };
 
 export type CustomFormProps = {
@@ -94,9 +102,22 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
    * individual attendee.
    */
   const renderPerAttendeeForm = (formValues: PerAttendeeTypeProps) => {
-    const { fields, variantNames, removeVariant } = formValues;
+    const { fields, variantNames, removeVariantModal } = formValues;
+
     return (
       <Fragment>
+        <Modal
+          title="Remove attendee"
+          cancelButtonText="Cancel"
+          confirmButtonText="Yes, remove"
+          content='Are you sure you want to remove "Adult"? 
+          You will lose all additional information you have entered.'
+          isOpen={removeVariantModal.isOpen}
+          onClickCancelButton={() =>
+            removeVariantModal.setIsRemoveVariantModalOpen(false, "")
+          }
+          onClickConfirmButton={removeVariantModal.removeVariant}
+        />
         {variantNames.map((variantName, idx) => (
           <div
             className="CustomForm__Attendee"
@@ -114,9 +135,13 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
               {variantNames.length > 1 && (
                 <button
                   className="CustomForm__Attendee__Remove"
-                  onClick={() => {
-                    removeVariant(variantName);
-                  }}
+                  onClick={() =>
+                    removeVariantModal.setIsRemoveVariantModalOpen(
+                      true,
+                      variantName,
+                    )
+                  }
+                  disabled={removeVariantModal.isOpen}
                 >
                   <CloseIcon height={30} color="#888888" />
                 </button>

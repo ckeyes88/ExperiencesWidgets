@@ -162,6 +162,18 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         (variant) => variant.currentQty > 0,
       );
 
+      //Handle removal of variant from view.
+      const handleRemoveVariant = () => {
+        const variantName = useCustomFormStore(
+          (state) => state.removeVariantName,
+        );
+
+        //Remove selected variant from form.
+        useQtySelectionStore((state) => state.handleRemoveVariant)(variantName);
+        //Close modal.
+        useCustomFormStore((state) => state.setIsModalOpen)(false, "");
+      };
+
       //Create per attendee form details object, used to populate
       //all fields for a per attendee custom form.
       const perAttendeeFormType: PerAttendeeTypeProps = {
@@ -176,9 +188,13 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         ),
         //Total fields per variant selected, to be separated by header rule
         //in form.
-        removeVariant: useQtySelectionStore(
-          (state) => state.handleRemoveVariant,
-        ),
+        removeVariantModal: {
+          isOpen: useCustomFormStore((state) => state.isModalOpen),
+          setIsRemoveVariantModalOpen: useCustomFormStore(
+            (state) => state.setIsModalOpen,
+          ),
+          removeVariant: handleRemoveVariant,
+        },
       };
 
       //Whether the user is allowed to confirm order by populating
