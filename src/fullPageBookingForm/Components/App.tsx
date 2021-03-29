@@ -37,6 +37,7 @@ export type QuantitySelectionStore = {
   variants: NumberCarouselVariants;
   setVariants: (event: EventDBO) => void;
   disableVariants: () => void;
+  enableVariants: () => void;
 };
 
 export const useQtySelectionStore = create<QuantitySelectionStore>(
@@ -95,6 +96,15 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
           variants: state.variants.map((variant) => ({
             ...variant,
             isDisabled: true,
+          })),
+        };
+      }),
+    enableVariants: () =>
+      set((state) => {
+        return {
+          variants: state.variants.map((variant) => ({
+            ...variant,
+            isDisabled: false,
           })),
         };
       }),

@@ -325,6 +325,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     const handleClick = () => {
       useOrderDetailsStore((state) => state.setIsSaveContinueDisabled)(false);
       useOrderDetailsStore((state) => state.setSaveButtonVisibility)("visible");
+      useQtySelectionStore((state) => state.enableVariants)();
     };
     return (
       <div className="OrderDetails__Button">
