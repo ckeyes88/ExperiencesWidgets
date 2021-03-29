@@ -7,7 +7,13 @@ export default {
   component: Modal,
 };
 
-const defaultArgs: ModalProps = {};
+const defaultArgs: ModalProps = {
+  title: "Remove attendee",
+  content:
+    'Are you sure you want to remove "Adult"? You will lose all additional information you have entered.',
+  confirmButtonText: "Yes, remove",
+  cancelButtonText: "Cancel",
+};
 
 const Template = (args: ModalProps) => <Modal {...args} />;
 

@@ -37,6 +37,11 @@
   }
 }
 
+.button--color-transparent {
+  background-color: transparent;
+  color: $color-default;
+}
+
 /** variants **/
 
 .button--variant-outlined {
