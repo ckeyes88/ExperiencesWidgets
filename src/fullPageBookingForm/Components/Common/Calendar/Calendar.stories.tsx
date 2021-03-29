@@ -11,6 +11,12 @@ export default {
         type: "date",
       },
     },
+    startOfWeek: {
+      control: {
+        type: "radio",
+        options: ["Su", "Mo"],
+      },
+    },
   },
 };
 
@@ -25,6 +31,7 @@ const defaultProps: CalendarProps = {
   year: 2021,
   date: new Date(),
   loading: false,
+  startOfWeek: "Su",
 };
 
 export const Basic = Template.bind({});

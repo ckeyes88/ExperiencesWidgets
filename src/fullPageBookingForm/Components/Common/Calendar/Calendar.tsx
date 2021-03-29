@@ -14,6 +14,7 @@ export type CalendarProps = {
   year?: number;
   date: Date;
   loading?: boolean;
+  startOfWeek?: "Su" | "Mo";
   dateIsDisabled?: (date: Date) => boolean;
   onDateChange?: (date: Date) => void;
   onMonthChange?: (month: number) => void;
@@ -27,6 +28,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
   year,
   date,
   loading,
+  startOfWeek = "Su",
   dateIsDisabled,
   onDateChange,
   onMonthChange,
@@ -111,8 +113,16 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
     onDateChange?.(today);
   };
 
-  const renderWeekdays = () =>
-    moment.weekdaysMin().map((weekday) => (
+  const renderWeekHeader = () => {
+    let weekdays = moment.weekdaysMin();
+
+    if (startOfWeek === "Mo") {
+      const sunday = weekdays.shift();
+
+      weekdays = [...weekdays, sunday];
+    }
+
+    return weekdays.map((weekday) => (
       <div
         key={weekday}
         className="calendar__matrix__day calendar__matrix__day--header"
@@ -120,10 +130,16 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
         <span>{weekday.charAt(0)}</span>
       </div>
     ));
+  };
 
   const calendarMatrix = useMemo(
-    () => getCalendarMatrix({ month: currentMonth, year: currentYear }),
-    [currentMonth, currentYear],
+    () =>
+      getCalendarMatrix({
+        month: currentMonth,
+        year: currentYear,
+        startOfWeek,
+      }),
+    [currentMonth, currentYear, startOfWeek],
   );
 
   const renderDays = () =>
@@ -168,7 +184,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
             );
           }),
         ),
-      [currentMonth, currentYear, currentDate.getTime(), loading],
+      [currentMonth, currentYear, currentDate.getTime(), loading, startOfWeek],
     );
 
   const withinCurrentMonthAndYear =
@@ -211,7 +227,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
         </div>
       </div>
       <div className="calendar__matrix">
-        {renderWeekdays()}
+        {renderWeekHeader()}
         {renderDays()}
       </div>
     </div>

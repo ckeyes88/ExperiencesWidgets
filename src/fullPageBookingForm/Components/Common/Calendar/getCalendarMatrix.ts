@@ -5,13 +5,19 @@ type CalendarMatrixItem = { day: number | null; date: Date | null };
 export const getCalendarMatrix = ({
   month,
   year,
+  startOfWeek,
 }: {
   month: number;
   year: number;
+  startOfWeek: "Su" | "Mo";
 }) => {
   const date = moment().set("month", month).set("year", year).toDate();
   const dayAndWeekdayMapping = getDayAndWeekdayMapping(date);
-  const weekdayOfTheStartOfMonth = moment(date).startOf("month").day();
+  let weekdayOfTheStartOfMonth = moment(date).startOf("month").day();
+
+  if (startOfWeek === "Mo") {
+    weekdayOfTheStartOfMonth -= 1;
+  }
 
   let currentWeek = 0;
 
