@@ -176,7 +176,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         ),
         //Total fields per variant selected, to be separated by header rule
         //in form.
-        removeVariant: useCustomFormStore((state) => state.handleRemoveVariant),
+        removeVariant: useQtySelectionStore(
+          (state) => state.handleRemoveVariant,
+        ),
       };
 
       //Whether the user is allowed to confirm order by populating

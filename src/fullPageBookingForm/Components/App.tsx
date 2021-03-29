@@ -38,6 +38,7 @@ export type QuantitySelectionStore = {
   setVariants: (event: EventDBO) => void;
   disableVariants: () => void;
   enableVariants: () => void;
+  handleRemoveVariant: (variantIdx: number) => void;
 };
 
 export const useQtySelectionStore = create<QuantitySelectionStore>(
@@ -108,6 +109,23 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
           })),
         };
       }),
+    handleRemoveVariant: (variantIdx) =>
+      set((state) => {
+        return {
+          variants: state.variants.map((variant, idx) => {
+            if (idx === variantIdx) {
+              return {
+                ...variant,
+                currentQty: variant.currentQty - 1,
+              };
+            }
+
+            return {
+              ...variant,
+            };
+          }),
+        };
+      }),
   }),
 );
 
@@ -155,7 +173,6 @@ export type CustomFormStore = {
   ) => void;
   canConfirmOrder: () => boolean;
   handleCustomFormChange: (fieldLabelIndex: string, fieldValue: string) => void;
-  handleRemoveVariant: (variantName: string, variantIdx: number) => void;
   onConfirmOrder: () => void;
 };
 
@@ -231,8 +248,6 @@ export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
         customFormValues: newCurrentCustomFormValues,
       };
     }),
-  //TODO: update logic
-  handleRemoveVariant: (variantName: string, variantIdx: number) => {},
   onConfirmOrder: () => {},
 }));
 
