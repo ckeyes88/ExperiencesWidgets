@@ -13,7 +13,7 @@ import { NumberCarouselVariants } from "./Common/QuantitySelection";
 
 //Use mock data for now.
 import { defaultArgs } from "../__mocks__/Event";
-import { clone, prepend } from "ramda";
+import { clone } from "ramda";
 import { CustomerInputData } from "../../typings/CustomerInput";
 import { FormFieldValueInput } from "../../typings/FormFieldValueInput";
 import {

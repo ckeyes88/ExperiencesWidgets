@@ -20,7 +20,10 @@ export type PerOrderTypeProps = {
 export type PerAttendeeTypeProps = {
   /** Array of fields that the form will display */
   fields: FormFieldDBO[];
-  /**Number of fields per variant, to be separated by header rule. */
+  /**Name of each variant selected in view, to be separated by header rule.
+   * If multiple of the same variants are selected (e.g. 2x "Parent"),
+   * this array will contain ["Parent", "Parent", etc.]
+   */
   variantNames: string[];
   /**Callback passed by parent to remove a variant from per attendee list on click. */
   removeVariant: (variantName: string, variantNumber: number) => void;
@@ -105,14 +108,19 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
               </div>
 
               <TextStyle variant="display2" text={variantName} />
-              <button
-                className="CustomForm__Attendee__Remove"
-                onClick={() => {
-                  removeVariant(variantName, idx);
-                }}
-              >
-                <CloseIcon height={30} color="#888888" />
-              </button>
+              {/**Disable ability to remove variant if this variant
+               * is the only selected variant in the form.
+               */}
+              {variantNames.length > 1 && (
+                <button
+                  className="CustomForm__Attendee__Remove"
+                  onClick={() => {
+                    removeVariant(variantName, idx);
+                  }}
+                >
+                  <CloseIcon height={30} color="#888888" />
+                </button>
+              )}
             </div>
 
             {fields.map(renderFormField)}

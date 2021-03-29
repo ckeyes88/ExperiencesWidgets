@@ -60,9 +60,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   //Get variants associated with event
   const variants = useQtySelectionStore((state) => state.variants);
 
-  /**
-   * State tracking in component.
-   */
+  //Whether the save and continue button should be disabled.
   const isSaveContinueDisabled = useOrderDetailsStore(
     (state) => state.isSaveContinueDisabled,
   );
