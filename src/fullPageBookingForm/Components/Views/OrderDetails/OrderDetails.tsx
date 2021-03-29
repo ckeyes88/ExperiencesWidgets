@@ -109,6 +109,14 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       formClassNames.push("OrderDetails__Input__Customer-Form--disabled");
     }
 
+    //Save/Confirm button is disabled if store requires it to be disabled, if a variant qty hasn't been
+    //specified, or if the customer form hasn't been populated.
+    const canConfirm =
+      useQtySelectionStore((state) => state.canConfirmOrder)() &&
+      useCustomerFormStore((state) => state.canConfirmOrder)();
+
+    console.log(canConfirm);
+
     return (
       <form className={formClassNames.join(" ")} onSubmit={handleFormSubmit}>
         <div className="OrderDetails__Input__Customer-Form__Title">
@@ -123,7 +131,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         {saveButtonVisibility !== "hidden" && (
           <div className="OrderDetails__Input__Customer-Form__Submit">
             {hasConfirmButton ? (
-              renderConfirmButton()
+              renderConfirmButton(!canConfirm)
             ) : (
               <Button
                 variant="contained"
@@ -131,7 +139,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
                 text="Save & continue"
                 fullWidth
                 type="submit"
-                disabled={saveButtonVisibility === "disabled"}
+                disabled={!canConfirm}
               />
             )}
           </div>
@@ -292,7 +300,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   );
 
   //Renders confirm button in view.
-  const renderConfirmButton = () => (
+  const renderConfirmButton = (isDisabled: boolean) => (
     <Button
       text={labels.confirmReservationButtonLabel}
       variant="outlined"
@@ -300,26 +308,28 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       color="primary"
       //TODO: Update this to move to next page in modal.
       onClick={() => {
-        useOrderDetailsStore((state) => state.setIsSaveContinueDisabled)(true);
-        useOrderDetailsStore((state) => state.setSaveButtonVisibility)(
-          "visible",
+        useOrderDetailsStore((state) => state.setPage)(
+          BookingFormPage.CONFIRMATION,
         );
       }}
+      disabled={isDisabled}
     />
   );
 
   //Renders confirm button in view.
-  const renderSaveButton = () => (
+  const renderSaveButton = (isDisabled: boolean) => (
     <Button
       text={"Save & continue"}
       variant="outlined"
       fullWidth
       color="primary"
       onClick={() => {
-        useOrderDetailsStore((state) => state.setPage)(
-          BookingFormPage.CONFIRMATION,
+        useOrderDetailsStore((state) => state.setIsSaveContinueDisabled)(true);
+        useOrderDetailsStore((state) => state.setSaveButtonVisibility)(
+          "hidden",
         );
       }}
+      disabled={isDisabled}
     />
   );
 
@@ -332,7 +342,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         color="primary"
         onClick={() => {
           useOrderDetailsStore((state) => state.setIsSaveContinueDisabled)(
-            true,
+            false,
           );
           useOrderDetailsStore((state) => state.setSaveButtonVisibility)(
             "visible",
@@ -344,6 +354,12 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
   //Renders pre-pay flow.
   const renderPrePayFlow = () => {
+    const canQtySelectionConfirm = useQtySelectionStore(
+      (state) => state.canConfirmOrder,
+    )();
+    const canCustomerFormConfirm = useCustomerFormStore(
+      (state) => state.canConfirmOrder,
+    )();
     return (
       <Fragment>
         {/**Always render the quantity selection component. */}
@@ -351,7 +367,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         {/** If no custom form is provided, render confirm button
          * to go to checkout after variants are selected.
          */}
-        {!hasCustomForm && renderConfirmButton()}
+        {!hasCustomForm && renderConfirmButton(canQtySelectionConfirm)}
         {/** If per order custom form is provided, render it
          * directly beneath quantity selection to go to checkout afterwards.
          */}
@@ -362,7 +378,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
          */}
         {hasPerAttendeeCustomForm &&
           !shouldRenderCustomForm &&
-          renderSaveButton()}
+          renderSaveButton(canQtySelectionConfirm && canCustomerFormConfirm)}
         {hasPerAttendeeCustomForm && shouldRenderCustomForm && (
           <Fragment>
             {renderEditButton()}

@@ -27,60 +27,78 @@ export type QuantitySelectionStore = {
   onDecreaseClick: (variantIdx: number) => void;
   onIncreaseClick: (variantIdx: number) => void;
   onChange: (variantIdx: number, variantQty: string) => void;
+  canConfirmOrder: () => boolean;
   variants: NumberCarouselVariants;
 };
 
-export const useQtySelectionStore = create<QuantitySelectionStore>((set) => ({
-  onDecreaseClick: (variantIdx: number) =>
-    set((state) => {
-      let oldArray = clone(state.variants);
-      oldArray[variantIdx].currentQty -= 1;
+export const useQtySelectionStore = create<QuantitySelectionStore>(
+  (set, get) => ({
+    onDecreaseClick: (variantIdx: number) =>
+      set((state) => {
+        let oldArray = clone(state.variants);
+        oldArray[variantIdx].currentQty -= 1;
 
-      return {
-        variants: oldArray,
-      };
-    }),
-  onIncreaseClick: (variantIdx: number) =>
-    set((state) => {
-      let oldArray = clone(state.variants);
-      oldArray[variantIdx].currentQty = oldArray[variantIdx].currentQty + 1;
+        return {
+          variants: oldArray,
+        };
+      }),
+    onIncreaseClick: (variantIdx: number) =>
+      set((state) => {
+        let oldArray = clone(state.variants);
+        oldArray[variantIdx].currentQty = oldArray[variantIdx].currentQty + 1;
 
-      return {
-        variants: oldArray,
-      };
-    }),
-  onChange: (variantIdx: number, variantQty: string) =>
-    set((state) => {
-      let oldArray = clone(state.variants);
-      const qtyMaximum = oldArray[variantIdx].qtyMaximum;
-      /**Ensure maximum qty typed in is at most the maximum variant quantity. */
-      oldArray[variantIdx].currentQty =
-        parseInt(variantQty) > qtyMaximum ? qtyMaximum : parseInt(variantQty);
+        return {
+          variants: oldArray,
+        };
+      }),
+    onChange: (variantIdx: number, variantQty: string) =>
+      set((state) => {
+        let oldArray = clone(state.variants);
+        const qtyMaximum = oldArray[variantIdx].qtyMaximum;
+        /**Ensure maximum qty typed in is at most the maximum variant quantity. */
+        oldArray[variantIdx].currentQty =
+          parseInt(variantQty) > qtyMaximum ? qtyMaximum : parseInt(variantQty);
 
-      return {
-        variants: oldArray,
-      };
-    }),
-  variants: defaultEvent.variants.map((variant) => ({
-    isDisabled: false,
-    currentQty: 0,
-    name: variant.name,
-    price: variant.price,
-    qtyMaximum: defaultEvent.maxLimit,
-  })),
-}));
+        return {
+          variants: oldArray,
+        };
+      }),
+    canConfirmOrder: () => {
+      const variants = get().variants;
+
+      return variants.some((variant) => variant.currentQty > 0);
+    },
+    variants: defaultEvent.variants.map((variant) => ({
+      isDisabled: false,
+      currentQty: 0,
+      name: variant.name,
+      price: variant.price,
+      qtyMaximum: defaultEvent.maxLimit,
+    })),
+  }),
+);
 
 export type CustomerFormStore = {
   customerData: CustomerInputData;
+  canConfirmOrder: () => boolean;
   handleCustomerFormChange: (fieldName: string, fieldValue: string) => void;
   onAddCustomerInfo: () => void;
 };
 
-export const useCustomerFormStore = create<CustomerFormStore>((set) => ({
+export const useCustomerFormStore = create<CustomerFormStore>((set, get) => ({
   customerData: {
     email: "",
     firstName: "",
     lastName: "",
+  },
+  canConfirmOrder: () => {
+    const customerData = get().customerData;
+
+    return (
+      customerData.email !== "" &&
+      customerData.firstName !== "" &&
+      customerData.lastName !== ""
+    );
   },
   handleCustomerFormChange: (fieldName: string, fieldValue: string) =>
     set((state) => {
@@ -96,16 +114,22 @@ export const useCustomerFormStore = create<CustomerFormStore>((set) => ({
 
 export type CustomFormStore = {
   customFormValues: FormFieldValueInput[];
+  canConfirmOrder: () => boolean;
   handleCustomFormChange: (fieldLabelIndex: string, fieldValue: string) => void;
   handleRemoveVariant: (variantName: string, variantIdx: number) => void;
   onConfirmOrder: () => void;
 };
 
-export const useCustomFormStore = create<CustomFormStore>((set) => ({
+export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
   customFormValues: defaultEvent.customOrderDetails.fields.map((field) => ({
     ...field,
     value: field.defaultValue,
   })),
+  canConfirmOrder: () => {
+    const values = get().customFormValues;
+
+    return values.every((value) => value.value !== "");
+  },
   handleCustomFormChange: (fieldLabelIndex: string, fieldValue: string) =>
     set((state) => {
       //fieldLabelIndex is the field label/name and its index position joined by a hyphen
