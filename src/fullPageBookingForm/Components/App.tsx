@@ -36,6 +36,7 @@ export type QuantitySelectionStore = {
   canConfirmOrder: () => boolean;
   variants: NumberCarouselVariants;
   setVariants: (event: EventDBO) => void;
+  disableVariants: () => void;
 };
 
 export const useQtySelectionStore = create<QuantitySelectionStore>(
@@ -85,6 +86,15 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
             name: variant.name,
             price: variant.price,
             qtyMaximum: event.maxLimit,
+          })),
+        };
+      }),
+    disableVariants: () =>
+      set((state) => {
+        return {
+          variants: state.variants.map((variant) => ({
+            ...variant,
+            isDisabled: true,
           })),
         };
       }),
