@@ -204,18 +204,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               )}
             />
             <div className="OrderDetails__Button">
-              <Button
-                fullWidth
-                color="primary"
-                text={labels.confirmReservationButtonLabel}
-                type="submit"
-                disabled={!canConfirm}
-                onClick={() =>
-                  useOrderDetailsStore((state) => state.setPage)(
-                    BookingFormPage.CONFIRMATION,
-                  )
-                }
-              />
+              {renderConfirmButton(!canConfirm)}
             </div>
           </form>
         </div>
@@ -250,18 +239,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               )}
             />
             <div className="OrderDetails__Button">
-              <Button
-                fullWidth
-                color="primary"
-                text={labels.confirmReservationButtonLabel}
-                type="submit"
-                disabled={!canConfirm}
-                onClick={() =>
-                  useOrderDetailsStore((state) =>
-                    state.setPage(BookingFormPage.CONFIRMATION),
-                  )
-                }
-              />
+              {renderConfirmButton(!canConfirm)}
             </div>
           </form>
         </div>
@@ -317,6 +295,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         color="primary"
         onClick={handleClick}
         disabled={isDisabled}
+        type="submit"
       />
     );
   };
