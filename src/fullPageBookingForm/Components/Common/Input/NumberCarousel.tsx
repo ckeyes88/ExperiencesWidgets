@@ -38,11 +38,11 @@ export const NumberCarousel: FunctionComponent<NumberCarouselProps> = ({
   const increasingButtonClassNames = [...decreasingButtonClassNames];
   const carouselClassNames = ["number-carousel"];
 
-  if (currentQty <= 0) {
+  if (currentQty <= 0 || isDisabled) {
     decreasingButtonClassNames.push("number-carousel__button--disabled");
   }
 
-  if (currentQty >= qtyMaximum) {
+  if (currentQty >= qtyMaximum || isDisabled) {
     increasingButtonClassNames.push("number-carousel__button--disabled");
   }
   return (
@@ -67,7 +67,7 @@ export const NumberCarousel: FunctionComponent<NumberCarouselProps> = ({
       <button
         className={increasingButtonClassNames.join(" ")}
         onClick={onIncreaseClick}
-        disabled={currentQty >= qtyMaximum}
+        disabled={currentQty >= qtyMaximum || isDisabled}
       >
         +
       </button>
