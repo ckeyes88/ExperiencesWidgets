@@ -12,7 +12,7 @@ import create from "zustand";
 import { NumberCarouselVariants } from "./Common/QuantitySelection";
 
 //Use mock data for now.
-import { defaultArgs, defaultEvent } from "../__mocks__/Event";
+import { defaultArgs } from "../__mocks__/Event";
 import { clone } from "ramda";
 import { CustomerInputData } from "../../typings/CustomerInput";
 import { FormFieldValueInput } from "../../typings/FormFieldValueInput";
@@ -30,6 +30,7 @@ export type QuantitySelectionStore = {
   onChange: (variantIdx: number, variantQty: string) => void;
   canConfirmOrder: () => boolean;
   variants: NumberCarouselVariants;
+  setVariants: (event: EventDBO) => void;
 };
 
 export const useQtySelectionStore = create<QuantitySelectionStore>(
@@ -69,13 +70,19 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
 
       return variants.some((variant) => variant.currentQty > 0);
     },
-    variants: defaultEvent.variants.map((variant) => ({
-      isDisabled: false,
-      currentQty: 0,
-      name: variant.name,
-      price: variant.price,
-      qtyMaximum: defaultEvent.maxLimit,
-    })),
+    variants: [],
+    setVariants: (event: EventDBO) =>
+      set((_) => {
+        return {
+          variants: event.variants.map((variant) => ({
+            isDisabled: false,
+            currentQty: 0,
+            name: variant.name,
+            price: variant.price,
+            qtyMaximum: event.maxLimit,
+          })),
+        };
+      }),
   }),
 );
 

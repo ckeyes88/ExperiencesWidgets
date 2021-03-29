@@ -52,13 +52,14 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   selectedDate,
   labels,
 }) => {
-  //Get variants associated with event
-  const variants = useQtySelectionStore((state) => state.variants);
-
-  //Populate custom form details on mount of component.
+  //Populate qty selection variants and custom form details on mount of component.
   useEffect(() => {
     useCustomFormStore((state) => state.setCustomFormValues)(event);
+    useQtySelectionStore((state) => state.setVariants)(event);
   }, []);
+
+  //Get variants associated with event
+  const variants = useQtySelectionStore((state) => state.variants);
 
   /**
    * State tracking in component.
