@@ -1,6 +1,7 @@
 /** @jsx h */
 import { h, FunctionComponent, Fragment } from "preact";
-import { useEffect, useState, useMemo } from "preact/hooks";
+import { useEffect, useState, useMemo, useRef } from "preact/hooks";
+import moment from "moment";
 import { Availability } from "../../../../typings/Availability";
 import { getTimeslotsByDate } from "../../../../Utils/helpers";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
@@ -20,6 +21,7 @@ import "./TimeslotSelection.scss";
 
 export const TimeslotSelection: FunctionComponent = () => {
   const { setPage, close } = useWizardModalAction();
+  const timeslotListContainer = useRef<HTMLDivElement>();
   const [calendarDrawerOpen, setCalendarOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
@@ -38,7 +40,6 @@ export const TimeslotSelection: FunctionComponent = () => {
 
   useEffect(() => {
     if (Object.keys(timeslotsByDay)[0]) {
-      console.log("new date", Object.keys(timeslotsByDay)[0]);
       setCurrentDate(new Date(Object.keys(timeslotsByDay)[0]));
     }
   }, [Object.keys(timeslotsByDay)[0]]);
@@ -54,7 +55,17 @@ export const TimeslotSelection: FunctionComponent = () => {
 
   const handleCalendarDrawerToggle = () => setCalendarOpen((prev) => !prev);
 
-  const handleDateChange = (date: Date) => setCurrentDate(date);
+  const handleDateChange = (date: Date) => {
+    setCurrentDate(date);
+
+    timeslotListContainer.current?.scrollTo({ top: 0, behavior: "smooth" });
+
+    document
+      .querySelector(".wizard-modal__body")
+      ?.scrollTo({ top: 0, behavior: "smooth" });
+
+    setCalendarOpen(false);
+  };
 
   const handleMonthChange = (month: number) => setCurrentMonth(month);
 
@@ -83,12 +94,32 @@ export const TimeslotSelection: FunctionComponent = () => {
     [isFetchingEvent],
   );
 
+  const getDaysToRender = () => {
+    const dateFormat = "YYYY-MM-DD";
+
+    const startingPointIndex = Object.keys(timeslotsByDay).findIndex(
+      (key) =>
+        moment(currentDate).format(dateFormat) ===
+        moment(key).format(dateFormat),
+    );
+
+    let daysToRender = Object.keys(timeslotsByDay);
+
+    if (startingPointIndex >= 0) {
+      daysToRender = daysToRender.slice(startingPointIndex);
+    }
+
+    return daysToRender;
+  };
+
   const renderTimeslots = () => {
     if (isFetchingInitialAvailabilities) {
       return null;
     }
 
-    return Object.keys(timeslotsByDay).map((date) => (
+    const daysToRender = getDaysToRender();
+
+    return daysToRender.map((date) => (
       <TimeslotGroup
         key={date}
         timeslots={timeslotsByDay[date].map((timeslot) => {
@@ -138,7 +169,10 @@ export const TimeslotSelection: FunctionComponent = () => {
             >
               {calendar}
             </BottomDrawer>
-            <div className="timeslot-selection__timeslot-list">
+            <div
+              className="timeslot-selection__timeslot-list"
+              ref={timeslotListContainer}
+            >
               <div className="timeslot-selection__timeslot-list__margin" />
               {isFetchingInitialAvailabilities ? (
                 <Fragment>

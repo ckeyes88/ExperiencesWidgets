@@ -30,37 +30,28 @@ export const useAvailabilities = ({
   >({});
 
   const addTimeslots = () => {
-    let numOfDaysAdded = 0;
     const timeslotsToAdd: Availability[] = [];
 
-    try {
-      Object.keys(availabilities).forEach((year) => {
-        Object.keys(availabilities[year]).forEach((month) => {
-          Object.keys(availabilities[year][month]).forEach((week) => {
-            Object.keys(availabilities[year][month][week]).forEach((day) => {
-              const timeslots = availabilities[year][month][week][day];
+    Object.keys(availabilities).forEach((year) => {
+      Object.keys(availabilities[year]).forEach((month) => {
+        Object.keys(availabilities[year][month]).forEach((week) => {
+          Object.keys(availabilities[year][month][week]).forEach((day) => {
+            const timeslots = availabilities[year][month][week][day];
 
-              timeslotsToAdd.push(...timeslots);
+            timeslotsToAdd.push(...timeslots);
 
-              numOfDaysAdded += 1;
+            const newDay = moment(timeslots[0].startsAt)
+              .startOf("day")
+              .toJSON();
 
-              const newDay = moment(timeslots[0].startsAt)
-                .startOf("day")
-                .toJSON();
-
-              setTimeslotsByDay((prev) => ({
-                ...prev,
-                [newDay]: timeslots,
-              }));
-
-              if (numOfDaysAdded === 10) {
-                throw new Error("Reached 10 days of timeslots");
-              }
-            });
+            setTimeslotsByDay((prev) => ({
+              ...prev,
+              [newDay]: timeslots,
+            }));
           });
         });
       });
-    } catch {}
+    });
   };
 
   const addFetchedMonth = (month: number, year: number) =>
