@@ -1,8 +1,9 @@
 /** @jsx h */
 import { h, FunctionComponent, Fragment } from "preact";
-import { useState } from "preact/hooks";
-import { BookingFormPage } from "../../../Typings/BookingFormPage";
+import { useEffect, useState, useMemo } from "preact/hooks";
+import { Availability } from "../../../../typings/Availability";
 import { getTimeslotsByDate } from "../../../../Utils/helpers";
+import { BookingFormPage } from "../../../Typings/BookingFormPage";
 import { Calendar } from "../../Common/Calendar";
 import { BottomDrawer } from "../../Common/BottomDrawer";
 import { TextStyle } from "../../Common/TextStyle";
@@ -28,13 +29,22 @@ export const TimeslotSelection: FunctionComponent = () => {
     isFetchingInitialAvailabilities,
     isFetchingMoreAvailabilities,
     availabilities,
+    timeslotsByDay,
   } = useAvailabilities({
     date: currentDate,
     month: currentMonth,
     year: currentYear,
   });
 
-  const handleSelect = () => {
+  useEffect(() => {
+    if (Object.keys(timeslotsByDay)[0]) {
+      console.log("new date", Object.keys(timeslotsByDay)[0]);
+      setCurrentDate(new Date(Object.keys(timeslotsByDay)[0]));
+    }
+  }, [Object.keys(timeslotsByDay)[0]]);
+
+  const handleTimeslotSelect = (timeslot: Availability) => {
+    alert(JSON.stringify(timeslot, null, 2));
     setPage(BookingFormPage.ORDER_DETAILS);
   };
 
@@ -67,6 +77,35 @@ export const TimeslotSelection: FunctionComponent = () => {
       onYearChange={handleYearChange}
     />
   );
+
+  const minPrice = useMemo(
+    () => event?.variants?.map(({ price }) => price).sort()[0],
+    [isFetchingEvent],
+  );
+
+  const renderTimeslots = () => {
+    if (isFetchingInitialAvailabilities) {
+      return null;
+    }
+
+    return Object.keys(timeslotsByDay).map((date) => (
+      <TimeslotGroup
+        key={date}
+        timeslots={timeslotsByDay[date].map((timeslot) => {
+          const handleSelect = () => handleTimeslotSelect(timeslot);
+
+          return {
+            minPrice,
+            startsAt: new Date(timeslot.startsAt),
+            endsAt: new Date(timeslot.endsAt),
+            remainingSpots: timeslot.unitsLeft,
+            timezone: timeslot.timezone,
+            onSelect: handleSelect,
+          };
+        })}
+      />
+    ));
+  };
 
   return (
     <Fragment>
@@ -107,100 +146,7 @@ export const TimeslotSelection: FunctionComponent = () => {
                   <TimeslotGroupSkeleton length={2} />
                 </Fragment>
               ) : (
-                <Fragment>
-                  <TimeslotGroup
-                    timeslots={[
-                      {
-                        startsAt: new Date("March 17, 2021 06:00:00"),
-                        endsAt: new Date("March 17, 2021 10:00:00"),
-                        remainingSpots: 4,
-                        minPrice: 150,
-                        timezone: "Asia/Manila",
-                        onSelect: handleSelect,
-                      },
-                      {
-                        startsAt: new Date("March 17, 2021 11:30:00"),
-                        endsAt: new Date("March 17, 2021 12:00:00"),
-                        remainingSpots: 4,
-                        minPrice: 150,
-                        timezone: "Asia/Manila",
-                        onSelect: handleSelect,
-                      },
-                      {
-                        startsAt: new Date("March 17, 2021 14:30:00"),
-                        endsAt: new Date("March 17, 2021 16:30:00"),
-                        remainingSpots: 4,
-                        minPrice: 150,
-                        timezone: "Asia/Manila",
-                        onSelect: handleSelect,
-                      },
-                      {
-                        startsAt: new Date("March 17, 2021 16:30:00"),
-                        endsAt: new Date("March 17, 2021 18:30:00"),
-                        remainingSpots: 4,
-                        minPrice: 150,
-                        timezone: "Asia/Manila",
-                        onSelect: handleSelect,
-                      },
-                    ]}
-                  />
-                  <TimeslotGroup
-                    timeslots={[
-                      {
-                        startsAt: new Date("March 18, 2021 13:00:00"),
-                        endsAt: new Date("March 18, 2021 15:30:00"),
-                        remainingSpots: 4,
-                        minPrice: 150,
-                        timezone: "Asia/Manila",
-                        onSelect: handleSelect,
-                      },
-                      {
-                        startsAt: new Date("March 18, 2021 17:00:00"),
-                        endsAt: new Date("March 18, 2021 19:00:00"),
-                        remainingSpots: 4,
-                        minPrice: 150,
-                        timezone: "Asia/Manila",
-                        onSelect: handleSelect,
-                      },
-                    ]}
-                  />
-                  <TimeslotGroup
-                    timeslots={[
-                      {
-                        startsAt: new Date("March 19, 2021 06:00:00"),
-                        endsAt: new Date("March 19, 2021 10:00:00"),
-                        remainingSpots: 4,
-                        minPrice: 150,
-                        timezone: "Asia/Manila",
-                        onSelect: handleSelect,
-                      },
-                      {
-                        startsAt: new Date("March 19, 2021 11:30:00"),
-                        endsAt: new Date("March 19, 2021 12:00:00"),
-                        remainingSpots: 4,
-                        minPrice: 150,
-                        timezone: "Asia/Manila",
-                        onSelect: handleSelect,
-                      },
-                      {
-                        startsAt: new Date("March 19, 2021 14:30:00"),
-                        endsAt: new Date("March 19, 2021 16:30:00"),
-                        remainingSpots: 4,
-                        minPrice: 150,
-                        timezone: "Asia/Manila",
-                        onSelect: handleSelect,
-                      },
-                      {
-                        startsAt: new Date("March 19, 2021 16:30:00"),
-                        endsAt: new Date("March 19, 2021 18:30:00"),
-                        remainingSpots: 4,
-                        minPrice: 150,
-                        timezone: "Asia/Manila",
-                        onSelect: handleSelect,
-                      },
-                    ]}
-                  />
-                </Fragment>
+                <Fragment>{renderTimeslots()}</Fragment>
               )}
             </div>
           </div>
