@@ -303,57 +303,61 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   );
 
   //Renders confirm button in view.
-  const renderConfirmButton = (isDisabled: boolean) => (
-    <Button
-      text={labels.confirmReservationButtonLabel}
-      variant="outlined"
-      fullWidth
-      color="primary"
-      //TODO: Update this to move to next page in modal.
-      onClick={() => {
-        useOrderDetailsStore((state) => state.setPage)(
-          BookingFormPage.CONFIRMATION,
-        );
-      }}
-      disabled={isDisabled}
-    />
-  );
-
-  //Renders save button in view.
-  const renderSaveButton = (isDisabled: boolean) => (
-    <Button
-      text={"Save & continue"}
-      variant="outlined"
-      fullWidth
-      color="primary"
-      onClick={() => {
-        useOrderDetailsStore((state) => state.setIsSaveContinueDisabled)(true);
-        useOrderDetailsStore((state) => state.setSaveButtonVisibility)(
-          "hidden",
-        );
-      }}
-      disabled={isDisabled}
-    />
-  );
-
-  const renderEditButton = () => (
-    <div className="OrderDetails__Button">
+  const renderConfirmButton = (isDisabled: boolean) => {
+    const handleClick = () => {
+      useOrderDetailsStore((state) => state.setPage)(
+        BookingFormPage.CONFIRMATION,
+      );
+    };
+    return (
       <Button
-        text="Edit"
+        text={labels.confirmReservationButtonLabel}
         variant="outlined"
         fullWidth
         color="primary"
-        onClick={() => {
-          useOrderDetailsStore((state) => state.setIsSaveContinueDisabled)(
-            false,
-          );
-          useOrderDetailsStore((state) => state.setSaveButtonVisibility)(
-            "visible",
-          );
-        }}
+        onClick={handleClick}
+        disabled={isDisabled}
       />
-    </div>
-  );
+    );
+  };
+
+  //Renders save button in view.
+  const renderSaveButton = (isDisabled: boolean) => {
+    const handleClick = () => {
+      useOrderDetailsStore((state) => state.setIsSaveContinueDisabled)(true);
+      useOrderDetailsStore((state) => state.setSaveButtonVisibility)("hidden");
+    };
+
+    return (
+      <Button
+        text={"Save & continue"}
+        variant="outlined"
+        fullWidth
+        color="primary"
+        onClick={handleClick}
+        disabled={isDisabled}
+      />
+    );
+  };
+
+  //Render edit button in view.
+  const renderEditButton = () => {
+    const handleClick = () => {
+      useOrderDetailsStore((state) => state.setIsSaveContinueDisabled)(false);
+      useOrderDetailsStore((state) => state.setSaveButtonVisibility)("visible");
+    };
+    return (
+      <div className="OrderDetails__Button">
+        <Button
+          text="Edit"
+          variant="outlined"
+          fullWidth
+          color="primary"
+          onClick={handleClick}
+        />
+      </div>
+    );
+  };
 
   //Renders pre-pay flow.
   const renderPrePayFlow = () => {
