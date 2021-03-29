@@ -29,7 +29,6 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
   onChange,
   onDecreaseClick,
 }) => {
-  variants;
   /**Calculates total of order. */
   let total = variants
     .map((variant) => variant.price * variant.currentQty)

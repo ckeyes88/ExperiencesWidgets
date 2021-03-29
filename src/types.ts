@@ -1,5 +1,7 @@
+export type FormFieldType = "Text" | "Select" | "Email" | "Phone";
+
 export type FormFieldDBO = {
-  type: "Text" | "Select" | "Email" | "Phone";
+  type: FormFieldType;
   label: string;
   required: boolean;
   placeholder?: string;

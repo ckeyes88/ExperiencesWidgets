@@ -54,7 +54,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 }) => {
   //Populate qty selection variants and custom form details on mount of component.
   useEffect(() => {
-    useCustomFormStore((state) => state.setCustomFormValues)(event);
+    useCustomFormStore((state) => state.setCustomFormValues)(event, labels);
     useQtySelectionStore((state) => state.setVariants)(event);
   }, []);
 
@@ -67,8 +67,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   const isSaveContinueDisabled = useOrderDetailsStore(
     (state) => state.isSaveContinueDisabled,
   );
-
-  //Define set page function, with stub if testing.
 
   //Calculate minimum cost of the event.
   const minCost = Math.min(...event.variants.map((variant) => variant.price));
@@ -123,8 +121,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       useQtySelectionStore((state) => state.canConfirmOrder)() &&
       useCustomerFormStore((state) => state.canConfirmOrder)();
 
-    console.log(canConfirm);
-
     return (
       <form className={formClassNames.join(" ")} onSubmit={handleFormSubmit}>
         <div className="OrderDetails__Input__Customer-Form__Title">
@@ -153,24 +149,16 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   const renderCustomOrderDetails = () => {
     const { customOrderDetails } = event;
 
-    //If the custom form is per attendee,
-    //add name/email fields and render attendee-specific
-    //info per form (ex. Attendee 1 of 3)
+    //Render per attendee form.
     if (customOrderDetails.formType === OrderDetailsFormType.PerAttendee) {
-      //Adds first, last, and email to any custom form by default
-      let fields: FormFieldDBO[] = [
-        {
-          type: FormFieldType.Text,
-          label: labels.firstNameLabel,
-          required: true,
-        },
-        {
-          type: FormFieldType.Text,
-          label: labels.lastNameLabel,
-          required: true,
-        },
-        { type: FormFieldType.Email, label: labels.emailLabel, required: true },
-      ].concat(customOrderDetails.fields);
+      let fields: FormFieldDBO[] = useCustomFormStore(
+        (state) => state.customFormValues,
+      ).map((value) => ({
+        label: value.label,
+        required: value.isRequired,
+        type: value.type,
+        value: value.value,
+      }));
 
       //Determine all variants that have been selected in view (where ticket quantity is > 0)
       const selectedVariants = Object.values(variants).filter(
@@ -203,8 +191,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           !field.isRequired || (field.isRequired && field.value !== ""),
       );
 
-      console.log(canConfirm);
-
       //Render the custom form for per attendee,
       //renders on how many tickets are bought
       return (
@@ -225,6 +211,11 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
                 text={labels.confirmReservationButtonLabel}
                 type="submit"
                 disabled={!canConfirm}
+                onClick={() =>
+                  useOrderDetailsStore((state) => state.setPage)(
+                    BookingFormPage.CONFIRMATION,
+                  )
+                }
               />
             </div>
           </form>
@@ -239,8 +230,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         (field) =>
           !field.isRequired || (field.isRequired && field.value !== ""),
       );
-
-      console.log(useCustomFormStore((state) => state.customFormValues));
 
       //Create data structure for per order form.
       const perOrderFormType: PerOrderTypeProps = {
@@ -285,7 +274,8 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   const hasCustomForm =
     event.customOrderDetails.formType !== OrderDetailsFormType.None &&
     event.customOrderDetails.fields &&
-    Array.isArray(event.customOrderDetails.fields);
+    Array.isArray(event.customOrderDetails.fields) &&
+    event.customOrderDetails.fields.length > 0;
 
   //Custom form provided is per attendee.
   const hasPerAttendeeCustomForm =

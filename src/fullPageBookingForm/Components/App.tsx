@@ -13,10 +13,15 @@ import { NumberCarouselVariants } from "./Common/QuantitySelection";
 
 //Use mock data for now.
 import { defaultArgs } from "../__mocks__/Event";
-import { clone } from "ramda";
+import { clone, prepend } from "ramda";
 import { CustomerInputData } from "../../typings/CustomerInput";
 import { FormFieldValueInput } from "../../typings/FormFieldValueInput";
-import { EventDBO } from "../../typings/Event";
+import {
+  EventDBO,
+  FormFieldType,
+  OrderDetailsFormType,
+} from "../../typings/Event";
+import { AppDictionary } from "../../typings/Languages";
 export type AppProps = {
   baseUrl: string;
   languageCode: string;
@@ -121,8 +126,13 @@ export const useCustomerFormStore = create<CustomerFormStore>((set, get) => ({
 }));
 
 export type CustomFormStore = {
-  customFormValues: Array<FormFieldValueInput & { isRequired: boolean }>;
-  setCustomFormValues: (event: EventDBO) => void;
+  customFormValues: Array<
+    FormFieldValueInput & { isRequired: boolean; type: FormFieldType }
+  >;
+  setCustomFormValues: (
+    event: EventDBO,
+    labels: Partial<AppDictionary>,
+  ) => void;
   canConfirmOrder: () => boolean;
   handleCustomFormChange: (fieldLabelIndex: string, fieldValue: string) => void;
   handleRemoveVariant: (variantName: string, variantIdx: number) => void;
@@ -131,13 +141,43 @@ export type CustomFormStore = {
 
 export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
   customFormValues: [],
-  setCustomFormValues: (event: EventDBO) =>
+  setCustomFormValues: (event: EventDBO, labels: Partial<AppDictionary>) =>
     set((_) => {
+      let fields = clone(event.customOrderDetails.fields);
+
+      //If the custom form is per attendee,
+      //add name/email fields and render attendee-specific
+      //info per form (ex. Attendee 1 of 3)
+      if (
+        event.customOrderDetails.formType === OrderDetailsFormType.PerAttendee
+      ) {
+        //Adds first, last, and email to any custom form by default, at the start
+        //of the form.
+        fields.unshift(
+          {
+            type: FormFieldType.Text,
+            label: labels.firstNameLabel,
+            required: true,
+          },
+          {
+            type: FormFieldType.Text,
+            label: labels.lastNameLabel,
+            required: true,
+          },
+          {
+            type: FormFieldType.Email,
+            label: labels.emailLabel,
+            required: true,
+          },
+        );
+      }
+
       return {
-        customFormValues: event.customOrderDetails.fields.map((field) => ({
+        customFormValues: fields.map((field) => ({
           ...field,
           value: field.defaultValue || "",
           isRequired: field.required,
+          type: field.type,
         })),
       };
     }),
@@ -163,6 +203,7 @@ export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
         label,
         value: fieldValue,
         isRequired: newCurrentCustomFormValues[parseInt(index)].isRequired,
+        type: newCurrentCustomFormValues[parseInt(index)].type,
       };
 
       //Set state with the updated value
