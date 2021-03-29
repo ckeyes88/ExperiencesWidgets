@@ -5,7 +5,6 @@ import { h, FunctionComponent, Fragment } from "preact";
 import { Availability } from "../../../../typings/Availability";
 import {
   EventDBO,
-  FormFieldType,
   OrderDetailsFormType,
   PaymentType,
 } from "../../../../typings/Event";
@@ -320,7 +319,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     />
   );
 
-  //Renders confirm button in view.
+  //Renders save button in view.
   const renderSaveButton = (isDisabled: boolean) => (
     <Button
       text={"Save & continue"}
@@ -371,7 +370,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         {/** If no custom form is provided, render confirm button
          * to go to checkout after variants are selected.
          */}
-        {!hasCustomForm && renderConfirmButton(canQtySelectionConfirm)}
+        {!hasCustomForm && renderConfirmButton(!canQtySelectionConfirm)}
         {/** If per order custom form is provided, render it
          * directly beneath quantity selection to go to checkout afterwards.
          */}
@@ -382,7 +381,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
          */}
         {hasPerAttendeeCustomForm &&
           !shouldRenderCustomForm &&
-          renderSaveButton(canQtySelectionConfirm && canCustomerFormConfirm)}
+          renderSaveButton(!canQtySelectionConfirm && !canCustomerFormConfirm)}
         {hasPerAttendeeCustomForm && shouldRenderCustomForm && (
           <Fragment>
             {renderEditButton()}
