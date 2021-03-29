@@ -95,7 +95,6 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
    */
   const renderPerAttendeeForm = (formValues: PerAttendeeTypeProps) => {
     const { fields, variantNames, removeVariant } = formValues;
-    console.log(variantNames);
     return (
       <Fragment>
         {variantNames.map((variantName, idx) => (
