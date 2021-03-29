@@ -18,6 +18,7 @@ export const useAvailabilities = ({
 }) => {
   const { baseUrl, shopUrl, shopifyProductId } = useWidgetData();
 
+  const [isFetchingInitially, setFetchingInitially] = useState(true);
   const [isFetching, setFetching] = useState(false);
   const [fetchedMonths, setFetchedMonths] = useState<{
     [year: number]: number[];
@@ -73,6 +74,8 @@ export const useAvailabilities = ({
       setFetching(false);
 
       addFetchedMonth(month, year);
+
+      setFetchingInitially(false);
     };
 
     fetchAvailabilities();
@@ -80,6 +83,7 @@ export const useAvailabilities = ({
 
   return {
     availabilities,
-    isFetchingAvailabilities: isFetching,
+    isFetchingInitialAvailabilities: isFetchingInitially,
+    isFetchingMoreAvailabilities: isFetching,
   };
 };
