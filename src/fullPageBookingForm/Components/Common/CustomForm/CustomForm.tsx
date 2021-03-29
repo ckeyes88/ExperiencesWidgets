@@ -26,7 +26,7 @@ export type PerAttendeeTypeProps = {
    */
   variantNames: string[];
   /**Callback passed by parent to remove a variant from per attendee list on click. */
-  removeVariant: (variantNumber: number) => void;
+  removeVariant: (variantName: string) => void;
 };
 
 export type CustomFormProps = {
@@ -95,6 +95,7 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
    */
   const renderPerAttendeeForm = (formValues: PerAttendeeTypeProps) => {
     const { fields, variantNames, removeVariant } = formValues;
+    console.log(variantNames);
     return (
       <Fragment>
         {variantNames.map((variantName, idx) => (
@@ -115,7 +116,7 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
                 <button
                   className="CustomForm__Attendee__Remove"
                   onClick={() => {
-                    removeVariant(idx);
+                    removeVariant(variantName);
                   }}
                 >
                   <CloseIcon height={30} color="#888888" />

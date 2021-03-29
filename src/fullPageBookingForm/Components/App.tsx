@@ -38,7 +38,7 @@ export type QuantitySelectionStore = {
   setVariants: (event: EventDBO) => void;
   disableVariants: () => void;
   enableVariants: () => void;
-  handleRemoveVariant: (variantIdx: number) => void;
+  handleRemoveVariant: (variantName: string) => void;
 };
 
 export const useQtySelectionStore = create<QuantitySelectionStore>(
@@ -109,11 +109,11 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
           })),
         };
       }),
-    handleRemoveVariant: (variantIdx) =>
+    handleRemoveVariant: (variantName) =>
       set((state) => {
         return {
-          variants: state.variants.map((variant, idx) => {
-            if (idx === variantIdx) {
+          variants: state.variants.map((variant) => {
+            if (variant.name === variantName) {
               return {
                 ...variant,
                 currentQty: variant.currentQty - 1,
