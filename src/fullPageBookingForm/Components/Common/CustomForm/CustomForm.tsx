@@ -183,7 +183,7 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
   /** Main render method */
   return (
     <div className="CustomForm-Container">
-      {formType.hasOwnProperty("variantNames")
+      {formType.hasOwnProperty("removeVariantModal")
         ? renderPerAttendeeForm(formType as PerAttendeeTypeProps)
         : renderPerOrderForm(formType as PerOrderTypeProps)}
     </div>

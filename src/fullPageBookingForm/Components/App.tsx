@@ -254,18 +254,14 @@ export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
         event.customOrderDetails.formType === OrderDetailsFormType.PerAttendee
       ) {
         //Create form values for each selected variant.
-        const allValues: {
-          name: string;
-          fields: Array<
-            FormFieldValueInput & {
-              isRequired: boolean;
-              type: FormFieldType;
-            }
-          >;
-        }[] = selectedVariants.map((variant) => ({
-          name: variant.name,
-          fields: [...formValues],
-        }));
+        const allValues: CustomFormValue[] = [].concat(
+          ...selectedVariants.map((variant) => {
+            return [...Array(variant.currentQty)].map((_) => ({
+              name: variant.name,
+              fields: [...formValues],
+            }));
+          }),
+        );
 
         return {
           customFormValues: allValues,
