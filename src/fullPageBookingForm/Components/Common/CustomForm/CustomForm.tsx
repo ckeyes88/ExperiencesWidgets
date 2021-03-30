@@ -1,8 +1,8 @@
 /** @jsx h */
 import { h, FunctionComponent, Fragment } from "preact";
 import { Person } from "../../../../SharedComponents/Icons/Person";
-import { FormFieldDBO } from "../../../../types";
 import { AppDictionary } from "../../../../typings/Languages";
+import { CustomFieldType, CustomFormValue } from "../../../Typings/CustomForm";
 import { FormField } from "../FormField";
 import { CloseIcon } from "../Icon/CloseIcon";
 import { Modal } from "../Modal";
@@ -11,7 +11,7 @@ import "./CustomForm.scss";
 
 export type PerOrderTypeProps = {
   /** Array of fields that the form will display */
-  fields: FormFieldDBO[];
+  formValues: CustomFormValue[];
   /** A string to display that descibe the purpose of the form */
   formDescription?: string;
   /** A string to display the title of this form */
@@ -20,18 +20,19 @@ export type PerOrderTypeProps = {
 
 export type PerAttendeeTypeProps = {
   /** Array of fields that the form will display */
-  fields: FormFieldDBO[];
-  /**Name of each variant selected in view, to be separated by header rule.
-   * If multiple of the same variants are selected (e.g. 2x "Parent"),
-   * this array will contain ["Parent", "Parent", etc.]
-   */
-  variantNames: string[];
+  formValues: CustomFormValue[];
   /**Attributes associated with the remove variant modal. */
   removeVariantModal: {
     /**Whether the modal is open. */
     isOpen: boolean;
     /**Setting if the variant modal is open, with the name of variant to be removed. */
-    setIsRemoveVariantModalOpen: (isOpen: boolean, variantName: string) => void;
+    setIsRemoveVariantModalOpen: (
+      isOpen: boolean,
+      variantToRemove: {
+        name: string;
+        idx: number;
+      },
+    ) => void;
     /**Callback passed by parent to remove a variant from per attendee list on click. */
     removeVariant: () => void;
   };
@@ -41,7 +42,7 @@ export type CustomFormProps = {
   /**Type of custom form rendered in checkout flow. */
   formType: PerAttendeeTypeProps | PerOrderTypeProps;
   /** Method passed in to handle changes to the value of a field */
-  handleChange(fieldName: string, value: string): void;
+  handleChange(variantIdx: number, fieldName: string, value: string): void;
   /** Event custom labels set in admin experience interface */
   labels: Partial<AppDictionary>;
 };
@@ -53,7 +54,11 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
   labels,
 }) => {
   /** Renders a single field */
-  const renderFormField = (field: FormFieldDBO, i: number) => {
+  const renderFormField = (
+    field: CustomFieldType,
+    i: number,
+    variantIdx: number,
+  ) => {
     const type =
       field.type === "Select"
         ? {
@@ -62,28 +67,36 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
         : field.type;
 
     //Only supply optional label if field is not required.
-    const optionalLabel = !field.required && labels.optionalFieldLabel;
+    const optionalLabel = !field.isRequired && labels.optionalFieldLabel;
+
+    /**Handles  */
+    const handleIdxChange = (fieldName: string, fieldValue: string) => {
+      handleChange(i, fieldName, fieldValue);
+    };
 
     return (
       <div className="FormField-Container">
         <FormField
           optionalLabel={optionalLabel}
-          key={`${field.label}%%%${i}`}
+          key={`${field.label}%%%${i}%%%${variantIdx}`}
           type={type}
           label={field.label}
           placeholder={field.placeholder}
           defaultValue={field.defaultValue}
           value={field.value}
-          id={`${field.label}%%%${i}`}
-          onFieldChange={handleChange}
+          id={`${field.label}%%%${i}%%%${variantIdx}`}
+          onFieldChange={handleIdxChange}
         />
       </div>
     );
   };
 
   /**Renders each individual field in the form for a per order form. */
-  const renderPerOrderForm = (formValues: PerOrderTypeProps) => {
-    const { formTitle, formDescription, fields } = formValues;
+  const renderPerOrderForm = (form: PerOrderTypeProps) => {
+    const { formTitle, formDescription, formValues } = form;
+    //Per order form only has one set of fields.
+    const fields = formValues[0].fields;
+
     return (
       <Fragment>
         {formTitle && <TextStyle variant="display2" text={"Test"} />}
@@ -92,7 +105,7 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
             <TextStyle variant="body1" text={formDescription} />
           </div>
         )}
-        {fields.map(renderFormField)}
+        {fields.map((field, idx) => renderFormField(field, idx, 0))}
         <div className="CustomForm__Header-Rule" />
       </Fragment>
     );
@@ -101,8 +114,8 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
   /**Renders each individual field in the form, for each
    * individual attendee.
    */
-  const renderPerAttendeeForm = (formValues: PerAttendeeTypeProps) => {
-    const { fields, variantNames, removeVariantModal } = formValues;
+  const renderPerAttendeeForm = (form: PerAttendeeTypeProps) => {
+    const { formValues, removeVariantModal } = form;
 
     return (
       <Fragment>
@@ -114,32 +127,35 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
           You will lose all additional information you have entered.'
           isOpen={removeVariantModal.isOpen}
           onClickCancelButton={() =>
-            removeVariantModal.setIsRemoveVariantModalOpen(false, "")
+            removeVariantModal.setIsRemoveVariantModalOpen(false, {
+              name: "",
+              idx: 0,
+            })
           }
           onClickConfirmButton={removeVariantModal.removeVariant}
         />
-        {variantNames.map((variantName, idx) => (
+        {formValues.map((value, variantIdx) => (
           <div
             className="CustomForm__Attendee"
-            key={`CustomForm_${variantName}_${idx}`}
+            key={`CustomForm_${value.name}_${variantIdx}`}
           >
             <div className="CustomForm__Attendee__Variant">
               <div className="CustomForm__Attendee__Icon">
                 <Person />
               </div>
 
-              <TextStyle variant="display2" text={variantName} />
+              <TextStyle variant="display2" text={value.name} />
               {/**Disable ability to remove variant if this variant
                * is the only selected variant in the form.
                */}
-              {variantNames.length > 1 && (
+              {formValues.length > 1 && (
                 <button
                   className="CustomForm__Attendee__Remove"
                   onClick={() =>
-                    removeVariantModal.setIsRemoveVariantModalOpen(
-                      true,
-                      variantName,
-                    )
+                    removeVariantModal.setIsRemoveVariantModalOpen(true, {
+                      idx: variantIdx,
+                      name: value.name,
+                    })
                   }
                   disabled={removeVariantModal.isOpen}
                 >
@@ -148,7 +164,15 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
               )}
             </div>
 
-            {fields.map(renderFormField)}
+            {/**
+             * We have the fields to be rendered, equal to variant name length *
+             * number of fields per variant name. We select the fields relevant
+             * to each variant name by slicing into the field array with each
+             * variant name.
+             */}
+            {value.fields.map((field, fieldIdx) =>
+              renderFormField(field, fieldIdx, variantIdx),
+            )}
             <div className="CustomForm__Header-Rule" />
           </div>
         ))}

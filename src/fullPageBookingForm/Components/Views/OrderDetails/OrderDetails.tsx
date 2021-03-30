@@ -31,6 +31,7 @@ import {
   useQtySelectionStore,
 } from "../../App";
 import { useCallback, useEffect, useRef } from "preact/hooks";
+import { CustomFormValue } from "../../../Typings/CustomForm";
 
 export type OrderDetailsProps = {
   /** This is the date that the user has selected for the order */
@@ -56,9 +57,8 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     (state) => state.isSaveContinueDisabled,
   );
 
-  //Populate qty selection variants and custom form details on mount of component.
+  //Populate qty selection variants on mount of component.
   useEffect(() => {
-    useCustomFormStore((state) => state.setCustomFormValues)(event, labels);
     useQtySelectionStore((state) => state.setVariants)(event);
   }, []);
 
@@ -158,22 +158,12 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   const renderCustomOrderDetails = () => {
     const { customOrderDetails } = event;
 
+    let formValues: CustomFormValue[] = useCustomFormStore(
+      (state) => state.customFormValues,
+    );
+
     //Render per attendee form.
     if (customOrderDetails.formType === OrderDetailsFormType.PerAttendee) {
-      let fields: FormFieldDBO[] = useCustomFormStore(
-        (state) => state.customFormValues,
-      ).map((value) => ({
-        label: value.label,
-        required: value.isRequired,
-        type: value.type,
-        value: value.value,
-      }));
-
-      //Determine all variants that have been selected in view (where ticket quantity is > 0)
-      const selectedVariants = Object.values(variants).filter(
-        (variant) => variant.currentQty > 0,
-      );
-
       //Handle removal of variant from view.
       const handleRemoveVariant = () => {
         const variantName = useCustomFormStore(
@@ -183,21 +173,17 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         //Remove selected variant from form.
         useQtySelectionStore((state) => state.handleRemoveVariant)(variantName);
         //Close modal.
-        useCustomFormStore((state) => state.setIsModalOpen)(false, "");
+        useCustomFormStore((state) => state.setIsModalOpen)(false, {
+          idx: 0,
+          name: "",
+        });
       };
 
       //Create per attendee form details object, used to populate
       //all fields for a per attendee custom form.
       const perAttendeeFormType: PerAttendeeTypeProps = {
-        //Fields for each variant selected in custom form.
-        fields,
-        //Create 1D string array of variant names, one name
-        //per one quantity selected in view.
-        variantNames: [].concat(
-          ...selectedVariants.map((variant) =>
-            Array(variant.currentQty).fill(variant.name),
-          ),
-        ),
+        //Form values for each variant selected in custom form.
+        formValues,
         //Total fields per variant selected, to be separated by header rule
         //in form.
         removeVariantModal: {
@@ -213,9 +199,11 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       //all required custom form fields.
       const canConfirm = useCustomFormStore(
         (state) => state.customFormValues,
-      ).every(
-        (field) =>
-          !field.isRequired || (field.isRequired && field.value !== ""),
+      ).every((form) =>
+        form.fields.every(
+          (field) =>
+            !field.isRequired || (field.isRequired && field.value !== ""),
+        ),
       );
 
       //Render the custom form for per attendee,
@@ -242,14 +230,16 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       //all required custom form fields.
       const canConfirm = useCustomFormStore(
         (state) => state.customFormValues,
-      ).every(
-        (field) =>
-          !field.isRequired || (field.isRequired && field.value !== ""),
+      ).every((form) =>
+        form.fields.every(
+          (field) =>
+            !field.isRequired || (field.isRequired && field.value !== ""),
+        ),
       );
 
       //Create data structure for per order form.
       const perOrderFormType: PerOrderTypeProps = {
-        fields: customOrderDetails.fields,
+        formValues,
         formDescription: customOrderDetails.formDescription,
         formTitle: customOrderDetails.formTitle,
       };
@@ -334,6 +324,17 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       useOrderDetailsStore((state) => state.setIsSaveContinueDisabled)(true);
       useOrderDetailsStore((state) => state.setSaveButtonVisibility)("hidden");
       useQtySelectionStore((state) => state.disableVariants)();
+
+      //Grab selected variants to render custom forms.
+      const selectedVariants = useQtySelectionStore(
+        (state) => state.variants,
+      ).filter((variant) => variant.currentQty > 0);
+
+      useCustomFormStore((state) => state.setCustomFormValues)(
+        event,
+        labels,
+        selectedVariants,
+      );
     };
 
     return (

@@ -22,6 +22,7 @@ import {
   OrderDetailsFormType,
 } from "../../typings/Event";
 import { AppDictionary } from "../../typings/Languages";
+import { CustomFormValue } from "../Typings/CustomForm";
 export type AppProps = {
   baseUrl: string;
   languageCode: string;
@@ -164,33 +165,51 @@ export const useCustomerFormStore = create<CustomerFormStore>((set, get) => ({
 }));
 
 export type CustomFormStore = {
-  customFormValues: Array<
-    FormFieldValueInput & { isRequired: boolean; type: FormFieldType }
-  >;
+  customFormValues: CustomFormValue[];
   setCustomFormValues: (
     event: EventDBO,
     labels: Partial<AppDictionary>,
+    variants: NumberCarouselVariants,
   ) => void;
   canConfirmOrder: () => boolean;
-  handleCustomFormChange: (fieldLabelIndex: string, fieldValue: string) => void;
+  handleCustomFormChange: (
+    variantIdx: number,
+    fieldLabelIndex: string,
+    fieldValue: string,
+  ) => void;
   onConfirmOrder: () => void;
   isModalOpen: boolean;
   removeVariantName: string;
-  setIsModalOpen: (isOpen: boolean, variantName: string) => void;
+  removeVariantIdx: number;
+  setIsModalOpen: (
+    isOpen: boolean,
+    variantToRemove: { name: string; idx: number },
+  ) => void;
+  removeVariant: () => void;
 };
 
 export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
   customFormValues: [],
   isModalOpen: false,
   removeVariantName: "",
-  setIsModalOpen: (isOpen: boolean, variantName: string) =>
+  removeVariantIdx: 0,
+  setIsModalOpen: (
+    isOpen: boolean,
+    variantToRemove: { name: string; idx: number },
+  ) =>
     set((_) => {
       return {
         isModalOpen: isOpen,
-        removeVariantName: variantName,
+        removeVariantName: variantToRemove.name,
+        removeVariantIdx: variantToRemove.idx,
       };
     }),
-  setCustomFormValues: (event: EventDBO, labels: Partial<AppDictionary>) =>
+  removeVariant: () => set((state) => {}),
+  setCustomFormValues: (
+    event: EventDBO,
+    labels: Partial<AppDictionary>,
+    selectedVariants: NumberCarouselVariants,
+  ) =>
     set((_) => {
       let fields = clone(event.customOrderDetails.fields);
 
@@ -221,21 +240,57 @@ export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
         );
       }
 
+      const formValues = fields.map((field) => ({
+        ...field,
+        value: field.defaultValue || "",
+        isRequired: field.required,
+        type: field.type,
+        defaultValue: field.defaultValue,
+        options: field.options,
+        placeholder: field.placeholder,
+      }));
+
+      if (
+        event.customOrderDetails.formType === OrderDetailsFormType.PerAttendee
+      ) {
+        //Create form values for each selected variant.
+        const allValues: {
+          name: string;
+          fields: Array<
+            FormFieldValueInput & {
+              isRequired: boolean;
+              type: FormFieldType;
+            }
+          >;
+        }[] = selectedVariants.map((variant) => ({
+          name: variant.name,
+          fields: [...formValues],
+        }));
+
+        return {
+          customFormValues: allValues,
+        };
+      }
+
       return {
-        customFormValues: fields.map((field) => ({
-          ...field,
-          value: field.defaultValue || "",
-          isRequired: field.required,
-          type: field.type,
-        })),
+        customFormValues: [{ name: "PerOrderForm", fields: formValues }],
       };
     }),
   canConfirmOrder: () => {
-    const values = get().customFormValues;
+    const variants = get().customFormValues;
 
-    return values.every((value) => value.value !== "");
+    return variants.every((variant) =>
+      variant.fields.every(
+        (field) =>
+          !field.isRequired || (field.isRequired && field.value !== ""),
+      ),
+    );
   },
-  handleCustomFormChange: (fieldLabelIndex: string, fieldValue: string) =>
+  handleCustomFormChange: (
+    variantIdx,
+    fieldLabelIndex: string,
+    fieldValue: string,
+  ) =>
     set((state) => {
       //fieldLabelIndex is the field label/name and its index position joined by a hyphen
       //Split the values apart here
@@ -243,16 +298,16 @@ export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
       const [label, index] = fieldLabelIndex.split("%%%");
 
       //Create a new custom form value of type FormFieldValueInput
-      const oldVal = state.customFormValues[parseInt(index)] || {};
+      const oldVal = state.customFormValues[variantIdx].fields[parseInt(index)];
 
       let newCurrentCustomFormValues = clone(state.customFormValues);
       //Index into the form values array using the index from the field ID
-      newCurrentCustomFormValues[parseInt(index)] = {
+      newCurrentCustomFormValues[variantIdx].fields[parseInt(index)] = {
         ...oldVal,
         label,
         value: fieldValue,
-        isRequired: newCurrentCustomFormValues[parseInt(index)].isRequired,
-        type: newCurrentCustomFormValues[parseInt(index)].type,
+        isRequired: oldVal.isRequired,
+        type: oldVal.type,
       };
 
       //Set state with the updated value
