@@ -1,3 +1,5 @@
+@import "../../../base.scss";
+
 .FullPage__Modal {
   display: flex;
   flex-direction: column;
@@ -47,4 +49,41 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+}
+
+@media only screen and (max-width: $full-page-single-column-breakpoint) {
+  .FullPage__Modal {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media only screen and (max-width: 920px) {
+  .FullPage__Modal__Buttons {
+    justify-content: flex-start;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .FullPage__Modal__Title-Row > * {
+    font-size: 16px;
+  }
+
+  .FullPage__Modal {
+    max-width: 100%;
+    margin-right: 20px;
+  }
+  .FullPage__Modal__Content {
+    max-width: 100%;
+  }
+
+  .FullPage__Modal__Content > * {
+    font-size: 14px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .FullPage__Modal__Buttons > * {
+    padding: 6px 32px;
+  }
 }
