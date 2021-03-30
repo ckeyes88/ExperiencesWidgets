@@ -55,10 +55,6 @@ $left-column-width: 427px;
   margin: 0 8px;
 }
 
-.OrderDetails__Input__Customer-Form {
-  margin-top: 42px;
-}
-
 .OrderDetails__Input__Customer-Form--disabled {
   opacity: 0.5;
 }
@@ -69,6 +65,10 @@ $left-column-width: 427px;
 
 .OrderDetails__Input__Customer-Form__Title {
   padding-bottom: 31px;
+}
+
+.OrderDetails__Input__Quantity-Selection {
+  margin-bottom: 42px;
 }
 
 .OrderDetails__Button {
