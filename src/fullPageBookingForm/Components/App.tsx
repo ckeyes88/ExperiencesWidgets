@@ -31,14 +31,23 @@ export type AppProps = {
 };
 
 export type QuantitySelectionStore = {
+  /**Update variant count on decrease click. */
   onDecreaseClick: (variantIdx: number) => void;
+  /**Update variant count on increase click. */
   onIncreaseClick: (variantIdx: number) => void;
+  /**Update quantity on change of input field. */
   onChange: (variantIdx: number, variantQty: string) => void;
+  /**Whether the customer can confirm their order per store. */
   canConfirmOrder: () => boolean;
+  /**Variants in the store. */
   variants: NumberCarouselVariants;
+  /**Populate initial variants of store based upon event. */
   setVariants: (event: EventDBO) => void;
+  /**Disables the variants from being edited in view. */
   disableVariants: () => void;
+  /**Enables all variants for edit in view. */
   enableVariants: () => void;
+  /**Handles the removal of a variant when filling out custom per attendee form. */
   handleRemoveVariant: (variantName: string) => void;
 };
 
@@ -131,9 +140,13 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
 );
 
 export type CustomerFormStore = {
+  /**Customer data in store. */
   customerData: CustomerInputData;
+  /**Whether the customer can confirm order per customer form store. */
   canConfirmOrder: () => boolean;
+  /**Callback to handle changes to customer form. */
   handleCustomerFormChange: (fieldName: string, fieldValue: string) => void;
+  /**Updates customer data on change of form data. */
   onAddCustomerInfo: () => void;
 };
 
@@ -165,26 +178,38 @@ export const useCustomerFormStore = create<CustomerFormStore>((set, get) => ({
 }));
 
 export type CustomFormStore = {
+  /**Values of custom form. */
   customFormValues: CustomFormValue[];
+  /**Sets the initial custom form values based upon the event and the
+   * selected variants in the view.
+   */
   setCustomFormValues: (
     event: EventDBO,
     labels: Partial<AppDictionary>,
     variants: NumberCarouselVariants,
   ) => void;
+  /**Whether the customer can confirm the order based upon the custom form store. */
   canConfirmOrder: () => boolean;
+  /**Handles the changing of a custom form. */
   handleCustomFormChange: (
     variantIdx: number,
     fieldLabelIndex: string,
     fieldValue: string,
   ) => void;
+  /**Callback for handling data after confirmation of order. */
   onConfirmOrder: () => void;
+  /**Whether the modal is open for removing a variant in a per attendee custom form. */
   isModalOpen: boolean;
+  /**Variant name to be removed in per attendee custom form. */
   removeVariantName: string;
+  /**Index of variant to be removed, relative to the customFormValues array. */
   removeVariantIdx: number;
+  /**Sets the removal modal open in a per attendee custom form. */
   setIsModalOpen: (
     isOpen: boolean,
     variantToRemove: { name: string; idx: number },
   ) => void;
+  /**Removes a variant in the custom form store. */
   removeVariant: () => void;
 };
 
@@ -322,15 +347,23 @@ export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
 }));
 
 export type OrderDetailsStore = {
+  /**Callback for clicking back in order details view. */
   onClickBack: () => void;
+  /**Callback for closing wizard modal in view. */
   closeModal: () => void;
+  /**Current visibility of the Save & continue button in view. */
   saveButtonVisibility: "visible" | "hidden" | "disabled";
+  /**Sets visibility of save and continue button in view. */
   setSaveButtonVisibility: (
     buttonVisibility: "visible" | "hidden" | "disabled",
   ) => void;
+  /**Whether this component is being tested in storybook. */
   isStorybookTest: boolean;
+  /**Whether the save and continue button is disabled in view. */
   isSaveContinueDisabled: boolean;
+  /**Sets the save and continue button to be disabled or not in view. */
   setIsSaveContinueDisabled: (isDisabled: boolean) => void;
+  /**Sets current page in wizard modal. */
   setPage: (page: number) => void;
 };
 
