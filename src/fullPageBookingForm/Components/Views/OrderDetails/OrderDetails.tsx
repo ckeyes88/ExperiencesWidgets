@@ -1,7 +1,7 @@
 /** @jsx h */
 import { parseISO } from "date-fns/fp";
 import { format } from "date-fns";
-import { h, FunctionComponent, Fragment } from "preact";
+import { h, FunctionComponent, Fragment, createRef } from "preact";
 import { Availability } from "../../../../typings/Availability";
 import {
   EventDBO,
@@ -30,7 +30,7 @@ import {
   useOrderDetailsStore,
   useQtySelectionStore,
 } from "../../App";
-import { useEffect } from "preact/hooks";
+import { useCallback, useEffect, useRef } from "preact/hooks";
 
 export type OrderDetailsProps = {
   /** This is the date that the user has selected for the order */
@@ -51,19 +51,31 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   selectedDate,
   labels,
 }) => {
+  //Whether the save and continue button should be disabled.
+  const isSaveContinueDisabled = useOrderDetailsStore(
+    (state) => state.isSaveContinueDisabled,
+  );
+
   //Populate qty selection variants and custom form details on mount of component.
   useEffect(() => {
     useCustomFormStore((state) => state.setCustomFormValues)(event, labels);
     useQtySelectionStore((state) => state.setVariants)(event);
   }, []);
 
+  //Create callback for scrolling to edit button when created in view.
+  const setEditRef = useCallback((element: HTMLDivElement) => {
+    const editRef = useRef(element);
+
+    if (editRef.current) {
+      window.scrollTo({
+        behavior: "smooth",
+        top: editRef.current.offsetTop,
+      });
+    }
+  }, []);
+
   //Get variants associated with event
   const variants = useQtySelectionStore((state) => state.variants);
-
-  //Whether the save and continue button should be disabled.
-  const isSaveContinueDisabled = useOrderDetailsStore(
-    (state) => state.isSaveContinueDisabled,
-  );
 
   //Calculate minimum cost of the event.
   const minCost = Math.min(...event.variants.map((variant) => variant.price));
@@ -344,7 +356,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       useQtySelectionStore((state) => state.enableVariants)();
     };
     return (
-      <div className="OrderDetails__Button">
+      <div className="OrderDetails__Button" ref={setEditRef}>
         <Button
           text="Edit"
           variant="outlined"
