@@ -88,6 +88,45 @@ $left-column-width: 427px;
 .OrderDetails__Overview {
   margin-top: 44px;
   margin-right: 75px;
+  animation: fade ease 1s;
+  -webkit-animation: fade ease 1s;
+  -moz-animation: fade ease 1s;
+  -ms-animation: fade ease 1s;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-moz-keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@-ms-keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .OrderDetails__Overview__Values {
