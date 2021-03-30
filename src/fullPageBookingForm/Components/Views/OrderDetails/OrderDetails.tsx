@@ -1,7 +1,7 @@
 /** @jsx h */
 import { parseISO } from "date-fns/fp";
 import { format } from "date-fns";
-import { h, FunctionComponent, Fragment, createRef } from "preact";
+import { h, FunctionComponent, Fragment } from "preact";
 import { Availability } from "../../../../typings/Availability";
 import {
   EventDBO,
@@ -23,7 +23,6 @@ import {
   PerAttendeeTypeProps,
   PerOrderTypeProps,
 } from "../../Common/CustomForm";
-import { FormFieldDBO } from "../../../../types";
 import {
   useCustomerFormStore,
   useCustomFormStore,
@@ -86,6 +85,54 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     const onConfirmOrder = useCustomFormStore((state) => state.onConfirmOrder);
     onConfirmOrder();
   };
+
+  //Whether the merchant has provided a custom form for this experience.
+  const hasCustomForm =
+    event.customOrderDetails.formType !== OrderDetailsFormType.None &&
+    event.customOrderDetails.fields &&
+    Array.isArray(event.customOrderDetails.fields) &&
+    event.customOrderDetails.fields.length > 0;
+
+  //Custom form provided is per attendee.
+  const hasPerAttendeeCustomForm =
+    hasCustomForm &&
+    event.customOrderDetails.formType === OrderDetailsFormType.PerAttendee;
+
+  //Custom form provided is per order.
+  const hasPerOrderCustomForm =
+    hasCustomForm &&
+    event.customOrderDetails.formType === OrderDetailsFormType.PerOrder;
+
+  //Whether a custom form should be rendered in the view.
+  const shouldRenderCustomForm = isSaveContinueDisabled && hasCustomForm;
+
+  //Calculate current total of order.
+  const variantTotal = Object.values(variants)
+    .filter((variant) => variant.currentQty > 0)
+    .map((variant) => variant.price * variant.currentQty)
+    .reduce((total, value) => total + value, 0);
+
+  //Populates custom form variants in store.
+  const populateCustomFormVariants = () => {
+    //Grab selected variants to render custom forms.
+    const selectedVariants = useQtySelectionStore(
+      (state) => state.variants,
+    ).filter((variant) => variant.currentQty > 0);
+
+    useCustomFormStore((state) => state.setCustomFormValues)(
+      event,
+      labels,
+      selectedVariants,
+    );
+  };
+
+  //On mount, check if we are in a prepay event, with a per order custom form.
+  //If so, populate the custom form store with variants to show in view immediately.
+  useEffect(() => {
+    if (event.paymentType === PaymentType.Prepay && hasPerOrderCustomForm) {
+      populateCustomFormVariants();
+    }
+  }, []);
 
   /*
    * If required by event type, render customer form.
@@ -267,32 +314,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     }
   };
 
-  //Whether the merchant has provided a custom form for this experience.
-  const hasCustomForm =
-    event.customOrderDetails.formType !== OrderDetailsFormType.None &&
-    event.customOrderDetails.fields &&
-    Array.isArray(event.customOrderDetails.fields) &&
-    event.customOrderDetails.fields.length > 0;
-
-  //Custom form provided is per attendee.
-  const hasPerAttendeeCustomForm =
-    hasCustomForm &&
-    event.customOrderDetails.formType === OrderDetailsFormType.PerAttendee;
-
-  //Custom form provided is per order.
-  const hasPerOrderCustomForm =
-    hasCustomForm &&
-    event.customOrderDetails.formType === OrderDetailsFormType.PerOrder;
-
-  //Whether a custom form should be rendered in the view.
-  const shouldRenderCustomForm = isSaveContinueDisabled && hasCustomForm;
-
-  //Calculate current total of order.
-  const variantTotal = Object.values(variants)
-    .filter((variant) => variant.currentQty > 0)
-    .map((variant) => variant.price * variant.currentQty)
-    .reduce((total, value) => total + value, 0);
-
   /**Renders the quantity selection component in the view. */
   const renderQtySelection = () => (
     <div className="OrderDetails__Input__Quantity-Selection">
@@ -326,17 +347,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       useOrderDetailsStore((state) => state.setIsSaveContinueDisabled)(true);
       useOrderDetailsStore((state) => state.setSaveButtonVisibility)("hidden");
       useQtySelectionStore((state) => state.disableVariants)();
-
-      //Grab selected variants to render custom forms.
-      const selectedVariants = useQtySelectionStore(
-        (state) => state.variants,
-      ).filter((variant) => variant.currentQty > 0);
-
-      useCustomFormStore((state) => state.setCustomFormValues)(
-        event,
-        labels,
-        selectedVariants,
-      );
+      populateCustomFormVariants();
     };
 
     return (
@@ -407,7 +418,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       </Fragment>
     );
   };
-  //Renders pre-pay flow.
+  //Renders non-pre-pay flow.
   const renderNonPrePayFlow = () => {
     return (
       <Fragment>

@@ -214,7 +214,7 @@ export type CustomFormStore = {
 };
 
 export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
-  customFormValues: [],
+  customFormValues: [{ name: "", fields: [] }],
   isModalOpen: false,
   removeVariantName: "",
   removeVariantIdx: 0,
