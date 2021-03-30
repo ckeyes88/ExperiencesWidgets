@@ -69,9 +69,9 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
     //Only supply optional label if field is not required.
     const optionalLabel = !field.isRequired && labels.optionalFieldLabel;
 
-    /**Handles  */
+    /**Handles changes to form fields per variant IDX in parent.*/
     const handleIdxChange = (fieldName: string, fieldValue: string) => {
-      handleChange(i, fieldName, fieldValue);
+      handleChange(variantIdx, fieldName, fieldValue);
     };
 
     return (
