@@ -204,7 +204,14 @@ export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
         removeVariantIdx: variantToRemove.idx,
       };
     }),
-  removeVariant: () => set((state) => {}),
+  removeVariant: () =>
+    set((state) => {
+      return {
+        customFormValues: state.customFormValues.filter(
+          (_, idx) => idx !== state.removeVariantIdx,
+        ),
+      };
+    }),
   setCustomFormValues: (
     event: EventDBO,
     labels: Partial<AppDictionary>,

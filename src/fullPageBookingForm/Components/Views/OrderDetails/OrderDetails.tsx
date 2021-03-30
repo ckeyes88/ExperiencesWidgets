@@ -170,8 +170,10 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           (state) => state.removeVariantName,
         );
 
-        //Remove selected variant from form.
+        //Remove selected variant from quantity selection store.
         useQtySelectionStore((state) => state.handleRemoveVariant)(variantName);
+        //Remove variant from custom form store.
+        useCustomFormStore((state) => state.removeVariant)();
         //Close modal.
         useCustomFormStore((state) => state.setIsModalOpen)(false, {
           idx: 0,
