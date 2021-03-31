@@ -1,6 +1,4 @@
 /** @jsx h */
-import { parseISO } from "date-fns/fp";
-import { format } from "date-fns";
 import { h, FunctionComponent, Fragment } from "preact";
 import { Availability } from "../../../../typings/Availability";
 import {
@@ -52,9 +50,11 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     (state) => state.isSaveContinueDisabled,
   );
 
+  console.log(event);
+
   //Populate qty selection variants on mount of component.
   useEffect(() => {
-    useQtySelectionStore((state) => state.setVariants)(event);
+    useQtySelectionStore((state) => state.setVariants)(event, selectedTimeslot);
   }, []);
 
   //Create callback for scrolling to edit button when created in view.
