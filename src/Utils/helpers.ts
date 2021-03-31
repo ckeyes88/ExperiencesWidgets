@@ -362,7 +362,7 @@ export const resolveImageUrl = (baseUrl: string, images: EventAssetLinkDBO[] = [
 /*
   Finds cheapest variant price from an array of EventVariantDBO
  */
-export const findCheapestVariantPrice = (variants: EventVariantDBO[] = []): [string, number] => {
+export const findCheapestVariantPrice = (moneyFormat: string, variants: EventVariantDBO[] = []): [string, number] => {
   let result: [string, number];
 
   if (!variants.length) {
@@ -371,7 +371,7 @@ export const findCheapestVariantPrice = (variants: EventVariantDBO[] = []): [str
 
   const prices = variants.map(v => v.price);
   const price = Math.min(...prices);
-  const priceStr = variants.length > 1 ? `Starts at $${price}` : `$${price}`;
+  const priceStr = variants.length > 1 ? `Starts at ${formatCurrency(moneyFormat, price)}` : `${formatCurrency(moneyFormat, price)}`;
   result = [priceStr, price];
   return result;
 };
@@ -389,7 +389,7 @@ export const makeid = (length: number = 10): string => {
 /*
  Takes events response and extracts available timeslots to display on FullCalendar
  */
-export const extractAndParseEvents = (events: EventAvailability[], storeUrl: string, baseUrl: string): {
+export const extractAndParseEvents = (events: EventAvailability[], storeUrl: string, baseUrl: string, moneyFormat: string): {
   calendarEvents: CalendarEvent[];
   fullCalendarEvents: FullCalendarEvent[];
 } => {
@@ -413,7 +413,7 @@ export const extractAndParseEvents = (events: EventAvailability[], storeUrl: str
             customUrl: pastEvent ? "#" : `https://${storeUrl}/products/${e.handle}?select=${startAtLocationTZ.unix()}`,
             imageUrl: resolveImageUrl(baseUrl, e.images, e.imageLinks),
             paymentType: e.paymentType,
-            price: findCheapestVariantPrice(e.variants),
+            price: findCheapestVariantPrice(moneyFormat, e.variants),
             editable: false,
             startEditable: false,
             durationEditable: false,
