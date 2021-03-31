@@ -7,7 +7,7 @@ export type ButtonProps = {
   variant?: "contained" | "outlined" | "text";
   fullWidth?: boolean;
   disabled?: boolean;
-  text: string;
+  text: string | JSX.Element;
   onClick?: () => void;
   type?: "button" | "submit";
 };

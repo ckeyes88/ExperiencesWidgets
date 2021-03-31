@@ -10,6 +10,8 @@ import {
 } from "../../../../typings/Event";
 import { AppDictionary } from "../../../../typings/Languages";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
+import { useEventStore } from "../../../Hooks/useEventStore";
+import { useTimeslotStore } from "../../../Hooks/useTimeslotStore";
 import { Button } from "../../Common/Button";
 import {
   CustomerInfoForm,
@@ -51,6 +53,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   selectedDate,
   labels,
 }) => {
+  const eventStub = useEventStore((state) => state.event);
+  const timeslot = useTimeslotStore((state) => state.selectedTimeslot);
+
   //Whether the save and continue button should be disabled.
   const isSaveContinueDisabled = useOrderDetailsStore(
     (state) => state.isSaveContinueDisabled,

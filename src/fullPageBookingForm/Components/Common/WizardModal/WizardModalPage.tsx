@@ -37,6 +37,7 @@ export const WizardModalPage: FunctionComponent<WizardModalPageProps> = ({
           <CloseIcon color="#666" width={32} height={32} strokeSize={2} />
         </div>
       )}
+      <div className="wizard-modal__title-bar" />
       <div className="wizard-modal__body">{children}</div>
     </Fragment>
   );
