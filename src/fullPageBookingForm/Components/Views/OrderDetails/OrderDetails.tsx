@@ -50,8 +50,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     (state) => state.isSaveContinueDisabled,
   );
 
-  console.log(event);
-
   //Populate qty selection variants on mount of component.
   useEffect(() => {
     useQtySelectionStore((state) => state.setVariants)(event, selectedTimeslot);

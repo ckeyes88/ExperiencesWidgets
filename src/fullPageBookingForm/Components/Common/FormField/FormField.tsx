@@ -77,6 +77,7 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
           onChange={handleChange}
           value={value}
           className="FullPage__FormField__Select"
+          required={optionalLabel === ""}
         >
           {typeof type !== "string" && type.options.map(renderOption)}
         </select>
@@ -101,7 +102,7 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
         </label>
         <input
           className="FullPage__FormField__Input"
-          required={optionalLabel && true}
+          required={optionalLabel === ""}
           placeholder={placeholder}
           onChange={handleChange}
           id={id}
