@@ -8,12 +8,10 @@ import {
   defaultPerOrderCustomerDetails,
   defaultPerAttendeeCustomerDetails,
 } from "../../../__mocks__/Event";
-import {
-  useCustomerFormStore,
-  useCustomFormStore,
-  useOrderDetailsStore,
-  useQtySelectionStore,
-} from "../../App";
+import { useCustomerFormStore } from "../../../Hooks/useCustomerFormStore";
+import { useCustomFormStore } from "../../../Hooks/useCustomFormStore";
+import { useOrderDetailsStore } from "../../../Hooks/useOrderDetailsStore";
+import { useQtySelectionStore } from "../../../Hooks/useQtySelectionStore";
 
 export default {
   title: "Full Page Booking Form/Views/Order Details",
