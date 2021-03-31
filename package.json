@@ -62,7 +62,8 @@
     "react-async": "^10.0.1",
     "rollup-plugin-json": "^4.0.0",
     "shopify-buy": "^2.8.1",
-    "ts-polyfill": "^3.8.2"
+    "ts-polyfill": "^3.8.2",
+    "zustand": "^3.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.13.8",
