@@ -43,9 +43,14 @@ export const TimeslotSelection: FunctionComponent = () => {
   });
 
   useEffect(() => {
-    if (Object.keys(timeslotsByDay)[0]) {
-      setCurrentDate(new Date(Object.keys(timeslotsByDay)[0]));
+    if (!Object.keys(timeslotsByDay)[0]) {
+      return;
     }
+
+    const newDate = new Date(Object.keys(timeslotsByDay)[0]);
+    setCurrentMonth(newDate.getMonth());
+    setCurrentYear(newDate.getFullYear());
+    setCurrentDate(newDate);
   }, [Object.keys(timeslotsByDay)[0]]);
 
   const handleTimeslotSelect = (timeslot: Availability) => {
@@ -85,6 +90,8 @@ export const TimeslotSelection: FunctionComponent = () => {
   const calendar = (
     <Calendar
       date={currentDate}
+      month={currentMonth}
+      year={currentYear}
       dateIsDisabled={dateIsDisabled}
       loading={isFetchingInitialAvailabilities || isFetchingMoreAvailabilities}
       onDateChange={handleDateChange}
