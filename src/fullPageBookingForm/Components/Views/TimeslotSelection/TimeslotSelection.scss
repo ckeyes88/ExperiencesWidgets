@@ -1,26 +1,23 @@
-$timeslot-list-margin: 235px;
-
 .timeslot-selection {
   display: flex;
   justify-content: space-between;
-  margin-top: 83px;
+  position: relative;
 }
 
 .timeslot-selection__calendar {
   width: 350px;
-}
+  position: fixed;
 
-.timeslot-selection__timeslot-list__margin {
-  height: $timeslot-list-margin;
+  .calendar {
+    margin-top: 50px;
+  }
 }
 
 .timeslot-selection__timeslot-list {
-  max-width: 460px;
+  width: 460px;
   flex: 1;
-  position: relative;
-  top: -$timeslot-list-margin;
-  overflow-y: scroll;
-  height: 100vh;
+  position: absolute;
+  right: 0;
   padding: 0 10px;
 
   &::-webkit-scrollbar {
@@ -56,11 +53,12 @@ $timeslot-list-margin: 235px;
 
   .timeslot-selection {
     flex-direction: column;
-    margin-top: 0;
+    margin-top: 20px;
   }
 
   .timeslot-selection__timeslot-list {
     max-width: none;
+    width: 100%;
     position: static;
     overflow-y: unset;
     padding: 0;

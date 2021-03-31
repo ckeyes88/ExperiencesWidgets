@@ -167,13 +167,15 @@ export const TimeslotSelection: FunctionComponent = () => {
         </div>
       ) : (
         <Fragment>
-          <EventTitle
-            inlineWithThumbnail
-            title={event.name}
-            thumbnailSrc={event.featuredImageUrl}
-          />
           <div className="timeslot-selection">
-            <div className="timeslot-selection__calendar">{calendar}</div>
+            <div className="timeslot-selection__calendar">
+              <EventTitle
+                inlineWithThumbnail
+                title={event.name}
+                thumbnailSrc={event.featuredImageUrl}
+              />
+              {calendar}
+            </div>
             <BottomDrawer
               open={calendarDrawerOpen}
               onClose={handleCalendarDrawerToggle}
@@ -184,7 +186,6 @@ export const TimeslotSelection: FunctionComponent = () => {
               className="timeslot-selection__timeslot-list"
               ref={timeslotListContainer}
             >
-              <div className="timeslot-selection__timeslot-list__margin" />
               {isFetchingInitialAvailabilities ? (
                 <Fragment>
                   <TimeslotGroupSkeleton length={4} />
