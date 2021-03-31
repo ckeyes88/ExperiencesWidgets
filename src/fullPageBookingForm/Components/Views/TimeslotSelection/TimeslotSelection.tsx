@@ -5,6 +5,7 @@ import moment from "moment";
 import { Availability } from "../../../../typings/Availability";
 import { getTimeslotsByDate } from "../../../../Utils/helpers";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
+import { useTimeslotStore } from "../../../Hooks/useTimeslotStore";
 import { Calendar } from "../../Common/Calendar";
 import { BottomDrawer } from "../../Common/BottomDrawer";
 import { TextStyle } from "../../Common/TextStyle";
@@ -20,6 +21,9 @@ import { useAvailabilities } from "./useAvailabilities";
 import "./TimeslotSelection.scss";
 
 export const TimeslotSelection: FunctionComponent = () => {
+  const setSelectedTimeslot = useTimeslotStore(
+    (state) => state.setSelectedTimeslot,
+  );
   const { setPage, close } = useWizardModalAction();
   const timeslotListContainer = useRef<HTMLDivElement>();
   const [calendarDrawerOpen, setCalendarOpen] = useState(false);
@@ -45,7 +49,7 @@ export const TimeslotSelection: FunctionComponent = () => {
   }, [Object.keys(timeslotsByDay)[0]]);
 
   const handleTimeslotSelect = (timeslot: Availability) => {
-    alert(JSON.stringify(timeslot, null, 2));
+    setSelectedTimeslot(timeslot);
     setPage(BookingFormPage.ORDER_DETAILS);
   };
 
