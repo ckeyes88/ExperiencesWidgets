@@ -8,7 +8,9 @@
 }
 
 .quantity-selection__table-cell {
-  padding-bottom: 34px;
+  display: grid;
+  grid-template-columns: 30% 30% 40%;
+  align-items: center;
 }
 
 .quantity-selection__table {
@@ -28,6 +30,11 @@
 }
 
 .quantity-selection__total {
+  display: grid;
+  grid-template-columns: 30% 30% 40%;
+  margin-top: 34px;
+}
+.quantity-selection__total__value {
   text-align: center;
 }
 

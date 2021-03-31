@@ -1,5 +1,6 @@
 /** @jsx h */
-import { h, FunctionComponent } from "preact";
+
+import { h, FunctionComponent, Fragment } from "preact";
 import { NumberCarousel, NumberCarouselProps } from "../Input/NumberCarousel";
 import { TextStyle } from "../TextStyle";
 import "./QuantitySelection.scss";
@@ -50,22 +51,13 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
   return (
     <div className={classNames.join(" ")}>
       <TextStyle variant="display2" text="Quantity" />
-      <table className="quantity-selection__table">
-        <colgroup>
-          <col span={1} style="width: 30%" />
-          <col span={1} style="width: 30%" />
-          <col span={1} style="width: 40%" />
-        </colgroup>
-        <tbody>
-          {Object.values(variants).map((variant, idx) => (
-            <tr key={`QuantitySelection-Table-Row-${idx}`}>
-              <td className="quantity-selection__table-cell">
-                <TextStyle variant="body1" text={variant.name} />
-              </td>
-              <td className="quantity-selection__table-cell">
-                <TextStyle variant="body1" text={`$${variant.price}`} />
-              </td>
-              <td className="quantity-selection__table-cell quantity-selection__table-cell__input">
+      <div className="quantity-selection__table">
+        {Object.values(variants).map((variant, idx) => (
+          <Fragment key={`QuantitySelection-Table-Row-${idx}`}>
+            <div className="quantity-selection__table-cell">
+              <TextStyle variant="body1" text={variant.name} />
+              <TextStyle variant="body1" text={`$${variant.price}`} />
+              <div className="quantity-selection__table-cell__input">
                 <NumberCarousel
                   name={variant.name}
                   onDecreaseClick={() => onDecreaseClick(idx)}
@@ -75,20 +67,18 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
                   onChange={(value) => onChange(idx, value)}
                   isDisabled={variant.isDisabled}
                 />
-              </td>
-            </tr>
-          ))}
-          <tr>
-            <td>
-              <TextStyle variant="body2" text="Total" />
-            </td>
-            <td />
-            <td className="quantity-selection__total">
-              <TextStyle variant="body2" text={`$${total}`} />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              </div>
+            </div>
+          </Fragment>
+        ))}
+        <div className="quantity-selection__total">
+          <TextStyle variant="body2" text="Total" />
+          <div />
+          <div className="quantity-selection__total__value">
+            <TextStyle variant="body2" text={`$${total}`} />
+          </div>
+        </div>
+      </div>
       <div className="quantity-selection__header-rule" />
     </div>
   );
