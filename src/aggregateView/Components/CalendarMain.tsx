@@ -3,7 +3,7 @@ import { addDays, isAfter, subDays } from "date-fns/fp";
 import { format } from "date-fns";
 import { Component, createRef, h } from "preact";
 import { CalendarViewSelector } from "../../SharedComponents/Calendar/CalendarViewSelector";
-import { fetchProductsWithAvailability, getCustomScripts } from "../../Utils/api";
+import { fetchProductsWithAvailability, getCustomScripts, getShopDetails } from "../../Utils/api";
 import {
   Calendar,
   CalendarEvent,
@@ -24,7 +24,7 @@ interface ICalendarContainerProps {
   aggregateViewBaseUrl?: string;
   aggregateViewShop?: string;
   aggregateViewShopUrl?: string;
-  defaultVew?: string;
+  defaultView?: string;
   baseUrl?: string;
   languageCode?: string;
   mainHeader?: string;
@@ -48,6 +48,7 @@ interface ICalendarContainerState {
 const eventRendererViewMap = {
   [calendarViewType.dayGrid]: CalendarEventGridContent,
   [calendarViewType.list]: CalendarEventListContent,
+  [calendarViewType.listMonth]: CalendarEventListContent,
 };
 
 export class CalendarContainer extends Component<ICalendarContainerProps, ICalendarContainerState> {
@@ -66,7 +67,7 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   };
 
   async componentDidMount() {
-    const { defaultVew, shopUrl, baseUrl, languageCode } = this.props;
+    const { defaultView, shopUrl, baseUrl, languageCode } = this.props;
     this.fetchEvents();
     this.fetchSettings(baseUrl, shopUrl);
     this.setState({ labels: defineLanguageDictionary(languageCode as LanguageCodes) });
@@ -76,8 +77,8 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
       this.selectView(calendarViewType.list);
     }
 
-    if (defaultVew && calendarViewType[defaultVew]) {
-      this.selectView(calendarViewType[defaultVew]);
+    if (defaultView && calendarViewType[defaultView]) {
+      this.selectView(calendarViewType[defaultView]);
     }
 
     document && document.getElementsByClassName("fc-prev-button")[0].addEventListener("click", this.handlePrevClick);
@@ -120,8 +121,11 @@ export class CalendarContainer extends Component<ICalendarContainerProps, ICalen
   fetchEvents = async (start = this.state.start, end = this.state.end) => {
     const { baseUrl, shopUrl } = this.props;
     this.setState({ loading: true });
+
+    const getShopResponse = await getShopDetails({baseUrl, shopId: shopUrl});
     const eventsResponse = await fetchProductsWithAvailability(baseUrl, shopUrl, start, end);
-    const { calendarEvents: events, fullCalendarEvents } = extractAndParseEvents(eventsResponse, shopUrl, baseUrl);
+    
+    const { calendarEvents: events, fullCalendarEvents } = extractAndParseEvents(eventsResponse, shopUrl, baseUrl, getShopResponse.moneyFormat);
     this.setState({ events, fullCalendarEvents, loading: false });
   }
 

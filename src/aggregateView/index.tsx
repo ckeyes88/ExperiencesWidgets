@@ -20,7 +20,7 @@ mountComponent({
 
     return { 
         ...data, 
-        defaultVew: data.aggregateViewDefaultView,
+        defaultView: data.aggregateViewDefaultView,
         baseUrl: data.aggregateViewBaseUrl, 
         shopUrl: data.aggregateViewShopUrl,
         //shopifyProductId: parseInt(data.aggregateViewProductId),
