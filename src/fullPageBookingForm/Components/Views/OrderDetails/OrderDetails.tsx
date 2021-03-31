@@ -10,8 +10,6 @@ import {
 } from "../../../../typings/Event";
 import { AppDictionary } from "../../../../typings/Languages";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
-import { useEventStore } from "../../../Hooks/useEventStore";
-import { useTimeslotStore } from "../../../Hooks/useTimeslotStore";
 import { Button } from "../../Common/Button";
 import {
   CustomerInfoForm,
@@ -25,14 +23,12 @@ import {
   PerAttendeeTypeProps,
   PerOrderTypeProps,
 } from "../../Common/CustomForm";
-import {
-  useCustomerFormStore,
-  useCustomFormStore,
-  useOrderDetailsStore,
-  useQtySelectionStore,
-} from "../../App";
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { CustomFormValue } from "../../../Typings/CustomForm";
+import { useCustomerFormStore } from "../../../Hooks/useCustomerFormStore";
+import { useCustomFormStore } from "../../../Hooks/useCustomFormStore";
+import { useOrderDetailsStore } from "../../../Hooks/useOrderDetailsStore";
+import { useQtySelectionStore } from "../../../Hooks/useQtySelectionStore";
 
 export type OrderDetailsProps = {
   /** This is the date that the user has selected for the order */
@@ -53,9 +49,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   selectedDate,
   labels,
 }) => {
-  const eventStub = useEventStore((state) => state.event);
-  const timeslot = useTimeslotStore((state) => state.selectedTimeslot);
-
   //Whether the save and continue button should be disabled.
   const isSaveContinueDisabled = useOrderDetailsStore(
     (state) => state.isSaveContinueDisabled,
