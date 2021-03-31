@@ -106,7 +106,7 @@ export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
 
       const formValues = fields.map((field) => ({
         ...field,
-        value: field.defaultValue || "",
+        value: "",
         isRequired: field.required,
         type: field.type,
         defaultValue: field.defaultValue,

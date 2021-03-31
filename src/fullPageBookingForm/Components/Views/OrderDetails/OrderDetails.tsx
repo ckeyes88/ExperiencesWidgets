@@ -29,6 +29,7 @@ import { useCustomerFormStore } from "../../../Hooks/useCustomerFormStore";
 import { useCustomFormStore } from "../../../Hooks/useCustomFormStore";
 import { useOrderDetailsStore } from "../../../Hooks/useOrderDetailsStore";
 import { useQtySelectionStore } from "../../../Hooks/useQtySelectionStore";
+import { LeftIcon } from "../../Common/Calendar/LeftIcon";
 
 export type OrderDetailsProps = {
   /** This is the timeslot that the user has selected for the order */
@@ -204,6 +205,16 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       (state) => state.customFormValues,
     );
 
+    //Whether the user is allowed to confirm order by populating
+    //all required custom form fields.
+    const canConfirm =
+      useCustomFormStore((state) => state.customFormValues).every((form) =>
+        form.fields.every(
+          (field) =>
+            !field.isRequired || (field.isRequired && field.value !== ""),
+        ),
+      ) && useQtySelectionStore((state) => state.canConfirmOrder)();
+
     //Render per attendee form.
     if (customOrderDetails.formType === OrderDetailsFormType.PerAttendee) {
       //Handle removal of variant from view.
@@ -239,17 +250,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         },
       };
 
-      //Whether the user is allowed to confirm order by populating
-      //all required custom form fields.
-      const canConfirm = useCustomFormStore(
-        (state) => state.customFormValues,
-      ).every((form) =>
-        form.fields.every(
-          (field) =>
-            !field.isRequired || (field.isRequired && field.value !== ""),
-        ),
-      );
-
       //Render the custom form for per attendee,
       //renders on how many tickets are bought
       return (
@@ -270,17 +270,6 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         </div>
       );
     } else {
-      //Whether the user is allowed to confirm order by populating
-      //all required custom form fields.
-      const canConfirm = useCustomFormStore(
-        (state) => state.customFormValues,
-      ).every((form) =>
-        form.fields.every(
-          (field) =>
-            !field.isRequired || (field.isRequired && field.value !== ""),
-        ),
-      );
-
       //Create data structure for per order form.
       const perOrderFormType: PerOrderTypeProps = {
         formValues,
@@ -437,10 +426,21 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     );
   };
 
+  //Handles clicking back in wizard modal.
+  const handleBackClick = () => {
+    useOrderDetailsStore((state) => state.setPage)(
+      BookingFormPage.TIMESLOT_SELECTION,
+    );
+  };
+
   /** Main render method. */
   return (
     <div className="OrderDetails">
       <div className="OrderDetails__Summary">
+        <div className="OrderDetails__Summary__Back" onClick={handleBackClick}>
+          <LeftIcon />
+        </div>
+
         {/* Render first image of event, if it exists. */}
         {event.images.length > 0 && (
           <img
@@ -455,16 +455,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         <TextStyle variant="display2" text={"Monday, January 13th"} />
         <div>
           <div className="OrderDetails__Summary__Time-Slot">
-            <TextStyle
-              variant="body1"
-              text={`${format(
-                parseISO(selectedTimeslot.startsAt.toISOString()),
-                "h:mm",
-              )} - ${format(
-                parseISO(selectedTimeslot.endsAt.toISOString()),
-                "h:mm",
-              )}`}
-            />
+            <TextStyle variant="body1" text="Stub" />
             <TextStyle variant="body1" text="|" />
             <TextStyle
               variant="body3"
