@@ -31,8 +31,6 @@ import { useOrderDetailsStore } from "../../../Hooks/useOrderDetailsStore";
 import { useQtySelectionStore } from "../../../Hooks/useQtySelectionStore";
 
 export type OrderDetailsProps = {
-  /** This is the date that the user has selected for the order */
-  selectedDate: Date;
   /** This is the timeslot that the user has selected for the order */
   selectedTimeslot: Availability;
   /** This is the event for which the order is being created */
@@ -46,7 +44,6 @@ export type OrderDetailsProps = {
 export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   event,
   selectedTimeslot,
-  selectedDate,
   labels,
 }) => {
   //Whether the save and continue button should be disabled.
