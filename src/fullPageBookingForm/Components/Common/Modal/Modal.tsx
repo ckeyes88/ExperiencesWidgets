@@ -37,13 +37,14 @@ export const Modal: FunctionComponent<ModalProps> = ({
     modalContainerClassNames.push("FullPage__Modal__Container--Open");
   }
   return (
-    <div className={modalContainerClassNames.join(" ")}>
+    <div className={modalContainerClassNames.join(" ")} role="FullPage__Modal">
       <div className="FullPage__Modal">
         <div className="FullPage__Modal__Title-Row">
           <TextStyle variant="display2" text={title} />
           <button
             className="FullPage__Modal__Close"
             onClick={onClickCancelButton}
+            role="cancel"
           >
             <CloseIcon height={30} color="#888888" />
           </button>
