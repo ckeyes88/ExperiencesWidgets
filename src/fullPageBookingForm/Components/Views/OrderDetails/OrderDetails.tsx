@@ -443,14 +443,14 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           />
         </div>
 
-        {/* Render first image of event, if it exists. */}
-        {event.images.length > 0 && (
+        {event.featuredImageUrl && (
           <img
             className="OrderDetails__Summary__Image"
-            href={event.images[0].id.toString()}
+            href={event.featuredImageUrl}
             alt="Experience image"
           />
         )}
+
         <div className="OrderDetails__Summary__Title">
           <TextStyle text={event.name} variant="display1" />
         </div>
