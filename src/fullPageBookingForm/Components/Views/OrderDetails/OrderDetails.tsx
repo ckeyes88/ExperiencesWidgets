@@ -467,7 +467,10 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         <div className="OrderDetails__Summary__Title">
           <TextStyle text={event.name} variant="display1" />
         </div>
+
+        <div className="OrderDetails__Header-Rule" />
         <TextStyle variant="display2" text={`${dayOfWeek}, ${monthAndDay}`} />
+
         <div>
           <div className="OrderDetails__Summary__Time-Slot">
             <TextStyle variant="body1" text={`${startTime} - ${endTime}`} />
@@ -486,6 +489,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           <TextStyle variant="body2" text={`From $${minCost} `} />
           <TextStyle variant="body1" text={"/ person"} />
         </div>
+        <div className="OrderDetails__Header-Rule" />
         {isSaveContinueDisabled && (
           <div className="OrderDetails__Overview">
             {Object.values(variants)

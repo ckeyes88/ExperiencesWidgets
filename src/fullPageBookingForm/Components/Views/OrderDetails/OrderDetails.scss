@@ -29,16 +29,27 @@ $left-column-width: 427px;
 .OrderDetails__Summary__Back > * {
   padding: 0 !important;
 }
+.OrderDetails__Header-Rule {
+  display: none;
+  margin-top: 42px;
+  margin-bottom: 42px;
+  border-top: 1px solid #d1d1d1;
+}
 
 @media only screen and (max-width: $full-page-single-column-breakpoint) {
   .OrderDetails__Summary {
     position: relative;
     left: 0;
+    width: 100%;
   }
 
   .OrderDetails__Input {
     width: 100%;
     margin-left: 0;
+  }
+
+  .OrderDetails__Header-Rule {
+    display: block;
   }
 }
 
