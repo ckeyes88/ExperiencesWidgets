@@ -441,6 +441,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   const dayOfWeek = moment(startsAt).format("dddd");
   const monthAndDay = moment(startsAt).format("MMMM Do");
 
+  //Determine number of units left to select for each variant.
+  const unitsLeft = useQtySelectionStore((state) => state.unitsLeft);
+
   /** Main render method. */
   return (
     <div className="OrderDetails">
@@ -472,9 +475,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
             <TextStyle
               variant="body3"
               text={
-                selectedTimeslot.unitsLeft > 1
-                  ? `${selectedTimeslot.unitsLeft} spots left`
-                  : `${selectedTimeslot.unitsLeft} spot left`
+                unitsLeft !== 1
+                  ? `${unitsLeft} spots left`
+                  : `${unitsLeft} spot left`
               }
             />
           </div>

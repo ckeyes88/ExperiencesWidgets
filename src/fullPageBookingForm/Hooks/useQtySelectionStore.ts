@@ -15,6 +15,8 @@ export type QuantitySelectionStore = {
   canConfirmOrder: () => boolean;
   /**Variants in the store. */
   variants: NumberCarouselVariants;
+  /**Number of total units left for the event. */
+  unitsLeft: number;
   /**Populate initial variants of store based upon event. */
   setVariants: (event: EventDBO, selectedTimeslot: Availability) => void;
   /**Disables the variants from being edited in view. */
@@ -34,6 +36,7 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
 
         return {
           variants: oldArray,
+          unitsLeft: state.unitsLeft + 1,
         };
       }),
     onIncreaseClick: (variantIdx: number) =>
@@ -43,18 +46,23 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
 
         return {
           variants: oldArray,
+          unitsLeft: state.unitsLeft - 1,
         };
       }),
     onChange: (variantIdx: number, variantQty: string) =>
       set((state) => {
         let oldArray = clone(state.variants);
-        const qtyMaximum = oldArray[variantIdx].qtyMaximum;
         /**Ensure maximum qty typed in is at most the maximum variant quantity. */
         oldArray[variantIdx].currentQty =
-          parseInt(variantQty) > qtyMaximum ? qtyMaximum : parseInt(variantQty);
+          parseInt(variantQty) > state.unitsLeft
+            ? state.unitsLeft
+            : parseInt(variantQty);
+
+        const selectedQty = oldArray[variantIdx].currentQty;
 
         return {
           variants: oldArray,
+          unitsLeft: state.unitsLeft - selectedQty,
         };
       }),
     canConfirmOrder: () => {
@@ -63,15 +71,16 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
       return variants.some((variant) => variant.currentQty > 0);
     },
     variants: [],
+    unitsLeft: 0,
     setVariants: (event: EventDBO, selectedTimeslot: Availability) =>
       set((_) => {
         return {
+          unitsLeft: selectedTimeslot.unitsLeft,
           variants: event.variants.map((variant) => ({
             isDisabled: false,
             currentQty: 0,
             name: variant.name,
             price: variant.price,
-            qtyMaximum: selectedTimeslot.unitsLeft,
           })),
         };
       }),
