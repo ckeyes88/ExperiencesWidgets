@@ -52,17 +52,20 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
     onChange: (variantIdx: number, variantQty: string) =>
       set((state) => {
         let oldArray = clone(state.variants);
+        const oldQuantity = oldArray[variantIdx].currentQty;
+        const maxQty = state.unitsLeft + oldQuantity;
+        const newQuantity =
+          parseInt(variantQty) > maxQty ? maxQty : parseInt(variantQty);
         /**Ensure maximum qty typed in is at most the maximum variant quantity. */
-        oldArray[variantIdx].currentQty =
-          parseInt(variantQty) > state.unitsLeft
-            ? state.unitsLeft
-            : parseInt(variantQty);
+        oldArray[variantIdx].currentQty = newQuantity;
 
-        const selectedQty = oldArray[variantIdx].currentQty;
+        //Update unitsLeft according to quantity differences between
+        //old quantity in field and entered quantity.
+        const qtyDifference = newQuantity - oldQuantity;
 
         return {
           variants: oldArray,
-          unitsLeft: state.unitsLeft - selectedQty,
+          unitsLeft: state.unitsLeft - qtyDifference,
         };
       }),
     canConfirmOrder: () => {
