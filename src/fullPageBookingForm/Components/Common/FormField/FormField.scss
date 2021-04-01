@@ -36,3 +36,10 @@
 .FullPage__FormField__Required {
   color: red;
 }
+
+.FullPage__FormField__Label,
+.FullPage__FormField__SelectLabel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

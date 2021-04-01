@@ -1,5 +1,5 @@
 /** @jsx h */
-import { h, FunctionComponent, JSX } from "preact";
+import { h, FunctionComponent, JSX, Fragment } from "preact";
 import { TextStyle } from "../TextStyle";
 import "./FormField.scss";
 
@@ -57,19 +57,29 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
     );
   };
 
+  const renderFieldTitle = () => {
+    const title = () => (
+      <Fragment>
+        {label}
+        {!optionalLabel && (
+          <TextStyle
+            variant="body3"
+            text={<span className="FullPage__FormField__Required"> * </span>}
+          />
+        )}
+      </Fragment>
+    );
+    return <TextStyle variant="body3" text={title()} />;
+  };
+
   /** If the field is a select, this method renders it */
   const renderSelect = (): JSX.Element => {
     return (
       <div className="FullPage__FormField__RenderSelect">
         <label className="FullPage__FormField__SelectLabel" for={id}>
-          <TextStyle variant="body3" text={label} />
-          {optionalLabel ? (
-            <TextStyle variant="body3" text={`(${optionalLabel})`} />
-          ) : (
-            <TextStyle
-              variant="body3"
-              text={<span className="FullPage__FormField__Required"> * </span>}
-            />
+          {renderFieldTitle()}
+          {optionalLabel && (
+            <TextStyle variant="body3" text={`${optionalLabel}`} />
           )}
         </label>
         <select
@@ -90,14 +100,9 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
     return (
       <div className="FullPage__FormField__RenderInput">
         <label className="FullPage__FormField__Label" for={id}>
-          <TextStyle variant="body3" text={label} />
-          {optionalLabel ? (
-            <TextStyle variant="body3" text={`(${optionalLabel})`} />
-          ) : (
-            <TextStyle
-              variant="body3"
-              text={<span className="FullPage__FormField__Required"> * </span>}
-            />
+          {renderFieldTitle()}
+          {optionalLabel && (
+            <TextStyle variant="body3" text={`${optionalLabel}`} />
           )}
         </label>
         <input
