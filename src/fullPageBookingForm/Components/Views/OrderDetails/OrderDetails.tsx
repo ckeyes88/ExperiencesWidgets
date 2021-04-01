@@ -520,7 +520,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       <div className="OrderDetails__Input">
         {/**
          * Flow for rendering forms on page by default.
-         * Review .png file in directory for state diagram of flow.
+         * Review .png diagram file for state diagram of flow.
          */}
         {event.paymentType === PaymentType.Prepay
           ? renderPrePayFlow()
