@@ -27,7 +27,7 @@ import { useCustomerFormStore } from "../../../Hooks/useCustomerFormStore";
 import { useCustomFormStore } from "../../../Hooks/useCustomFormStore";
 import { useOrderDetailsStore } from "../../../Hooks/useOrderDetailsStore";
 import { useQtySelectionStore } from "../../../Hooks/useQtySelectionStore";
-import { LeftIcon } from "../../Common/Calendar/LeftIcon";
+import { BackIcon } from "../../Common/WizardModal/BackIcon";
 
 export type OrderDetailsProps = {
   /** This is the timeslot that the user has selected for the order */
@@ -435,8 +435,12 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   return (
     <div className="OrderDetails">
       <div className="OrderDetails__Summary">
-        <div className="OrderDetails__Summary__Back" onClick={handleBackClick}>
-          <LeftIcon />
+        <div className="OrderDetails__Summary__Back">
+          <Button
+            variant="text"
+            text={<BackIcon />}
+            onClick={handleBackClick}
+          />
         </div>
 
         {/* Render first image of event, if it exists. */}

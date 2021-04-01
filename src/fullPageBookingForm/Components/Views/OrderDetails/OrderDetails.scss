@@ -24,6 +24,10 @@ $left-column-width: 427px;
 
 .OrderDetails__Summary__Back {
   cursor: pointer;
+  width: max-content;
+}
+.OrderDetails__Summary__Back > * {
+  padding: 0 !important;
 }
 
 @media only screen and (max-width: $full-page-single-column-breakpoint) {
