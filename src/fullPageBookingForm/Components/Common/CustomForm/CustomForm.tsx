@@ -5,6 +5,7 @@ import { AppDictionary } from "../../../../typings/Languages";
 import { CustomFieldType, CustomFormValue } from "../../../Typings/CustomForm";
 import { FormField } from "../FormField";
 import { CloseIcon } from "../Icon/CloseIcon";
+import { FormIcon } from "../Icon/FormIcon";
 import { Modal } from "../Modal";
 import { TextStyle } from "../TextStyle";
 import "./CustomForm.scss";
@@ -90,6 +91,16 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
       </div>
     );
   };
+  const renderPerOrderTitle = (formTitle: string | undefined) => (
+    <div className="CustomOrder__Title">
+      <FormIcon />
+      {formTitle ? (
+        <TextStyle variant="display2" text={formTitle} />
+      ) : (
+        <TextStyle variant="display2" text={"Additional order details"} />
+      )}
+    </div>
+  );
 
   /**Renders each individual field in the form for a per order form. */
   const renderPerOrderForm = (form: PerOrderTypeProps) => {
@@ -99,7 +110,7 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
 
     return (
       <Fragment>
-        {formTitle && <TextStyle variant="display2" text={"Test"} />}
+        {renderPerOrderTitle(formTitle)}
         {formDescription && (
           <div className="CustomOrder__Description">
             <TextStyle variant="body1" text={formDescription} />
