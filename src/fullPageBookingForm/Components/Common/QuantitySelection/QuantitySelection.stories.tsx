@@ -18,27 +18,25 @@ const defaultArgs: QuantitySelectionProps = {
       name: "Adult",
       price: 150,
       currentQty: 0,
-      qtyMaximum: 5,
       isDisabled: false,
     },
     {
       name: "Child",
       price: 100,
       currentQty: 0,
-      qtyMaximum: 5,
       isDisabled: false,
     },
     {
       name: "Senior",
       price: 50,
       currentQty: 0,
-      qtyMaximum: 5,
       isDisabled: false,
     },
   ],
   onChange: defaultOnChange,
   onDecreaseClick: defaultOnDecreaseClick,
   onIncreaseClick: defaultOnIncreaseClick,
+  unitsLeft: 5,
 };
 
 const Template = (args: QuantitySelectionProps) => (
@@ -55,11 +53,7 @@ const disabledArgs = {
     {
       name: "Adult",
       price: 150,
-      onChange: defaultOnChange,
-      onDecreaseClick: defaultOnDecreaseClick,
-      onIncreaseClick: defaultOnIncreaseClick,
       currentQty: 0,
-      qtyMaximum: 5,
       isDisabled: true,
     },
   ],
