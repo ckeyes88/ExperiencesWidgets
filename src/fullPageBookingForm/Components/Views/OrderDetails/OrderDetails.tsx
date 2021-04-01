@@ -308,7 +308,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   const renderConfirmButton = (isDisabled: boolean) => {
     const handleClick = () => {
       useOrderDetailsStore((state) => state.setPage)(
-        BookingFormPage.CONFIRMATION,
+        BookingFormPage.SUBMISSION_LOADER,
       );
     };
     return (
