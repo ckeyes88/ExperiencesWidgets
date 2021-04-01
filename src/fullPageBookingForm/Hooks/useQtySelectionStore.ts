@@ -54,9 +54,14 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
         let oldArray = clone(state.variants);
         const oldQuantity = oldArray[variantIdx].currentQty;
         const maxQty = state.unitsLeft + oldQuantity;
-        const newQuantity =
+        /**Ensure maximum qty typed in is at most the maximum variant quantity.
+         * If user enters an empty string, disallow change.
+         */
+        let newQuantity =
           parseInt(variantQty) > maxQty ? maxQty : parseInt(variantQty);
-        /**Ensure maximum qty typed in is at most the maximum variant quantity. */
+
+        newQuantity = isNaN(newQuantity) ? 0 : newQuantity;
+
         oldArray[variantIdx].currentQty = newQuantity;
 
         //Update unitsLeft according to quantity differences between
