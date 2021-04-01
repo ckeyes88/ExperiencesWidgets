@@ -28,6 +28,7 @@ import { useCustomFormStore } from "../../../Hooks/useCustomFormStore";
 import { useOrderDetailsStore } from "../../../Hooks/useOrderDetailsStore";
 import { useQtySelectionStore } from "../../../Hooks/useQtySelectionStore";
 import { BackIcon } from "../../Common/WizardModal/BackIcon";
+import moment from "moment-timezone";
 
 export type OrderDetailsProps = {
   /** This is the timeslot that the user has selected for the order */
@@ -431,6 +432,15 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     );
   };
 
+  //Format start and end time of selected event.
+  const { startsAt, timezone, endsAt } = selectedTimeslot;
+  const startTime = moment(startsAt).tz(timezone).format("h:mma");
+  const endTime = moment(endsAt).tz(timezone).format("h:mma");
+
+  //Format day of week and month/day of event.
+  const dayOfWeek = moment(startsAt).format("dddd");
+  const monthAndDay = moment(startsAt).format("MMMM Do");
+
   /** Main render method. */
   return (
     <div className="OrderDetails">
@@ -454,10 +464,10 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         <div className="OrderDetails__Summary__Title">
           <TextStyle text={event.name} variant="display1" />
         </div>
-        <TextStyle variant="display2" text={"Monday, January 13th"} />
+        <TextStyle variant="display2" text={`${dayOfWeek}, ${monthAndDay}`} />
         <div>
           <div className="OrderDetails__Summary__Time-Slot">
-            <TextStyle variant="body1" text="Stub" />
+            <TextStyle variant="body1" text={`${startTime} - ${endTime}`} />
             <TextStyle variant="body1" text="|" />
             <TextStyle
               variant="body3"
