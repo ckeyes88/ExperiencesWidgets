@@ -1,7 +1,6 @@
 /** @jsx h */
 import { h } from "preact";
 import { CustomerInfoForm, CustomerInfoFormProps } from "./CustomerInfoForm";
-import { object } from "@storybook/addon-knobs";
 import { CustomerInputData } from "../../../../typings/CustomerInput";
 
 export default {
