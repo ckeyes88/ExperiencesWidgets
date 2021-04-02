@@ -84,10 +84,12 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
         </label>
         <select
           id={id}
+          data-testid={id}
           onChange={handleChange}
           value={value}
           className="FullPage__FormField__Select"
           required={optionalLabel === ""}
+          disabled={disabled}
         >
           {typeof type !== "string" && type.options.map(renderOption)}
         </select>
@@ -111,6 +113,7 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
           placeholder={placeholder}
           onChange={handleChange}
           id={id}
+          data-testid={id}
           type={typeof type !== "string" ? "select" : type.toLowerCase()}
           value={value}
           disabled={disabled}

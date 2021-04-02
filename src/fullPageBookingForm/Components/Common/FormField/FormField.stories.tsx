@@ -1,7 +1,6 @@
 /** @jsx h */
 import { h } from "preact";
 import { FormField, FormFieldProps } from "./FormField";
-import { object } from "@storybook/addon-knobs";
 
 export default {
   title: "Full Page Booking Form/Common/Form Field",
