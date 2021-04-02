@@ -1,5 +1,5 @@
 /** @jsx h */
-import { h, FunctionComponent, Fragment } from "preact";
+import { h, FunctionComponent } from "preact";
 import { Button } from "../../Common/Button";
 import { ThumbsUp } from "../../Common/Icon/ThumbsUp";
 import { TextStyle } from "../../Common/TextStyle";
