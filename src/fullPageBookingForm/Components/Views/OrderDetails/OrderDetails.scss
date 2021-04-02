@@ -36,6 +36,15 @@ $left-column-width: 427px;
   border-top: 1px solid #d1d1d1;
 }
 
+.OrderDetails__Overview {
+  margin-top: 44px;
+  margin-right: 75px;
+  animation: fade ease 1s;
+  -webkit-animation: fade ease 1s;
+  -moz-animation: fade ease 1s;
+  -ms-animation: fade ease 1s;
+}
+
 @media only screen and (max-width: $full-page-single-column-breakpoint) {
   .OrderDetails__Summary {
     position: relative;
@@ -50,6 +59,10 @@ $left-column-width: 427px;
 
   .OrderDetails__Header-Rule {
     display: block;
+  }
+
+  .OrderDetails__Overview {
+    display: none;
   }
 }
 
@@ -102,15 +115,6 @@ $left-column-width: 427px;
 
 .CustomOrder__Description {
   margin-top: 31px;
-}
-
-.OrderDetails__Overview {
-  margin-top: 44px;
-  margin-right: 75px;
-  animation: fade ease 1s;
-  -webkit-animation: fade ease 1s;
-  -moz-animation: fade ease 1s;
-  -ms-animation: fade ease 1s;
 }
 
 @keyframes fade {
