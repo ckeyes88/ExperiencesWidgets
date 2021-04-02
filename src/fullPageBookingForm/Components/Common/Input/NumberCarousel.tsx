@@ -8,6 +8,8 @@ export type NumberCarouselProps = {
   isDisabled: boolean;
   /** Name of variant. */
   name: string;
+  /**Role of component for testing. */
+  role?: string;
   /**Current qty of tickets for variant. */
   currentQty: number;
   /**Maximum qty of tickets for variant. */
@@ -28,6 +30,7 @@ export const NumberCarousel: FunctionComponent<NumberCarouselProps> = ({
   onIncreaseClick,
   onDecreaseClick,
   onChange,
+  role,
 }) => {
   const handleChange: JSXInternal.DOMAttributes<
     HTMLInputElement
@@ -46,7 +49,7 @@ export const NumberCarousel: FunctionComponent<NumberCarouselProps> = ({
     increasingButtonClassNames.push("number-carousel__button--disabled");
   }
   return (
-    <div className={carouselClassNames.join(" ")}>
+    <div className={carouselClassNames.join(" ")} role={role}>
       <button
         className={decreasingButtonClassNames.join(" ")}
         onClick={onDecreaseClick}

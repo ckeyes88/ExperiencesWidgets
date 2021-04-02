@@ -52,7 +52,7 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
   }
 
   return (
-    <div className={classNames.join(" ")}>
+    <div className={classNames.join(" ")} role="QuantitySelection">
       <TextStyle variant="display2" text="Quantity" />
       <div className="quantity-selection__table">
         {Object.values(variants).map((variant, idx) => (
@@ -60,9 +60,13 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
             <div className="quantity-selection__table-cell">
               <TextStyle variant="body1" text={variant.name} />
               <TextStyle variant="body1" text={`$${variant.price}`} />
-              <div className="quantity-selection__table-cell__input">
+              <div
+                className="quantity-selection__table-cell__input"
+                role={variant.name}
+              >
                 <NumberCarousel
                   name={variant.name}
+                  role={`NumberCarousel-${variant.name}`}
                   onDecreaseClick={() => onDecreaseClick(idx)}
                   onIncreaseClick={() => onIncreaseClick(idx)}
                   currentQty={variant.currentQty}
