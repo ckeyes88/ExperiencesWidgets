@@ -1,6 +1,7 @@
 /** @jsx h */
 import { h } from "preact";
-import { FormFieldDBO } from "../../../../types";
+import { FormFieldType } from "../../../../typings/Event";
+import { CustomFieldType } from "../../../Typings/CustomForm";
 import {
   CustomForm,
   CustomFormProps,
@@ -14,38 +15,53 @@ export default {
   argTypes: {},
 };
 
-const defaultFields: FormFieldDBO[] = [
+const defaultFields: CustomFieldType[] = [
   {
     label: "First",
-    required: true,
-    type: "Text",
+    isRequired: true,
+    type: FormFieldType.Text,
   },
   {
     label: "Last",
-    required: true,
-    type: "Text",
+    isRequired: true,
+    type: FormFieldType.Text,
   },
   {
     label: "Snack Preference",
-    required: false,
-    type: "Text",
+    isRequired: false,
+    type: FormFieldType.Text,
   },
   {
     label: "Shirt Size?",
-    required: true,
-    type: "Select",
+    isRequired: true,
+    type: FormFieldType.Select,
     options: ["XS", "S"],
   },
 ];
 
 const defaultPerOrderFormProps: PerOrderTypeProps = {
-  fields: defaultFields,
+  formValues: [
+    {
+      fields: defaultFields,
+      name: "Default Form",
+    },
+  ],
+  formTitle: "Title of Form",
+  formDescription: "Description of form",
 };
 
 const defaultPerAttendeeFormProps: PerAttendeeTypeProps = {
-  fields: defaultFields,
-  variantNames: ["Adult", "Child"],
-  removeVariant: () => {},
+  formValues: [
+    {
+      fields: defaultFields,
+      name: "Per Attendee Form",
+    },
+  ],
+  removeVariantModal: {
+    isOpen: false,
+    removeVariant: () => {},
+    setIsRemoveVariantModalOpen: () => {},
+  },
 };
 
 const defaultArgs: CustomFormProps = {
