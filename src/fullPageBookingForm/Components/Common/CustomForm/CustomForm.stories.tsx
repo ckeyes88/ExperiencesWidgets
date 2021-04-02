@@ -15,7 +15,7 @@ export default {
   argTypes: {},
 };
 
-const defaultFields: CustomFieldType[] = [
+export const defaultFields: CustomFieldType[] = [
   {
     label: "First",
     isRequired: true,
@@ -39,7 +39,7 @@ const defaultFields: CustomFieldType[] = [
   },
 ];
 
-const defaultPerOrderFormProps: PerOrderTypeProps = {
+export const defaultPerOrderFormProps: PerOrderTypeProps = {
   formValues: [
     {
       fields: defaultFields,
@@ -50,7 +50,7 @@ const defaultPerOrderFormProps: PerOrderTypeProps = {
   formDescription: "Description of form",
 };
 
-const defaultPerAttendeeFormProps: PerAttendeeTypeProps = {
+export const defaultPerAttendeeFormProps: PerAttendeeTypeProps = {
   formValues: [
     {
       fields: defaultFields,

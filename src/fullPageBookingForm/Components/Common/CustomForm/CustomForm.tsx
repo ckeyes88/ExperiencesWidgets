@@ -86,6 +86,7 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
           defaultValue={field.defaultValue}
           value={field.value}
           id={`${field.label}%%%${i}%%%${variantIdx}`}
+          data-testid={`${field.label}%%%${i}%%%${variantIdx}`}
           onFieldChange={handleIdxChange}
         />
       </div>
@@ -132,6 +133,7 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
       <Fragment>
         <Modal
           title="Remove attendee"
+          data-testid="CustomForm-Modal"
           cancelButtonText="Cancel"
           confirmButtonText="Yes, remove"
           content='Are you sure you want to remove "Adult"? 
