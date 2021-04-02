@@ -1,6 +1,6 @@
 /** @jsx h */
 import { h, FunctionComponent, Fragment } from "preact";
-import { useEffect, useState, useMemo, useRef } from "preact/hooks";
+import { useEffect, useState, useMemo } from "preact/hooks";
 import moment from "moment";
 import { Availability } from "../../../../typings/Availability";
 import { getTimeslotsByDate } from "../../../../Utils/helpers";
@@ -25,7 +25,6 @@ export const TimeslotSelection: FunctionComponent = () => {
     (state) => state.setSelectedTimeslot,
   );
   const { setPage, close } = useWizardModalAction();
-  const timeslotListContainer = useRef<HTMLDivElement>();
   const [calendarDrawerOpen, setCalendarOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
@@ -67,11 +66,11 @@ export const TimeslotSelection: FunctionComponent = () => {
   const handleDateChange = (date: Date) => {
     setCurrentDate(date);
 
-    timeslotListContainer.current?.scrollTo({ top: 0, behavior: "smooth" });
-
     document
-      .querySelector(".wizard-modal__body")
-      ?.scrollTo({ top: 0, behavior: "smooth" });
+      .querySelectorAll(".wizard-modal, .wizard-modal__body")
+      .forEach((element) => {
+        element?.scrollTo({ top: 0, behavior: "smooth" });
+      });
 
     setCalendarOpen(false);
   };
@@ -182,10 +181,7 @@ export const TimeslotSelection: FunctionComponent = () => {
             >
               {calendar}
             </BottomDrawer>
-            <div
-              className="timeslot-selection__timeslot-list"
-              ref={timeslotListContainer}
-            >
+            <div className="timeslot-selection__timeslot-list">
               {isFetchingInitialAvailabilities ? (
                 <Fragment>
                   <TimeslotGroupSkeleton length={4} />
