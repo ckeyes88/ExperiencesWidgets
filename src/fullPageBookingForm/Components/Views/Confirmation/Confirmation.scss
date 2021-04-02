@@ -1,0 +1,40 @@
+@import "../../../base.scss";
+.FullPage__Confirmation {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 460px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  margin-top: 360px;
+}
+
+@media only screen and (max-width: 400px) {
+  .FullPage__Confirmation {
+    margin-top: 100px;
+  }
+}
+
+.FullPage__Confirmation__Title {
+  margin: 30px 0;
+}
+.FullPage__Confirmation__Subtitle {
+  margin-bottom: 12px;
+}
+.FullPage__Confirmation__Email-Text > * {
+  color: $color-primary;
+}
+.FullPage__Confirmation__Email {
+  margin-bottom: 60px;
+}
+
+.FullPage__Confirmation__Close > * {
+  color: $color-primary;
+  text-decoration: underline;
+}
+
+.FullPage__Confirmation > button {
+  padding: 0;
+}
