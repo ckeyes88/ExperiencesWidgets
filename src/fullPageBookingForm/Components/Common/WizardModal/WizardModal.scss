@@ -10,20 +10,25 @@
   bottom: 0;
   left: 0;
   transition: all 0.4s ease;
-  display: none;
-}
-
-.wizard-modal--open {
-  top: 0;
-  display: block;
+  overflow-y: auto;
 }
 
 .wizard-modal__close-button {
   cursor: pointer;
   position: absolute;
-  top: 40px;
+  top: 100%;
   left: 40px;
   z-index: 1;
+  transition: all 0.4s ease;
+}
+
+.wizard-modal--open {
+  top: 0;
+
+  .wizard-modal__close-button {
+    position: fixed;
+    top: 40px;
+  }
 }
 
 .wizard-modal__title-bar {
@@ -47,15 +52,11 @@
 }
 
 .wizard-modal__body {
-  position: absolute;
   max-width: 1100px;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
   margin: 0 auto;
   padding: 40px 30px;
   overflow-y: auto;
+  position: relative;
 }
 
 @media (max-width: 854px) {
@@ -74,7 +75,6 @@
 
   .wizard-modal__body {
     padding: 20px;
-    padding-top: 70px;
     overflow-y: scroll;
     flex: 1;
     margin: 0;

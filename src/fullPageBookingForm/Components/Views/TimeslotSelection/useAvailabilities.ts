@@ -32,26 +32,27 @@ export const useAvailabilities = ({
   const addTimeslots = () => {
     const timeslotsToAdd: Availability[] = [];
 
-    Object.keys(availabilities).forEach((year) => {
-      Object.keys(availabilities[year]).forEach((month) => {
-        Object.keys(availabilities[year][month]).forEach((week) => {
-          Object.keys(availabilities[year][month][week]).forEach((day) => {
-            const timeslots = availabilities[year][month][week][day];
+    (function collectTimeslots<TData extends Record<string, any>>(data: TData) {
+      Object.keys(data).forEach((key) => {
+        const currentItem = data[key];
 
-            timeslotsToAdd.push(...timeslots);
+        if (!Array.isArray(currentItem)) {
+          collectTimeslots(currentItem);
+          return;
+        }
 
-            const newDay = moment(timeslots[0].startsAt)
-              .startOf("day")
-              .toJSON();
+        const timeslots = currentItem;
 
-            setTimeslotsByDay((prev) => ({
-              ...prev,
-              [newDay]: timeslots,
-            }));
-          });
-        });
+        timeslotsToAdd.push(...timeslots);
+
+        const newDay = moment(timeslots[0].startsAt).startOf("day").toJSON();
+
+        setTimeslotsByDay((prev) => ({
+          ...prev,
+          [newDay]: timeslots,
+        }));
       });
-    });
+    })(availabilities);
   };
 
   const addFetchedMonth = (month: number, year: number) =>

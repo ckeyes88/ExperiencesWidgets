@@ -33,7 +33,7 @@ const TestComponent: FunctionComponent<WizardModalProps> = (props) => (
     <WizardModal.Page page={0}>
       <TestPage0 />
     </WizardModal.Page>
-    <WizardModal.Page hideCloseButton page={1}>
+    <WizardModal.Page page={1}>
       <TestPage1 />
     </WizardModal.Page>
   </WizardModal>
@@ -68,18 +68,6 @@ test("Displays the right initial page", () => {
 
   expect(screen.getByText(/this is page 1/i)).toBeInTheDocument();
   expect(screen.queryByText(/this is page 0/i)).not.toBeInTheDocument();
-});
-
-test("Can hide close button in a specific page", () => {
-  render(<TestComponent open initialPage={0} onClose={jest.fn()} />);
-
-  expect(screen.getByTestId("wizard-modal-close-button")).toBeInTheDocument();
-
-  fireEvent.click(screen.getByText(/go to page 1/i));
-
-  expect(
-    screen.queryByTestId("wizard-modal-close-button"),
-  ).not.toBeInTheDocument();
 });
 
 test("Can be closed with a custom close button", () => {
