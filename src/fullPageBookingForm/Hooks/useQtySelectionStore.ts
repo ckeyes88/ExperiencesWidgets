@@ -113,6 +113,7 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
     handleRemoveVariant: (variantName) =>
       set((state) => {
         return {
+          unitsLeft: state.unitsLeft + 1,
           variants: state.variants.map((variant) => {
             if (variant.name === variantName) {
               return {
