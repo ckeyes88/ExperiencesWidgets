@@ -54,13 +54,7 @@ const PageB: FunctionComponent = () => {
       <p>
         <TextStyle
           variant="body1"
-          text={
-            <Fragment>
-              You can hide the close button in a specific page
-              <br />
-              and create a custom one:
-            </Fragment>
-          }
+          text={<Fragment>Create another close button:</Fragment>}
         />
       </p>
       <Button variant="outlined" text="Close" onClick={() => close()} />
@@ -82,7 +76,7 @@ export const WizardModalExample: FunctionComponent = () => {
         <WizardModal.Page page={Page.PAGE_A}>
           <PageA />
         </WizardModal.Page>
-        <WizardModal.Page hideCloseButton page={Page.PAGE_B}>
+        <WizardModal.Page page={Page.PAGE_B}>
           <PageB />
         </WizardModal.Page>
       </WizardModal>
