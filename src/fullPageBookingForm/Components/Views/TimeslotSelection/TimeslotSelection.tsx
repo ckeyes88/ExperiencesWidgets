@@ -1,6 +1,7 @@
 /** @jsx h */
 import { h, FunctionComponent, Fragment } from "preact";
 import { useEffect, useState, useMemo } from "preact/hooks";
+import InfiniteScroll from "react-infinite-scroller";
 import moment from "moment";
 import { Availability } from "../../../../typings/Availability";
 import { getTimeslotsByDate } from "../../../../Utils/helpers";
@@ -33,8 +34,10 @@ export const TimeslotSelection: FunctionComponent = () => {
   const {
     isFetchingInitialAvailabilities,
     isFetchingMoreAvailabilities,
+    isFetchingMoreFromList,
     availabilities,
     timeslotsByDay,
+    fetchMoreFromList,
   } = useAvailabilities({
     date: currentDate,
     month: currentMonth,
@@ -78,6 +81,12 @@ export const TimeslotSelection: FunctionComponent = () => {
   const handleMonthChange = (month: number) => setCurrentMonth(month);
 
   const handleYearChange = (year: number) => setCurrentYear(year);
+
+  const handleLoadMore = () => {
+    if (!isFetchingMoreFromList) {
+      fetchMoreFromList();
+    }
+  };
 
   const dateIsDisabled = (date: Date) => {
     const timeslots = getTimeslotsByDate(availabilities, date);
@@ -129,23 +138,37 @@ export const TimeslotSelection: FunctionComponent = () => {
 
     const daysToRender = getDaysToRender();
 
-    return daysToRender.map((date) => (
-      <TimeslotGroup
-        key={date}
-        timeslots={timeslotsByDay[date].map((timeslot) => {
-          const handleSelect = () => handleTimeslotSelect(timeslot);
+    return (
+      <InfiniteScroll
+        hasMore
+        useWindow={false}
+        getScrollParent={() => document.querySelector(".wizard-modal")}
+        loadMore={handleLoadMore}
+        loader={
+          (isFetchingMoreFromList ? (
+            <TimeslotGroupSkeleton length={1} />
+          ) : undefined) as React.ReactElement
+        }
+      >
+        {daysToRender.map((date) => (
+          <TimeslotGroup
+            key={date}
+            timeslots={timeslotsByDay[date].map((timeslot) => {
+              const handleSelect = () => handleTimeslotSelect(timeslot);
 
-          return {
-            minPrice,
-            startsAt: new Date(timeslot.startsAt),
-            endsAt: new Date(timeslot.endsAt),
-            remainingSpots: timeslot.unitsLeft,
-            timezone: timeslot.timezone,
-            onSelect: handleSelect,
-          };
-        })}
-      />
-    ));
+              return {
+                minPrice,
+                startsAt: new Date(timeslot.startsAt),
+                endsAt: new Date(timeslot.endsAt),
+                remainingSpots: timeslot.unitsLeft,
+                timezone: timeslot.timezone,
+                onSelect: handleSelect,
+              };
+            })}
+          />
+        ))}
+      </InfiniteScroll>
+    );
   };
 
   return (
