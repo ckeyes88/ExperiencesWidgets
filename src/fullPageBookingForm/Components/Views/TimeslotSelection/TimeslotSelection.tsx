@@ -147,7 +147,7 @@ export const TimeslotSelection: FunctionComponent = () => {
         loader={
           (isFetchingMoreFromList ? (
             <TimeslotGroupSkeleton length={1} />
-          ) : undefined) as React.ReactElement
+          ) : undefined) as JSX.Element
         }
       >
         {daysToRender.map((date) => (
