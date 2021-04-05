@@ -1,0 +1,36 @@
+.CustomForm__Attendee__Variant {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 31px;
+}
+.CustomForm__Attendee__Variant > * {
+  margin-right: 5px;
+}
+.CustomForm__Header-Rule {
+  margin: 42px 0;
+  border-top: 1px solid #d1d1d1;
+}
+
+.CustomForm__Attendee__Icon {
+  display: flex;
+  align-items: center;
+}
+
+.CustomForm__Attendee__Remove {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.CustomOrder__Title {
+  margin-bottom: 31px;
+  line-height: 1;
+  display: flex;
+  align-items: flex-end;
+}
+
+@media only screen and (max-width: 400px) {
+  .text-style--display2 {
+    font-size: 22px;
+  }
+}

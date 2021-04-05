@@ -3,12 +3,13 @@ import { h, FunctionComponent } from "preact";
 import "./Button.scss";
 
 export type ButtonProps = {
-  color?: "primary" | "danger" | "default";
+  color?: "primary" | "danger" | "default" | "transparent";
   variant?: "contained" | "outlined" | "text";
   fullWidth?: boolean;
   disabled?: boolean;
   text: string | JSX.Element;
   onClick?: () => void;
+  type?: "button" | "submit";
 };
 
 export const Button: FunctionComponent<ButtonProps> = ({
@@ -18,6 +19,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
   disabled,
   fullWidth,
   onClick,
+  type,
 }) => {
   const classNames = [
     "button",
@@ -38,6 +40,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
       className={classNames.join(" ")}
       disabled={disabled}
       onClick={!disabled ? onClick : undefined}
+      type={type ? type : "button"}
     >
       {text}
     </button>
