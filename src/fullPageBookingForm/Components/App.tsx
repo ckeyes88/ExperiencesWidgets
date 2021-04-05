@@ -17,6 +17,7 @@ import {
   defineLanguageDictionary,
   LanguageCodes,
 } from "../../typings/Languages";
+import { useCustomerFormStore } from "../Hooks/useCustomerFormStore";
 export type AppProps = {
   baseUrl: string;
   languageCode: string;
@@ -62,6 +63,10 @@ export const App: FunctionComponent<AppProps> = ({
     setOpen(false);
   };
 
+  const customerEmail = useCustomerFormStore(
+    (state) => state.customerData.email,
+  );
+
   return (
     <WidgetDataProvider
       data={{ baseUrl, shopUrl, shopifyProductId, languageCode }}
@@ -86,7 +91,7 @@ export const App: FunctionComponent<AppProps> = ({
           <SubmissionLoader />
         </WizardModal.Page>
         <WizardModal.Page page={BookingFormPage.CONFIRMATION}>
-          <Confirmation />
+          <Confirmation email={customerEmail} onClose={handleClose} />
         </WizardModal.Page>
       </WizardModal>
     </WidgetDataProvider>
