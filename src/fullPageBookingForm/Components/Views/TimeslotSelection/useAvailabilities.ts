@@ -64,12 +64,13 @@ export const useAvailabilities = ({
 
         timeslotsToAdd.push(...timeslots);
 
-        const newDay = moment(timeslots[0].startsAt).startOf("day").toJSON();
+        const newDay = moment(timeslots[0].startsAt).startOf("day");
 
+        addFetchedMonth(newDay.month() - 1, newDay.year());
         setLastDateFetched(new Date(timeslots[timeslots.length - 1].startsAt));
         setTimeslotsByDay((prev) => ({
           ...prev,
-          [newDay]: timeslots,
+          [newDay.toJSON()]: timeslots,
         }));
       });
     })(availabilities);
@@ -77,17 +78,13 @@ export const useAvailabilities = ({
 
   const addFetchedMonth = (month: number, year: number) =>
     setFetchedMonths((prev) => {
-      let newYear: number[] = [];
-
-      if (!fetchedMonths[year]) {
-        newYear = [month];
-      } else {
-        newYear = [...fetchedMonths[year], month];
-      }
+      const existingFetchedMonths = prev[year];
 
       return {
         ...prev,
-        [year]: newYear,
+        [year]: !existingFetchedMonths?.length
+          ? [month]
+          : [...existingFetchedMonths, month],
       };
     });
 
@@ -120,11 +117,8 @@ export const useAvailabilities = ({
       });
 
       setAvailabilities(unionAvailability(availabilities, result));
-
       setFetching(false);
-
       addFetchedMonth(month, year);
-
       setFetchingInitially(false);
     };
 
