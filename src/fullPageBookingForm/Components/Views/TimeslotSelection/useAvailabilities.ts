@@ -21,6 +21,7 @@ export const useAvailabilities = ({
 
   const [isFetchingInitially, setFetchingInitially] = useState(true);
   const [isFetching, setFetching] = useState(false);
+  const [isFetchingMoreFromList, setFetchingMoreFromList] = useState(false);
   const [fetchedMonths, setFetchedMonths] = useState<{
     [year: number]: number[];
   }>({});
@@ -28,6 +29,24 @@ export const useAvailabilities = ({
   const [timeslotsByDay, setTimeslotsByDay] = useState<
     Record<string, Availability[]>
   >({});
+  const [lastDateFetched, setLastDateFetched] = useState(new Date());
+
+  const fetchMoreFromList = async () => {
+    setFetchingMoreFromList(true);
+
+    const result = await getFirstAvailability({
+      baseUrl,
+      productId: shopifyProductId,
+      shopId: shopUrl,
+      startingFrom: lastDateFetched,
+      timespanInSeconds: TIMESPAN_IN_SECONDS,
+    });
+
+    setAvailabilities(unionAvailability(availabilities, result));
+    addTimeslots();
+
+    setFetchingMoreFromList(false);
+  };
 
   const addTimeslots = () => {
     const timeslotsToAdd: Availability[] = [];
@@ -47,6 +66,7 @@ export const useAvailabilities = ({
 
         const newDay = moment(timeslots[0].startsAt).startOf("day").toJSON();
 
+        setLastDateFetched(new Date(timeslots[timeslots.length - 1].startsAt));
         setTimeslotsByDay((prev) => ({
           ...prev,
           [newDay]: timeslots,
@@ -120,7 +140,9 @@ export const useAvailabilities = ({
   return {
     availabilities,
     timeslotsByDay,
+    fetchMoreFromList,
     isFetchingInitialAvailabilities: isFetchingInitially,
     isFetchingMoreAvailabilities: isFetching,
+    isFetchingMoreFromList,
   };
 };
