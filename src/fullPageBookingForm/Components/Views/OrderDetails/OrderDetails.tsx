@@ -27,6 +27,7 @@ import { useCustomerFormStore } from "../../../Hooks/useCustomerFormStore";
 import { useCustomFormStore } from "../../../Hooks/useCustomFormStore";
 import { useOrderDetailsStore } from "../../../Hooks/useOrderDetailsStore";
 import { useQtySelectionStore } from "../../../Hooks/useQtySelectionStore";
+import { useAddOrderToCart } from "../../../Hooks/useCreateOrder";
 import { BackIcon } from "../../Common/WizardModal/BackIcon";
 import { useWizardModalAction } from "../../Common/WizardModal";
 import moment from "moment-timezone";
@@ -47,6 +48,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   selectedTimeslot,
   labels,
 }) => {
+  const addOrderToCart = useAddOrderToCart();
   const { setPage } = useWizardModalAction();
   //Whether the save and continue button should be disabled.
   const isSaveContinueDisabled = useOrderDetailsStore(
@@ -309,10 +311,15 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   //Renders confirm button in view.
   const renderConfirmButton = (isDisabled: boolean) => {
     const handleClick = () => {
+      if (event.paymentType === PaymentType.Prepay) {
+        return addOrderToCart();
+      }
+
       useOrderDetailsStore((state) => state.setPage)(
         BookingFormPage.SUBMISSION_LOADER,
       );
     };
+
     return (
       <Button
         text={labels.confirmReservationButtonLabel}
