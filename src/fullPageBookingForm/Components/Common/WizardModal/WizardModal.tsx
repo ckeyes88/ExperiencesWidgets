@@ -15,13 +15,14 @@ export type WizardModalProps = {
   open: boolean;
   initialPage: number;
   hideCloseButton?: (page: number) => boolean;
+  hideTitleBar?: (page: number) => boolean;
   onClose: () => void;
 };
 
 const Modal: FunctionComponent<Pick<
   WizardModalProps,
-  "open" | "hideCloseButton"
->> = ({ children, open, hideCloseButton }) => {
+  "open" | "hideCloseButton" | "hideTitleBar"
+>> = ({ children, open, hideCloseButton, hideTitleBar }) => {
   const modalContentRef = useRef<HTMLDivElement>();
   const { currentPage } = useWizardModalState();
   const { close } = useWizardModalAction();
@@ -47,7 +48,9 @@ const Modal: FunctionComponent<Pick<
       overlayClassName="wizard-modal"
       closeTimeoutMS={400}
     >
-      <div className="wizard-modal__title-bar" />
+      {!hideTitleBar?.(currentPage) && (
+        <div className="wizard-modal__title-bar" />
+      )}
       <div className="wizard-modal__body">
         {!hideCloseButton?.(currentPage) && (
           <div
@@ -66,7 +69,14 @@ const Modal: FunctionComponent<Pick<
 
 export const WizardModal: FunctionComponent<WizardModalProps> & {
   Page: typeof WizardModalPage;
-} = ({ open, initialPage, children, hideCloseButton, onClose }) => {
+} = ({
+  open,
+  initialPage,
+  children,
+  hideCloseButton,
+  hideTitleBar,
+  onClose,
+}) => {
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "auto";
   }, [open]);
@@ -77,7 +87,11 @@ export const WizardModal: FunctionComponent<WizardModalProps> & {
       initialPage={initialPage}
       onClose={onClose}
     >
-      <Modal open={open} hideCloseButton={hideCloseButton}>
+      <Modal
+        open={open}
+        hideCloseButton={hideCloseButton}
+        hideTitleBar={hideTitleBar}
+      >
         {children}
       </Modal>
     </WizardModalProvider>

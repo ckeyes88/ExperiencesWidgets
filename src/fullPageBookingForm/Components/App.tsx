@@ -72,6 +72,11 @@ export const App: FunctionComponent<AppProps> = ({
       page,
     );
 
+  const hideTitleBar = (page: number) =>
+    [BookingFormPage.SUBMISSION_LOADER, BookingFormPage.CONFIRMATION].includes(
+      page,
+    );
+
   return (
     <WidgetDataProvider
       data={{ baseUrl, shopUrl, shopifyProductId, languageCode }}
@@ -80,6 +85,7 @@ export const App: FunctionComponent<AppProps> = ({
         open={open}
         initialPage={BookingFormPage.TIMESLOT_SELECTION}
         hideCloseButton={hideCloseButton}
+        hideTitleBar={hideTitleBar}
         onClose={handleClose}
       >
         <WizardModal.Page page={BookingFormPage.TIMESLOT_SELECTION}>
