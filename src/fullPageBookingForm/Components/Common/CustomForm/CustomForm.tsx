@@ -3,10 +3,11 @@ import { h, FunctionComponent, Fragment } from "preact";
 import { Person } from "../../../../SharedComponents/Icons/Person";
 import { AppDictionary } from "../../../../typings/Languages";
 import { CustomFieldType, CustomFormValue } from "../../../Typings/CustomForm";
+import { ButtonProps } from "../Button";
+import { Dialog } from "../Dialog";
 import { FormField } from "../FormField";
 import { CloseIcon } from "../Icon/CloseIcon";
 import { FormIcon } from "../Icon/FormIcon";
-import { Modal } from "../Modal";
 import { TextStyle } from "../TextStyle";
 import "./CustomForm.scss";
 
@@ -26,6 +27,8 @@ export type PerAttendeeTypeProps = {
   removeVariantModal: {
     /**Whether the modal is open. */
     isOpen: boolean;
+    /**Name of variant to remove */
+    variantToRemove: string;
     /**Setting if the variant modal is open, with the name of variant to be removed. */
     setIsRemoveVariantModalOpen: (
       isOpen: boolean,
@@ -129,23 +132,36 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
   const renderPerAttendeeForm = (form: PerAttendeeTypeProps) => {
     const { formValues, removeVariantModal } = form;
 
+    const onCloseModal = () => {
+      removeVariantModal.setIsRemoveVariantModalOpen(false, {
+        name: "",
+        idx: 0,
+      });
+    };
+
+    const modalActions: ButtonProps[] = [
+      {
+        text: "Cancel",
+        color: "transparent",
+        variant: "text",
+        onClick: onCloseModal,
+      },
+      {
+        text: "Yes, remove",
+        color: "danger",
+        variant: "contained",
+        onClick: removeVariantModal.removeVariant,
+      },
+    ];
+
     return (
       <Fragment>
-        <Modal
+        <Dialog
+          open={removeVariantModal.isOpen}
           title="Remove attendee"
-          data-testid="CustomForm-Modal"
-          cancelButtonText="Cancel"
-          confirmButtonText="Yes, remove"
-          content='Are you sure you want to remove "Adult"? 
-          You will lose all additional information you have entered.'
-          isOpen={removeVariantModal.isOpen}
-          onClickCancelButton={() =>
-            removeVariantModal.setIsRemoveVariantModalOpen(false, {
-              name: "",
-              idx: 0,
-            })
-          }
-          onClickConfirmButton={removeVariantModal.removeVariant}
+          message={`Are you sure you want to remove "${removeVariantModal.variantToRemove}"? You will lose all additional information you have entered.`}
+          actions={modalActions}
+          onClose={onCloseModal}
         />
         {formValues.map((value, variantIdx) => (
           <div

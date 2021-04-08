@@ -38,7 +38,10 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
             <TextStyle variant="body3" text={`${remainingSpots} spots left`} />
           </div>
           <div className="timeslot-card__details__pricing">
-            <TextStyle variant="display1" text={`From $${minPrice}`} />
+            <TextStyle
+              variant="display1"
+              text={minPrice ? `From $${minPrice}` : "Free"}
+            />
             <TextStyle variant="body1" text=" / person" />
           </div>
         </div>

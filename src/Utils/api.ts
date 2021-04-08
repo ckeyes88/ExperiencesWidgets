@@ -111,7 +111,7 @@ type GetShopDetailsResponse = {
 
 export type AddToCartArgs = {
   shopUrl?: string;
-  variants: Variants;
+  variants?: Variants;
   timeslot: Availability;
   quantities: Quantities;
   fields?: FormFieldValueInput[];

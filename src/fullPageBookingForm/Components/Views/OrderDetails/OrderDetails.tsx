@@ -27,7 +27,12 @@ import { useCustomerFormStore } from "../../../Hooks/useCustomerFormStore";
 import { useCustomFormStore } from "../../../Hooks/useCustomFormStore";
 import { useOrderDetailsStore } from "../../../Hooks/useOrderDetailsStore";
 import { useQtySelectionStore } from "../../../Hooks/useQtySelectionStore";
+import { useAddOrderToCart } from "../../../Hooks/useCreateOrder";
 import { BackIcon } from "../../Common/WizardModal/BackIcon";
+import {
+  useWizardModalAction,
+  WizardModalTitleBar,
+} from "../../Common/WizardModal";
 import moment from "moment-timezone";
 
 export type OrderDetailsProps = {
@@ -39,13 +44,20 @@ export type OrderDetailsProps = {
   error: string;
   /** Event custom labels set in admin experience interface */
   labels: Partial<AppDictionary>;
+  /**Whether the view is being tested in storybook. */
+  isStorybookTest?: boolean;
 };
 
 export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   event,
   selectedTimeslot,
   labels,
+  isStorybookTest,
 }) => {
+  const addOrderToCart = useAddOrderToCart();
+  const setPage = isStorybookTest
+    ? (value: number) => {}
+    : useWizardModalAction().setPage;
   //Whether the save and continue button should be disabled.
   const isSaveContinueDisabled = useOrderDetailsStore(
     (state) => state.isSaveContinueDisabled,
@@ -242,6 +254,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         //in form.
         removeVariantModal: {
           isOpen: useCustomFormStore((state) => state.isModalOpen),
+          variantToRemove: useCustomFormStore(
+            (state) => state.removeVariantName,
+          ),
           setIsRemoveVariantModalOpen: useCustomFormStore(
             (state) => state.setIsModalOpen,
           ),
@@ -307,10 +322,15 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   //Renders confirm button in view.
   const renderConfirmButton = (isDisabled: boolean) => {
     const handleClick = () => {
+      if (event.paymentType === PaymentType.Prepay) {
+        return addOrderToCart();
+      }
+
       useOrderDetailsStore((state) => state.setPage)(
         BookingFormPage.SUBMISSION_LOADER,
       );
     };
+
     return (
       <Button
         text={labels.confirmReservationButtonLabel}
@@ -427,9 +447,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
   //Handles clicking back in wizard modal.
   const handleBackClick = () => {
-    useOrderDetailsStore((state) => state.setPage)(
-      BookingFormPage.TIMESLOT_SELECTION,
-    );
+    setPage(BookingFormPage.TIMESLOT_SELECTION);
   };
 
   //Format start and end time of selected event.
@@ -446,86 +464,88 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
   /** Main render method. */
   return (
-    <div className="OrderDetails">
-      <div className="OrderDetails__Summary">
-        <div className="OrderDetails__Summary__Back">
-          <Button
-            variant="text"
-            text={<BackIcon />}
-            onClick={handleBackClick}
-          />
-        </div>
-
-        {event.featuredImageUrl && (
-          <img
-            className="OrderDetails__Summary__Image"
-            href={event.featuredImageUrl}
-            alt="Experience image"
-          />
-        )}
-
-        <div className="OrderDetails__Summary__Title">
-          <TextStyle text={event.name} variant="display1" />
-        </div>
-
-        <div className="OrderDetails__Header-Rule" />
-        <TextStyle variant="display2" text={`${dayOfWeek}, ${monthAndDay}`} />
-
-        <div>
-          <div className="OrderDetails__Summary__Time-Slot">
-            <TextStyle variant="body1" text={`${startTime} - ${endTime}`} />
-            <TextStyle variant="body1" text="|" />
-            <TextStyle
-              variant="body3"
-              text={
-                unitsLeft !== 1
-                  ? `${unitsLeft} spots left`
-                  : `${unitsLeft} spot left`
-              }
+    <Fragment>
+      <WizardModalTitleBar title="Select quantity" onBack={handleBackClick} />
+      <div className="OrderDetails">
+        <div className="OrderDetails__Summary">
+          <div className="OrderDetails__Summary__Back">
+            <Button
+              variant="text"
+              text={<BackIcon />}
+              onClick={handleBackClick}
             />
           </div>
-        </div>
-        <div>
-          <TextStyle variant="body2" text={`From $${minCost} `} />
-          <TextStyle variant="body1" text={"/ person"} />
-        </div>
-        <div className="OrderDetails__Header-Rule" />
-        {isSaveContinueDisabled && (
-          <div className="OrderDetails__Overview">
-            {Object.values(variants)
-              .filter((variant) => variant.currentQty > 0)
-              .map((variant) => (
-                <div
-                  className="OrderDetails__Overview__Values"
-                  key={`VariantTotal_${variant.name}_${variant.price}`}
-                >
-                  <TextStyle variant="body1" text={variant.name} />
-                  <TextStyle variant="body1" text={`${variant.currentQty}x`} />
-                  <div className="OrderDetails__Overview__Values__Total">
-                    <TextStyle
-                      variant="body1"
-                      text={`$${variant.currentQty * variant.price}`}
-                    />
-                  </div>
-                </div>
-              ))}
-            <div className="OrderDetails__Overview__Total">
-              <TextStyle variant="body2" text="Total" />
-              <TextStyle variant="body2" text={`$${variantTotal}`} />
+          <img
+            className="OrderDetails__Summary__Image"
+            src={event.featuredImageUrl}
+          />
+
+          <div className="OrderDetails__Summary__Title">
+            <TextStyle text={event.name} variant="display1" />
+          </div>
+
+          <div className="OrderDetails__Header-Rule" />
+          <TextStyle variant="display2" text={`${dayOfWeek}, ${monthAndDay}`} />
+
+          <div>
+            <div className="OrderDetails__Summary__Time-Slot">
+              <TextStyle variant="body1" text={`${startTime} - ${endTime}`} />
+              <TextStyle variant="body1" text="|" />
+              <TextStyle
+                variant="body3"
+                text={
+                  unitsLeft !== 1
+                    ? `${unitsLeft} spots left`
+                    : `${unitsLeft} spot left`
+                }
+              />
             </div>
           </div>
-        )}
-      </div>
+          <div>
+            <TextStyle variant="body2" text={`From $${minCost} `} />
+            <TextStyle variant="body1" text={"/ person"} />
+          </div>
+          <div className="OrderDetails__Header-Rule" />
+          {isSaveContinueDisabled && (
+            <div className="OrderDetails__Overview">
+              {Object.values(variants)
+                .filter((variant) => variant.currentQty > 0)
+                .map((variant) => (
+                  <div
+                    className="OrderDetails__Overview__Values"
+                    key={`VariantTotal_${variant.name}_${variant.price}`}
+                  >
+                    <TextStyle variant="body1" text={variant.name} />
+                    <TextStyle
+                      variant="body1"
+                      text={`${variant.currentQty}x`}
+                    />
+                    <div className="OrderDetails__Overview__Values__Total">
+                      <TextStyle
+                        variant="body1"
+                        text={`$${variant.currentQty * variant.price}`}
+                      />
+                    </div>
+                  </div>
+                ))}
+              <div className="OrderDetails__Overview__Total">
+                <TextStyle variant="body2" text="Total" />
+                <TextStyle variant="body2" text={`$${variantTotal}`} />
+              </div>
+            </div>
+          )}
+        </div>
 
-      <div className="OrderDetails__Input">
-        {/**
-         * Flow for rendering forms on page by default.
-         * Review .png diagram file for state diagram of flow.
-         */}
-        {event.paymentType === PaymentType.Prepay
-          ? renderPrePayFlow()
-          : renderNonPrePayFlow()}
+        <div className="OrderDetails__Input">
+          {/**
+           * Flow for rendering forms on page by default.
+           * Review .png diagram file for state diagram of flow.
+           */}
+          {event.paymentType === PaymentType.Prepay
+            ? renderPrePayFlow()
+            : renderNonPrePayFlow()}
+        </div>
       </div>
-    </div>
+    </Fragment>
   );
 };

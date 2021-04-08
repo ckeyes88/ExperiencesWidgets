@@ -1,24 +1,29 @@
 /** @jsx h */
-import { h, FunctionComponent, Fragment } from "preact";
+import { h, FunctionComponent } from "preact";
+import { useEffect } from "preact/hooks";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
-import { Button } from "../../Common/Button";
 import { TextStyle } from "../../Common/TextStyle";
 import { useWizardModalAction } from "../../Common/WizardModal";
+import { useCreateNonPrepayOrder } from "../../../Hooks/useCreateOrder";
+import "./SubmissionLoader.scss";
 
 export const SubmissionLoader: FunctionComponent = () => {
   const { setPage } = useWizardModalAction();
+  const createOrder = useCreateNonPrepayOrder();
+
+  useEffect(() => {
+    const startOrderCreation = async () => {
+      await createOrder();
+      setPage(BookingFormPage.CONFIRMATION);
+    };
+
+    startOrderCreation();
+  }, []);
 
   return (
-    <Fragment>
-      <h1>
-        <TextStyle variant="display1" text="Submission loader" />
-      </h1>
-      <Button
-        variant="contained"
-        color="primary"
-        text="Next"
-        onClick={() => setPage(BookingFormPage.CONFIRMATION)}
-      />
-    </Fragment>
+    <div className="submission-loader-page">
+      <div className="submission-loader-page__loader" />
+      <TextStyle variant="display2" text="Please wait..." />
+    </div>
   );
 };

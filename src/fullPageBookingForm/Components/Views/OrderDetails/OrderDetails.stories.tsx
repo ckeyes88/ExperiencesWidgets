@@ -1,7 +1,7 @@
 /** @jsx h */
 import { h } from "preact";
 import { OrderDetails, OrderDetailsProps } from "../OrderDetails";
-import { PaymentType } from "../../../../typings/Event";
+import { EventDBO, PaymentType } from "../../../../typings/Event";
 import {
   defaultArgs,
   defaultEvent,
@@ -12,6 +12,8 @@ import { useCustomerFormStore } from "../../../Hooks/useCustomerFormStore";
 import { useCustomFormStore } from "../../../Hooks/useCustomFormStore";
 import { useOrderDetailsStore } from "../../../Hooks/useOrderDetailsStore";
 import { useQtySelectionStore } from "../../../Hooks/useQtySelectionStore";
+import { useEventStore, useTimeslotStore } from "../../../Hooks";
+import { Availability } from "../../../../typings/Availability";
 
 export default {
   title: "Full Page Booking Form/Views/Order Details",
@@ -24,6 +26,8 @@ const initialOrderDetailsState = useOrderDetailsStore.getState();
 const initialCustomFormState = useCustomFormStore.getState();
 const initialCustomerFormState = useCustomerFormStore.getState();
 const initialQtySelectionState = useQtySelectionStore.getState();
+const initialEventState = useEventStore.getState();
+const initialTimeslotState = useTimeslotStore.getState();
 
 /**Resets state of all stores. */
 const resetStoreState = () => {
@@ -31,17 +35,27 @@ const resetStoreState = () => {
   useCustomFormStore.setState(initialCustomFormState, true);
   useCustomerFormStore.setState(initialCustomerFormState, true);
   useQtySelectionStore.setState(initialQtySelectionState, true);
+  useEventStore.setState(initialEventState, true);
+  useTimeslotStore.setState(initialTimeslotState, true);
+};
+
+//Sets initial state common to all views.
+const setInitialState = (event: EventDBO, timeslot: Availability) => {
+  useEventStore((state) => state.setEvent)(event);
+  useTimeslotStore((state) => state.setSelectedTimeslot)(timeslot);
 };
 
 //Create template component for all testing, with the ability
 //to seed the state of the component if needed.
 const Template = (args: OrderDetailsProps, seedState?: () => void) => {
-  if (typeof seedState === "function" && seedState !== undefined) {
+  if (seedState !== undefined && typeof seedState === "function") {
+    console.log("seeding");
     seedState();
   }
+  resetStoreState();
+  setInitialState(args.event, args.selectedTimeslot);
   return (
     <div>
-      {resetStoreState()}
       <OrderDetails {...args} />
     </div>
   );
