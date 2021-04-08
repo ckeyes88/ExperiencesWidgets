@@ -17,7 +17,6 @@ $left-column-width: 427px;
 .OrderDetails__Summary {
   height: max-content;
   position: fixed;
-  top: 20px;
   left: 228px;
   width: $left-column-width;
 }
@@ -71,6 +70,8 @@ $left-column-width: 427px;
   height: $image-width;
   margin-right: $image-right-margin;
   object-fit: cover;
+  border-radius: 5px;
+  background-color: #424242;
 }
 
 .OrderDetails__Summary__Time-Slot {

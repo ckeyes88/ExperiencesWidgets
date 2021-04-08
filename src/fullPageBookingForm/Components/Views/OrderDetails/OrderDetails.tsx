@@ -472,14 +472,10 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               onClick={handleBackClick}
             />
           </div>
-
-          {event.featuredImageUrl && (
-            <img
-              className="OrderDetails__Summary__Image"
-              src={event.featuredImageUrl}
-              alt="Experience image"
-            />
-          )}
+          <img
+            className="OrderDetails__Summary__Image"
+            src={event.featuredImageUrl}
+          />
 
           <div className="OrderDetails__Summary__Title">
             <TextStyle text={event.name} variant="display1" />
