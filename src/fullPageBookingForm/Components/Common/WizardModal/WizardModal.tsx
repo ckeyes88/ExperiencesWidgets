@@ -43,7 +43,7 @@ const Modal: FunctionComponent<Pick<
     <ReactModal
       contentRef={setModalContentRef}
       isOpen={open}
-      contentLabel="Minimal Modal Example"
+      ariaHideApp={false}
       className="wizard-modal__root"
       overlayClassName="wizard-modal"
       closeTimeoutMS={400}
