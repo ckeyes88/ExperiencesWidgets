@@ -19,11 +19,10 @@ export const defaultQuantitySelections: QuantitySelectionProps = {
       name: "Adult",
       price: 150,
       currentQty: 0,
-      qtyMaximum: 5,
-
       isDisabled: false,
     },
   ],
+  unitsLeft: 5,
   onDecreaseClick: () => {},
   onIncreaseClick: () => {},
   onChange: () => {},
@@ -98,6 +97,7 @@ export const defaultEvent: EventDBO = {
   ],
   ticketedEvent: true,
   ticketTemplateId: null,
+  featuredImageUrl: "none",
 };
 
 export const defaultLabels: Partial<AppDictionary> = {
@@ -118,11 +118,11 @@ export const defaultOrderLineItemData: OrderLineItemInputData = {
 };
 
 export const defaultArgs: OrderDetailsProps = {
-  selectedDate: new Date(2021, 0, 13),
   selectedTimeslot: defaultTimeslot,
   event: defaultEvent,
   error: "",
   labels: defaultLabels,
+  isStorybookTest: true,
 };
 
 export const defaultPerOrderCustomerDetails: CustomOrderDetailsDBO = {

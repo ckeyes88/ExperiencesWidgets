@@ -44,15 +44,20 @@ export type OrderDetailsProps = {
   error: string;
   /** Event custom labels set in admin experience interface */
   labels: Partial<AppDictionary>;
+  /**Whether the view is being tested in storybook. */
+  isStorybookTest?: boolean;
 };
 
 export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   event,
   selectedTimeslot,
   labels,
+  isStorybookTest,
 }) => {
   const addOrderToCart = useAddOrderToCart();
-  const { setPage } = useWizardModalAction();
+  const setPage = isStorybookTest
+    ? (value: number) => {}
+    : useWizardModalAction().setPage;
   //Whether the save and continue button should be disabled.
   const isSaveContinueDisabled = useOrderDetailsStore(
     (state) => state.isSaveContinueDisabled,
