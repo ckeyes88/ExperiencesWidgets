@@ -1,0 +1,45 @@
+.FullPage__FormField__RenderInput,
+.FullPage__FormField__RenderSelect {
+  display: flex;
+  flex-direction: column;
+}
+
+.FullPage__FormField__Select,
+.FullPage__FormField__Input {
+  height: 36px;
+  border: 1px solid #bfbfbf;
+  border-radius: 5px;
+  font-family: "Montserrat";
+  font-size: 16px;
+  padding: 6px 13px;
+  font-weight: 500;
+  color: #424242;
+  margin-bottom: 16px;
+}
+
+/** Handles discrepancy between select/input heights. */
+.FullPage__FormField__Select {
+  min-height: 50px;
+}
+.FullPage__FormField__Select:disabled {
+  background-color: transparent;
+}
+
+.FullPage__FormField__Input:disabled {
+  background-color: transparent;
+}
+
+.FullPage__FormField__Input--disabled {
+  opacity: 0.5;
+}
+
+.FullPage__FormField__Required {
+  color: red;
+}
+
+.FullPage__FormField__Label,
+.FullPage__FormField__SelectLabel {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

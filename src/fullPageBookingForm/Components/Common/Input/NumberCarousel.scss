@@ -1,0 +1,50 @@
+.number-carousel {
+  width: min-content;
+  display: flex;
+  align-items: center;
+}
+
+.number-carousel__input {
+  width: 48px;
+  height: 36px;
+  border: 1px solid #bfbfbf;
+  border-radius: 5px;
+  -moz-appearance: textfield;
+  font-size: 16px;
+  text-align: center;
+  font-family: "Montserrat";
+  color: #424242;
+  margin: 0 8px;
+  padding: 0;
+}
+
+.number-carousel__input:disabled {
+  background-color: transparent;
+}
+
+.number-carousel__input::outersp {
+  -webkit-appearance: none;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+.number-carousel__input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+.number-carousel__button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 1px solid #424242;
+  cursor: pointer;
+}
+
+.number-carousel__button--disabled {
+  border: 1px solid #bfbfbf;
+  color: #bfbfbf;
+  cursor: auto;
+}

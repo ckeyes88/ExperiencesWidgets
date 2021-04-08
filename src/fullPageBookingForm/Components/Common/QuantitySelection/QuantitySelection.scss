@@ -1,0 +1,46 @@
+@import "../../../base.scss";
+.quantity-selection {
+  opacity: 1;
+}
+
+.quantity-selection--is-disabled {
+  opacity: 0.5;
+}
+
+.quantity-selection__table-cell {
+  display: grid;
+  grid-template-columns: 30% 30% 40%;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.quantity-selection__table {
+  margin-top: 18px;
+  width: 100%;
+}
+
+.quantity-selection__header-rule {
+  margin-top: 42px;
+  border-top: 1px solid #d1d1d1;
+}
+
+/* Center align contents of input field in table cell. */
+.quantity-selection__table-cell__input > div {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.quantity-selection__total {
+  display: grid;
+  grid-template-columns: 30% 30% 40%;
+  margin-top: 34px;
+}
+.quantity-selection__total__value {
+  text-align: center;
+}
+
+@media only screen and (max-width: $full-page-single-column-breakpoint) {
+  .quantity-selection {
+    margin-top: 31px;
+  }
+}

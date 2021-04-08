@@ -1,109 +1,112 @@
+@import "../../sass/variables.scss";
+@import "../../aggregateView/index.scss";
+
 .FormField-RenderInput {
-    position: relative;
-    width: 100%;
-    padding: 0.5rem 1.5rem;
-    text-align: left;
-    box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  padding: 0.5rem 1.5rem;
+  text-align: left;
+  box-sizing: border-box;
 }
-.FormField-Input{
-    border: none;
-    border-bottom: 2px solid lightgray;
-    outline: none;
-}
-
-.FormField-Label{
-    opacity: 0.5;
-    z-index: 2;
+.FormField-Input {
+  border: none;
+  border-bottom: 2px solid lightgray;
+  outline: none;
 }
 
-.FormField-Input::placeholder{
-    color: transparent;
+.FormField-Label {
+  opacity: 0.5;
+  z-index: 2;
+}
+
+.FormField-Input::placeholder {
+  color: transparent;
 }
 input.FormField-Input:focus::placeholder,
-input.FormField-Input:valid::placeholder{
-    color: black;
+input.FormField-Input:valid::placeholder {
+  color: black;
 }
-.FormField-SelectLabel{
-    display: block;
-    opacity: .5;
+.FormField-SelectLabel {
+  display: block;
+  opacity: 0.5;
 }
 .FormField-RenderSelect {
-    text-align: left;
-    padding: 0.5rem 1.5rem;
+  text-align: left;
+  padding: 0.5rem 1.5rem;
 }
-.FormField-RenderSelect select{
-    padding: 0.5rem;
-    border: 2px solid lightgray;
-    width: 100%;
+.FormField-RenderSelect select {
+  padding: 0.5rem;
+  border: 2px solid lightgray;
+  width: 100%;
 }
-.CustomForm-Container{
-    padding: 1rem;
-    overflow: auto;
+.CustomForm-Container {
+  padding: 1rem;
+  overflow: auto;
 }
 .FormField-OptionalLabel {
-    font-size: 12px;
-    margin-left: .5rem;
+  font-size: 12px;
+  margin-left: 0.5rem;
 }
 
 .FormField-RequredWarning {
-    text-align: center;
+  text-align: center;
 
-    span:first-of-type {
-        color: $color-error-red;
-    }
+  span:first-of-type {
+    color: $color-error-red;
+  }
 }
 
 .Red {
-    color: $color-error-red;
+  color: $color-error-red;
 }
 
 @include Phone {
-    .CustomForm-Container{
-        text-align: center;
+  .CustomForm-Container {
+    text-align: center;
+  }
+  .FormField-RenderInput {
+    display: flex;
+    flex-flow: column;
+    padding: 1rem 0;
+
+    input {
+      height: 1.5rem;
+      padding: 0;
     }
-    .FormField-RenderInput {
-        display: flex;
-        flex-flow: column;
-        padding: 1rem 0;
-        
-        input {
-            height: 1.5rem;
-            padding: 0;
-        }
+  }
+  .FormField-RenderSelect {
+    padding: 1rem 0;
+
+    select {
+      height: 1.5rem;
+      padding: 0;
+      border: none;
+      border-bottom: 2px solid lightgray;
     }
-    .FormField-RenderSelect {
-        padding: 1rem 0;
-    
-        select {
-            height: 1.5rem;
-            padding: 0;
-            border: none;
-            border-bottom: 2px solid lightgray;
-        }
-    }
+  }
 }
 
-@include Tablet{
-    .FormField-Label{
-        padding: 0px;
-        left: 1rem;
-        margin: 0;
+@include Tablet {
+  .FormField-Label {
+    padding: 0px;
+    left: 1rem;
+    margin: 0;
+  }
+  .FormField-RenderInput input,
+  .FormField-RenderSelect select {
+    border: 2px solid lightgray;
+    padding: 0.5rem;
+    width: 100%;
+  }
+  input[type="email"] {
+    width: 100%;
+  }
+  .FormField-Container {
+    width: 50%;
+    text-align: center;
+    margin: 0 auto;
+    & label {
+      left: 10%;
     }
-    .FormField-RenderInput input, .FormField-RenderSelect select {
-        border: 2px solid lightgray;
-        padding: .5rem;
-        width: 100%;
-    }
-    input[type=email]{      
-        width: 100%;
-    }
-    .FormField-Container{
-        width: 50%;
-        text-align: center;
-        margin: 0 auto;
-        & label{
-            left: 10%;
-        }
-    }
-
+  }
 }
