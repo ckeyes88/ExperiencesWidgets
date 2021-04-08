@@ -78,7 +78,7 @@ export const WizardModal: FunctionComponent<WizardModalProps> & {
   onClose,
 }) => {
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "auto";
+    document.body.style.overflow = open ? "hidden" : "";
   }, [open]);
 
   return (
