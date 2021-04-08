@@ -166,3 +166,9 @@ $left-column-width: 427px;
   flex-direction: row;
   justify-content: space-between;
 }
+
+@media (max-width: 854px) {
+  .OrderDetails__Summary__Back {
+    display: none;
+  }
+}

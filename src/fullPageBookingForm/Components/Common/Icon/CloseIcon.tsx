@@ -15,7 +15,6 @@ export const CloseIcon: FunctionComponent<CloseIconProps> = ({
   strokeSize = 3,
 }) => (
   <svg
-    className="icon"
     width={width}
     height={height}
     viewBox="0 0 34 34"

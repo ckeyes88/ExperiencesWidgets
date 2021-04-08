@@ -70,10 +70,8 @@ export const TimeslotSelection: FunctionComponent = () => {
     setCurrentDate(date);
 
     document
-      .querySelectorAll(".wizard-modal, .wizard-modal__body")
-      .forEach((element) => {
-        element?.scrollTo({ top: 0, behavior: "smooth" });
-      });
+      .querySelector(".wizard-modal__root")
+      ?.scrollTo({ top: 0, behavior: "smooth" });
 
     setCalendarOpen(false);
   };
@@ -142,7 +140,7 @@ export const TimeslotSelection: FunctionComponent = () => {
       <InfiniteScroll
         hasMore
         useWindow={false}
-        getScrollParent={() => document.querySelector(".wizard-modal")}
+        getScrollParent={() => document.querySelector(".wizard-modal__root")}
         loadMore={handleLoadMore}
         loader={
           (isFetchingMoreFromList ? (
