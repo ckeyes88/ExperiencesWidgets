@@ -18,6 +18,12 @@
   padding: 0;
 }
 
+.number-carousel__input::-webkit-outer-spin-button,
+.number-carousel__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .number-carousel__input:disabled {
   background-color: transparent;
 }
