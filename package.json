@@ -59,9 +59,12 @@
     "monk": "^7.0.0",
     "preact": "10.4.1",
     "preact-compat": "^3.19.0",
+    "react-async": "^10.0.1",
+    "react-infinite-scroller": "^1.2.4",
     "rollup-plugin-json": "^4.0.0",
     "shopify-buy": "^2.8.1",
-    "ts-polyfill": "^3.8.2"
+    "ts-polyfill": "^3.8.2",
+    "zustand": "^3.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.13.8",
@@ -78,6 +81,7 @@
     "@types/jest": "^26.0.20",
     "@types/moment-timezone": "^0.5.12",
     "@types/node": "^14.14.22",
+    "@types/react-infinite-scroller": "^1.2.1",
     "@types/shopify-buy": "^1.4.3",
     "@types/testing-library__jest-dom": "^5.9.5",
     "babel-loader": "^8.2.2",

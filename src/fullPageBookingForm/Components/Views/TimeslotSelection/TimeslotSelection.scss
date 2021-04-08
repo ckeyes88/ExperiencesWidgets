@@ -1,0 +1,72 @@
+.timeslot-selection {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+}
+
+.timeslot-selection__calendar {
+  width: 350px;
+  position: fixed;
+
+  .calendar {
+    margin-top: 50px;
+  }
+}
+
+.timeslot-selection__timeslot-list {
+  width: 460px;
+  flex: 1;
+  position: absolute;
+  right: 0;
+  padding: 0 10px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .timeslot-group {
+    margin-bottom: 60px;
+
+    &:last-child {
+      margin-bottom: 30px;
+    }
+  }
+}
+
+.timeslot-selection__calendar-button {
+  position: absolute;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+@media (max-width: 854px) {
+  .event-title,
+  .timeslot-selection__timeslot-list__margin,
+  .timeslot-selection__calendar {
+    display: none !important;
+  }
+
+  .timeslot-selection {
+    flex-direction: column;
+    margin-top: 20px;
+  }
+
+  .timeslot-selection__timeslot-list {
+    max-width: none;
+    width: 100%;
+    position: static;
+    overflow-y: unset;
+    padding: 0;
+
+    .timeslot-group {
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
