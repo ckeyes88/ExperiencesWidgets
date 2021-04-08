@@ -28,7 +28,7 @@ export type PerAttendeeTypeProps = {
     /**Whether the modal is open. */
     isOpen: boolean;
     /**Name of variant to remove */
-    //variantToRemove: string;
+    variantToRemove: string;
     /**Setting if the variant modal is open, with the name of variant to be removed. */
     setIsRemoveVariantModalOpen: (
       isOpen: boolean,
@@ -159,7 +159,7 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
         <Dialog
           open={removeVariantModal.isOpen}
           title="Remove attendee"
-          message='Are you sure you want to remove "Adult"? You will lose all additional information you have entered.'
+          message={`Are you sure you want to remove "${removeVariantModal.variantToRemove}"? You will lose all additional information you have entered.`}
           actions={modalActions}
           onClose={onCloseModal}
         />

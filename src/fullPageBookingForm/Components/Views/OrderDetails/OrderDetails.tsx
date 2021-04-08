@@ -254,6 +254,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
         //in form.
         removeVariantModal: {
           isOpen: useCustomFormStore((state) => state.isModalOpen),
+          variantToRemove: useCustomFormStore(
+            (state) => state.removeVariantName,
+          ),
           setIsRemoveVariantModalOpen: useCustomFormStore(
             (state) => state.setIsModalOpen,
           ),
