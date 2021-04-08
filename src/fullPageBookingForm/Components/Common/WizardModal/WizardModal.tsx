@@ -1,6 +1,7 @@
 /** @jsx h */
 import { h, FunctionComponent } from "preact";
 import { useEffect, useRef } from "preact/hooks";
+import ReactModal from "react-modal";
 import { CloseIcon } from "../Icon/CloseIcon";
 import {
   WizardModalProvider,
@@ -21,32 +22,34 @@ const Modal: FunctionComponent<Pick<
   WizardModalProps,
   "open" | "hideCloseButton"
 >> = ({ children, open, hideCloseButton }) => {
-  const modalRef = useRef<HTMLDivElement>();
+  const modalContentRef = useRef<HTMLDivElement>();
   const { currentPage } = useWizardModalState();
   const { close } = useWizardModalAction();
-  const wizardModalClassNames = ["wizard-modal"];
 
   useEffect(() => {
-    modalRef.current?.scrollTo?.({
+    modalContentRef.current?.scrollTo?.({
       top: 0,
     });
   }, [currentPage]);
 
-  if (open) {
-    wizardModalClassNames.push("wizard-modal--open");
-  }
-
   const handleCloseButtonClick = () => close();
 
+  const setModalContentRef = (ref: HTMLDivElement) => {
+    modalContentRef.current = ref;
+  };
+
   return (
-    <div
-      role="dialog"
-      className={wizardModalClassNames.join(" ")}
-      ref={modalRef}
+    <ReactModal
+      contentRef={setModalContentRef}
+      isOpen={open}
+      contentLabel="Minimal Modal Example"
+      className="wizard-modal__root"
+      overlayClassName="wizard-modal"
+      closeTimeoutMS={400}
     >
       <div className="wizard-modal__title-bar" />
       <div className="wizard-modal__body">
-        {!hideCloseButton(currentPage) && (
+        {!hideCloseButton?.(currentPage) && (
           <div
             data-testid="wizard-modal-close-button"
             className="wizard-modal__close-button"
@@ -57,7 +60,7 @@ const Modal: FunctionComponent<Pick<
         )}
         {children}
       </div>
-    </div>
+    </ReactModal>
   );
 };
 
