@@ -14,7 +14,7 @@ export type QuantitySelectionStore = {
   /**Whether the customer can confirm their order per store. */
   canConfirmOrder: () => boolean;
   /**Variants in the store. */
-  variants: NumberCarouselVariants;
+  variants: (NumberCarouselVariants[number] & { shopifyVariantId: number })[];
   /**Number of total units left for the event. */
   unitsLeft: number;
   /**Populate initial variants of store based upon event. */
@@ -89,6 +89,7 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
             currentQty: 0,
             name: variant.name,
             price: variant.price,
+            shopifyVariantId: variant.shopifyVariantId,
           })),
         };
       }),

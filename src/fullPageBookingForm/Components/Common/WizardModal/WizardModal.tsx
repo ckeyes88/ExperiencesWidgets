@@ -13,13 +13,14 @@ import "./WizardModal.scss";
 export type WizardModalProps = {
   open: boolean;
   initialPage: number;
+  hideCloseButton?: (page: number) => boolean;
   onClose: () => void;
 };
 
-const Modal: FunctionComponent<Pick<WizardModalProps, "open">> = ({
-  children,
-  open,
-}) => {
+const Modal: FunctionComponent<Pick<
+  WizardModalProps,
+  "open" | "hideCloseButton"
+>> = ({ children, open, hideCloseButton }) => {
   const modalRef = useRef<HTMLDivElement>();
   const { currentPage } = useWizardModalState();
   const { close } = useWizardModalAction();
@@ -45,13 +46,15 @@ const Modal: FunctionComponent<Pick<WizardModalProps, "open">> = ({
     >
       <div className="wizard-modal__title-bar" />
       <div className="wizard-modal__body">
-        <div
-          data-testid="wizard-modal-close-button"
-          className="wizard-modal__close-button"
-          onClick={handleCloseButtonClick}
-        >
-          <CloseIcon color="#666" width={32} height={32} strokeSize={2} />
-        </div>
+        {!hideCloseButton(currentPage) && (
+          <div
+            data-testid="wizard-modal-close-button"
+            className="wizard-modal__close-button"
+            onClick={handleCloseButtonClick}
+          >
+            <CloseIcon color="#666" width={32} height={32} strokeSize={2} />
+          </div>
+        )}
         {children}
       </div>
     </div>
@@ -60,7 +63,7 @@ const Modal: FunctionComponent<Pick<WizardModalProps, "open">> = ({
 
 export const WizardModal: FunctionComponent<WizardModalProps> & {
   Page: typeof WizardModalPage;
-} = ({ open, initialPage, children, onClose }) => {
+} = ({ open, initialPage, children, hideCloseButton, onClose }) => {
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "auto";
   }, [open]);
@@ -71,7 +74,9 @@ export const WizardModal: FunctionComponent<WizardModalProps> & {
       initialPage={initialPage}
       onClose={onClose}
     >
-      <Modal open={open}>{children}</Modal>
+      <Modal open={open} hideCloseButton={hideCloseButton}>
+        {children}
+      </Modal>
     </WizardModalProvider>
   );
 };
