@@ -12,6 +12,8 @@ export type NumberCarouselProps = {
   role?: string;
   /**Current qty of tickets for variant. */
   currentQty: number;
+  /**Minimum qty of tickets for variant. */
+  qtyMinimum: number;
   /**Maximum qty of tickets for variant. */
   qtyMaximum: number;
   /**Callback for increasing qty click. */
@@ -26,6 +28,7 @@ export const NumberCarousel: FunctionComponent<NumberCarouselProps> = ({
   name,
   isDisabled,
   currentQty,
+  qtyMinimum,
   qtyMaximum,
   onIncreaseClick,
   onDecreaseClick,
@@ -62,7 +65,7 @@ export const NumberCarousel: FunctionComponent<NumberCarouselProps> = ({
         className="number-carousel__input"
         type="number"
         name={name}
-        min={0}
+        min={qtyMinimum > 0 ? qtyMinimum : 0}
         max={qtyMaximum}
         value={currentQty}
         onChange={handleChange}

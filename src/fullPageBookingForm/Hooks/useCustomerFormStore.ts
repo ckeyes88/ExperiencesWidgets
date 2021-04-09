@@ -8,8 +8,6 @@ export type CustomerFormStore = {
   canConfirmOrder: () => boolean;
   /**Callback to handle changes to customer form. */
   handleCustomerFormChange: (fieldName: string, fieldValue: string) => void;
-  /**Updates customer data on change of form data. */
-  onAddCustomerInfo: () => void;
 };
 
 export const useCustomerFormStore = create<CustomerFormStore>((set, get) => ({
@@ -36,5 +34,4 @@ export const useCustomerFormStore = create<CustomerFormStore>((set, get) => ({
         },
       };
     }),
-  onAddCustomerInfo: () => {},
 }));

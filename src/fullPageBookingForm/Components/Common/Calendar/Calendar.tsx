@@ -207,7 +207,8 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
             color="primary"
             text="Today"
             disabled={
-              (moment(today).isSame(currentDate, "date") &&
+              moment(today).isSame(currentDate, "date") ||
+              (moment(today).isBefore(currentDate, "date") &&
                 withinCurrentMonthAndYear) ||
               loading
             }

@@ -11,6 +11,7 @@ const defaultArgs: NumberCarouselProps = {
   name: "Senior",
   currentQty: 0,
   qtyMaximum: 5,
+  qtyMinimum: 0,
   onDecreaseClick: () => {},
   onIncreaseClick: () => {},
   onChange: (value: string) => {},

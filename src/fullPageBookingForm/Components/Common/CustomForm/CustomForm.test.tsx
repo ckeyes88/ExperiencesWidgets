@@ -1,15 +1,11 @@
 /** @jsx h */
 import { h } from "preact";
 import { fireEvent, render, screen } from "@testing-library/preact";
+import { CustomForm, CustomFormProps } from "./CustomForm";
 import {
-  CustomForm,
-  CustomFormProps,
-  PerAttendeeTypeProps,
-} from "./CustomForm";
-import {
-  defaultPerOrderFormProps,
   defaultPerAttendeeFormProps,
-} from "./CustomForm.stories";
+  defaultPerOrderFormProps,
+} from "../../../__mocks__/CustomForm";
 
 const defaultProps: CustomFormProps = {
   formType: defaultPerOrderFormProps,

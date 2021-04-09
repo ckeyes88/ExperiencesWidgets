@@ -2,7 +2,6 @@ import { EventDBO } from "../../typings/Event";
 import { clone } from "ramda";
 import { NumberCarouselVariants } from "../Components/Common/QuantitySelection";
 import create from "zustand";
-import { Availability } from "../../typings/Availability";
 
 export type QuantitySelectionStore = {
   /**Update variant count on decrease click. */
@@ -15,10 +14,16 @@ export type QuantitySelectionStore = {
   canConfirmOrder: () => boolean;
   /**Variants in the store. */
   variants: (NumberCarouselVariants[number] & { shopifyVariantId: number })[];
+  /**Minimum quantity for a variant in the event. */
+  minLimit: number;
+  /**Current maximum quantity for variants. Is null if API response for event
+   * has a maximum qty of 0.
+   */
+  maxLimit: number | null;
   /**Number of total units left for the event. */
   unitsLeft: number;
   /**Populate initial variants of store based upon event. */
-  setVariants: (event: EventDBO, selectedTimeslot: Availability) => void;
+  setVariants: (event: EventDBO, unitsLeft: number) => void;
   /**Disables the variants from being edited in view. */
   disableVariants: () => void;
   /**Enables all variants for edit in view. */
@@ -42,18 +47,32 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
     onIncreaseClick: (variantIdx: number) =>
       set((state) => {
         let oldArray = clone(state.variants);
-        oldArray[variantIdx].currentQty = oldArray[variantIdx].currentQty + 1;
+        const currentQty = oldArray[variantIdx].currentQty;
+
+        //If we are at a qty of 0, and the tickets have a min limit, we want to
+        //increase the value of the variant by the min limit.
+        const increaseValue =
+          currentQty === 0 && state.minLimit > 0 ? state.minLimit : 1;
+
+        //Update value
+        oldArray[variantIdx].currentQty =
+          oldArray[variantIdx].currentQty + increaseValue;
 
         return {
           variants: oldArray,
-          unitsLeft: state.unitsLeft - 1,
+          unitsLeft: state.unitsLeft - increaseValue,
         };
       }),
     onChange: (variantIdx: number, variantQty: string) =>
       set((state) => {
         let oldArray = clone(state.variants);
         const oldQuantity = oldArray[variantIdx].currentQty;
-        const maxQty = state.unitsLeft + oldQuantity;
+
+        //Maximum quantity for event will be maxLimit first, and then a tracked value
+        //of the addition of the current variant value + units left if no max limit is provided.
+        const maxQty = state.maxLimit
+          ? state.maxLimit
+          : state.unitsLeft + oldQuantity;
         /**Ensure maximum qty typed in is at most the maximum variant quantity.
          * If user enters an empty string, disallow change.
          */
@@ -61,6 +80,10 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
           parseInt(variantQty) > maxQty ? maxQty : parseInt(variantQty);
 
         newQuantity = isNaN(newQuantity) ? 0 : newQuantity;
+
+        //Ensure typed value is at minimum minLimit, if one exists.
+        newQuantity =
+          newQuantity < state.minLimit ? state.minLimit : newQuantity;
 
         oldArray[variantIdx].currentQty = newQuantity;
 
@@ -80,10 +103,14 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
     },
     variants: [],
     unitsLeft: 0,
-    setVariants: (event: EventDBO, selectedTimeslot: Availability) =>
+    maxLimit: null,
+    minLimit: 0,
+    setVariants: (event: EventDBO, unitsLeft: number) =>
       set((_) => {
         return {
-          unitsLeft: selectedTimeslot.unitsLeft,
+          unitsLeft: unitsLeft,
+          maxLimit: event.maxLimit === 0 ? null : event.maxLimit,
+          minLimit: event.minLimit,
           variants: event.variants.map((variant) => ({
             isDisabled: false,
             currentQty: 0,
