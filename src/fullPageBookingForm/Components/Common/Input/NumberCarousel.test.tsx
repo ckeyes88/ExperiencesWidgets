@@ -11,6 +11,7 @@ const props: NumberCarouselProps = {
   onDecreaseClick: jest.fn(),
   onIncreaseClick: jest.fn(),
   qtyMaximum: 5,
+  qtyMinimum: 0,
 };
 
 const buttonDisabledClass = "number-carousel__button--disabled";
