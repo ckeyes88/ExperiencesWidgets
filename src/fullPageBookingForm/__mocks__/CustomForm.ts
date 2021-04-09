@@ -48,6 +48,7 @@ export const defaultPerAttendeeFormProps: PerAttendeeTypeProps = {
     },
   ],
   removeVariantModal: {
+    variantToRemove: "",
     isOpen: false,
     removeVariant: () => {},
     setIsRemoveVariantModalOpen: () => {},

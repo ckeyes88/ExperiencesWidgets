@@ -8,7 +8,11 @@ import "./QuantitySelection.scss";
 export type NumberCarouselVariants = Array<
   Omit<
     NumberCarouselProps,
-    "onIncreaseClick" | "onDecreaseClick" | "onChange" | "qtyMaximum"
+    | "onIncreaseClick"
+    | "onDecreaseClick"
+    | "onChange"
+    | "qtyMaximum"
+    | "qtyMinimum"
   > & {
     price: number;
   }
@@ -17,6 +21,10 @@ export type NumberCarouselVariants = Array<
 export type QuantitySelectionProps = {
   /**Array of variants to be shown in table.*/
   variants: NumberCarouselVariants;
+  /**Minimum Quantity for event variant */
+  qtyMinimum: number;
+  /**Optional maximum quantity for event variant. */
+  currentMaximumQty?: number;
   /**Number of units left to be selected. */
   unitsLeft: number;
   /**Callback for increasing variant quantity at variantIdx. */
@@ -32,6 +40,8 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
   onChange,
   onDecreaseClick,
   unitsLeft,
+  qtyMinimum,
+  currentMaximumQty,
 }) => {
   /**Calculates total of order. */
   let total = variants
@@ -70,7 +80,12 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
                   onDecreaseClick={() => onDecreaseClick(idx)}
                   onIncreaseClick={() => onIncreaseClick(idx)}
                   currentQty={variant.currentQty}
-                  qtyMaximum={variant.currentQty + unitsLeft}
+                  qtyMaximum={
+                    currentMaximumQty
+                      ? variant.currentQty + currentMaximumQty
+                      : variant.currentQty + unitsLeft
+                  }
+                  qtyMinimum={qtyMinimum}
                   onChange={(value) => onChange(idx, value)}
                   isDisabled={variant.isDisabled}
                 />
