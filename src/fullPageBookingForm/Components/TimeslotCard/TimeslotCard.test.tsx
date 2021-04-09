@@ -11,7 +11,7 @@ test("Renders content correctly", () => {
       endsAt={new Date("March 17, 2021 10:00:00")}
       remainingSpots={4}
       minPrice={150}
-      timezone={"Asia/Manila"}
+      timezone="America/Los_Angeles"
       onSelect={jest.fn()}
     />,
   );
