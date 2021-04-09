@@ -37,7 +37,8 @@ const defaultArgs: QuantitySelectionProps = {
   onDecreaseClick: defaultOnDecreaseClick,
   onIncreaseClick: defaultOnIncreaseClick,
   unitsLeft: 5,
-  qtyMinimum: 0,
+  minLimit: 0,
+  maxLimit: null,
   itemsInCart: 0,
 };
 

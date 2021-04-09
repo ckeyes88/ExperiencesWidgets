@@ -14,6 +14,12 @@ export type QuantitySelectionStore = {
   canConfirmOrder: () => boolean;
   /**Variants in the store. */
   variants: (NumberCarouselVariants[number] & { shopifyVariantId: number })[];
+  /**Minimum quantity for a variant in the event. */
+  minLimit: number;
+  /**Current maximum quantity for variants. Is null if API response for event
+   * has a maximum qty of 0.
+   */
+  maxLimit: number | null;
   /**Number of total units left for the event. */
   unitsLeft: number;
   /**Populate initial variants of store based upon event. */
@@ -79,10 +85,14 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
     },
     variants: [],
     unitsLeft: 0,
+    maxLimit: null,
+    minLimit: 0,
     setVariants: (event: EventDBO, unitsLeft: number) =>
       set((_) => {
         return {
           unitsLeft: unitsLeft,
+          maxLimit: event.maxLimit === 0 ? null : event.maxLimit,
+          minLimit: event.minLimit,
           variants: event.variants.map((variant) => ({
             isDisabled: false,
             currentQty: 0,
