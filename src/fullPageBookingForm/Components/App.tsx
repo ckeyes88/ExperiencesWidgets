@@ -95,6 +95,7 @@ export const App: FunctionComponent<AppProps> = ({
   }, []);
 
   const handleClose = () => {
+    resetOrderDetailsStores();
     setOpen(false);
   };
 
