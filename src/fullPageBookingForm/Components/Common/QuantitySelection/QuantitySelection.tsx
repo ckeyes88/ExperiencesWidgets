@@ -21,8 +21,6 @@ export type NumberCarouselVariants = Array<
 export type QuantitySelectionProps = {
   /**Array of variants to be shown in table.*/
   variants: NumberCarouselVariants;
-  /**Minimum Quantity for event variant */
-  minLimit: number;
   /**Maximum quantity for event variant. */
   maxLimit: number | null;
   /**Number of units left to be selected. */
@@ -43,7 +41,6 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
   onDecreaseClick,
   unitsLeft,
   maxLimit,
-  minLimit,
   itemsInCart,
 }) => {
   /**Calculates total of order. */
@@ -89,7 +86,7 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
                   qtyMaximum={
                     maxLimit ? maxLimit : variant.currentQty + unitsLeft
                   }
-                  qtyMinimum={minLimit}
+                  qtyMinimum={0}
                   onChange={(value) => onChange(idx, value)}
                   isDisabled={variant.isDisabled}
                 />

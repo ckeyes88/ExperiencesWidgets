@@ -8,7 +8,6 @@ const props: QuantitySelectionProps = {
   onDecreaseClick: jest.fn(),
   onIncreaseClick: jest.fn(),
   unitsLeft: 5,
-  minLimit: 0,
   maxLimit: null,
   itemsInCart: 0,
   variants: [
@@ -66,7 +65,6 @@ const multipleVariantsProps: QuantitySelectionProps = {
   onIncreaseClick: jest.fn(),
   unitsLeft: 5,
   variants: multipleVariants,
-  minLimit: 0,
   maxLimit: null,
   itemsInCart: 0,
 };

@@ -99,7 +99,19 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
     canConfirmOrder: () => {
       const variants = get().variants;
 
-      return variants.some((variant) => variant.currentQty > 0);
+      //Event meets min limit if no min limit is supplied, or there are enough tickets
+      //selected.
+      const meetsMinLimit =
+        get().minLimit === 0 ||
+        (get().minLimit &&
+          variants
+            .map((variant) => variant.currentQty)
+            .reduce((total, val) => total + val),
+        0);
+
+      return (
+        meetsMinLimit && variants.some((variant) => variant.currentQty > 0)
+      );
     },
     variants: [],
     unitsLeft: 0,
