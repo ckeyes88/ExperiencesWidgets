@@ -19,6 +19,8 @@ export type QuantitySelectionProps = {
   variants: NumberCarouselVariants;
   /**Number of units left to be selected. */
   unitsLeft: number;
+  /** Total number of items for this time slot in their cart */
+  itemsInCart: number | null;
   /**Callback for increasing variant quantity at variantIdx. */
   onIncreaseClick: (variantIdx: number) => void;
   /**Callback for decreasing variant quantity at variantIdx */
@@ -32,6 +34,7 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
   onChange,
   onDecreaseClick,
   unitsLeft,
+  itemsInCart
 }) => {
   /**Calculates total of order. */
   let total = variants
@@ -50,6 +53,8 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
   if (isDisabled) {
     classNames.push("quantity-selection--is-disabled");
   }
+
+  const showCartItemWarning = itemsInCart !== null && itemsInCart > 0 && (unitsLeft <= itemsInCart);
 
   return (
     <div className={classNames.join(" ")} role="QuantitySelection">
@@ -85,6 +90,10 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
             <TextStyle variant="body2" text={`$${total}`} />
           </div>
         </div>
+
+        {showCartItemWarning && <div className="quantity-selection__cart-warning">
+          <TextStyle variant="body3" text={`You already have ${itemsInCart} item${itemsInCart > 1 ? "s" : ""} in your cart for this time slot.`} />
+        </div>}
       </div>
       <div className="quantity-selection__header-rule" />
     </div>

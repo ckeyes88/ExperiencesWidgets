@@ -37,6 +37,7 @@ const defaultArgs: QuantitySelectionProps = {
   onDecreaseClick: defaultOnDecreaseClick,
   onIncreaseClick: defaultOnIncreaseClick,
   unitsLeft: 5,
+  itemsInCart: 0,
 };
 
 const Template = (args: QuantitySelectionProps) => (

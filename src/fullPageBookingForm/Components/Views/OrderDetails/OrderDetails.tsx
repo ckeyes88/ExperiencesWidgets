@@ -64,7 +64,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     (state) => state.isSaveContinueDisabled,
   );
 
-  const [itemsInCart, setItemsInCart] = useState<number>(0);
+  const [itemsInCart, setItemsInCart] = useState<number | null>(null);
 
   //Populate qty selection variants on mount of component.
   useEffect(() => {
@@ -339,7 +339,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   /**Renders the quantity selection component in the view. */
   const renderQtySelection = () => (
     <div className="OrderDetails__Input__Quantity-Selection">
-      <QuantitySelection {...useQtySelectionStore()} />
+      <QuantitySelection itemsInCart={itemsInCart} {...useQtySelectionStore()} />
     </div>
   );
 
@@ -485,7 +485,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
   //Determine number of units left to select for each variant.
   const unitsLeft = useQtySelectionStore((state) => state.unitsLeft);
-
+  
   /** Main render method. */
   return (
     <Fragment>
