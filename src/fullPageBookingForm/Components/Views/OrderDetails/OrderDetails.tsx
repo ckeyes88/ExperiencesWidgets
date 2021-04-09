@@ -174,14 +174,16 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     const customerData = useCustomerFormStore((state) => state.customerData);
 
     //Handle submission of form, and pass data in form to parent component.
-    const handleFormSubmit = (event: Event) => {
-      event.preventDefault();
-      const onAddCustomerInfo = useCustomerFormStore(
-        (state) => state.onAddCustomerInfo,
-      );
+    const handleFormSubmit = (e: Event) => {
+      e.preventDefault();
 
-      //Pass data to parent.
-      onAddCustomerInfo();
+      if (event.paymentType === PaymentType.Prepay) {
+        return addOrderToCart();
+      }
+
+      useOrderDetailsStore((state) => state.setPage)(
+        BookingFormPage.SUBMISSION_LOADER,
+      );
     };
 
     const customerFormProps: CustomerInfoFormProps = {
