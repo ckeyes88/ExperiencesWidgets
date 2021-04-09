@@ -592,10 +592,15 @@ export async function addToCart(
  */
 export async function getCart(shopUrl?: string): Promise<GetCartResponse> {
   const cartUrl = "/cart.js";
-  const res = await axios.post<
+  const res = await axios.get<
     GetCartRequestBody,
     AxiosResponse<GetCartResponse>
-  >(cartUrl);
+  >(cartUrl, {
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json",
+    }
+  });
   //const res = await sendJSON<GetCartRequestBody, GetCartResponse>("GET", cartUrl);
 
   return res.data;

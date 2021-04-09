@@ -21,7 +21,7 @@ import {
   PerAttendeeTypeProps,
   PerOrderTypeProps,
 } from "../../Common/CustomForm";
-import { useCallback, useEffect, useRef } from "preact/hooks";
+import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 import { CustomFormValue } from "../../../Typings/CustomForm";
 import { useCustomerFormStore } from "../../../Hooks/useCustomerFormStore";
 import { useCustomFormStore } from "../../../Hooks/useCustomFormStore";
@@ -34,6 +34,7 @@ import {
   WizardModalTitleBar,
 } from "../../Common/WizardModal";
 import moment from "moment-timezone";
+import { getCart } from "../../../../Utils/api";
 
 export type OrderDetailsProps = {
   /** This is the timeslot that the user has selected for the order */
@@ -63,9 +64,30 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     (state) => state.isSaveContinueDisabled,
   );
 
+  const [itemsInCart, setItemsInCart] = useState<number>(0);
+
   //Populate qty selection variants on mount of component.
   useEffect(() => {
-    useQtySelectionStore((state) => state.setVariants)(event, selectedTimeslot);
+    getCart().then(cart => {
+      const items = cart.items ? cart.items : [];
+      let numOfProductInCart: number = 0;
+      for (let i = 0; i < items.length; i++) {
+        // check if the product and time slot are the same to add up the total number in cart so far
+        if (
+          items[i].product_id === event.shopifyProductId &&
+          items[i].properties.When === selectedTimeslot.formattedTimeslot.when &&
+          items[i].properties.Timeslot === selectedTimeslot.timeslotId
+        ) {
+          numOfProductInCart += items[i].quantity;
+        }
+      }
+
+      let unitsLeft = (selectedTimeslot.unitsLeft > numOfProductInCart) ? selectedTimeslot.unitsLeft - numOfProductInCart : 0;
+      setItemsInCart(numOfProductInCart);
+      useQtySelectionStore((state) => state.setVariants)(event, unitsLeft);
+    }).catch(e => {
+      console.error(e);
+    });
   }, []);
 
   //Create callback for scrolling to edit button when created in view.

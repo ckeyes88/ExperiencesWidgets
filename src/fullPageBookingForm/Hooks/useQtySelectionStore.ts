@@ -2,7 +2,6 @@ import { EventDBO } from "../../typings/Event";
 import { clone } from "ramda";
 import { NumberCarouselVariants } from "../Components/Common/QuantitySelection";
 import create from "zustand";
-import { Availability } from "../../typings/Availability";
 
 export type QuantitySelectionStore = {
   /**Update variant count on decrease click. */
@@ -18,7 +17,7 @@ export type QuantitySelectionStore = {
   /**Number of total units left for the event. */
   unitsLeft: number;
   /**Populate initial variants of store based upon event. */
-  setVariants: (event: EventDBO, selectedTimeslot: Availability) => void;
+  setVariants: (event: EventDBO, unitsLeft: number) => void;
   /**Disables the variants from being edited in view. */
   disableVariants: () => void;
   /**Enables all variants for edit in view. */
@@ -80,10 +79,10 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
     },
     variants: [],
     unitsLeft: 0,
-    setVariants: (event: EventDBO, selectedTimeslot: Availability) =>
+    setVariants: (event: EventDBO, unitsLeft: number) =>
       set((_) => {
         return {
-          unitsLeft: selectedTimeslot.unitsLeft,
+          unitsLeft: unitsLeft,
           variants: event.variants.map((variant) => ({
             isDisabled: false,
             currentQty: 0,
