@@ -47,6 +47,8 @@ export type OrderDetailsProps = {
   labels: Partial<AppDictionary>;
   /**Whether the view is being tested in storybook. */
   isStorybookTest?: boolean;
+  /**Callback to handle back click in parent. */
+  onBackClick: () => void;
 };
 
 export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
@@ -54,6 +56,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   selectedTimeslot,
   labels,
   isStorybookTest,
+  onBackClick,
 }) => {
   const addOrderToCart = useAddOrderToCart();
   const setPage = isStorybookTest
@@ -485,6 +488,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
   //Handles clicking back in wizard modal.
   const handleBackClick = () => {
+    onBackClick();
     setPage(BookingFormPage.TIMESLOT_SELECTION);
   };
 
