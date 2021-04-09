@@ -7,6 +7,10 @@
   opacity: 0.5;
 }
 
+.quantity-selection__cart-warning > span {
+  color: $color-danger;
+}
+
 .quantity-selection__table-cell {
   display: grid;
   grid-template-columns: 30% 30% 40%;

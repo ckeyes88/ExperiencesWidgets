@@ -9,6 +9,7 @@ const props: QuantitySelectionProps = {
   onIncreaseClick: jest.fn(),
   unitsLeft: 5,
   qtyMinimum: 0,
+  itemsInCart: 0,
   variants: [
     {
       currentQty: 0,
@@ -65,6 +66,7 @@ const multipleVariantsProps: QuantitySelectionProps = {
   unitsLeft: 5,
   variants: multipleVariants,
   qtyMinimum: 0,
+  itemsInCart: 0,
 };
 
 const qtySelectionRole = "QuantitySelection";
