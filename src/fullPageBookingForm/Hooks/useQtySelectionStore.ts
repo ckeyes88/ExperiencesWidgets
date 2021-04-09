@@ -47,18 +47,32 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
     onIncreaseClick: (variantIdx: number) =>
       set((state) => {
         let oldArray = clone(state.variants);
-        oldArray[variantIdx].currentQty = oldArray[variantIdx].currentQty + 1;
+        const currentQty = oldArray[variantIdx].currentQty;
+
+        //If we are at a qty of 0, and the tickets have a min limit, we want to
+        //increase the value of the variant by the min limit.
+        const increaseValue =
+          currentQty === 0 && state.minLimit > 0 ? state.minLimit : 1;
+
+        //Update value
+        oldArray[variantIdx].currentQty =
+          oldArray[variantIdx].currentQty + increaseValue;
 
         return {
           variants: oldArray,
-          unitsLeft: state.unitsLeft - 1,
+          unitsLeft: state.unitsLeft - increaseValue,
         };
       }),
     onChange: (variantIdx: number, variantQty: string) =>
       set((state) => {
         let oldArray = clone(state.variants);
         const oldQuantity = oldArray[variantIdx].currentQty;
-        const maxQty = state.unitsLeft + oldQuantity;
+
+        //Maximum quantity for event will be maxLimit first, and then a tracked value
+        //of the addition of the current variant value + units left if no max limit is provided.
+        const maxQty = state.maxLimit
+          ? state.maxLimit
+          : state.unitsLeft + oldQuantity;
         /**Ensure maximum qty typed in is at most the maximum variant quantity.
          * If user enters an empty string, disallow change.
          */
@@ -66,6 +80,10 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
           parseInt(variantQty) > maxQty ? maxQty : parseInt(variantQty);
 
         newQuantity = isNaN(newQuantity) ? 0 : newQuantity;
+
+        //Ensure typed value is at minimum minLimit, if one exists.
+        newQuantity =
+          newQuantity < state.minLimit ? state.minLimit : newQuantity;
 
         oldArray[variantIdx].currentQty = newQuantity;
 
