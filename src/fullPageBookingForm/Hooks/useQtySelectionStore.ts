@@ -75,39 +75,74 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
       }),
     onChange: (variantIdx: number, variantQty: string) =>
       set((state) => {
-        let oldArray = clone(state.variants);
-        const oldQuantity = oldArray[variantIdx].currentQty;
-
-        //Maximum quantity for event will be maxLimit first, and then a tracked value
-        //of the addition of the current variant value + units left if no max limit is provided.
-        const maxQty = state.maxLimit
-          ? state.maxLimit - (state.currentSelectedUnits - oldQuantity)
-          : state.unitsLeft + oldQuantity;
-        /**Ensure maximum qty typed in is at most the maximum variant quantity.
+        /**
          * If user enters an empty string, disallow change.
          */
-        let newQuantity =
-          parseInt(variantQty) >= maxQty ? maxQty : parseInt(variantQty);
+        if (isNaN(parseInt(variantQty))) {
+          return;
+        }
 
-        newQuantity = isNaN(newQuantity) ? 0 : newQuantity;
+        let oldArray = clone(state.variants);
+        const oldQuantity = oldArray[variantIdx].currentQty;
+        let newQuantity = parseInt(variantQty);
 
-        //Ensure typed value is at minimum minLimit, if one exists.
-        newQuantity =
-          newQuantity <
-          state.minLimit - (state.currentSelectedUnits - oldQuantity)
-            ? state.minLimit
-            : newQuantity;
+        const tempSelectedUnits = state.currentSelectedUnits - oldQuantity;
+        const tempUnitsLeft = state.unitsLeft + oldQuantity;
+
+        //Determine if updated value meets minimum limit.
+        const meetsMinLimit = tempSelectedUnits + newQuantity >= state.minLimit;
+
+        //Ensure entered qty meets minimum limit.
+        if (!meetsMinLimit) {
+          const minAmount = state.minLimit - tempSelectedUnits;
+          oldArray[variantIdx].currentQty = minAmount;
+
+          return {
+            variants: oldArray,
+            unitsLeft: tempUnitsLeft - minAmount,
+            currentSelectedUnits: tempSelectedUnits + minAmount,
+          };
+        }
+
+        //If no max limit is provided, ensure we are below unitsLeft for variant.
+        if (!state.maxLimit) {
+          const maxQty = tempUnitsLeft;
+          newQuantity = newQuantity >= maxQty ? maxQty : newQuantity;
+          oldArray[variantIdx].currentQty = newQuantity;
+
+          return {
+            variants: oldArray,
+            unitsLeft: tempUnitsLeft - newQuantity,
+            currentSelectedUnits: tempSelectedUnits + newQuantity,
+          };
+        }
+
+        //If max limit is provided, maximum possible qty is minimum between
+        //units left and maxLimit.
+        const maxQtyLimit =
+          state.maxLimit > tempUnitsLeft + tempSelectedUnits
+            ? tempUnitsLeft + tempSelectedUnits
+            : state.maxLimit;
+        const meetsMaxLimit = maxQtyLimit >= newQuantity + tempSelectedUnits;
+
+        //Max limit is provided, and entry does not meet max limit.
+        if (!meetsMaxLimit) {
+          const maxQty = maxQtyLimit - tempSelectedUnits;
+          oldArray[variantIdx].currentQty = maxQty;
+
+          return {
+            variants: oldArray,
+            unitsLeft: tempUnitsLeft - maxQty,
+            currentSelectedUnits: tempSelectedUnits + maxQty,
+          };
+        }
 
         oldArray[variantIdx].currentQty = newQuantity;
 
-        //Update unitsLeft according to quantity differences between
-        //old quantity in field and entered quantity.
-        const qtyDifference = newQuantity - oldQuantity;
-
         return {
           variants: oldArray,
-          unitsLeft: state.unitsLeft - qtyDifference,
-          currentSelectedUnits: state.currentSelectedUnits - qtyDifference,
+          unitsLeft: tempUnitsLeft - newQuantity,
+          currentSelectedUnits: tempSelectedUnits + newQuantity,
         };
       }),
     canConfirmOrder: () => {

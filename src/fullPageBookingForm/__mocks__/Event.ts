@@ -24,6 +24,8 @@ export const defaultQuantitySelections: QuantitySelectionProps = {
   ],
   maxLimit: 5,
   itemsInCart: 0,
+  minLimit: 0,
+  currentSelectedUnits: 0,
   unitsLeft: 5,
   onDecreaseClick: () => {},
   onIncreaseClick: () => {},
@@ -92,6 +94,10 @@ export const defaultEvent: EventDBO = {
   taxStatus: TaxStatus.NoTax,
   updatedAt: new Date(2021, 1, 2),
   variants: [
+    {
+      name: "Adult",
+      price: 100,
+    },
     {
       name: "Child",
       price: 50,

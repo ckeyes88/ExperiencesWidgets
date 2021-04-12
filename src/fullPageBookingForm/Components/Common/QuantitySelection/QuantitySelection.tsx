@@ -21,10 +21,14 @@ export type NumberCarouselVariants = Array<
 export type QuantitySelectionProps = {
   /**Array of variants to be shown in table.*/
   variants: NumberCarouselVariants;
+  /**Min limit for variant. */
+  minLimit: number;
   /**Maximum quantity for event variant. */
   maxLimit: number | null;
   /**Number of units left to be selected. */
   unitsLeft: number;
+  /**Number of variants currently selected in parent. */
+  currentSelectedUnits: number;
   /** Total number of items for this time slot in their cart */
   itemsInCart: number | null;
   /**Callback for increasing variant quantity at variantIdx. */
@@ -40,7 +44,9 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
   onChange,
   onDecreaseClick,
   unitsLeft,
+  minLimit,
   maxLimit,
+  currentSelectedUnits,
   itemsInCart,
 }) => {
   /**Calculates total of order. */
@@ -64,6 +70,14 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
   const showCartItemWarning =
     itemsInCart !== null && itemsInCart > 0 && unitsLeft <= itemsInCart;
 
+  //Maximum current limit qty, if defined, is maxLimit less current selected variant qty
+  const maxLimitQty = maxLimit && maxLimit - currentSelectedUnits;
+
+  //Min limit qty is capped at 0, and is linear between minLimit and currentSelected
+  //units otherwise.
+  const minLimitQty =
+    minLimit - currentSelectedUnits < 0 ? 0 : minLimit - currentSelectedUnits;
+
   return (
     <div className={classNames.join(" ")} role="QuantitySelection">
       <TextStyle variant="display2" text="Quantity" />
@@ -84,9 +98,13 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
                   onIncreaseClick={() => onIncreaseClick(idx)}
                   currentQty={variant.currentQty}
                   qtyMaximum={
-                    maxLimit ? maxLimit : variant.currentQty + unitsLeft
+                    maxLimitQty
+                      ? maxLimitQty > unitsLeft
+                        ? unitsLeft + variant.currentQty
+                        : maxLimitQty + variant.currentQty
+                      : variant.currentQty + unitsLeft
                   }
-                  qtyMinimum={0}
+                  qtyMinimum={minLimitQty}
                   onChange={(value) => onChange(idx, value)}
                   isDisabled={variant.isDisabled}
                 />
