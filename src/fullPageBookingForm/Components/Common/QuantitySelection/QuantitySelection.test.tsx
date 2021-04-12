@@ -69,6 +69,8 @@ const multipleVariantsProps: QuantitySelectionProps = {
   variants: multipleVariants,
   maxLimit: null,
   itemsInCart: 0,
+  currentSelectedUnits: 0,
+  minLimit: 0,
 };
 
 const qtySelectionRole = "QuantitySelection";
