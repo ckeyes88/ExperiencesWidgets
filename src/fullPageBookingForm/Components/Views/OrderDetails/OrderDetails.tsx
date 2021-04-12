@@ -47,6 +47,8 @@ export type OrderDetailsProps = {
   labels: Partial<AppDictionary>;
   /**Whether the view is being tested in storybook. */
   isStorybookTest?: boolean;
+  /**Callback to handle back click in parent. */
+  onBackClick: () => void;
 };
 
 export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
@@ -54,6 +56,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   selectedTimeslot,
   labels,
   isStorybookTest,
+  onBackClick,
 }) => {
   const addOrderToCart = useAddOrderToCart();
   const setPage = isStorybookTest
@@ -68,26 +71,32 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
   //Populate qty selection variants on mount of component.
   useEffect(() => {
-    getCart().then(cart => {
-      const items = cart.items ? cart.items : [];
-      let numOfProductInCart: number = 0;
-      for (let i = 0; i < items.length; i++) {
-        // check if the product and time slot are the same to add up the total number in cart so far
-        if (
-          items[i].product_id === event.shopifyProductId &&
-          items[i].properties.When === selectedTimeslot.formattedTimeslot.when &&
-          items[i].properties.Timeslot === selectedTimeslot.timeslotId
-        ) {
-          numOfProductInCart += items[i].quantity;
+    getCart()
+      .then((cart) => {
+        const items = cart.items ? cart.items : [];
+        let numOfProductInCart: number = 0;
+        for (let i = 0; i < items.length; i++) {
+          // check if the product and time slot are the same to add up the total number in cart so far
+          if (
+            items[i].product_id === event.shopifyProductId &&
+            items[i].properties.When ===
+              selectedTimeslot.formattedTimeslot.when &&
+            items[i].properties.Timeslot === selectedTimeslot.timeslotId
+          ) {
+            numOfProductInCart += items[i].quantity;
+          }
         }
-      }
 
-      let unitsLeft = (selectedTimeslot.unitsLeft > numOfProductInCart) ? selectedTimeslot.unitsLeft - numOfProductInCart : 0;
-      setItemsInCart(numOfProductInCart);
-      useQtySelectionStore((state) => state.setVariants)(event, unitsLeft);
-    }).catch(e => {
-      console.error(e);
-    });
+        let unitsLeft =
+          selectedTimeslot.unitsLeft > numOfProductInCart
+            ? selectedTimeslot.unitsLeft - numOfProductInCart
+            : 0;
+        setItemsInCart(numOfProductInCart);
+        useQtySelectionStore((state) => state.setVariants)(event, unitsLeft);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   }, []);
 
   //Create callback for scrolling to edit button when created in view.
@@ -111,8 +120,13 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   /** Triggered on submission of a custom form */
   const handleSubmitCustomForm = (ev: Event) => {
     ev.preventDefault();
-    const onConfirmOrder = useCustomFormStore((state) => state.onConfirmOrder);
-    onConfirmOrder();
+    if (event.paymentType === PaymentType.Prepay) {
+      return addOrderToCart();
+    }
+
+    useOrderDetailsStore((state) => state.setPage)(
+      BookingFormPage.SUBMISSION_LOADER,
+    );
   };
 
   //Whether the merchant has provided a custom form for this experience.
@@ -339,7 +353,10 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   /**Renders the quantity selection component in the view. */
   const renderQtySelection = () => (
     <div className="OrderDetails__Input__Quantity-Selection">
-      <QuantitySelection itemsInCart={itemsInCart} {...useQtySelectionStore()} />
+      <QuantitySelection
+        itemsInCart={itemsInCart}
+        {...useQtySelectionStore()}
+      />
     </div>
   );
 
@@ -471,6 +488,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
   //Handles clicking back in wizard modal.
   const handleBackClick = () => {
+    onBackClick();
     setPage(BookingFormPage.TIMESLOT_SELECTION);
   };
 
@@ -485,7 +503,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
   //Determine number of units left to select for each variant.
   const unitsLeft = useQtySelectionStore((state) => state.unitsLeft);
-  
+
   /** Main render method. */
   return (
     <Fragment>

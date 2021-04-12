@@ -17,7 +17,18 @@ import {
   defineLanguageDictionary,
   LanguageCodes,
 } from "../../typings/Languages";
-import { useCustomerFormStore } from "../Hooks/useCustomerFormStore";
+import {
+  CustomerFormStore,
+  useCustomerFormStore,
+} from "../Hooks/useCustomerFormStore";
+import {
+  CustomFormStore,
+  useCustomFormStore,
+  OrderDetailsStore,
+  useOrderDetailsStore,
+  QuantitySelectionStore,
+  useQtySelectionStore,
+} from "../Hooks";
 export type AppProps = {
   baseUrl: string;
   languageCode: string;
@@ -31,6 +42,30 @@ export const App: FunctionComponent<AppProps> = ({
   shopifyProductId,
   languageCode,
 }) => {
+  const [initialCustomerFormStore] = useState<CustomerFormStore>(
+    useCustomerFormStore.getState(),
+  );
+  const [initialCustomFormStore] = useState<CustomFormStore>(
+    useCustomFormStore.getState(),
+  );
+  const [initialOrderDetailsStore] = useState<OrderDetailsStore>(
+    useOrderDetailsStore.getState(),
+  );
+  const [initialQtySelectionStore] = useState<QuantitySelectionStore>(
+    useQtySelectionStore.getState(),
+  );
+
+  const resetOrderDetailsStores = () => {
+    useCustomerFormStore.setState(initialCustomerFormStore, true);
+    useCustomFormStore.setState(initialCustomFormStore, true);
+    useOrderDetailsStore.setState(initialOrderDetailsStore, true);
+    useQtySelectionStore.setState(initialQtySelectionStore, true);
+  };
+  //Reset store data on unmount
+  useEffect(() => {
+    return resetOrderDetailsStores;
+  }, []);
+
   const { open, setOpen } = useConnectActivators();
   const event = useEventStore((state) => state.event);
   const selectedTimeslot = useTimeslotStore((state) => state.selectedTimeslot);
@@ -60,6 +95,7 @@ export const App: FunctionComponent<AppProps> = ({
   }, []);
 
   const handleClose = () => {
+    resetOrderDetailsStores();
     setOpen(false);
   };
 
@@ -97,6 +133,7 @@ export const App: FunctionComponent<AppProps> = ({
             event={event}
             labels={labels}
             selectedTimeslot={selectedTimeslot}
+            onBackClick={resetOrderDetailsStores}
           />
         </WizardModal.Page>
         <WizardModal.Page page={BookingFormPage.SUBMISSION_LOADER}>

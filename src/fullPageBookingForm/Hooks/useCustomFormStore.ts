@@ -28,8 +28,6 @@ export type CustomFormStore = {
     fieldLabelIndex: string,
     fieldValue: string,
   ) => void;
-  /**Callback for handling data after confirmation of order. */
-  onConfirmOrder: () => void;
   /**Whether the modal is open for removing a variant in a per attendee custom form. */
   isModalOpen: boolean;
   /**Variant name to be removed in per attendee custom form. */
@@ -175,5 +173,4 @@ export const useCustomFormStore = create<CustomFormStore>((set, get) => ({
         customFormValues: newCurrentCustomFormValues,
       };
     }),
-  onConfirmOrder: () => {},
 }));
