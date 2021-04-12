@@ -10,6 +10,8 @@ const props: QuantitySelectionProps = {
   unitsLeft: 5,
   maxLimit: null,
   itemsInCart: 0,
+  currentSelectedUnits: 0,
+  minLimit: 0,
   variants: [
     {
       currentQty: 0,
