@@ -58,7 +58,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   isStorybookTest,
   onBackClick,
 }) => {
-  const addOrderToCart = useAddOrderToCart();
+  const addOrderToCart = isStorybookTest ? () => {} : useAddOrderToCart();
   const setPage = isStorybookTest
     ? (value: number) => {}
     : useWizardModalAction().setPage;
@@ -71,32 +71,40 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
   //Populate qty selection variants on mount of component.
   useEffect(() => {
-    getCart()
-      .then((cart) => {
-        const items = cart.items ? cart.items : [];
-        let numOfProductInCart: number = 0;
-        for (let i = 0; i < items.length; i++) {
-          // check if the product and time slot are the same to add up the total number in cart so far
-          if (
-            items[i].product_id === event.shopifyProductId &&
-            items[i].properties.When ===
-              selectedTimeslot.formattedTimeslot.when &&
-            items[i].properties.Timeslot === selectedTimeslot.timeslotId
-          ) {
-            numOfProductInCart += items[i].quantity;
-          }
-        }
+    !isStorybookTest
+      ? getCart()
+          .then((cart) => {
+            const items = cart.items ? cart.items : [];
+            let numOfProductInCart: number = 0;
+            for (let i = 0; i < items.length; i++) {
+              // check if the product and time slot are the same to add up the total number in cart so far
+              if (
+                items[i].product_id === event.shopifyProductId &&
+                items[i].properties.When ===
+                  selectedTimeslot.formattedTimeslot.when &&
+                items[i].properties.Timeslot === selectedTimeslot.timeslotId
+              ) {
+                numOfProductInCart += items[i].quantity;
+              }
+            }
 
-        let unitsLeft =
-          selectedTimeslot.unitsLeft > numOfProductInCart
-            ? selectedTimeslot.unitsLeft - numOfProductInCart
-            : 0;
-        setItemsInCart(numOfProductInCart);
-        useQtySelectionStore((state) => state.setVariants)(event, unitsLeft);
-      })
-      .catch((e) => {
-        console.error(e);
-      });
+            let unitsLeft =
+              selectedTimeslot.unitsLeft > numOfProductInCart
+                ? selectedTimeslot.unitsLeft - numOfProductInCart
+                : 0;
+            setItemsInCart(numOfProductInCart);
+            useQtySelectionStore((state) => state.setVariants)(
+              event,
+              unitsLeft,
+            );
+          })
+          .catch((e) => {
+            console.error(e);
+          })
+      : useQtySelectionStore((state) => state.setVariants)(
+          event,
+          selectedTimeslot.unitsLeft,
+        );
   }, []);
 
   //Create callback for scrolling to edit button when created in view.

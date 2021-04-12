@@ -22,6 +22,8 @@ export const defaultQuantitySelections: QuantitySelectionProps = {
       isDisabled: false,
     },
   ],
+  maxLimit: 5,
+  itemsInCart: 0,
   unitsLeft: 5,
   onDecreaseClick: () => {},
   onIncreaseClick: () => {},
@@ -123,6 +125,7 @@ export const defaultArgs: OrderDetailsProps = {
   error: "",
   labels: defaultLabels,
   isStorybookTest: true,
+  onBackClick: () => {},
 };
 
 export const defaultPerOrderCustomerDetails: CustomOrderDetailsDBO = {
