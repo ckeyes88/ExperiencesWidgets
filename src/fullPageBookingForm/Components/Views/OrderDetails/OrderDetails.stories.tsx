@@ -68,8 +68,8 @@ export const NonPrepayNoCustomForm = Template.bind({});
 NonPrepayNoCustomForm.args = {
   ...defaultArgs,
 };
-export const NonPrepayNoCustomFormMinLimit = Template.bind({});
-NonPrepayNoCustomFormMinLimit.args = {
+export const NonPrepayNoCustomFormMinMaxLimit = Template.bind({});
+NonPrepayNoCustomFormMinMaxLimit.args = {
   ...defaultArgs,
   event: {
     ...defaultEvent,
@@ -92,6 +92,16 @@ NonPrepayPerAttendeeForm.args = {
   event: {
     ...defaultEvent,
     customOrderDetails: defaultPerAttendeeCustomerDetails,
+  },
+};
+
+export const NonPrepayPerAttendeeFormMinLimit = Template.bind({});
+NonPrepayPerAttendeeFormMinLimit.args = {
+  ...defaultArgs,
+  event: {
+    ...defaultEvent,
+    customOrderDetails: defaultPerAttendeeCustomerDetails,
+    minLimit: 2,
   },
 };
 

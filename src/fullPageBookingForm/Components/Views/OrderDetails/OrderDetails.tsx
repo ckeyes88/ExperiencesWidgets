@@ -296,6 +296,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       const perAttendeeFormType: PerAttendeeTypeProps = {
         //Form values for each variant selected in custom form.
         formValues,
+        minLimit: useQtySelectionStore((state) => state.minLimit),
         //Total fields per variant selected, to be separated by header rule
         //in form.
         removeVariantModal: {
