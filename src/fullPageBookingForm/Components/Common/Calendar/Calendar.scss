@@ -1,0 +1,122 @@
+@import "../../../base";
+
+.calendar {
+  font-family: "Montserrat";
+  color: $color-default;
+  position: relative;
+}
+
+.calendar__loader {
+  margin-left: 10px;
+  border: 3px solid lighten($color-primary, 40%);
+  border-radius: 50%;
+  border-top: 3px solid $color-primary;
+  width: 20px;
+  height: 20px;
+  animation: spin 2s linear infinite;
+  -webkit-animation: spin 2s linear infinite;
+
+  @-webkit-keyframes spin {
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+.calendar__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 23px;
+}
+
+.calendar__header__month {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.calendar__header__today-btn button {
+  padding: 5px;
+  margin-right: 5px;
+}
+
+.calendar__header__month-navigator button {
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  padding: 6px;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:active {
+    background-color: #f3f3f3;
+  }
+
+  &:last-child {
+    margin-right: -6px;
+  }
+
+  &:disabled {
+    pointer-events: none;
+
+    svg path {
+      fill: #b9b9b9;
+    }
+  }
+}
+
+.calendar__matrix {
+  display: grid;
+  gap: 15px 0px;
+  grid-template-areas: ". . . . . . .";
+  text-align: center;
+
+  & > div {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.calendar__matrix__day span {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 2px;
+}
+
+.calendar__matrix__day--header span {
+  cursor: default;
+  font-weight: 600;
+}
+
+.calendar__matrix__day--current span {
+  font-weight: 600;
+}
+
+.calendar__matrix__day--selected span {
+  background-color: $color-primary;
+  color: #fff;
+  border-radius: 50%;
+}
+
+.calendar__matrix__day--disabled span {
+  cursor: default;
+  color: lighten($color-default, 40%);
+}

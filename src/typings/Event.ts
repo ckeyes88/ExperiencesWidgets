@@ -11,6 +11,7 @@ export type EventDBO = {
   description: string;
   defaultEmailTemplateId?: IObjectID;
   endsAt?: Date;
+  featuredImageUrl: string | null;
   handle: string;
   hostImage?: EventAssetLinkDBO;
   hostDescription?: string;

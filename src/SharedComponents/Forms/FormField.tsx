@@ -1,3 +1,4 @@
+/** @jsx h */
 import "./Forms.scss";
 
 import { Component, h, JSX } from "preact";
@@ -62,7 +63,7 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
     if (options && options[0]) {
       this.props.onFieldChange(id, options[0]);
     }
-  }
+  };
 
   /** Sets the local state to current value of the field
    * Passes the value and the field's id into the designated method passed in as a prop
@@ -76,7 +77,7 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
       (ev.target as HTMLInputElement).id,
       (ev.target as HTMLInputElement).value,
     );
-  }
+  };
 
   /** If the field is a select, this method renders it */
   renderSelect() {
@@ -85,7 +86,11 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
       <div className="FormField-RenderSelect">
         <label className="FormField-SelectLabel" for={id}>
           <span>{label}</span>
-          {required !== true ? <span className="FormField-OptionalLabel">{`(${optionalLabel})`}</span> : <span className="Red">*</span>}
+          {required !== true ? (
+            <span className="FormField-OptionalLabel">{`(${optionalLabel})`}</span>
+          ) : (
+            <span className="Red">*</span>
+          )}
         </label>
         <select id={id} onChange={this.onChange}>
           {options.map(this.renderOption)}
@@ -105,17 +110,28 @@ export class FormField extends Component<IFormFieldProps, IFormFieldState> {
         {option}
       </option>
     );
-  }
+  };
 
   /** If the field is a text, email, or phone input, this renders it */
   renderInput() {
-    const { id, label, required, placeholder, type, optionalLabel } = this.props;
-    
+    const {
+      id,
+      label,
+      required,
+      placeholder,
+      type,
+      optionalLabel,
+    } = this.props;
+
     return (
       <div className="FormField-RenderInput">
         <label className="FormField-Label" for={id}>
           <span>{label}</span>
-          {required !== true ? <span className="FormField-OptionalLabel">{`(${optionalLabel})`}</span> : <span className="Red">*</span>}
+          {required !== true ? (
+            <span className="FormField-OptionalLabel">{`(${optionalLabel})`}</span>
+          ) : (
+            <span className="Red">*</span>
+          )}
         </label>
         <input
           className="FormField-Input"

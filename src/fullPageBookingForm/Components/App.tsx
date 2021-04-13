@@ -8,7 +8,27 @@ import { OrderDetails } from "./Views/OrderDetails";
 import { SubmissionLoader } from "./Views/SubmissionLoader";
 import { Confirmation } from "./Views/Confirmation";
 import { WidgetDataProvider } from "./WidgetDataProvider";
-
+import { useEventStore } from "../Hooks/useEventStore";
+import { useTimeslotStore } from "../Hooks/useTimeslotStore";
+import { getEventCustomLabels } from "../../Utils/api";
+import { useEffect, useState } from "preact/hooks";
+import {
+  AppDictionary,
+  defineLanguageDictionary,
+  LanguageCodes,
+} from "../../typings/Languages";
+import {
+  CustomerFormStore,
+  useCustomerFormStore,
+} from "../Hooks/useCustomerFormStore";
+import {
+  CustomFormStore,
+  useCustomFormStore,
+  OrderDetailsStore,
+  useOrderDetailsStore,
+  QuantitySelectionStore,
+  useQtySelectionStore,
+} from "../Hooks";
 export type AppProps = {
   baseUrl: string;
   languageCode: string;
@@ -16,31 +36,111 @@ export type AppProps = {
   shopifyProductId: number;
 };
 
-export const App: FunctionComponent<AppProps> = (props) => {
+export const App: FunctionComponent<AppProps> = ({
+  baseUrl,
+  shopUrl,
+  shopifyProductId,
+  languageCode,
+}) => {
+  const [initialCustomerFormStore] = useState<CustomerFormStore>(
+    useCustomerFormStore.getState(),
+  );
+  const [initialCustomFormStore] = useState<CustomFormStore>(
+    useCustomFormStore.getState(),
+  );
+  const [initialOrderDetailsStore] = useState<OrderDetailsStore>(
+    useOrderDetailsStore.getState(),
+  );
+  const [initialQtySelectionStore] = useState<QuantitySelectionStore>(
+    useQtySelectionStore.getState(),
+  );
+
+  const resetOrderDetailsStores = () => {
+    useCustomerFormStore.setState(initialCustomerFormStore, true);
+    useCustomFormStore.setState(initialCustomFormStore, true);
+    useOrderDetailsStore.setState(initialOrderDetailsStore, true);
+    useQtySelectionStore.setState(initialQtySelectionStore, true);
+  };
+  //Reset store data on unmount
+  useEffect(() => {
+    return resetOrderDetailsStores;
+  }, []);
+
   const { open, setOpen } = useConnectActivators();
+  const event = useEventStore((state) => state.event);
+  const selectedTimeslot = useTimeslotStore((state) => state.selectedTimeslot);
+  const [labels, setLabels] = useState<Partial<AppDictionary>>({});
+
+  //Fetch labels associated with event on mount.
+  useEffect(() => {
+    async function fetchLabels() {
+      const labelResponse = await getEventCustomLabels({
+        baseUrl,
+        shopId: shopUrl,
+        shopifyProductId,
+      });
+
+      const labelsResolved =
+        labelResponse && labelResponse.data
+          ? {
+              ...defineLanguageDictionary(languageCode as LanguageCodes),
+              ...labelResponse.data,
+            }
+          : defineLanguageDictionary(languageCode as LanguageCodes);
+
+      setLabels(labelsResolved);
+    }
+
+    fetchLabels();
+  }, []);
 
   const handleClose = () => {
+    resetOrderDetailsStores();
     setOpen(false);
   };
 
+  const customerEmail = useCustomerFormStore(
+    (state) => state.customerData.email,
+  );
+
+  const hideCloseButton = (page: number) =>
+    [BookingFormPage.SUBMISSION_LOADER, BookingFormPage.CONFIRMATION].includes(
+      page,
+    );
+
+  const hideTitleBar = (page: number) =>
+    [BookingFormPage.SUBMISSION_LOADER, BookingFormPage.CONFIRMATION].includes(
+      page,
+    );
+
   return (
-    <WidgetDataProvider data={props}>
+    <WidgetDataProvider
+      data={{ baseUrl, shopUrl, shopifyProductId, languageCode }}
+    >
       <WizardModal
         open={open}
         initialPage={BookingFormPage.TIMESLOT_SELECTION}
+        hideCloseButton={hideCloseButton}
+        hideTitleBar={hideTitleBar}
         onClose={handleClose}
       >
         <WizardModal.Page page={BookingFormPage.TIMESLOT_SELECTION}>
           <TimeslotSelection />
         </WizardModal.Page>
         <WizardModal.Page page={BookingFormPage.ORDER_DETAILS}>
-          <OrderDetails />
+          <OrderDetails
+            error=""
+            event={event}
+            labels={labels}
+            selectedTimeslot={selectedTimeslot}
+            onBackClick={resetOrderDetailsStores}
+          />
         </WizardModal.Page>
         <WizardModal.Page page={BookingFormPage.SUBMISSION_LOADER}>
           <SubmissionLoader />
         </WizardModal.Page>
         <WizardModal.Page page={BookingFormPage.CONFIRMATION}>
-          <Confirmation />
+          <Confirmation email={customerEmail} onClose={handleClose} />
         </WizardModal.Page>
       </WizardModal>
     </WidgetDataProvider>

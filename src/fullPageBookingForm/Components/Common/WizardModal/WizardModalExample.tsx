@@ -6,6 +6,7 @@ import { Button } from "../Button";
 import { TextStyle } from "../TextStyle";
 import { WizardModal } from "./WizardModal";
 import { useWizardModalAction } from "./WizardModalProvider";
+import { WizardModalTitleBar } from "./WizardModalTitleBar";
 
 enum Page {
   PAGE_A,
@@ -13,10 +14,11 @@ enum Page {
 }
 
 const PageA: FunctionComponent = () => {
-  const { setPage } = useWizardModalAction();
+  const { setPage, close } = useWizardModalAction();
 
   return (
     <Fragment>
+      <WizardModalTitleBar title="Page A" onBack={() => close()} />
       <h1>
         <TextStyle variant="display1" text="Page A" />
       </h1>
@@ -37,6 +39,7 @@ const PageB: FunctionComponent = () => {
 
   return (
     <Fragment>
+      <WizardModalTitleBar title="Page B" onBack={() => setPage(Page.PAGE_A)} />
       <h1>
         <TextStyle variant="display1" text="Page B" />
       </h1>
@@ -51,13 +54,7 @@ const PageB: FunctionComponent = () => {
       <p>
         <TextStyle
           variant="body1"
-          text={
-            <Fragment>
-              You can hide the close button in a specific page
-              <br />
-              and create a custom one:
-            </Fragment>
-          }
+          text={<Fragment>Create another close button:</Fragment>}
         />
       </p>
       <Button variant="outlined" text="Close" onClick={() => close()} />
@@ -79,7 +76,7 @@ export const WizardModalExample: FunctionComponent = () => {
         <WizardModal.Page page={Page.PAGE_A}>
           <PageA />
         </WizardModal.Page>
-        <WizardModal.Page hideCloseButton page={Page.PAGE_B}>
+        <WizardModal.Page page={Page.PAGE_B}>
           <PageB />
         </WizardModal.Page>
       </WizardModal>

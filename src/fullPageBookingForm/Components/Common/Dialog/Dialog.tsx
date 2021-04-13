@@ -1,5 +1,6 @@
 /** @jsx h */
 import { h, FunctionComponent } from "preact";
+import ReactModal from "react-modal";
 import { Button, ButtonProps } from "../Button";
 import { Card } from "../Card";
 import { TextStyle } from "../TextStyle";
@@ -20,37 +21,33 @@ export const Dialog: FunctionComponent<DialogProps> = ({
   message,
   actions,
   onClose,
-}) => {
-  const dialogClassNames = ["dialog"];
-
-  if (open) {
-    dialogClassNames.push("dialog--open");
-  }
-
-  return (
-    <div className={dialogClassNames.join(" ")} role="dialog">
-      <div className="dialog__content">
-        <Card>
-          <div className="dialog__title">
-            <TextStyle text={title} variant="display2" />
-            <div
-              className="dialog__title__close-button"
-              onClick={onClose}
-              data-testid="dialog-close-button"
-            >
-              <CloseIcon color="#a7a7a7" width={20} height={20} />
-            </div>
-          </div>
-          <div className="dialog__message">
-            <TextStyle text={message} variant="body1" />
-          </div>
-          <div className="dialog__actions">
-            {actions.map((action) => (
-              <Button key={action.text} {...action} />
-            ))}
-          </div>
-        </Card>
+}) => (
+  <ReactModal
+    isOpen={open}
+    ariaHideApp={false}
+    className="dialog__root"
+    overlayClassName="dialog"
+    closeTimeoutMS={400}
+  >
+    <Card>
+      <div className="dialog__title">
+        <TextStyle text={title} variant="display2" />
+        <div
+          className="dialog__title__close-button"
+          onClick={onClose}
+          data-testid="dialog-close-button"
+        >
+          <CloseIcon color="#a7a7a7" width={20} height={20} />
+        </div>
       </div>
-    </div>
-  );
-};
+      <div className="dialog__message">
+        <TextStyle text={message} variant="body1" />
+      </div>
+      <div className="dialog__actions">
+        {actions.map((action) => (
+          <Button key={action.text} {...action} />
+        ))}
+      </div>
+    </Card>
+  </ReactModal>
+);

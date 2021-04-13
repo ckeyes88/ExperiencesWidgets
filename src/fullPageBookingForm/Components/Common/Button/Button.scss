@@ -37,6 +37,11 @@
   }
 }
 
+.button--color-transparent {
+  background-color: transparent;
+  color: $color-default;
+}
+
 /** variants **/
 
 .button--variant-outlined {
@@ -102,6 +107,10 @@
 
 /** disabled **/
 
+.button--disabled {
+  cursor: default;
+}
+
 .button--disabled.button--color-primary {
   background-color: lighten($color-primary, 35%);
 }
@@ -114,19 +123,22 @@
   background-color: lighten($color-default, 40%);
 }
 
-.button--disabled.button--color-primary.button--variant-outlined {
+.button--disabled.button--color-primary.button--variant-outlined,
+.button--disabled.button--color-primary.button--variant-text {
   background-color: transparent;
   border-color: lighten($color-primary, 35%);
   color: lighten($color-primary, 35%);
 }
 
-.button--disabled.button--color-danger.button--variant-outlined {
+.button--disabled.button--color-danger.button--variant-outlined,
+.button--disabled.button--color-danger.button--variant-text {
   background-color: transparent;
   border-color: lighten($color-danger, 20%);
   color: lighten($color-danger, 20%);
 }
 
-.button--disabled.button--color-default.button--variant-outlined {
+.button--disabled.button--color-default.button--variant-outlined,
+.button--disabled.button--color-default.button--variant-text {
   background-color: transparent;
   border-color: lighten($color-default, 20%);
   color: lighten($color-default, 20%);
