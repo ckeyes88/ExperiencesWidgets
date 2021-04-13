@@ -4,7 +4,7 @@ import { render, screen, fireEvent } from "@testing-library/preact";
 import { withMarkup } from "../../../testUtils";
 import { TimeslotCard } from "./TimeslotCard";
 
-test("Renders content correctly", () => {
+test("Renders content correctly", async () => {
   render(
     <TimeslotCard
       startsAt={new Date("March 17, 2021 06:00:00")}
@@ -16,7 +16,7 @@ test("Renders content correctly", () => {
     />,
   );
 
-  expect(screen.getByText(/6:00am - 10:00am/i)).toBeInTheDocument();
+  expect(screen.getByText(/3:00pm - 7:00pm/i)).toBeInTheDocument();
   expect(screen.getByText(/4 spots left/i)).toBeInTheDocument();
   expect(
     withMarkup(screen.getByText)("From $150 / person"),
