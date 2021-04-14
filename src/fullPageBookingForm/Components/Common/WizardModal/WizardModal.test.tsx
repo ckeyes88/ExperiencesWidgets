@@ -44,11 +44,11 @@ test("Toggles correctly", () => {
     <TestComponent open={false} initialPage={0} onClose={jest.fn()} />,
   );
 
-  expect(screen.getByRole("dialog")).not.toHaveClass("wizard-modal--open");
+  expect(screen.queryByText(/this is page 0/i)).not.toBeInTheDocument();
 
   rerender(<TestComponent open initialPage={0} onClose={jest.fn()} />);
 
-  expect(screen.getByRole("dialog")).toHaveClass("wizard-modal--open");
+  expect(screen.getByText(/this is page 0/i)).toBeInTheDocument();
 });
 
 test("Changes page and displays data correctly", () => {

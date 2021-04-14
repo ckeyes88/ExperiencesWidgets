@@ -27,11 +27,15 @@ const props: DialogProps = {
 test("Toggles correctly", () => {
   const { rerender } = render(<Dialog {...props} open={false} />);
 
-  expect(screen.getByRole("dialog")).not.toHaveClass("dialog--open");
+  expect(screen.queryByText(/dialog title/i)).not.toBeInTheDocument();
+  expect(
+    screen.queryByText(/this is the dialog message/i),
+  ).not.toBeInTheDocument();
 
   rerender(<Dialog {...props} />);
 
-  expect(screen.getByRole("dialog")).toHaveClass("dialog--open");
+  expect(screen.getByText(/dialog title/i)).toBeInTheDocument();
+  expect(screen.getByText(/this is the dialog message/i)).toBeInTheDocument();
 });
 
 test("Displays content correctly", () => {
