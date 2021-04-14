@@ -20,6 +20,7 @@ import { CalendarIcon } from "./CalendarIcon";
 import { useEvent } from "./useEvent";
 import { useAvailabilities } from "./useAvailabilities";
 import "./TimeslotSelection.scss";
+import { Dialog } from "../../Common/Dialog";
 
 export const TimeslotSelection: FunctionComponent = () => {
   const setSelectedTimeslot = useTimeslotStore(
@@ -168,7 +169,10 @@ export const TimeslotSelection: FunctionComponent = () => {
       </InfiniteScroll>
     );
   };
-
+  console.log(
+    !isFetchingInitialAvailabilities &&
+      Object.keys(availabilities).length === 0,
+  );
   return (
     <Fragment>
       <WizardModalTitleBar title="Select dates" onBack={handleClose}>
@@ -213,6 +217,16 @@ export const TimeslotSelection: FunctionComponent = () => {
               )}
             </div>
           </div>
+          {!isFetchingInitialAvailabilities &&
+            Object.keys(availabilities).length === 0 && (
+              <Dialog
+                title="All availabilities are filled."
+                open={true}
+                message="Please go back."
+                actions={[]}
+                onClose={() => {}}
+              />
+            )}
         </Fragment>
       )}
     </Fragment>
