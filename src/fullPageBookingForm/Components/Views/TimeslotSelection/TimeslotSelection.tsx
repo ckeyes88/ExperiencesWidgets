@@ -93,12 +93,20 @@ export const TimeslotSelection: FunctionComponent = () => {
     return disabled;
   };
 
+  /**Callback to determine if date is sold out. */
+  const dateIsSoldOut = (date: Date) => {
+    const timeslots = getTimeslotsByDate(availabilities, date);
+    const isSoldOut = timeslots.every((timeslot) => timeslot.unitsLeft === 0);
+
+    return isSoldOut;
+  };
   const calendar = (
     <Calendar
       date={currentDate}
       month={currentMonth}
       year={currentYear}
       dateIsDisabled={dateIsDisabled}
+      dateIsSoldOut={dateIsSoldOut}
       loading={isFetchingInitialAvailabilities || isFetchingMoreAvailabilities}
       onDateChange={handleDateChange}
       onMonthChange={handleMonthChange}

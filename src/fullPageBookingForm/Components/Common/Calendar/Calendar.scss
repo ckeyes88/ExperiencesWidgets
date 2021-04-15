@@ -120,3 +120,18 @@
   cursor: default;
   color: lighten($color-default, 40%);
 }
+
+.calendar__matrix__day--sold-out > span {
+  cursor: default;
+  color: lighten($color-default, 40%);
+  position: relative;
+}
+
+/** Add strikethrough to sold out events. */
+.calendar__matrix__day--sold-out > span::after {
+  content: "";
+  border-bottom: 2px solid lighten($color-default, 40%);
+  position: absolute;
+  left: 0;
+  width: 100%;
+}
