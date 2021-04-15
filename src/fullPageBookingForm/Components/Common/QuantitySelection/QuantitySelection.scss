@@ -43,6 +43,10 @@
   text-align: center;
 }
 
+.quantity-selection__table-cell > span:nth-child(2) {
+  text-align: center;
+}
+
 @media only screen and (max-width: $full-page-single-column-breakpoint) {
   .quantity-selection {
     margin-top: 31px;
