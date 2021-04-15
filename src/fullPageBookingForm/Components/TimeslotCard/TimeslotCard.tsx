@@ -26,9 +26,15 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
   const formattedStartsAt = moment(startsAt).tz(timezone).format("h:mma");
   const formattedEndsAt = moment(endsAt).tz(timezone).format("h:mma");
 
+  let timeslotClassNames = ["timeslot-card"];
+
+  if (remainingSpots === 0) {
+    timeslotClassNames.push("timeslot-card--is-disabled");
+  }
+
   return (
     <Card>
-      <div className="timeslot-card" data-testid="timeslot-card">
+      <div className={timeslotClassNames.join(" ")} data-testid="timeslot-card">
         <div className="timeslot-card__details">
           <div className="timeslot-card__details__time">
             <TextStyle
@@ -46,7 +52,12 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
           </div>
         </div>
         <div className="timeslot-card__button">
-          <Button color="primary" text="Select" onClick={onSelect} />
+          <Button
+            color={remainingSpots === 0 ? "grayed" : "primary"}
+            text={remainingSpots === 0 ? "Sold Out" : "Select"}
+            onClick={onSelect}
+            disabled={remainingSpots === 0}
+          />
         </div>
       </div>
     </Card>

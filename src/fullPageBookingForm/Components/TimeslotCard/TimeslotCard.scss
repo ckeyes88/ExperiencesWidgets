@@ -3,6 +3,10 @@
   align-items: center;
 }
 
+.timeslot-card--is-disabled {
+  opacity: 0.5;
+}
+
 .timeslot-card__details {
   flex-grow: 1;
 }
