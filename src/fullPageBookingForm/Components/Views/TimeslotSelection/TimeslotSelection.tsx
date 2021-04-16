@@ -203,6 +203,22 @@ export const TimeslotSelection: FunctionComponent = () => {
                 thumbnailSrc={event.featuredImageUrl}
               />
               {calendar}
+              <div className="timeslot-selection__legend">
+                <div className="timeslot-selection__legend-container">
+                  <TextStyle text="T" variant="body1" />
+                  <TextStyle
+                    text="Sold out. No availability on this day"
+                    variant="body1"
+                  />
+                </div>
+                <div className="timeslot-selection__legend-container">
+                  <TextStyle text="T" variant="body1" />
+                  <TextStyle
+                    text="Timeslots not offered on this day"
+                    variant="body1"
+                  />
+                </div>
+              </div>
             </div>
             <BottomDrawer
               open={calendarDrawerOpen}
