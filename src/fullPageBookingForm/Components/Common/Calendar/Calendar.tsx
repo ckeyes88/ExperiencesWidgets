@@ -170,12 +170,12 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
 
             classNames.push(
               `calendar__matrix__day--${
-                selected
-                  ? "selected"
-                  : disabled
+                disabled
                   ? "disabled"
                   : isSoldOut
                   ? "sold-out"
+                  : selected
+                  ? "selected"
                   : "default"
               }`,
             );
@@ -200,6 +200,10 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
     moment(today).month() === currentMonth &&
     moment(today).year() === currentYear;
 
+  //Today is disabled if the date is disabled (no timeslots on this date)
+  // //or it's sold out.
+  // const todayIsDisabled = dateIsDisabled(today) || dateIsSoldOut(today);
+
   return (
     <div className="calendar">
       <div className="calendar__header">
@@ -216,8 +220,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
             color="primary"
             text="Today"
             disabled={
-              moment(today).isSame(currentDate, "date") ||
-              (moment(today).isBefore(currentDate, "date") &&
+              (moment(currentMonth).isSameOrBefore(month, "date") &&
                 withinCurrentMonthAndYear) ||
               loading
             }

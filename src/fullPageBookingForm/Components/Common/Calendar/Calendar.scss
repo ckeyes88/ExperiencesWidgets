@@ -66,10 +66,6 @@
     background-color: #f3f3f3;
   }
 
-  &:last-child {
-    margin-right: -6px;
-  }
-
   &:disabled {
     pointer-events: none;
 
@@ -77,28 +73,29 @@
       fill: #b9b9b9;
     }
   }
+
+  & > svg:first-child {
+    margin-right: 0;
+  }
 }
 
 .calendar__matrix {
   display: grid;
-  gap: 15px 0px;
+  gap: 15px 29px;
   grid-template-areas: ". . . . . . .";
   text-align: center;
 
   & > div {
     display: flex;
-    justify-content: center;
   }
 }
 
 .calendar__matrix__day span {
   cursor: pointer;
   display: flex;
-  justify-content: center;
   align-items: center;
   width: 26px;
   height: 26px;
-  padding: 2px;
 }
 
 .calendar__matrix__day--header span {
@@ -132,6 +129,6 @@
   content: "";
   border-bottom: 2px solid lighten($color-default, 40%);
   position: absolute;
-  left: 0;
+  left: -4px;
   width: 100%;
 }
