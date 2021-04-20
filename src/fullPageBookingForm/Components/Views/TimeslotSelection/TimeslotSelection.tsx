@@ -178,6 +178,9 @@ export const TimeslotSelection: FunctionComponent = () => {
       </InfiniteScroll>
     );
   };
+
+  console.log("attempting to render");
+  console.log(Object.keys(availabilities));
   return (
     <Fragment>
       <WizardModalTitleBar title="Select dates" onBack={handleClose}>
@@ -194,22 +197,21 @@ export const TimeslotSelection: FunctionComponent = () => {
         <div style={{ textAlign: "center" }}>
           <TextStyle variant="display2" text="Loading experience data..." />
         </div>
-      ) : !isFetchingInitialAvailabilities ? (
-        Object.keys(availabilities).length === 0 && (
-          <div className="timeslot-selection__no-availability">
-            <Donger />
-            <TextStyle text="Whoops!" variant="display1" />
-            <TextStyle
-              text="There is currently no availability for this experience."
-              variant="body1"
-            />
-            <Button
-              text={<TextStyle text="close" variant="body1" />}
-              color="transparent"
-              onClick={handleClose}
-            />
-          </div>
-        )
+      ) : !isFetchingInitialAvailabilities &&
+        Object.keys(availabilities).length === 0 ? (
+        <div className="timeslot-selection__no-availability">
+          <Donger />
+          <TextStyle text="Whoops!" variant="display1" />
+          <TextStyle
+            text="There is currently no availability for this experience."
+            variant="body1"
+          />
+          <Button
+            text={<TextStyle text="close" variant="body1" />}
+            color="transparent"
+            onClick={handleClose}
+          />
+        </div>
       ) : (
         <Fragment>
           <div className="timeslot-selection">
