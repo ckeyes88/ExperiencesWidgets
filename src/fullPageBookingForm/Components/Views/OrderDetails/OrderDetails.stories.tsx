@@ -12,7 +12,8 @@ import { useCustomerFormStore } from "../../../Hooks/useCustomerFormStore";
 import { useCustomFormStore } from "../../../Hooks/useCustomFormStore";
 import { useOrderDetailsStore } from "../../../Hooks/useOrderDetailsStore";
 import { useQtySelectionStore } from "../../../Hooks/useQtySelectionStore";
-import { useEventStore, useTimeslotStore } from "../../../Hooks";
+import { useEventStore } from "../../../Hooks/useEventStore";
+import { useTimeslotStore } from "../../../Hooks/useTimeslotStore";
 import { Availability } from "../../../../typings/Availability";
 
 export default {
@@ -41,8 +42,10 @@ const resetStoreState = () => {
 
 //Sets initial state common to all views.
 const setInitialState = (event: EventDBO, timeslot: Availability) => {
-  useEventStore((state) => state.setEvent)(event);
+  //useTimeslotStore((state) => state.setSelectedTimeslot)(timeslot);
+  console.log(event);
   useTimeslotStore((state) => state.setSelectedTimeslot)(timeslot);
+  useEventStore((state) => state.setEvent)(event);
 };
 
 //Create template component for all testing, with the ability
@@ -65,6 +68,14 @@ export const NonPrepayNoCustomForm = Template.bind({});
 NonPrepayNoCustomForm.args = {
   ...defaultArgs,
 };
+export const NonPrepayNoCustomFormMinMaxLimit = Template.bind({});
+NonPrepayNoCustomFormMinMaxLimit.args = {
+  ...defaultArgs,
+  event: {
+    ...defaultEvent,
+    minLimit: 2,
+  },
+};
 
 export const NonPrepayPerOrderForm = Template.bind({});
 NonPrepayPerOrderForm.args = {
@@ -81,6 +92,16 @@ NonPrepayPerAttendeeForm.args = {
   event: {
     ...defaultEvent,
     customOrderDetails: defaultPerAttendeeCustomerDetails,
+  },
+};
+
+export const NonPrepayPerAttendeeFormMinLimit = Template.bind({});
+NonPrepayPerAttendeeFormMinLimit.args = {
+  ...defaultArgs,
+  event: {
+    ...defaultEvent,
+    customOrderDetails: defaultPerAttendeeCustomerDetails,
+    minLimit: 2,
   },
 };
 

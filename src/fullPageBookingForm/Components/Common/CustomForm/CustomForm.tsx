@@ -23,6 +23,8 @@ export type PerOrderTypeProps = {
 export type PerAttendeeTypeProps = {
   /** Array of fields that the form will display */
   formValues: CustomFormValue[];
+  /**Minimum limit of variants in form. */
+  minLimit: number;
   /**Attributes associated with the remove variant modal. */
   removeVariantModal: {
     /**Whether the modal is open. */
@@ -130,7 +132,7 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
    * individual attendee.
    */
   const renderPerAttendeeForm = (form: PerAttendeeTypeProps) => {
-    const { formValues, removeVariantModal } = form;
+    const { formValues, removeVariantModal, minLimit } = form;
 
     const onCloseModal = () => {
       removeVariantModal.setIsRemoveVariantModalOpen(false, {
@@ -177,20 +179,21 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
               {/**Disable ability to remove variant if this variant
                * is the only selected variant in the form.
                */}
-              {formValues.length > 1 && (
-                <button
-                  className="CustomForm__Attendee__Remove"
-                  onClick={() =>
-                    removeVariantModal.setIsRemoveVariantModalOpen(true, {
-                      idx: variantIdx,
-                      name: value.name,
-                    })
-                  }
-                  disabled={removeVariantModal.isOpen}
-                >
-                  <CloseIcon height={30} color="#888888" />
-                </button>
-              )}
+              {(minLimit === 0 && formValues.length > 1) ||
+                (minLimit > 0 && formValues.length > minLimit && (
+                  <button
+                    className="CustomForm__Attendee__Remove"
+                    onClick={() =>
+                      removeVariantModal.setIsRemoveVariantModalOpen(true, {
+                        idx: variantIdx,
+                        name: value.name,
+                      })
+                    }
+                    disabled={removeVariantModal.isOpen}
+                  >
+                    <CloseIcon height={30} color="#888888" />
+                  </button>
+                ))}
             </div>
 
             {/**

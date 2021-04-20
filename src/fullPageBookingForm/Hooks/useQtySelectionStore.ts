@@ -20,6 +20,8 @@ export type QuantitySelectionStore = {
    * has a maximum qty of 0.
    */
   maxLimit: number | null;
+  /**Number of units currently selected in order. */
+  currentSelectedUnits: number;
   /**Number of total units left for the event. */
   unitsLeft: number;
   /**Populate initial variants of store based upon event. */
@@ -37,22 +39,29 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
     onDecreaseClick: (variantIdx: number) =>
       set((state) => {
         let oldArray = clone(state.variants);
-        oldArray[variantIdx].currentQty -= 1;
+
+        //If our order has a minimum limit, do not allow the user to
+        //decrease qty below minimum value on min click.
+        const decreaseValue =
+          state.currentSelectedUnits === state.minLimit ? 0 : 1;
+        oldArray[variantIdx].currentQty -= decreaseValue;
 
         return {
           variants: oldArray,
-          unitsLeft: state.unitsLeft + 1,
+          unitsLeft: state.unitsLeft + decreaseValue,
+          currentSelectedUnits: state.currentSelectedUnits - decreaseValue,
         };
       }),
     onIncreaseClick: (variantIdx: number) =>
       set((state) => {
         let oldArray = clone(state.variants);
-        const currentQty = oldArray[variantIdx].currentQty;
 
         //If we are at a qty of 0, and the tickets have a min limit, we want to
         //increase the value of the variant by the min limit.
         const increaseValue =
-          currentQty === 0 && state.minLimit > 0 ? state.minLimit : 1;
+          state.currentSelectedUnits === 0 && state.minLimit > 0
+            ? state.minLimit
+            : 1;
 
         //Update value
         oldArray[variantIdx].currentQty =
@@ -61,48 +70,96 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
         return {
           variants: oldArray,
           unitsLeft: state.unitsLeft - increaseValue,
+          currentSelectedUnits: state.currentSelectedUnits + increaseValue,
         };
       }),
     onChange: (variantIdx: number, variantQty: string) =>
       set((state) => {
-        let oldArray = clone(state.variants);
-        const oldQuantity = oldArray[variantIdx].currentQty;
-
-        //Maximum quantity for event will be maxLimit first, and then a tracked value
-        //of the addition of the current variant value + units left if no max limit is provided.
-        const maxQty = state.maxLimit
-          ? state.maxLimit
-          : state.unitsLeft + oldQuantity;
-        /**Ensure maximum qty typed in is at most the maximum variant quantity.
+        /**
          * If user enters an empty string, disallow change.
          */
-        let newQuantity =
-          parseInt(variantQty) > maxQty ? maxQty : parseInt(variantQty);
+        if (isNaN(parseInt(variantQty))) {
+          return;
+        }
 
-        newQuantity = isNaN(newQuantity) ? 0 : newQuantity;
+        let oldArray = clone(state.variants);
+        const oldQuantity = oldArray[variantIdx].currentQty;
+        let newQuantity = parseInt(variantQty);
 
-        //Ensure typed value is at minimum minLimit, if one exists.
-        newQuantity =
-          newQuantity < state.minLimit ? state.minLimit : newQuantity;
+        const tempSelectedUnits = state.currentSelectedUnits - oldQuantity;
+        const tempUnitsLeft = state.unitsLeft + oldQuantity;
+
+        //Determine if updated value meets minimum limit.
+        const meetsMinLimit = tempSelectedUnits + newQuantity >= state.minLimit;
+
+        //Ensure entered qty meets minimum limit.
+        if (!meetsMinLimit) {
+          const minAmount = state.minLimit - tempSelectedUnits;
+          oldArray[variantIdx].currentQty = minAmount;
+
+          return {
+            variants: oldArray,
+            unitsLeft: tempUnitsLeft - minAmount,
+            currentSelectedUnits: tempSelectedUnits + minAmount,
+          };
+        }
+
+        //If no max limit is provided, ensure we are below unitsLeft for variant.
+        if (!state.maxLimit) {
+          const maxQty = tempUnitsLeft;
+          newQuantity = newQuantity >= maxQty ? maxQty : newQuantity;
+          oldArray[variantIdx].currentQty = newQuantity;
+
+          return {
+            variants: oldArray,
+            unitsLeft: tempUnitsLeft - newQuantity,
+            currentSelectedUnits: tempSelectedUnits + newQuantity,
+          };
+        }
+
+        //If max limit is provided, maximum possible qty is minimum between
+        //units left and maxLimit.
+        const maxQtyLimit =
+          state.maxLimit > tempUnitsLeft + tempSelectedUnits
+            ? tempUnitsLeft + tempSelectedUnits
+            : state.maxLimit;
+        const meetsMaxLimit = maxQtyLimit >= newQuantity + tempSelectedUnits;
+
+        //Max limit is provided, and entry does not meet max limit.
+        if (!meetsMaxLimit) {
+          const maxQty = maxQtyLimit - tempSelectedUnits;
+          oldArray[variantIdx].currentQty = maxQty;
+
+          return {
+            variants: oldArray,
+            unitsLeft: tempUnitsLeft - maxQty,
+            currentSelectedUnits: tempSelectedUnits + maxQty,
+          };
+        }
 
         oldArray[variantIdx].currentQty = newQuantity;
 
-        //Update unitsLeft according to quantity differences between
-        //old quantity in field and entered quantity.
-        const qtyDifference = newQuantity - oldQuantity;
-
         return {
           variants: oldArray,
-          unitsLeft: state.unitsLeft - qtyDifference,
+          unitsLeft: tempUnitsLeft - newQuantity,
+          currentSelectedUnits: tempSelectedUnits + newQuantity,
         };
       }),
     canConfirmOrder: () => {
       const variants = get().variants;
 
-      return variants.some((variant) => variant.currentQty > 0);
+      //Event meets min limit if no min limit is supplied, or there are enough tickets
+      //selected.
+      const meetsMinLimit =
+        get().minLimit === 0 || get().currentSelectedUnits >= get().minLimit;
+
+      return (
+        meetsMinLimit && variants.some((variant) => variant.currentQty > 0)
+      );
     },
     variants: [],
     unitsLeft: 0,
+    currentSelectedUnits: 0,
     maxLimit: null,
     minLimit: 0,
     setVariants: (event: EventDBO, unitsLeft: number) =>
@@ -111,6 +168,7 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
           unitsLeft: unitsLeft,
           maxLimit: event.maxLimit === 0 ? null : event.maxLimit,
           minLimit: event.minLimit,
+          currentSelectedUnits: 0,
           variants: event.variants.map((variant) => ({
             isDisabled: false,
             currentQty: 0,
@@ -142,6 +200,7 @@ export const useQtySelectionStore = create<QuantitySelectionStore>(
       set((state) => {
         return {
           unitsLeft: state.unitsLeft + 1,
+          currentSelectedUnits: state.currentSelectedUnits - 1,
           variants: state.variants.map((variant) => {
             if (variant.name === variantName) {
               return {
