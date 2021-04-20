@@ -179,8 +179,6 @@ export const TimeslotSelection: FunctionComponent = () => {
     );
   };
 
-  console.log("attempting to render");
-  console.log(Object.keys(availabilities));
   return (
     <Fragment>
       <WizardModalTitleBar title="Select dates" onBack={handleClose}>
