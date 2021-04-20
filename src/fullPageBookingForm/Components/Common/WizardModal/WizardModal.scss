@@ -5,7 +5,7 @@ $title-bar-height: 68px;
 .wizard-modal {
   position: fixed;
   inset: 0px;
-  z-index: 999;
+  z-index: 10000;
   opacity: 0;
   transform: translateY(100%);
   transition: all 0.4s ease-in-out;
