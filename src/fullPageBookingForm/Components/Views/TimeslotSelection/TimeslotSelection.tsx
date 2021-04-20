@@ -20,6 +20,8 @@ import { CalendarIcon } from "./CalendarIcon";
 import { useEvent } from "./useEvent";
 import { useAvailabilities } from "./useAvailabilities";
 import "./TimeslotSelection.scss";
+import { Button } from "../../Common/Button";
+import { Donger } from "../../Common/Icon/Donger";
 
 export const TimeslotSelection: FunctionComponent = () => {
   const setSelectedTimeslot = useTimeslotStore(
@@ -168,7 +170,6 @@ export const TimeslotSelection: FunctionComponent = () => {
       </InfiniteScroll>
     );
   };
-
   return (
     <Fragment>
       <WizardModalTitleBar title="Select dates" onBack={handleClose}>
@@ -185,6 +186,22 @@ export const TimeslotSelection: FunctionComponent = () => {
         <div style={{ textAlign: "center" }}>
           <TextStyle variant="display2" text="Loading experience data..." />
         </div>
+      ) : !isFetchingInitialAvailabilities ? (
+        Object.keys(availabilities).length === 0 && (
+          <div className="timeslot-selection__no-availability">
+            <Donger />
+            <TextStyle text="Whoops!" variant="display1" />
+            <TextStyle
+              text="There is currently no availability for this experience."
+              variant="body1"
+            />
+            <Button
+              text={<TextStyle text="close" variant="body1" />}
+              color="transparent"
+              onClick={handleClose}
+            />
+          </div>
+        )
       ) : (
         <Fragment>
           <div className="timeslot-selection">

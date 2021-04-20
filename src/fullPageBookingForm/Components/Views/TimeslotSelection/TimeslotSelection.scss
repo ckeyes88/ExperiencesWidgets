@@ -1,7 +1,39 @@
+@import "../../../base.scss";
+
 .timeslot-selection {
   display: flex;
   justify-content: space-between;
   position: relative;
+}
+
+.timeslot-selection__no-availability {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 40vh;
+  text-align: center;
+}
+
+.timeslot-selection__no-availability > svg {
+  margin-right: 0;
+  margin-bottom: 2rem;
+}
+
+.timeslot-selection__no-availability > button {
+  width: min-content;
+  text-decoration: underline;
+  width: min-content;
+  margin-top: 1rem;
+  color: $color-primary;
+  padding: 0;
+}
+
+.timeslot-selection__no-availability > button > span {
+  color: $color-primary;
+}
+
+.timeslot-selection__no-availability > * {
+  margin-bottom: 1rem;
 }
 
 .timeslot-selection__calendar {
