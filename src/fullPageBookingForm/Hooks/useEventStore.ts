@@ -8,5 +8,8 @@ type State = {
 
 export const useEventStore = create<State>((set) => ({
   event: null,
-  setEvent: (event) => set((state) => ({ ...state, event })),
+  setEvent: (event) =>
+    set((state) => {
+      return { ...state, event };
+    }),
 }));

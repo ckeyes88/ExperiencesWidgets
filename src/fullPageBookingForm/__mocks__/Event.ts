@@ -22,6 +22,10 @@ export const defaultQuantitySelections: QuantitySelectionProps = {
       isDisabled: false,
     },
   ],
+  maxLimit: 5,
+  itemsInCart: 0,
+  minLimit: 0,
+  currentSelectedUnits: 0,
   unitsLeft: 5,
   onDecreaseClick: () => {},
   onIncreaseClick: () => {},
@@ -91,6 +95,10 @@ export const defaultEvent: EventDBO = {
   updatedAt: new Date(2021, 1, 2),
   variants: [
     {
+      name: "Adult",
+      price: 100,
+    },
+    {
       name: "Child",
       price: 50,
     },
@@ -123,6 +131,7 @@ export const defaultArgs: OrderDetailsProps = {
   error: "",
   labels: defaultLabels,
   isStorybookTest: true,
+  onBackClick: () => {},
 };
 
 export const defaultPerOrderCustomerDetails: CustomOrderDetailsDBO = {
