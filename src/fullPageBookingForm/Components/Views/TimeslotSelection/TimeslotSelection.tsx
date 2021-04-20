@@ -95,12 +95,20 @@ export const TimeslotSelection: FunctionComponent = () => {
     return disabled;
   };
 
+  /**Callback to determine if date is sold out. */
+  const dateIsSoldOut = (date: Date) => {
+    const timeslots = getTimeslotsByDate(availabilities, date);
+    const isSoldOut = timeslots.every((timeslot) => timeslot.unitsLeft === 0);
+
+    return isSoldOut;
+  };
   const calendar = (
     <Calendar
       date={currentDate}
       month={currentMonth}
       year={currentYear}
       dateIsDisabled={dateIsDisabled}
+      dateIsSoldOut={dateIsSoldOut}
       loading={isFetchingInitialAvailabilities || isFetchingMoreAvailabilities}
       onDateChange={handleDateChange}
       onMonthChange={handleMonthChange}
@@ -212,6 +220,22 @@ export const TimeslotSelection: FunctionComponent = () => {
                 thumbnailSrc={event.featuredImageUrl}
               />
               {calendar}
+              <div className="timeslot-selection__legend">
+                <div className="timeslot-selection__legend-container">
+                  <TextStyle text="T" variant="body1" />
+                  <TextStyle
+                    text="Sold out. No availability on this day"
+                    variant="body1"
+                  />
+                </div>
+                <div className="timeslot-selection__legend-container">
+                  <TextStyle text="T" variant="body1" />
+                  <TextStyle
+                    text="Timeslots not offered on this day"
+                    variant="body1"
+                  />
+                </div>
+              </div>
             </div>
             <BottomDrawer
               open={calendarDrawerOpen}

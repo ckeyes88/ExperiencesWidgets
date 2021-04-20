@@ -66,10 +66,6 @@
     background-color: #f3f3f3;
   }
 
-  &:last-child {
-    margin-right: -6px;
-  }
-
   &:disabled {
     pointer-events: none;
 
@@ -77,28 +73,30 @@
       fill: #b9b9b9;
     }
   }
+
+  & > svg:first-child {
+    margin-right: 0;
+  }
 }
 
 .calendar__matrix {
   display: grid;
-  gap: 15px 0px;
+  gap: 15px 29px;
   grid-template-areas: ". . . . . . .";
   text-align: center;
-
+  margin-left: -5px;
   & > div {
     display: flex;
-    justify-content: center;
   }
 }
 
 .calendar__matrix__day span {
   cursor: pointer;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 26px;
   height: 26px;
-  padding: 2px;
 }
 
 .calendar__matrix__day--header span {
@@ -119,4 +117,18 @@
 .calendar__matrix__day--disabled span {
   cursor: default;
   color: lighten($color-default, 40%);
+}
+
+.calendar__matrix__day--sold-out > span {
+  cursor: default;
+  color: lighten($color-default, 40%);
+  position: relative;
+}
+
+/** Add strikethrough to sold out events. */
+.calendar__matrix__day--sold-out > span::after {
+  content: "";
+  border-bottom: 2px solid lighten($color-default, 40%);
+  position: absolute;
+  width: 100%;
 }

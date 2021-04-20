@@ -6,6 +6,33 @@
   position: relative;
 }
 
+.timeslot-selection__legend {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.5rem;
+}
+
+.timeslot-selection__legend-container {
+  margin-left: 5px;
+
+  & > span:first-child {
+    margin-right: 16px;
+    color: lighten($color-default, 40%);
+    position: relative;
+  }
+}
+
+.timeslot-selection__legend-container:first-of-type {
+  /** Add strikethrough to sold out event legend label. */
+  & > span:first-child:after {
+    content: "";
+    border-bottom: 2px solid lighten($color-default, 40%);
+    position: absolute;
+    left: -2px;
+    width: 140%;
+    bottom: 9px;
+  }
+}
 .timeslot-selection__no-availability {
   display: flex;
   flex-direction: column;

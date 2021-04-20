@@ -3,7 +3,7 @@ import { h, FunctionComponent } from "preact";
 import "./Button.scss";
 
 export type ButtonProps = {
-  color?: "primary" | "danger" | "default" | "transparent";
+  color?: "primary" | "danger" | "default" | "transparent" | "grayed";
   variant?: "contained" | "outlined" | "text";
   fullWidth?: boolean;
   disabled?: boolean;

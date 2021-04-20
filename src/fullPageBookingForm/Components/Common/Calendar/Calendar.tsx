@@ -16,6 +16,7 @@ export type CalendarProps = {
   loading?: boolean;
   startOfWeek?: "Su" | "Mo";
   dateIsDisabled?: (date: Date) => boolean;
+  dateIsSoldOut?: (date: Date) => boolean;
   onDateChange?: (date: Date) => void;
   onMonthChange?: (month: number) => void;
   onYearChange?: (year: number) => void;
@@ -30,6 +31,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
   loading,
   startOfWeek = "Su",
   dateIsDisabled,
+  dateIsSoldOut,
   onDateChange,
   onMonthChange,
   onYearChange,
@@ -153,9 +155,10 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
 
             const before = moment(date).isBefore(moment(), "day");
             const disabled = before || dateIsDisabled?.(date) || loading;
+            const isSoldOut = dateIsSoldOut(date);
 
             const handleClick = () => {
-              if (!disabled) {
+              if (!disabled && !isSoldOut) {
                 setCurrentDate(date);
                 onDateChange?.(date);
               }
@@ -167,7 +170,13 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
 
             classNames.push(
               `calendar__matrix__day--${
-                selected ? "selected" : disabled ? "disabled" : "default"
+                disabled
+                  ? "disabled"
+                  : isSoldOut
+                  ? "sold-out"
+                  : selected
+                  ? "selected"
+                  : "default"
               }`,
             );
 
@@ -191,6 +200,10 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
     moment(today).month() === currentMonth &&
     moment(today).year() === currentYear;
 
+  //Today is disabled if the date is disabled (no timeslots on this date)
+  // //or it's sold out.
+  // const todayIsDisabled = dateIsDisabled(today) || dateIsSoldOut(today);
+
   return (
     <div className="calendar">
       <div className="calendar__header">
@@ -207,8 +220,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
             color="primary"
             text="Today"
             disabled={
-              moment(today).isSame(currentDate, "date") ||
-              (moment(today).isBefore(currentDate, "date") &&
+              (moment(currentMonth).isSameOrBefore(month, "date") &&
                 withinCurrentMonthAndYear) ||
               loading
             }
