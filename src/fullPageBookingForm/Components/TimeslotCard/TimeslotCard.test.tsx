@@ -1,8 +1,9 @@
 /** @jsx h */
 import { h } from "preact";
 import { render, screen, fireEvent } from "@testing-library/preact";
-import { withMarkup } from "../../../testUtils";
 import { TimeslotCard } from "./TimeslotCard";
+
+const defaultMoneyFormat = "${{amount}}";
 
 test("Renders content correctly", async () => {
   render(
@@ -13,14 +14,14 @@ test("Renders content correctly", async () => {
       minPrice={150}
       timezone="America/Los_Angeles"
       onSelect={jest.fn()}
+      moneyFormat={defaultMoneyFormat}
     />,
   );
 
-  expect(screen.getByText(/3:00pm - 7:00pm/i)).toBeInTheDocument();
+  expect(screen.getAllByText(/6:00am - 10:00am/i)).toHaveLength(1);
   expect(screen.getByText(/4 spots left/i)).toBeInTheDocument();
-  expect(
-    withMarkup(screen.getByText)("From $150 / person"),
-  ).toBeInTheDocument();
+  expect(screen.getByText("From $150.00")).toBeInTheDocument();
+  expect(screen.getByText("/ person")).toBeInTheDocument();
   expect(screen.getByText(/select/i)).toBeInTheDocument();
 });
 
@@ -35,6 +36,7 @@ test("Calls onSelect callback", () => {
       minPrice={150}
       timezone={"Asia/Manila"}
       onSelect={handleSelect}
+      moneyFormat={defaultMoneyFormat}
     />,
   );
 

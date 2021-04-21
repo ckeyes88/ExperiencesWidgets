@@ -47,6 +47,7 @@ export const defaultPerAttendeeFormProps: PerAttendeeTypeProps = {
       name: "Per Attendee Form",
     },
   ],
+  minLimit: 0,
   removeVariantModal: {
     variantToRemove: "",
     isOpen: false,
