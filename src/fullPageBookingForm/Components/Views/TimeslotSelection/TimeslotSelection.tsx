@@ -28,6 +28,7 @@ export const TimeslotSelection: FunctionComponent = () => {
     (state) => state.setSelectedTimeslot,
   );
   const { setPage, close } = useWizardModalAction();
+  const [hasMoreAvailableDates, setHasMoreAvailableDates] = useState(true);
   const [calendarDrawerOpen, setCalendarOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
@@ -40,6 +41,7 @@ export const TimeslotSelection: FunctionComponent = () => {
     availabilities,
     timeslotsByDay,
     fetchMoreFromList,
+    hasMoreAvailabilites,
   } = useAvailabilities({
     date: currentDate,
     month: currentMonth,
@@ -82,9 +84,15 @@ export const TimeslotSelection: FunctionComponent = () => {
 
   const handleYearChange = (year: number) => setCurrentYear(year);
 
-  const handleLoadMore = () => {
+  /**Loads more events on callback from infinite scroller. */
+  const handleLoadMore = async () => {
     if (!isFetchingMoreFromList) {
-      fetchMoreFromList();
+      const hasMore = await hasMoreAvailabilites();
+      setHasMoreAvailableDates(hasMore);
+
+      if (hasMore) {
+        fetchMoreFromList();
+      }
     }
   };
 
@@ -148,7 +156,7 @@ export const TimeslotSelection: FunctionComponent = () => {
 
     return (
       <InfiniteScroll
-        hasMore
+        hasMore={hasMoreAvailableDates}
         useWindow={false}
         getScrollParent={() => document.querySelector(".wizard-modal__root")}
         loadMore={handleLoadMore}
