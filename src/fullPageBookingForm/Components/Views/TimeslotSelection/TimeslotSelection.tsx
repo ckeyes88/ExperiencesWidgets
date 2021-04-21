@@ -23,7 +23,14 @@ import "./TimeslotSelection.scss";
 import { Button } from "../../Common/Button";
 import { Donger } from "../../Common/Icon/Donger";
 
-export const TimeslotSelection: FunctionComponent = () => {
+export type TimeslotSelectionProps = {
+  /**Format for money in shop. */
+  moneyFormat: string;
+};
+
+export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
+  moneyFormat,
+}) => {
   const setSelectedTimeslot = useTimeslotStore(
     (state) => state.setSelectedTimeslot,
   );
@@ -174,6 +181,7 @@ export const TimeslotSelection: FunctionComponent = () => {
 
               return {
                 minPrice,
+                moneyFormat: moneyFormat,
                 startsAt: new Date(timeslot.startsAt),
                 endsAt: new Date(timeslot.endsAt),
                 remainingSpots: timeslot.unitsLeft,

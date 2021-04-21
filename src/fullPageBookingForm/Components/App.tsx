@@ -10,7 +10,7 @@ import { Confirmation } from "./Views/Confirmation";
 import { WidgetDataProvider } from "./WidgetDataProvider";
 import { useEventStore } from "../Hooks/useEventStore";
 import { useTimeslotStore } from "../Hooks/useTimeslotStore";
-import { getEventCustomLabels } from "../../Utils/api";
+import { getEventCustomLabels, getShopDetails } from "../../Utils/api";
 import { useEffect, useState } from "preact/hooks";
 import {
   AppDictionary,
@@ -42,6 +42,7 @@ export const App: FunctionComponent<AppProps> = ({
   shopifyProductId,
   languageCode,
 }) => {
+  const [moneyFormat, setMoneyFormat] = useState("${{amount}}");
   const [initialCustomerFormStore] = useState<CustomerFormStore>(
     useCustomerFormStore.getState(),
   );
@@ -61,6 +62,22 @@ export const App: FunctionComponent<AppProps> = ({
     useOrderDetailsStore.setState(initialOrderDetailsStore, true);
     useQtySelectionStore.setState(initialQtySelectionStore, true);
   };
+
+  //Updates money format on mount.
+  useEffect(() => {
+    try {
+      const updateMoneyFormat = async () => {
+        const shop = await getShopDetails({ baseUrl, shopId: shopUrl });
+
+        setMoneyFormat(shop.moneyFormat);
+      };
+
+      updateMoneyFormat();
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
   //Reset store data on unmount
   useEffect(() => {
     return resetOrderDetailsStores;
@@ -125,7 +142,7 @@ export const App: FunctionComponent<AppProps> = ({
         onClose={handleClose}
       >
         <WizardModal.Page page={BookingFormPage.TIMESLOT_SELECTION}>
-          <TimeslotSelection />
+          <TimeslotSelection moneyFormat={moneyFormat} />
         </WizardModal.Page>
         <WizardModal.Page page={BookingFormPage.ORDER_DETAILS}>
           <OrderDetails
@@ -134,6 +151,7 @@ export const App: FunctionComponent<AppProps> = ({
             labels={labels}
             selectedTimeslot={selectedTimeslot}
             onBackClick={resetOrderDetailsStores}
+            moneyFormat={moneyFormat}
           />
         </WizardModal.Page>
         <WizardModal.Page page={BookingFormPage.SUBMISSION_LOADER}>
