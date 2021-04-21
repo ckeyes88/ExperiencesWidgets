@@ -224,7 +224,7 @@ export default [
             "cloneElement",
             "options",
           ],
-          "node_modules/ramda/dist/ramda.js": ["clone"],
+          "node_modules/ramda/dist/ramda.js": ["clone", "equals"],
         },
       }),
     ],

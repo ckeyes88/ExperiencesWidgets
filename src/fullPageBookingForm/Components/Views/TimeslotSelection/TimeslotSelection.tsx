@@ -23,11 +23,19 @@ import "./TimeslotSelection.scss";
 import { Button } from "../../Common/Button";
 import { Donger } from "../../Common/Icon/Donger";
 
-export const TimeslotSelection: FunctionComponent = () => {
+export type TimeslotSelectionProps = {
+  /**Format for money in shop. */
+  moneyFormat: string;
+};
+
+export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
+  moneyFormat,
+}) => {
   const setSelectedTimeslot = useTimeslotStore(
     (state) => state.setSelectedTimeslot,
   );
   const { setPage, close } = useWizardModalAction();
+  const [hasMoreAvailableDates, setHasMoreAvailableDates] = useState(true);
   const [calendarDrawerOpen, setCalendarOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentMonth, setCurrentMonth] = useState(currentDate.getMonth());
@@ -40,6 +48,7 @@ export const TimeslotSelection: FunctionComponent = () => {
     availabilities,
     timeslotsByDay,
     fetchMoreFromList,
+    hasMoreAvailabilites,
   } = useAvailabilities({
     date: currentDate,
     month: currentMonth,
@@ -82,9 +91,15 @@ export const TimeslotSelection: FunctionComponent = () => {
 
   const handleYearChange = (year: number) => setCurrentYear(year);
 
-  const handleLoadMore = () => {
+  /**Loads more events on callback from infinite scroller. */
+  const handleLoadMore = async () => {
     if (!isFetchingMoreFromList) {
-      fetchMoreFromList();
+      const hasMore = await hasMoreAvailabilites();
+      setHasMoreAvailableDates(hasMore);
+
+      if (hasMore) {
+        fetchMoreFromList();
+      }
     }
   };
 
@@ -148,7 +163,7 @@ export const TimeslotSelection: FunctionComponent = () => {
 
     return (
       <InfiniteScroll
-        hasMore
+        hasMore={hasMoreAvailableDates}
         useWindow={false}
         getScrollParent={() => document.querySelector(".wizard-modal__root")}
         loadMore={handleLoadMore}
@@ -166,6 +181,7 @@ export const TimeslotSelection: FunctionComponent = () => {
 
               return {
                 minPrice,
+                moneyFormat: moneyFormat,
                 startsAt: new Date(timeslot.startsAt),
                 endsAt: new Date(timeslot.endsAt),
                 remainingSpots: timeslot.unitsLeft,

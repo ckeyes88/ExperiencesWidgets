@@ -98,7 +98,7 @@ export const QuantitySelection: FunctionComponent<QuantitySelectionProps> = ({
                   onIncreaseClick={() => onIncreaseClick(idx)}
                   currentQty={variant.currentQty}
                   qtyMaximum={
-                    maxLimitQty !== undefined
+                    maxLimitQty !== null && maxLimitQty !== undefined
                       ? maxLimitQty > unitsLeft
                         ? unitsLeft + variant.currentQty
                         : maxLimitQty + variant.currentQty

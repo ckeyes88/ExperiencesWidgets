@@ -5,6 +5,7 @@ import { FirstAvailability } from "../../../../typings/FirstAvailability";
 import { getFirstAvailability } from "../../../../Utils/api";
 import { unionAvailability } from "../../../../Utils/mergeAvailability";
 import { useWidgetData } from "../../WidgetDataProvider";
+import { equals } from "ramda";
 
 const TIMESPAN_IN_SECONDS = 32 * 24 * 60 * 60;
 
@@ -19,6 +20,9 @@ export const useAvailabilities = ({
 }) => {
   const { baseUrl, shopUrl, shopifyProductId } = useWidgetData();
 
+  const [nextAvailabilites, setNextAvailabilities] = useState<
+    FirstAvailability
+  >({});
   const [isFetchingInitially, setFetchingInitially] = useState(true);
   const [isFetching, setFetching] = useState(false);
   const [isFetchingMoreFromList, setFetchingMoreFromList] = useState(false);
@@ -31,7 +35,16 @@ export const useAvailabilities = ({
   >({});
   const [lastDateFetched, setLastDateFetched] = useState(new Date());
 
-  const fetchMoreFromList = async () => {
+  /**Concatenates next availabilities with current availabilities to add availabilites
+   * to list.
+   */
+  const fetchMoreFromList = () => {
+    setAvailabilities(unionAvailability(availabilities, nextAvailabilites));
+    addTimeslots();
+  };
+
+  /**Determines if more availabilities are available to be fetched. */
+  const hasMoreAvailabilites = async (): Promise<boolean> => {
     setFetchingMoreFromList(true);
 
     const result = await getFirstAvailability({
@@ -42,10 +55,17 @@ export const useAvailabilities = ({
       timespanInSeconds: TIMESPAN_IN_SECONDS,
     });
 
-    setAvailabilities(unionAvailability(availabilities, result));
-    addTimeslots();
+    const hasNewAvailabilites = !equals(result, availabilities);
+
+    if (hasNewAvailabilites) {
+      setNextAvailabilities(result);
+      setFetchingMoreFromList(false);
+
+      return true;
+    }
 
     setFetchingMoreFromList(false);
+    return false;
   };
 
   const addTimeslots = () => {
@@ -135,6 +155,7 @@ export const useAvailabilities = ({
     availabilities,
     timeslotsByDay,
     fetchMoreFromList,
+    hasMoreAvailabilites,
     isFetchingInitialAvailabilities: isFetchingInitially,
     isFetchingMoreAvailabilities: isFetching,
     isFetchingMoreFromList,

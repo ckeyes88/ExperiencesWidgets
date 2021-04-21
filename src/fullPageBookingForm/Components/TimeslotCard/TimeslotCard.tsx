@@ -5,6 +5,7 @@ import { Button } from "../Common/Button";
 import { Card } from "../Common/Card";
 import { TextStyle } from "../Common/TextStyle";
 import "./TimeslotCard.scss";
+import { formatCurrency } from "../../../Utils/helpers";
 
 export type TimeslotCardProps = {
   startsAt: Date;
@@ -13,6 +14,7 @@ export type TimeslotCardProps = {
   remainingSpots: number;
   minPrice: number;
   onSelect: () => void;
+  moneyFormat: string;
 };
 
 export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
@@ -21,6 +23,7 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
   timezone,
   remainingSpots,
   minPrice,
+  moneyFormat,
   onSelect,
 }) => {
   const formattedStartsAt = moment(startsAt).tz(timezone).format("h:mma");
@@ -46,7 +49,11 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
           <div className="timeslot-card__details__pricing">
             <TextStyle
               variant="display1"
-              text={minPrice ? `From $${minPrice}` : "Free"}
+              text={
+                minPrice
+                  ? `From ${formatCurrency(moneyFormat, minPrice)}`
+                  : "Free"
+              }
             />
             <TextStyle variant="body1" text=" / person" />
           </div>

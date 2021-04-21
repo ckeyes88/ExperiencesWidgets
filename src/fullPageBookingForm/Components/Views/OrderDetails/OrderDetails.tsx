@@ -35,8 +35,11 @@ import {
 } from "../../Common/WizardModal";
 import moment from "moment-timezone";
 import { getCart } from "../../../../Utils/api";
+import { formatCurrency } from "../../../../Utils/helpers";
 
 export type OrderDetailsProps = {
+  /**Format for money in shop. */
+  moneyFormat: string;
   /** This is the timeslot that the user has selected for the order */
   selectedTimeslot: Availability;
   /** This is the event for which the order is being created */
@@ -53,6 +56,7 @@ export type OrderDetailsProps = {
 
 export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   event,
+  moneyFormat,
   selectedTimeslot,
   labels,
   isStorybookTest,
@@ -553,7 +557,10 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
             </div>
           </div>
           <div>
-            <TextStyle variant="body2" text={`From $${minCost} `} />
+            <TextStyle
+              variant="body2"
+              text={`From ${formatCurrency(moneyFormat, minCost)} `}
+            />
             <TextStyle variant="body1" text={"/ person"} />
           </div>
           <div className="OrderDetails__Header-Rule" />
@@ -574,14 +581,20 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
                     <div className="OrderDetails__Overview__Values__Total">
                       <TextStyle
                         variant="body1"
-                        text={`$${variant.currentQty * variant.price}`}
+                        text={`${formatCurrency(
+                          moneyFormat,
+                          variant.currentQty * variant.price,
+                        )}`}
                       />
                     </div>
                   </div>
                 ))}
               <div className="OrderDetails__Overview__Total">
                 <TextStyle variant="body2" text="Total" />
-                <TextStyle variant="body2" text={`$${variantTotal}`} />
+                <TextStyle
+                  variant="body2"
+                  text={`${formatCurrency(moneyFormat, variantTotal)}`}
+                />
               </div>
             </div>
           )}
