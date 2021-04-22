@@ -156,8 +156,8 @@ export class CalendarWidgetMain extends Component<
     const ms = +date;
     const selectedDate = isNaN(ms) ? new Date() : fromUnixTime(ms);
     const availabilityRangeEnd =
-      Date.now() + ms * 1000 > Date.now() + TIMESPAN_IN_SECONDS * 1000
-        ? selectedDate.getTime() / 1000 + TIMESPAN_IN_SECONDS * 2
+      !isNaN(ms) && (Date.now() + ms * 1000) > Date.now() + TIMESPAN_IN_SECONDS * 1000
+        ? Math.trunc(selectedDate.getTime() / 1000) + TIMESPAN_IN_SECONDS * 2
         : TIMESPAN_IN_SECONDS * 2;
 
     try {
