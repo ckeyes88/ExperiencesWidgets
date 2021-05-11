@@ -32,7 +32,7 @@ export type AppProps = {
   baseUrl: string;
   languageCode: string;
   shopUrl: string;
-  shopifyProductId: string;
+  shopifyProductId: number;
 };
 
 export const App: FunctionComponent<AppProps> = ({
@@ -92,7 +92,7 @@ export const App: FunctionComponent<AppProps> = ({
       const labelResponse = await getEventCustomLabels({
         baseUrl,
         shopId: shopUrl,
-        shopifyProductId: parseFloat(shopifyProductId as string),
+        shopifyProductId: shopifyProductId,
       });
 
       const labelsResolved =

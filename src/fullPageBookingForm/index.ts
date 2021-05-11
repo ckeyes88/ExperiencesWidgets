@@ -34,7 +34,7 @@ const mountWidget = (component: ComponentFactory<AppProps>, el: Element) => {
       baseUrl,
       languageCode,
       shopUrl,
-      shopifyProductId,
+      shopifyProductId: parseFloat(shopifyProductId),
     };
     render(h(component, props), el);
   } catch (err) {
