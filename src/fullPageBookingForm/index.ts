@@ -31,7 +31,7 @@ const mountWidget = (component: ComponentFactory<AppProps>, el: Element) => {
       throw new Error("shopifyProductId must be specified to load the widget.");
     }
     const props: AppProps = {
-      baseUrl: `//${baseUrl}`,
+      baseUrl,
       languageCode,
       shopUrl,
       shopifyProductId,
