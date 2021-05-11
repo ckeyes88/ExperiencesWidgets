@@ -13,11 +13,28 @@ import { App, AppProps } from "./Components/App";
 const mountWidget = (component: ComponentFactory<AppProps>, el: Element) => {
   try {
     const urlParams = new URL(location.href).searchParams;
+    const baseUrl = urlParams.get("baseUrl");
+    const languageCode = urlParams.get("lang");
+    const shopUrl = urlParams.get("shopUrl");
+    const shopifyProductId = urlParams.get("productId");
+
+    if (!baseUrl) {
+      throw new Error("baseUrl must be specified to load the widget.");
+    }
+    if (!languageCode) {
+      throw new Error("languageCode must be specified to load the widget.");
+    }
+    if (!shopUrl) {
+      throw new Error("shopUrl must be specified to load the widget.");
+    }
+    if (!shopifyProductId) {
+      throw new Error("shopifyProductId must be specified to load the widget.");
+    }
     const props: AppProps = {
-      baseUrl: `//${urlParams.get("baseUrl")}`,
-      languageCode: urlParams.get("lang"),
-      shopUrl: urlParams.get("shopUrl"),
-      shopifyProductId: urlParams.get("productId"),
+      baseUrl: `//${baseUrl}`,
+      languageCode,
+      shopUrl,
+      shopifyProductId,
     };
     render(h(component, props), el);
   } catch (err) {
