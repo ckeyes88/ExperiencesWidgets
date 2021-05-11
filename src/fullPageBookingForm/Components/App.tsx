@@ -28,11 +28,14 @@ import {
   QuantitySelectionStore,
   useQtySelectionStore,
 } from "../Hooks";
+import { useConnectActivators } from "../Hooks/useConnectActivators";
+
 export type AppProps = {
   baseUrl: string;
   languageCode: string;
   shopUrl: string;
   shopifyProductId: number;
+  autoOpen?: number;
 };
 
 export const App: FunctionComponent<AppProps> = ({
@@ -40,7 +43,13 @@ export const App: FunctionComponent<AppProps> = ({
   shopUrl,
   shopifyProductId,
   languageCode,
+  autoOpen,
 }) => {
+  //Proxied version of app is requested, which is automatically open on mount.
+  const isOpenOnMount = autoOpen === 1;
+
+  const { open, setOpen } = useConnectActivators();
+
   const [moneyFormat, setMoneyFormat] = useState("${{amount}}");
   const [initialCustomerFormStore] = useState<CustomerFormStore>(
     useCustomerFormStore.getState(),
@@ -111,6 +120,11 @@ export const App: FunctionComponent<AppProps> = ({
 
   const handleClose = () => {
     resetOrderDetailsStores();
+
+    //For non proxied version of application, we want to close the modal on click of "X" button
+    if (!isOpenOnMount) {
+      setOpen(false);
+    }
   };
 
   const customerEmail = useCustomerFormStore(
@@ -132,7 +146,7 @@ export const App: FunctionComponent<AppProps> = ({
       data={{ baseUrl, shopUrl, shopifyProductId, languageCode }}
     >
       <WizardModal
-        open={true}
+        open={isOpenOnMount ? isOpenOnMount : open}
         initialPage={BookingFormPage.TIMESLOT_SELECTION}
         hideCloseButton={hideCloseButton}
         hideTitleBar={hideTitleBar}
