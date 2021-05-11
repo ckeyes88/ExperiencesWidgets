@@ -1,6 +1,5 @@
 /** @jsx h */
 import { h, FunctionComponent } from "preact";
-import { useConnectActivators } from "../Hooks/useConnectActivators";
 import { BookingFormPage } from "../Typings/BookingFormPage";
 import { WizardModal } from "./Common/WizardModal";
 import { TimeslotSelection } from "./Views/TimeslotSelection";
@@ -33,7 +32,7 @@ export type AppProps = {
   baseUrl: string;
   languageCode: string;
   shopUrl: string;
-  shopifyProductId: number;
+  shopifyProductId: string;
 };
 
 export const App: FunctionComponent<AppProps> = ({
@@ -83,7 +82,6 @@ export const App: FunctionComponent<AppProps> = ({
     return resetOrderDetailsStores;
   }, []);
 
-  const { open, setOpen } = useConnectActivators();
   const event = useEventStore((state) => state.event);
   const selectedTimeslot = useTimeslotStore((state) => state.selectedTimeslot);
   const [labels, setLabels] = useState<Partial<AppDictionary>>({});
@@ -94,7 +92,7 @@ export const App: FunctionComponent<AppProps> = ({
       const labelResponse = await getEventCustomLabels({
         baseUrl,
         shopId: shopUrl,
-        shopifyProductId,
+        shopifyProductId: parseFloat(shopifyProductId as string),
       });
 
       const labelsResolved =
@@ -113,7 +111,6 @@ export const App: FunctionComponent<AppProps> = ({
 
   const handleClose = () => {
     resetOrderDetailsStores();
-    setOpen(false);
   };
 
   const customerEmail = useCustomerFormStore(
@@ -135,7 +132,7 @@ export const App: FunctionComponent<AppProps> = ({
       data={{ baseUrl, shopUrl, shopifyProductId, languageCode }}
     >
       <WizardModal
-        open={open}
+        open={true}
         initialPage={BookingFormPage.TIMESLOT_SELECTION}
         hideCloseButton={hideCloseButton}
         hideTitleBar={hideTitleBar}
