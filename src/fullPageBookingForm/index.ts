@@ -17,6 +17,7 @@ const mountWidget = (component: ComponentFactory<AppProps>, el: Element) => {
     const languageCode = urlParams.get("lang");
     const shopUrl = urlParams.get("shopUrl");
     const shopifyProductId = urlParams.get("productId");
+    const autoOpen = urlParams.get("autoOpen");
 
     if (!baseUrl) {
       throw new Error("baseUrl must be specified to load the widget.");
@@ -35,6 +36,7 @@ const mountWidget = (component: ComponentFactory<AppProps>, el: Element) => {
       languageCode,
       shopUrl,
       shopifyProductId: parseFloat(shopifyProductId),
+      autoOpen: parseFloat(autoOpen),
     };
     render(h(component, props), el);
   } catch (err) {
