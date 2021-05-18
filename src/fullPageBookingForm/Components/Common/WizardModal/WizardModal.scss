@@ -5,7 +5,9 @@ $title-bar-height: 68px;
 .wizard-modal {
   position: fixed;
   top: 0px;
+  bottom: 0px;
   left: 0px;
+  right: 0px;
   z-index: 10000;
   opacity: 0;
   transform: translateY(100%);
@@ -30,8 +32,10 @@ $title-bar-height: 68px;
   background: rgb(255, 255, 255);
   overflow: auto;
   outline: none;
-  width: 100vw;
-  height: 100vh;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
   border: none;
 }
 
