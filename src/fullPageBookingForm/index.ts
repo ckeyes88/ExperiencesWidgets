@@ -8,37 +8,27 @@ import "@fontsource/montserrat/700.css";
 import { App, AppProps } from "./Components/App";
 import { mountComponent } from "../Utils/mount";
 
-const queryParams = new URL(location.href).searchParams;
+const url = new URL(location.href);
+const urlPaths = url.pathname.split("/");
 
-//Proxied version of application will have autoOpen query param, otherwise we are
-//being mounted in original full-page.liquid template
-if (queryParams.has("autoOpen")) {
+//Provided by express template injection.
+declare const baseUrl: string;
+
+//Proxied version of app has multiple path parameters.
+if (urlPaths.length >= 6) {
+  const langCodeIdx = 3;
+  const productIdIdx = 4;
+  const autoOpenIdx = 5;
   /**
    * Mounts an instance of the widget component to the found HTML element.
    */
   const mountWidget = (component: ComponentFactory<AppProps>, el: Element) => {
     try {
-      const urlParams = new URL(location.href).searchParams;
-      const baseUrl = urlParams.get("baseUrl");
-      const languageCode = urlParams.get("lang");
-      const shopUrl = urlParams.get("shopUrl");
-      const shopifyProductId = urlParams.get("productId");
-      const autoOpen = urlParams.get("autoOpen");
+      const languageCode = urlPaths[langCodeIdx];
+      const shopifyProductId = urlPaths[productIdIdx];
+      const autoOpen = urlPaths[autoOpenIdx];
+      const shopUrl = url.host;
 
-      if (!baseUrl) {
-        throw new Error("baseUrl must be specified to load the widget.");
-      }
-      if (!languageCode) {
-        throw new Error("languageCode must be specified to load the widget.");
-      }
-      if (!shopUrl) {
-        throw new Error("shopUrl must be specified to load the widget.");
-      }
-      if (!shopifyProductId) {
-        throw new Error(
-          "shopifyProductId must be specified to load the widget.",
-        );
-      }
       const props: AppProps = {
         baseUrl,
         languageCode,

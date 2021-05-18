@@ -119,11 +119,13 @@ export const App: FunctionComponent<AppProps> = ({
   }, []);
 
   const handleClose = () => {
-    resetOrderDetailsStores();
-
-    //For non proxied version of application, we want to close the modal on click of "X" button
+    //For non proxied version of application, we want to close the modal on click of "X" button.
+    //Otherwise, redirect to the previous shopify page.
     if (!isOpenOnMount) {
+      resetOrderDetailsStores();
       setOpen(false);
+    } else {
+      location.href = document.referrer;
     }
   };
 
