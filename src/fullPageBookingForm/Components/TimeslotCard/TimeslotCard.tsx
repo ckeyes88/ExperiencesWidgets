@@ -55,7 +55,7 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
                   : "Free"
               }
             />
-            <TextStyle variant="body1" text=" / person" />
+            <TextStyle variant="body1" text=" | person" />
           </div>
         </div>
         <div className="timeslot-card__button">
