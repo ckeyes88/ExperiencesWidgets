@@ -155,7 +155,7 @@ export const App: FunctionComponent<AppProps> = ({
         onClose={handleClose}
       >
         <WizardModal.Page page={BookingFormPage.TIMESLOT_SELECTION}>
-          <TimeslotSelection moneyFormat={moneyFormat} />
+          <TimeslotSelection moneyFormat={moneyFormat} labels={labels} />
         </WizardModal.Page>
         <WizardModal.Page page={BookingFormPage.ORDER_DETAILS}>
           <OrderDetails
