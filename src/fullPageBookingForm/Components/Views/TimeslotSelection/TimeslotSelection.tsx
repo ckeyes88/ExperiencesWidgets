@@ -22,14 +22,18 @@ import { useAvailabilities } from "./useAvailabilities";
 import "./TimeslotSelection.scss";
 import { Button } from "../../Common/Button";
 import { Donger } from "../../Common/Icon/Donger";
+import { AppDictionary } from "../../../../typings/Languages";
 
 export type TimeslotSelectionProps = {
   /**Format for money in shop. */
   moneyFormat: string;
+  /**Labels to be used in the view. */
+  labels: Partial<AppDictionary>;
 };
 
 export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
   moneyFormat,
+  labels,
 }) => {
   const setSelectedTimeslot = useTimeslotStore(
     (state) => state.setSelectedTimeslot,
@@ -197,7 +201,10 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
 
   return (
     <Fragment>
-      <WizardModalTitleBar title="Select dates" onBack={handleClose}>
+      <WizardModalTitleBar
+        title={labels.selectDateLabel ? labels.selectDateLabel : "Select dates"}
+        onBack={handleClose}
+      >
         {!isFetchingEvent && (
           <button
             className="timeslot-selection__calendar-button"
@@ -231,27 +238,10 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
           <div className="timeslot-selection">
             <div className="timeslot-selection__calendar">
               <EventTitle
-                inlineWithThumbnail
                 title={event.name}
                 thumbnailSrc={event.featuredImageUrl}
               />
               {calendar}
-              <div className="timeslot-selection__legend">
-                <div className="timeslot-selection__legend-container">
-                  <TextStyle text="T" variant="body1" />
-                  <TextStyle
-                    text="Sold out. No availability on this day"
-                    variant="body1"
-                  />
-                </div>
-                <div className="timeslot-selection__legend-container">
-                  <TextStyle text="T" variant="body1" />
-                  <TextStyle
-                    text="Timeslots not offered on this day"
-                    variant="body1"
-                  />
-                </div>
-              </div>
             </div>
             <BottomDrawer
               open={calendarDrawerOpen}
