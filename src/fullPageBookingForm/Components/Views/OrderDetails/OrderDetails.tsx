@@ -544,7 +544,14 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
           <div>
             <div className="OrderDetails__Summary__Time-Slot">
-              <TextStyle variant="body1" text={`${startTime} - ${endTime}`} />
+              <TextStyle
+                variant="body1"
+                text={
+                  <Fragment>
+                    {startTime} &mdash; {endTime}
+                  </Fragment>
+                }
+              />
               <TextStyle variant="body1" text="|" />
               <TextStyle
                 variant="body3"

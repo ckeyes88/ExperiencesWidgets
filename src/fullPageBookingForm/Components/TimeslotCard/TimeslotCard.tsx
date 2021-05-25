@@ -1,5 +1,5 @@
 /** @jsx h */
-import { h, FunctionComponent } from "preact";
+import { h, FunctionComponent, Fragment } from "preact";
 import moment from "moment-timezone";
 import { Button } from "../Common/Button";
 import { Card } from "../Common/Card";
@@ -42,7 +42,11 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
           <div className="timeslot-card__details__time">
             <TextStyle
               variant="body1"
-              text={`${formattedStartsAt} - ${formattedEndsAt} | `}
+              text={
+                <Fragment>
+                  {formattedStartsAt} &mdash; {formattedEndsAt} |{" "}
+                </Fragment>
+              }
             />
             <TextStyle variant="body3" text={`${remainingSpots} spots left`} />
           </div>
