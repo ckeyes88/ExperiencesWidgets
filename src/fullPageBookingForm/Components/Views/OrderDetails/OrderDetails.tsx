@@ -568,7 +568,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               variant="body2"
               text={`From ${formatCurrency(moneyFormat, minCost)} `}
             />
-            <TextStyle variant="body1" text={"/ person"} />
+            <TextStyle variant="body1" text={"| person"} />
           </div>
           <div className="OrderDetails__Header-Rule" />
           {isSaveContinueDisabled && (

@@ -11,22 +11,26 @@ $left-column-width: 427px;
 
 .OrderDetails__Input {
   width: 460px;
-  margin-left: 100px + $left-column-width + $column-gutter-width;
+  margin-left: auto;
 }
 
 .OrderDetails__Summary {
   height: max-content;
   position: fixed;
-  left: 228px;
-  width: $left-column-width;
 }
 
 .OrderDetails__Summary__Back {
   cursor: pointer;
+  margin-left: -18px;
   width: max-content;
+
+  &:hover {
+    background-color: #ececec;
+    border-radius: 50%;
+  }
 }
 .OrderDetails__Summary__Back > * {
-  padding: 0 !important;
+  padding: 7.5px 12px !important;
 }
 .OrderDetails__Header-Rule {
   display: none;
@@ -72,6 +76,8 @@ $left-column-width: 427px;
   object-fit: cover;
   border-radius: 5px;
   background-color: #424242;
+  margin-top: 26px;
+  margin-bottom: 12px;
 }
 
 .OrderDetails__Summary__Time-Slot {
