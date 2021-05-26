@@ -74,6 +74,12 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
 
   /** If the field is a select, this method renders it */
   const renderSelect = (): JSX.Element => {
+    const classNames = ["FullPage__FormField__Select"];
+
+    if (disabled) {
+      classNames.push("FullPage__FormField__Select--isDisabled");
+    }
+
     return (
       <div className="FullPage__FormField__RenderSelect">
         <label className="FullPage__FormField__SelectLabel" for={id}>
@@ -87,7 +93,7 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
           data-testid={id}
           onChange={handleChange}
           value={value}
-          className="FullPage__FormField__Select"
+          className={classNames.join(" ")}
           required={optionalLabel === ""}
           disabled={disabled}
         >
@@ -99,6 +105,11 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
 
   /** If the field is a text, email, or phone input, this renders it */
   const renderInput = (): JSX.Element => {
+    const classNames = ["FullPage__FormField__Input"];
+
+    if (disabled) {
+      classNames.push("FullPage__FormField__Input--isDisabled");
+    }
     return (
       <div className="FullPage__FormField__RenderInput">
         <label className="FullPage__FormField__Label" for={id}>
@@ -108,7 +119,7 @@ export const FormField: FunctionComponent<FormFieldProps> = ({
           )}
         </label>
         <input
-          className="FullPage__FormField__Input"
+          className={classNames.join(" ")}
           required={optionalLabel === ""}
           placeholder={placeholder}
           onChange={handleChange}

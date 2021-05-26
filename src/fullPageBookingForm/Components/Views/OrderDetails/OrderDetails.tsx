@@ -228,11 +228,13 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       formClassNames.push("OrderDetails__Input__Customer-Form--disabled");
     }
 
+    const hasQuantity = useQtySelectionStore(
+      (state) => state.canConfirmOrder,
+    )();
     //Save/Confirm button is disabled if store requires it to be disabled, if a variant qty hasn't been
     //specified, or if the customer form hasn't been populated.
     const canConfirm =
-      useQtySelectionStore((state) => state.canConfirmOrder)() &&
-      useCustomerFormStore((state) => state.canConfirmOrder)();
+      hasQuantity && useCustomerFormStore((state) => state.canConfirmOrder)();
 
     return (
       <form className={formClassNames.join(" ")} onSubmit={handleFormSubmit}>
@@ -242,7 +244,9 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
         <CustomerInfoForm
           {...customerFormProps}
-          isCustomerInfoFormDisabled={saveButtonVisibility === "hidden"}
+          isCustomerInfoFormDisabled={
+            saveButtonVisibility === "hidden" || !hasQuantity
+          }
         />
         <div className="OrderDetails__Header-Rule" />
         {saveButtonVisibility !== "hidden" && (
@@ -266,6 +270,10 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       (state) => state.customFormValues,
     );
 
+    const hasQuantity = useQtySelectionStore(
+      (state) => state.canConfirmOrder,
+    )();
+
     //Whether the user is allowed to confirm order by populating
     //all required custom form fields.
     const canConfirm =
@@ -274,7 +282,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           (field) =>
             !field.isRequired || (field.isRequired && field.value !== ""),
         ),
-      ) && useQtySelectionStore((state) => state.canConfirmOrder)();
+      ) && hasQuantity;
 
     //Render per attendee form.
     if (customOrderDetails.formType === OrderDetailsFormType.PerAttendee) {
@@ -327,6 +335,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               handleChange={useCustomFormStore(
                 (state) => state.handleCustomFormChange,
               )}
+              isDisabled={!hasQuantity}
             />
             <div className="OrderDetails__Button">
               {renderConfirmButton(!canConfirm)}
@@ -353,6 +362,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               handleChange={useCustomFormStore(
                 (state) => state.handleCustomFormChange,
               )}
+              isDisabled={!hasQuantity}
             />
             <div className="OrderDetails__Button">
               {renderConfirmButton(!canConfirm)}
