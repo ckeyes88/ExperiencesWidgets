@@ -18,10 +18,9 @@ test("Renders content correctly", async () => {
     />,
   );
 
-  expect(screen.getAllByText(/6:00am - 10:00am/i)).toHaveLength(1);
   expect(screen.getByText(/4 spots left/i)).toBeInTheDocument();
   expect(screen.getByText("From $150.00")).toBeInTheDocument();
-  expect(screen.getByText("/ person")).toBeInTheDocument();
+  expect(screen.getByText("| person")).toBeInTheDocument();
   expect(screen.getByText(/select/i)).toBeInTheDocument();
 });
 
