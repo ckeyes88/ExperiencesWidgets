@@ -558,7 +558,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
                 variant="body1"
                 text={
                   <Fragment>
-                    {startTime} &mdash; {endTime}
+                    {startTime} &ndash; {endTime}
                   </Fragment>
                 }
               />

@@ -44,7 +44,7 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
               variant="body1"
               text={
                 <Fragment>
-                  {formattedStartsAt} &mdash; {formattedEndsAt} |{" "}
+                  {formattedStartsAt} &ndash; {formattedEndsAt} |{" "}
                 </Fragment>
               }
             />
