@@ -199,6 +199,40 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
     );
   };
 
+  /**Renders calendar and timeslot cards for view. */
+  const renderView = () => {
+    return (
+      <div className="timeslot-selection">
+        <div className="timeslot-selection__calendar">
+          {isFetchingInitialAvailabilities ? (
+            <div>fetching calendar...</div>
+          ) : (
+            <Fragment>
+              <EventTitle
+                title={event.name}
+                thumbnailSrc={event.featuredImageUrl}
+              />
+              {calendar}
+            </Fragment>
+          )}
+        </div>
+        <BottomDrawer
+          open={calendarDrawerOpen}
+          onClose={handleCalendarDrawerToggle}
+        >
+          {calendar}
+        </BottomDrawer>
+        <div className="timeslot-selection__timeslot-list">
+          {isFetchingInitialAvailabilities ? (
+            <div> fetching cards... </div>
+          ) : (
+            <Fragment>{renderTimeslots()}</Fragment>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Fragment>
       <WizardModalTitleBar
@@ -214,12 +248,8 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
           </button>
         )}
       </WizardModalTitleBar>
-      {isFetchingEvent ? (
-        <div style={{ textAlign: "center" }}>
-          <TextStyle variant="display2" text="Loading experience data..." />
-        </div>
-      ) : !isFetchingInitialAvailabilities &&
-        Object.keys(availabilities).length === 0 ? (
+      {!isFetchingInitialAvailabilities &&
+      Object.keys(availabilities).length === 0 ? (
         <div className="timeslot-selection__no-availability">
           <Donger />
           <TextStyle text="Whoops!" variant="display1" />
@@ -234,33 +264,7 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
           />
         </div>
       ) : (
-        <Fragment>
-          <div className="timeslot-selection">
-            <div className="timeslot-selection__calendar">
-              <EventTitle
-                title={event.name}
-                thumbnailSrc={event.featuredImageUrl}
-              />
-              {calendar}
-            </div>
-            <BottomDrawer
-              open={calendarDrawerOpen}
-              onClose={handleCalendarDrawerToggle}
-            >
-              {calendar}
-            </BottomDrawer>
-            <div className="timeslot-selection__timeslot-list">
-              {isFetchingInitialAvailabilities ? (
-                <Fragment>
-                  <TimeslotGroupSkeleton length={4} />
-                  <TimeslotGroupSkeleton length={2} />
-                </Fragment>
-              ) : (
-                <Fragment>{renderTimeslots()}</Fragment>
-              )}
-            </div>
-          </div>
-        </Fragment>
+        renderView()
       )}
     </Fragment>
   );
