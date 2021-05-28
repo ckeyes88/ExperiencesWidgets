@@ -224,7 +224,7 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
         </BottomDrawer>
         <div className="timeslot-selection__timeslot-list">
           {isFetchingInitialAvailabilities ? (
-            <div> fetching cards... </div>
+            <TimeslotGroupSkeleton length={5} />
           ) : (
             <Fragment>{renderTimeslots()}</Fragment>
           )}
