@@ -6,6 +6,7 @@ import { Card } from "../Common/Card";
 import { TextStyle } from "../Common/TextStyle";
 import "./TimeslotCard.scss";
 import { formatCurrency } from "../../../Utils/helpers";
+import { AppDictionary } from "../../../typings/Languages";
 
 export type TimeslotCardProps = {
   startsAt: Date;
@@ -15,6 +16,7 @@ export type TimeslotCardProps = {
   minPrice: number;
   onSelect: () => void;
   moneyFormat: string;
+  labels: Partial<AppDictionary>;
 };
 
 export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
@@ -25,6 +27,7 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
   minPrice,
   moneyFormat,
   onSelect,
+  labels,
 }) => {
   const formattedStartsAt = moment(startsAt).tz(timezone).format("h:mma");
   const formattedEndsAt = moment(endsAt).tz(timezone).format("h:mma");
@@ -48,7 +51,12 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
                 </Fragment>
               }
             />
-            <TextStyle variant="body3" text={`${remainingSpots} spots left`} />
+            <TextStyle
+              variant="body3"
+              text={`${remainingSpots} ${
+                labels.spotsLeftLabel ? labels.spotsLeftLabel : "spots left"
+              }`}
+            />
           </div>
           <div className="timeslot-card__details__pricing">
             <TextStyle
@@ -59,13 +67,24 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
                   : "Free"
               }
             />
-            <TextStyle variant="body1" text=" | person" />
+            <TextStyle
+              variant="body1"
+              text={` | ${
+                labels.singularUnitLabel ? labels.singularUnitLabel : "person"
+              }`}
+            />
           </div>
         </div>
         <div className="timeslot-card__button">
           <Button
             color={remainingSpots === 0 ? "grayed" : "primary"}
-            text={remainingSpots === 0 ? "Sold Out" : "Select"}
+            text={
+              remainingSpots === 0
+                ? `${labels.soldOutLabel ? labels.soldOutLabel : "Sold Out"}`
+                : `${
+                    labels.selectDateLabel ? labels.selectDateLabel : "Select"
+                  }`
+            }
             onClick={onSelect}
             disabled={remainingSpots === 0}
           />

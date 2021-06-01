@@ -193,6 +193,7 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
                 remainingSpots: timeslot.unitsLeft,
                 timezone: timeslot.timezone,
                 onSelect: handleSelect,
+                labels: labels,
               };
             })}
           />

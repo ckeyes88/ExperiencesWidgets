@@ -132,6 +132,8 @@ export type AppDictionary = { [key: string]: any } & {
   list: string;
   today: string;
   whoopsLabel: string;
+  spotsLeftLabel: string;
+  soldOutLabel: string;
 };
 
 export type LanguageDictionaryType = {
@@ -144,6 +146,8 @@ export type LanguageDictionaryType = {
  */
 export const languageDictionary: LanguageDictionaryType = {
   "en-US": {
+    soldOutLabel: "Sold Out",
+    spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",
     goToNextAvailableMessage: "No events to display",
     calendarHeader: "Events Calendar",
@@ -290,6 +294,8 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Today",
   },
   es: {
+    soldOutLabel: "Sold Out",
+    spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",
     goToNextAvailableMessage: "No hay eventos para mostrar",
     calendarHeader: "Calendario de eventos",
@@ -442,6 +448,8 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Hoy dia",
   },
   ja: {
+    soldOutLabel: "Sold Out",
+    spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",
     goToNextAvailableMessage: "表示するイベントはありません",
     calendarHeader: "イベントカレンダー",
@@ -585,6 +593,8 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "今日",
   },
   ger: {
+    soldOutLabel: "Sold Out",
+    spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",
     goToNextAvailableMessage: "Keine Ereignisse zum Anzeigen",
     calendarHeader: "Veranstaltungskalender",
@@ -732,6 +742,8 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Heute",
   },
   swe: {
+    soldOutLabel: "Sold Out",
+    spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",
     goToNextAvailableMessage: "Inga händelser att visa",
     calendarHeader: "Evenemangskalender",
@@ -877,6 +889,8 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "I dag",
   },
   fr: {
+    soldOutLabel: "Sold Out",
+    spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",
     goToNextAvailableMessage: "Aucun événement à afficher",
     calendarHeader: "Calendrier des événements",
@@ -1024,6 +1038,8 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Aujourd'hui",
   },
   nl: {
+    soldOutLabel: "Sold Out",
+    spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",
     goToNextAvailableMessage: "Geen evenementen om weer te geven",
     calendarHeader: "Evenementen kalender",
@@ -1170,6 +1186,8 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Vandaag",
   },
   it: {
+    soldOutLabel: "Sold Out",
+    spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",
     goToNextAvailableMessage: "Nessun evento da visualizzare",
     calendarHeader: "Calendario eventi",
