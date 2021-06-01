@@ -173,10 +173,14 @@ export const App: FunctionComponent<AppProps> = ({
           />
         </WizardModal.Page>
         <WizardModal.Page page={BookingFormPage.SUBMISSION_LOADER}>
-          <SubmissionLoader />
+          <SubmissionLoader labels={labels} />
         </WizardModal.Page>
         <WizardModal.Page page={BookingFormPage.CONFIRMATION}>
-          <Confirmation email={customerEmail} onClose={handleClose} />
+          <Confirmation
+            labels={labels}
+            email={customerEmail}
+            onClose={handleClose}
+          />
         </WizardModal.Page>
       </WizardModal>
     </WidgetDataProvider>
