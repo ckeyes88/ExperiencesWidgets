@@ -23,6 +23,7 @@ import "./TimeslotSelection.scss";
 import { Button } from "../../Common/Button";
 import { Donger } from "../../Common/Icon/Donger";
 import { AppDictionary } from "../../../../typings/Languages";
+import { CalendarSkeleton } from "../../Common/CalendarSkeleton";
 
 export type TimeslotSelectionProps = {
   /**Format for money in shop. */
@@ -205,7 +206,7 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
       <div className="timeslot-selection">
         <div className="timeslot-selection__calendar">
           {isFetchingInitialAvailabilities ? (
-            <div>fetching calendar...</div>
+            <CalendarSkeleton />
           ) : (
             <Fragment>
               <EventTitle

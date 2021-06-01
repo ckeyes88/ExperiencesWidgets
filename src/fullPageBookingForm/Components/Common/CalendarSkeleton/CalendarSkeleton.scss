@@ -1,0 +1,34 @@
+.CalendarSkeleton {
+  display: flex;
+  flex-direction: column;
+  width: 330px;
+}
+
+.CalendarSkeleton__Title > * {
+  margin-bottom: 8px;
+}
+.CalendarSkeleton__Title > div:first-child {
+  margin-bottom: 15px;
+}
+.CalendarSkeleton__Calendar {
+  margin-top: 4rem;
+}
+.CalendarSkeleton__Calendar__Title {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 25px;
+}
+
+.CalendarSkeleton__Calendar__Title--hasTitleMargin {
+  margin-right: 25%;
+}
+.CalendarSkeleton__Calendar__Title--hasMarginRight {
+  margin-right: 5%;
+}
+
+.CalendarRow {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: space-between;
+  margin-top: 20px;
+}

@@ -1,7 +1,6 @@
 .skeleton {
   background: #eeeeee;
   border-radius: 5px;
-  width: 50%;
 }
 
 .skeleton--display {
@@ -14,4 +13,8 @@
 
 .skeleton--button {
   height: 36px;
+}
+.skeleton--box {
+  height: 48px;
+  width: 48px;
 }
