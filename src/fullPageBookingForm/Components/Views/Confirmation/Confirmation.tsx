@@ -49,7 +49,7 @@ export const Confirmation: FunctionComponent<ConfirmationProps> = ({
               ? labels.sentConfirmationLabel
               : "A confirmation will be sent to "
           }`}
-        />
+        />{" "}
         {emailText()}
       </div>
     );
