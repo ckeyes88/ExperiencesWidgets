@@ -124,6 +124,7 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
   };
   const calendar = (
     <Calendar
+      labels={labels}
       date={currentDate}
       month={currentMonth}
       year={currentYear}
@@ -204,6 +205,9 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
   const renderView = () => {
     return (
       <div className="timeslot-selection">
+        {isFetchingInitialAvailabilities && (
+          <div className="timeslot-selection__loader" />
+        )}
         <div className="timeslot-selection__calendar">
           {isFetchingInitialAvailabilities ? (
             <CalendarSkeleton />
@@ -253,9 +257,16 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
       Object.keys(availabilities).length === 0 ? (
         <div className="timeslot-selection__no-availability">
           <Donger />
-          <TextStyle text="Whoops!" variant="display1" />
           <TextStyle
-            text="There is currently no availability for this experience."
+            text={labels.whoopsLabel ? labels.whoopsLabel : "Whoops!"}
+            variant="display1"
+          />
+          <TextStyle
+            text={
+              labels.noUpcomingTimeSlotsLabel
+                ? labels.noUpcomingTimeSlotsLabel
+                : "There is currently no availability for this experience."
+            }
             variant="body1"
           />
           <Button
