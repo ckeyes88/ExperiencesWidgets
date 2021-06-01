@@ -139,6 +139,7 @@ export type AppDictionary = { [key: string]: any } & {
   editLabel: string;
   spotLeftLabel: string;
   additionalOrderDetailsLabel: string;
+  pleaseWaitLabel: string;
 };
 
 export type LanguageDictionaryType = {
@@ -151,6 +152,11 @@ export type LanguageDictionaryType = {
  */
 export const languageDictionary: LanguageDictionaryType = {
   "en-US": {
+    additionalOrderDetailsLabel: "Additional order details",
+    editLabel: "Edit",
+    pleaseWaitLabel: "Please wait...",
+    saveContinueLabel: "Save & continue",
+    spotLeftLabel: "spot left",
     customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
@@ -300,6 +306,11 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Today",
   },
   es: {
+    additionalOrderDetailsLabel: "Additional order details",
+    editLabel: "Edit",
+    pleaseWaitLabel: "Please wait...",
+    saveContinueLabel: "Save & continue",
+    spotLeftLabel: "spot left",
     customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
@@ -455,6 +466,11 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Hoy dia",
   },
   ja: {
+    additionalOrderDetailsLabel: "Additional order details",
+    editLabel: "Edit",
+    pleaseWaitLabel: "Please wait...",
+    saveContinueLabel: "Save & continue",
+    spotLeftLabel: "spot left",
     customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
@@ -601,6 +617,11 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "今日",
   },
   ger: {
+    additionalOrderDetailsLabel: "Additional order details",
+    editLabel: "Edit",
+    pleaseWaitLabel: "Please wait...",
+    saveContinueLabel: "Save & continue",
+    spotLeftLabel: "spot left",
     customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
@@ -751,6 +772,11 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Heute",
   },
   swe: {
+    additionalOrderDetailsLabel: "Additional order details",
+    editLabel: "Edit",
+    pleaseWaitLabel: "Please wait...",
+    saveContinueLabel: "Save & continue",
+    spotLeftLabel: "spot left",
     customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
@@ -899,6 +925,11 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "I dag",
   },
   fr: {
+    additionalOrderDetailsLabel: "Additional order details",
+    editLabel: "Edit",
+    pleaseWaitLabel: "Please wait...",
+    saveContinueLabel: "Save & continue",
+    spotLeftLabel: "spot left",
     customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
@@ -1049,6 +1080,11 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Aujourd'hui",
   },
   nl: {
+    additionalOrderDetailsLabel: "Additional order details",
+    editLabel: "Edit",
+    pleaseWaitLabel: "Please wait...",
+    saveContinueLabel: "Save & continue",
+    spotLeftLabel: "spot left",
     customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
@@ -1198,6 +1234,11 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Vandaag",
   },
   it: {
+    additionalOrderDetailsLabel: "Additional order details",
+    editLabel: "Edit",
+    pleaseWaitLabel: "Please wait...",
+    saveContinueLabel: "Save & continue",
+    spotLeftLabel: "spot left",
     customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
