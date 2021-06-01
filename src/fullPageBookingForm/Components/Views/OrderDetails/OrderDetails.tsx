@@ -52,6 +52,8 @@ export type OrderDetailsProps = {
   isStorybookTest?: boolean;
   /**Callback to handle back click in parent. */
   onBackClick: () => void;
+  /**Language code for view. */
+  languageCode: string;
 };
 
 export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
@@ -61,6 +63,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   labels,
   isStorybookTest,
   onBackClick,
+  languageCode,
 }) => {
   const addOrderToCart = isStorybookTest ? () => {} : useAddOrderToCart();
   const setPage = isStorybookTest
@@ -239,7 +242,14 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     return (
       <form className={formClassNames.join(" ")} onSubmit={handleFormSubmit}>
         <div className="OrderDetails__Input__Customer-Form__Title">
-          <TextStyle variant="display2" text="Customer info" />
+          <TextStyle
+            variant="display2"
+            text={
+              labels.customerInfoLabel
+                ? labels.customerInfoLabel
+                : "Customer info"
+            }
+          />
         </div>
 
         <CustomerInfoForm
@@ -419,7 +429,11 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
     return (
       <Button
-        text={"Save & continue"}
+        text={`${
+          labels.saveContinueLabel
+            ? labels.saveContinueLabel
+            : "Save & continue"
+        }`}
         variant="contained"
         fullWidth
         color="primary"
@@ -439,7 +453,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     return (
       <div className="OrderDetails__Button" ref={setEditRef}>
         <Button
-          text="Edit"
+          text={`${labels.editLabel ? labels.editLabel : "Edit"}`}
           variant="contained"
           fullWidth
           color="primary"
@@ -517,8 +531,14 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
   //Format start and end time of selected event.
   const { startsAt, timezone, endsAt } = selectedTimeslot;
-  const startTime = moment(startsAt).tz(timezone).format("h:mma");
-  const endTime = moment(endsAt).tz(timezone).format("h:mma");
+  const startTime = moment(startsAt)
+    .tz(timezone)
+    .locale(languageCode)
+    .format("h:mma");
+  const endTime = moment(endsAt)
+    .tz(timezone)
+    .locale(languageCode)
+    .format("h:mma");
 
   //Format day of week and month/day of event.
   const dayOfWeek = moment(startsAt).format("dddd");
@@ -567,8 +587,16 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
                 variant="body3"
                 text={
                   unitsLeft !== 1
-                    ? `${unitsLeft} spots left`
-                    : `${unitsLeft} spot left`
+                    ? `${unitsLeft} ${
+                        labels.spotsLeftLabel
+                          ? labels.spotsLeftLabel
+                          : "spots left"
+                      }`
+                    : `${unitsLeft} ${
+                        labels.spotLeftLabel
+                          ? labels.spotLeftLabel
+                          : "spot left"
+                      }`
                 }
               />
             </div>
@@ -578,7 +606,12 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               variant="body2"
               text={`From ${formatCurrency(moneyFormat, minCost)} `}
             />
-            <TextStyle variant="body1" text={"| person"} />
+            <TextStyle
+              variant="body1"
+              text={`| ${
+                labels.singularUnitLabel ? labels.singularUnitLabel : "person"
+              }`}
+            />
           </div>
           <div className="OrderDetails__Header-Rule" />
           {isSaveContinueDisabled && (

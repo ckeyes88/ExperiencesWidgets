@@ -7,13 +7,18 @@ import "./TimeslotGroup.scss";
 
 export type TimeslotGroup = {
   timeslots: TimeslotCardProps[];
+  lang: string;
 };
 
 export const TimeslotGroup: FunctionComponent<TimeslotGroup> = ({
+  lang,
   timeslots,
 }) => {
   const { startsAt, timezone } = timeslots[0];
-  const formattedDayText = moment(startsAt).tz(timezone).format("dddd, MMMM D");
+  const formattedDayText = moment(startsAt)
+    .tz(timezone)
+    .locale(lang)
+    .format("dddd, MMMM D");
 
   return (
     <div className="timeslot-group">

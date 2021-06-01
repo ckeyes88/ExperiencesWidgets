@@ -107,7 +107,14 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
       {formTitle ? (
         <TextStyle variant="display2" text={formTitle} />
       ) : (
-        <TextStyle variant="display2" text={"Additional order details"} />
+        <TextStyle
+          variant="display2"
+          text={`${
+            labels.additionalOrderDetailsLabel
+              ? labels.additionalOrderDetailsLabel
+              : "Additional order details"
+          }`}
+        />
       )}
     </div>
   );

@@ -134,6 +134,11 @@ export type AppDictionary = { [key: string]: any } & {
   whoopsLabel: string;
   spotsLeftLabel: string;
   soldOutLabel: string;
+  customerInfoLabel: string;
+  saveContinueLabel: string;
+  editLabel: string;
+  spotLeftLabel: string;
+  additionalOrderDetailsLabel: string;
 };
 
 export type LanguageDictionaryType = {
@@ -146,6 +151,7 @@ export type LanguageDictionaryType = {
  */
 export const languageDictionary: LanguageDictionaryType = {
   "en-US": {
+    customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",
@@ -294,6 +300,7 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Today",
   },
   es: {
+    customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",
@@ -448,6 +455,7 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Hoy dia",
   },
   ja: {
+    customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",
@@ -593,6 +601,7 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "今日",
   },
   ger: {
+    customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",
@@ -742,6 +751,7 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Heute",
   },
   swe: {
+    customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",
@@ -889,6 +899,7 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "I dag",
   },
   fr: {
+    customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",
@@ -1038,6 +1049,7 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Aujourd'hui",
   },
   nl: {
+    customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",
@@ -1186,6 +1198,7 @@ export const languageDictionary: LanguageDictionaryType = {
     today: "Vandaag",
   },
   it: {
+    customerInfoLabel: "Customer info",
     soldOutLabel: "Sold Out",
     spotsLeftLabel: "spots left",
     whoopsLabel: "Whoops!",

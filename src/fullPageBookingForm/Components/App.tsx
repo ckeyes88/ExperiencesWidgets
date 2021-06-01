@@ -155,13 +155,18 @@ export const App: FunctionComponent<AppProps> = ({
         onClose={handleClose}
       >
         <WizardModal.Page page={BookingFormPage.TIMESLOT_SELECTION}>
-          <TimeslotSelection moneyFormat={moneyFormat} labels={labels} />
+          <TimeslotSelection
+            moneyFormat={moneyFormat}
+            labels={labels}
+            languageCode={languageCode}
+          />
         </WizardModal.Page>
         <WizardModal.Page page={BookingFormPage.ORDER_DETAILS}>
           <OrderDetails
             error=""
             event={event}
             labels={labels}
+            languageCode={languageCode}
             selectedTimeslot={selectedTimeslot}
             onBackClick={resetOrderDetailsStores}
             moneyFormat={moneyFormat}

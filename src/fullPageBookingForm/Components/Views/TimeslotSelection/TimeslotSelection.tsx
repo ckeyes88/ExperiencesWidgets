@@ -30,11 +30,14 @@ export type TimeslotSelectionProps = {
   moneyFormat: string;
   /**Labels to be used in the view. */
   labels: Partial<AppDictionary>;
+  /**Language code */
+  languageCode: string;
 };
 
 export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
   moneyFormat,
   labels,
+  languageCode,
 }) => {
   const setSelectedTimeslot = useTimeslotStore(
     (state) => state.setSelectedTimeslot,
@@ -182,6 +185,7 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
         {daysToRender.map((date) => (
           <TimeslotGroup
             key={date}
+            lang={languageCode}
             timeslots={timeslotsByDay[date].map((timeslot) => {
               const handleSelect = () => handleTimeslotSelect(timeslot);
 
