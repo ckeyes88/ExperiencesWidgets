@@ -38,6 +38,16 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
     timeslotClassNames.push("timeslot-card--is-disabled");
   }
 
+  const remainingSpotsText = `${remainingSpots} ${
+    remainingSpots !== 1
+      ? labels.spotsLeftLabel
+        ? labels.spotsLeftLabel
+        : "spots left"
+      : labels.spotLeftLabel
+      ? labels.spotLeftLabel
+      : "spot left"
+  }`;
+
   return (
     <Card>
       <div className={timeslotClassNames.join(" ")} data-testid="timeslot-card">
@@ -51,12 +61,7 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
                 </Fragment>
               }
             />
-            <TextStyle
-              variant="body3"
-              text={`${remainingSpots} ${
-                labels.spotsLeftLabel ? labels.spotsLeftLabel : "spots left"
-              }`}
-            />
+            <TextStyle variant="body3" text={remainingSpotsText} />
           </div>
           <div className="timeslot-card__details__pricing">
             <TextStyle
