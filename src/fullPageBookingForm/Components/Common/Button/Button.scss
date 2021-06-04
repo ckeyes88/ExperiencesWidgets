@@ -116,7 +116,8 @@
 }
 
 .button--disabled.button--color-primary {
-  background-color: lighten($color-primary, 35%);
+  background-color: #d9d9d9;
+  color: #929292;
 }
 
 .button--disabled.button--color-danger {

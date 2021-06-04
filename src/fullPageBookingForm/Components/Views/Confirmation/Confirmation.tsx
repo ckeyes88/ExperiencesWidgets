@@ -1,5 +1,6 @@
 /** @jsx h */
 import { h, FunctionComponent } from "preact";
+import { AppDictionary } from "../../../../typings/Languages";
 import { Button } from "../../Common/Button";
 import { ThumbsUp } from "../../Common/Icon/ThumbsUp";
 import { TextStyle } from "../../Common/TextStyle";
@@ -10,16 +11,26 @@ export type ConfirmationProps = {
   email: string;
   /**Function to close wizard modal when confirmed. */
   onClose: () => void;
+  /**Labels for view. */
+  labels: Partial<AppDictionary>;
 };
 
 export const Confirmation: FunctionComponent<ConfirmationProps> = ({
   email,
   onClose,
+  labels,
 }) => {
   const renderCloseButton = () => {
     return (
       <div className="FullPage__Confirmation__Close">
-        <TextStyle variant="body1" text="close" />
+        <TextStyle
+          variant="body1"
+          text={`${
+            labels.finalConfirmationLabel
+              ? labels.finalConfirmationLabel.toLowerCase()
+              : "close"
+          }`}
+        />
       </div>
     );
   };
@@ -31,7 +42,14 @@ export const Confirmation: FunctionComponent<ConfirmationProps> = ({
     );
     return (
       <div className="FullPage__Confirmation__Subtitle">
-        <TextStyle variant="body1" text="A confirmation will be sent to " />
+        <TextStyle
+          variant="body1"
+          text={`${
+            labels.sentConfirmationLabel
+              ? labels.sentConfirmationLabel
+              : "A confirmation will be sent to "
+          }`}
+        />{" "}
         {emailText()}
       </div>
     );
@@ -40,15 +58,19 @@ export const Confirmation: FunctionComponent<ConfirmationProps> = ({
     <div className="FullPage__Confirmation">
       <ThumbsUp />
       <div className="FullPage__Confirmation__Title">
-        <TextStyle variant="display1" text="We've saved you a spot!" />
+        <TextStyle
+          variant="display1"
+          text={`${
+            labels.savedSpotLabel
+              ? labels.savedSpotLabel
+              : "We've saved you a spot!"
+          }`}
+        />
       </div>
 
       {renderConfirmText()}
       <div className="FullPage__Confirmation__Email">
-        <TextStyle
-          variant="body1"
-          text="You will receive an email reminder the day before your scheduled time."
-        />
+        <TextStyle variant="body1" text={labels.getEmailReminderDaysLabel(1)} />
       </div>
 
       <Button

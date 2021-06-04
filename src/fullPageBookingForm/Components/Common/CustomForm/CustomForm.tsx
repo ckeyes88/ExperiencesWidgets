@@ -45,6 +45,8 @@ export type PerAttendeeTypeProps = {
 };
 
 export type CustomFormProps = {
+  /**Whether form should be disabled by parent. */
+  isDisabled: boolean;
   /**Type of custom form rendered in checkout flow. */
   formType: PerAttendeeTypeProps | PerOrderTypeProps;
   /** Method passed in to handle changes to the value of a field */
@@ -58,6 +60,7 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
   formType,
   handleChange,
   labels,
+  isDisabled,
 }) => {
   /** Renders a single field */
   const renderFormField = (
@@ -93,6 +96,7 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
           id={`${field.label}%%%${i}%%%${variantIdx}`}
           data-testid={`${field.label}%%%${i}%%%${variantIdx}`}
           onFieldChange={handleIdxChange}
+          disabled={isDisabled}
         />
       </div>
     );
@@ -103,7 +107,14 @@ export const CustomForm: FunctionComponent<CustomFormProps> = ({
       {formTitle ? (
         <TextStyle variant="display2" text={formTitle} />
       ) : (
-        <TextStyle variant="display2" text={"Additional order details"} />
+        <TextStyle
+          variant="display2"
+          text={`${
+            labels.additionalOrderDetailsLabel
+              ? labels.additionalOrderDetailsLabel
+              : "Additional order details"
+          }`}
+        />
       )}
     </div>
   );

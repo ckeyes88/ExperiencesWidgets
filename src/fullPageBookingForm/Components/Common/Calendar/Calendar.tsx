@@ -8,8 +8,10 @@ import { LeftIcon } from "./LeftIcon";
 import { RightIcon } from "./RightIcon";
 import { getCalendarMatrix } from "./getCalendarMatrix";
 import "./Calendar.scss";
+import { AppDictionary } from "../../../../typings/Languages";
 
 export type CalendarProps = {
+  labels: Partial<AppDictionary>;
   month?: number;
   year?: number;
   date: Date;
@@ -35,6 +37,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
   onDateChange,
   onMonthChange,
   onYearChange,
+  labels,
 }) => {
   const [currentMonth, setCurrentMonth] = useState(
     month || moment(date).month(),
@@ -203,6 +206,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
   //Today is disabled if the date is disabled (no timeslots on this date)
   // //or it's sold out.
   // const todayIsDisabled = dateIsDisabled(today) || dateIsSoldOut(today);
+  const currentMonthString = moment.months()[currentMonth];
 
   return (
     <div className="calendar">
@@ -210,7 +214,11 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
         <div className="calendar__header__month">
           <TextStyle
             variant="display2"
-            text={`${moment.months()[currentMonth]} ${currentYear}`}
+            text={`${
+              labels[currentMonthString]
+                ? labels[currentMonthString]
+                : currentMonthString
+            } ${currentYear}`}
           />
           {loading && <div className="calendar__loader" />}
         </div>
@@ -218,7 +226,7 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
           <Button
             variant="text"
             color="primary"
-            text="Today"
+            text={labels.today ? labels.today : "Today"}
             disabled={
               (moment(currentMonth).isSameOrBefore(month, "date") &&
                 withinCurrentMonthAndYear) ||

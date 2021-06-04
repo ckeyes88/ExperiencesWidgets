@@ -52,6 +52,8 @@ export type OrderDetailsProps = {
   isStorybookTest?: boolean;
   /**Callback to handle back click in parent. */
   onBackClick: () => void;
+  /**Language code for view. */
+  languageCode: string;
 };
 
 export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
@@ -61,6 +63,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
   labels,
   isStorybookTest,
   onBackClick,
+  languageCode,
 }) => {
   const addOrderToCart = isStorybookTest ? () => {} : useAddOrderToCart();
   const setPage = isStorybookTest
@@ -228,21 +231,32 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       formClassNames.push("OrderDetails__Input__Customer-Form--disabled");
     }
 
+    const hasQuantity = useQtySelectionStore(
+      (state) => state.canConfirmOrder,
+    )();
     //Save/Confirm button is disabled if store requires it to be disabled, if a variant qty hasn't been
     //specified, or if the customer form hasn't been populated.
     const canConfirm =
-      useQtySelectionStore((state) => state.canConfirmOrder)() &&
-      useCustomerFormStore((state) => state.canConfirmOrder)();
+      hasQuantity && useCustomerFormStore((state) => state.canConfirmOrder)();
 
     return (
       <form className={formClassNames.join(" ")} onSubmit={handleFormSubmit}>
         <div className="OrderDetails__Input__Customer-Form__Title">
-          <TextStyle variant="display2" text="Customer info" />
+          <TextStyle
+            variant="display2"
+            text={
+              labels.customerInfoLabel
+                ? labels.customerInfoLabel
+                : "Customer info"
+            }
+          />
         </div>
 
         <CustomerInfoForm
           {...customerFormProps}
-          isCustomerInfoFormDisabled={saveButtonVisibility === "hidden"}
+          isCustomerInfoFormDisabled={
+            saveButtonVisibility === "hidden" || !hasQuantity
+          }
         />
         <div className="OrderDetails__Header-Rule" />
         {saveButtonVisibility !== "hidden" && (
@@ -266,6 +280,10 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
       (state) => state.customFormValues,
     );
 
+    const hasQuantity = useQtySelectionStore(
+      (state) => state.canConfirmOrder,
+    )();
+
     //Whether the user is allowed to confirm order by populating
     //all required custom form fields.
     const canConfirm =
@@ -274,7 +292,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
           (field) =>
             !field.isRequired || (field.isRequired && field.value !== ""),
         ),
-      ) && useQtySelectionStore((state) => state.canConfirmOrder)();
+      ) && hasQuantity;
 
     //Render per attendee form.
     if (customOrderDetails.formType === OrderDetailsFormType.PerAttendee) {
@@ -327,6 +345,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               handleChange={useCustomFormStore(
                 (state) => state.handleCustomFormChange,
               )}
+              isDisabled={!hasQuantity}
             />
             <div className="OrderDetails__Button">
               {renderConfirmButton(!canConfirm)}
@@ -353,6 +372,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               handleChange={useCustomFormStore(
                 (state) => state.handleCustomFormChange,
               )}
+              isDisabled={!hasQuantity}
             />
             <div className="OrderDetails__Button">
               {renderConfirmButton(!canConfirm)}
@@ -409,7 +429,11 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
     return (
       <Button
-        text={"Save & continue"}
+        text={`${
+          labels.saveContinueLabel
+            ? labels.saveContinueLabel
+            : "Save & continue"
+        }`}
         variant="contained"
         fullWidth
         color="primary"
@@ -429,7 +453,7 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
     return (
       <div className="OrderDetails__Button" ref={setEditRef}>
         <Button
-          text="Edit"
+          text={`${labels.editLabel ? labels.editLabel : "Edit"}`}
           variant="contained"
           fullWidth
           color="primary"
@@ -507,8 +531,14 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
   //Format start and end time of selected event.
   const { startsAt, timezone, endsAt } = selectedTimeslot;
-  const startTime = moment(startsAt).tz(timezone).format("h:mma");
-  const endTime = moment(endsAt).tz(timezone).format("h:mma");
+  const startTime = moment(startsAt)
+    .tz(timezone)
+    .locale(languageCode)
+    .format("h:mma");
+  const endTime = moment(endsAt)
+    .tz(timezone)
+    .locale(languageCode)
+    .format("h:mma");
 
   //Format day of week and month/day of event.
   const dayOfWeek = moment(startsAt).format("dddd");
@@ -544,14 +574,29 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
 
           <div>
             <div className="OrderDetails__Summary__Time-Slot">
-              <TextStyle variant="body1" text={`${startTime} - ${endTime}`} />
+              <TextStyle
+                variant="body1"
+                text={
+                  <Fragment>
+                    {startTime} &ndash; {endTime}
+                  </Fragment>
+                }
+              />
               <TextStyle variant="body1" text="|" />
               <TextStyle
                 variant="body3"
                 text={
                   unitsLeft !== 1
-                    ? `${unitsLeft} spots left`
-                    : `${unitsLeft} spot left`
+                    ? `${unitsLeft} ${
+                        labels.spotsLeftLabel
+                          ? labels.spotsLeftLabel
+                          : "spots left"
+                      }`
+                    : `${unitsLeft} ${
+                        labels.spotLeftLabel
+                          ? labels.spotLeftLabel
+                          : "spot left"
+                      }`
                 }
               />
             </div>
@@ -561,7 +606,12 @@ export const OrderDetails: FunctionComponent<OrderDetailsProps> = ({
               variant="body2"
               text={`From ${formatCurrency(moneyFormat, minCost)} `}
             />
-            <TextStyle variant="body1" text={"/ person"} />
+            <TextStyle
+              variant="body1"
+              text={`| ${
+                labels.singularUnitLabel ? labels.singularUnitLabel : "person"
+              }`}
+            />
           </div>
           <div className="OrderDetails__Header-Rule" />
           {isSaveContinueDisabled && (

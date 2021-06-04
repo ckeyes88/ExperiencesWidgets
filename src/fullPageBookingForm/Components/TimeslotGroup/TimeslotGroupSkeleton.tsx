@@ -13,7 +13,7 @@ export const TimeslotGroupSkeleton: FunctionComponent<TimeslotGroupSkeletonProps
 }) => (
   <div className="timeslot-group">
     <div className="timeslot-group__header">
-      <Skeleton variant="display" />
+      <Skeleton variant="display" width="50%" />
     </div>
     <div className="timeslot-group__list">
       {Array.from({ length }).map((_, i) => (

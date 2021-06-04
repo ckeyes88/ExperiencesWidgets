@@ -132,6 +132,7 @@ export const defaultArgs: OrderDetailsProps = {
   labels: defaultLabels,
   isStorybookTest: true,
   onBackClick: () => {},
+  moneyFormat: "$",
 };
 
 export const defaultPerOrderCustomerDetails: CustomOrderDetailsDBO = {

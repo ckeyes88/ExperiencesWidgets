@@ -13,6 +13,7 @@ const defaultProps: CustomFormProps = {
   labels: {
     optionalFieldLabel: "Optional",
   },
+  isDisabled: false,
 };
 
 const perAttendeeProps: CustomFormProps = {
@@ -21,6 +22,7 @@ const perAttendeeProps: CustomFormProps = {
   labels: {
     optionalFieldLabel: "Optional",
   },
+  isDisabled: false,
 };
 
 test("Renders custom per order form correctly.", () => {

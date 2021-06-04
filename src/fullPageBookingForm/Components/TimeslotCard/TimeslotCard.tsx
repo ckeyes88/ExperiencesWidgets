@@ -1,11 +1,12 @@
 /** @jsx h */
-import { h, FunctionComponent } from "preact";
+import { h, FunctionComponent, Fragment } from "preact";
 import moment from "moment-timezone";
 import { Button } from "../Common/Button";
 import { Card } from "../Common/Card";
 import { TextStyle } from "../Common/TextStyle";
 import "./TimeslotCard.scss";
 import { formatCurrency } from "../../../Utils/helpers";
+import { AppDictionary } from "../../../typings/Languages";
 
 export type TimeslotCardProps = {
   startsAt: Date;
@@ -15,6 +16,7 @@ export type TimeslotCardProps = {
   minPrice: number;
   onSelect: () => void;
   moneyFormat: string;
+  labels: Partial<AppDictionary>;
 };
 
 export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
@@ -25,6 +27,7 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
   minPrice,
   moneyFormat,
   onSelect,
+  labels,
 }) => {
   const formattedStartsAt = moment(startsAt).tz(timezone).format("h:mma");
   const formattedEndsAt = moment(endsAt).tz(timezone).format("h:mma");
@@ -35,6 +38,16 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
     timeslotClassNames.push("timeslot-card--is-disabled");
   }
 
+  const remainingSpotsText = `${remainingSpots} ${
+    remainingSpots !== 1
+      ? labels.spotsLeftLabel
+        ? labels.spotsLeftLabel
+        : "spots left"
+      : labels.spotLeftLabel
+      ? labels.spotLeftLabel
+      : "spot left"
+  }`;
+
   return (
     <Card>
       <div className={timeslotClassNames.join(" ")} data-testid="timeslot-card">
@@ -42,9 +55,13 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
           <div className="timeslot-card__details__time">
             <TextStyle
               variant="body1"
-              text={`${formattedStartsAt} - ${formattedEndsAt} | `}
+              text={
+                <Fragment>
+                  {formattedStartsAt} &ndash; {formattedEndsAt} |{" "}
+                </Fragment>
+              }
             />
-            <TextStyle variant="body3" text={`${remainingSpots} spots left`} />
+            <TextStyle variant="body3" text={remainingSpotsText} />
           </div>
           <div className="timeslot-card__details__pricing">
             <TextStyle
@@ -55,13 +72,24 @@ export const TimeslotCard: FunctionComponent<TimeslotCardProps> = ({
                   : "Free"
               }
             />
-            <TextStyle variant="body1" text=" / person" />
+            <TextStyle
+              variant="body1"
+              text={` | ${
+                labels.singularUnitLabel ? labels.singularUnitLabel : "person"
+              }`}
+            />
           </div>
         </div>
         <div className="timeslot-card__button">
           <Button
             color={remainingSpots === 0 ? "grayed" : "primary"}
-            text={remainingSpots === 0 ? "Sold Out" : "Select"}
+            text={
+              remainingSpots === 0
+                ? `${labels.soldOutLabel ? labels.soldOutLabel : "Sold Out"}`
+                : `${
+                    labels.selectDateLabel ? labels.selectDateLabel : "Select"
+                  }`
+            }
             onClick={onSelect}
             disabled={remainingSpots === 0}
           />

@@ -18,6 +18,16 @@
   background-color: transparent !important;
 }
 
+.FullPage__FormField__Select--isDisabled,
+.FullPage__FormField__Input--isDisabled {
+  background-color: #f8f8f8 !important;
+}
+
+.FullPage__FormField__Select::placeholder,
+.FullPage__FormField__Input::placeholder {
+  opacity: 0.3;
+}
+
 .FullPage__FormField__Label > span:nth-child(2) {
   margin-left: 1rem;
 }
