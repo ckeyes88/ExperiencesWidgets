@@ -9,13 +9,15 @@ import { useEffect, useRef, useState } from "preact/hooks";
 export type TimeslotGroup = {
   timeslots: TimeslotCardProps[];
   lang: string;
-  onScrollTimeslots: (startsAt: Date) => void;
+  setActiveTimeslot: (startsAt: Date) => void;
+  setTimeslotLocations: (timeslot: Date, location: number) => void;
 };
 
 export const TimeslotGroup: FunctionComponent<TimeslotGroup> = ({
   lang,
   timeslots,
-  onScrollTimeslots,
+  setActiveTimeslot,
+  setTimeslotLocations,
 }) => {
   const ref = useRef<HTMLDivElement>();
   const [currentY, setCurrentY] = useState(0);
@@ -29,9 +31,10 @@ export const TimeslotGroup: FunctionComponent<TimeslotGroup> = ({
     const onScroll = () => {
       const currentY = ref.current?.getBoundingClientRect().y;
       setCurrentY(currentY);
+      setTimeslotLocations(startsAt, currentY);
 
       if (currentY >= 85 && currentY < ref.current?.offsetHeight + 85) {
-        onScrollTimeslots(startsAt);
+        setActiveTimeslot(startsAt);
       }
     };
     window.addEventListener("scroll", onScroll, true);

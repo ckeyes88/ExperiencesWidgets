@@ -24,6 +24,7 @@ import { Button } from "../../Common/Button";
 import { Donger } from "../../Common/Icon/Donger";
 import { AppDictionary } from "../../../../typings/Languages";
 import { CalendarSkeleton } from "../../Common/CalendarSkeleton";
+import { TimeslotYLocations } from "../../../../typings/TimeslotSelection";
 
 export type TimeslotSelectionProps = {
   /**Format for money in shop. */
@@ -43,6 +44,9 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
     (state) => state.setSelectedTimeslot,
   );
   const { setPage, close } = useWizardModalAction();
+  const [timeslotLocations, setTimeslotLocations] = useState<
+    TimeslotYLocations
+  >({});
   const [hasMoreAvailableDates, setHasMoreAvailableDates] = useState(true);
   const [calendarDrawerOpen, setCalendarOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -88,9 +92,9 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
   const handleDateChange = (date: Date) => {
     setCurrentDate(date);
 
-    document
-      .querySelector(".wizard-modal__root")
-      ?.scrollTo({ top: 0, behavior: "smooth" });
+    // document
+    //   .querySelector(".wizard-modal__root")
+    //   ?.scrollTo({ top: 0, behavior: "smooth" });
 
     setCalendarOpen(false);
   };
@@ -146,8 +150,6 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
   );
 
   const getDaysToRender = () => {
-    const dateFormat = "YYYY-MM-DD";
-
     let daysToRender = Object.keys(timeslotsByDay);
 
     return daysToRender;
@@ -160,6 +162,17 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
 
     const handleNewActiveTimeslot = (startsAt: Date) => {
       setCurrentDate(startsAt);
+    };
+
+    const handleUpdateTimeslotLocations = (
+      timeslot: Date,
+      location: number,
+    ) => {
+      const timeString = timeslot.toString();
+      setTimeslotLocations((prevState) => ({
+        ...prevState,
+        [`${timeString}`]: location,
+      }));
     };
 
     const daysToRender = getDaysToRender();
@@ -181,7 +194,8 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
           <TimeslotGroup
             key={date}
             lang={languageCode}
-            onScrollTimeslots={handleNewActiveTimeslot}
+            setActiveTimeslot={handleNewActiveTimeslot}
+            setTimeslotLocations={handleUpdateTimeslotLocations}
             timeslots={timeslotsByDay[date].map((timeslot) => {
               const handleSelect = () => handleTimeslotSelect(timeslot);
 
