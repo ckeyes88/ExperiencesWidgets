@@ -45,7 +45,11 @@ export const Calendar: FunctionComponent<CalendarProps> = ({
   const [currentYear, setCurrentYear] = useState(year || moment(date).year());
   const [currentDate, setCurrentDate] = useState(date);
 
+  //Update calendar's front month to current date's month, if the
+  //passed in date month is not equal to the current date's month.
   useEffect(() => {
+    setCurrentMonth(date.getMonth());
+    setCurrentYear(date.getFullYear());
     setCurrentDate(date);
   }, [date.getTime()]);
 
