@@ -168,6 +168,10 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
       return null;
     }
 
+    const handleNewActiveTimeslot = (startsAt: Date) => {
+      setCurrentDate(startsAt);
+    };
+
     const daysToRender = getDaysToRender();
 
     return (
@@ -187,6 +191,7 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
           <TimeslotGroup
             key={date}
             lang={languageCode}
+            onScrollTimeslots={handleNewActiveTimeslot}
             timeslots={timeslotsByDay[date].map((timeslot) => {
               const handleSelect = () => handleTimeslotSelect(timeslot);
 
