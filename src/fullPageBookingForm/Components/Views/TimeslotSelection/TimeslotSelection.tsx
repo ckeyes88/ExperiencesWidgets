@@ -148,17 +148,7 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
   const getDaysToRender = () => {
     const dateFormat = "YYYY-MM-DD";
 
-    const startingPointIndex = Object.keys(timeslotsByDay).findIndex(
-      (key) =>
-        moment(currentDate).format(dateFormat) ===
-        moment(key).format(dateFormat),
-    );
-
     let daysToRender = Object.keys(timeslotsByDay);
-
-    if (startingPointIndex >= 0) {
-      daysToRender = daysToRender.slice(startingPointIndex);
-    }
 
     return daysToRender;
   };
