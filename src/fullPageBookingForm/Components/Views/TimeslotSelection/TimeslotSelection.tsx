@@ -174,6 +174,7 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
       <InfiniteScroll
         hasMore={hasMoreAvailableDates}
         useWindow={false}
+        threshold={350}
         getScrollParent={() => document.querySelector(".wizard-modal__root")}
         loadMore={handleLoadMore}
         loader={
