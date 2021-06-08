@@ -30,7 +30,7 @@ export const TimeslotGroup: FunctionComponent<TimeslotGroup> = ({
       const currentY = ref.current?.getBoundingClientRect().y;
       setCurrentY(currentY);
 
-      if (currentY >= 85 && currentY < 95) {
+      if (currentY >= 85 && currentY < ref.current?.offsetHeight + 85) {
         onScrollTimeslots(startsAt);
       }
     };
