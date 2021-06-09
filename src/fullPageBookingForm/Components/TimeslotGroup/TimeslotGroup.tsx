@@ -45,6 +45,12 @@ export const TimeslotGroup: FunctionComponent<TimeslotGroup> = ({
     return () => window.removeEventListener("scroll", onScroll, true);
   }, [currentY, ref]);
 
+  useEffect(() => {
+    if (ref.current) {
+      setTimeslotLocations(startsAt, ref.current);
+    }
+  }, [ref]);
+
   return (
     <div className="timeslot-group" ref={ref}>
       <div className="timeslot-group__header">
