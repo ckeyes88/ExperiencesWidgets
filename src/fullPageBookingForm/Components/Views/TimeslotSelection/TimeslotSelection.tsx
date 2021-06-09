@@ -24,6 +24,7 @@ import { Button } from "../../Common/Button";
 import { Donger } from "../../Common/Icon/Donger";
 import { AppDictionary } from "../../../../typings/Languages";
 import { CalendarSkeleton } from "../../Common/CalendarSkeleton";
+import { TimeslotYLocations } from "../../../../typings/TimeslotSelection";
 
 export type TimeslotSelectionProps = {
   /**Format for money in shop. */
@@ -43,6 +44,9 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
     (state) => state.setSelectedTimeslot,
   );
   const { setPage, close } = useWizardModalAction();
+  const [timeslotLocations, setTimeslotLocations] = useState<
+    TimeslotYLocations
+  >({});
   const [hasMoreAvailableDates, setHasMoreAvailableDates] = useState(true);
   const [calendarDrawerOpen, setCalendarOpen] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -87,10 +91,13 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
 
   const handleDateChange = (date: Date) => {
     setCurrentDate(date);
+    const timeslotKey = createTimeslotKey(date);
+    const element = timeslotLocations[timeslotKey];
 
-    document
-      .querySelector(".wizard-modal__root")
-      ?.scrollTo({ top: 0, behavior: "smooth" });
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
 
     setCalendarOpen(false);
   };
@@ -146,21 +153,14 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
   );
 
   const getDaysToRender = () => {
-    const dateFormat = "YYYY-MM-DD";
-
-    const startingPointIndex = Object.keys(timeslotsByDay).findIndex(
-      (key) =>
-        moment(currentDate).format(dateFormat) ===
-        moment(key).format(dateFormat),
-    );
-
     let daysToRender = Object.keys(timeslotsByDay);
 
-    if (startingPointIndex >= 0) {
-      daysToRender = daysToRender.slice(startingPointIndex);
-    }
-
     return daysToRender;
+  };
+
+  const createTimeslotKey = (date: Date) => {
+    const key = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`;
+    return key;
   };
 
   const renderTimeslots = () => {
@@ -168,12 +168,28 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
       return null;
     }
 
+    const handleNewActiveTimeslot = (startsAt: Date) => {
+      setCurrentDate(startsAt);
+    };
+
+    const handleUpdateTimeslotLocations = (
+      timeslot: Date,
+      element: HTMLDivElement,
+    ) => {
+      const timeString = createTimeslotKey(timeslot);
+      setTimeslotLocations((prevState) => ({
+        ...prevState,
+        [`${timeString}`]: element,
+      }));
+    };
+
     const daysToRender = getDaysToRender();
 
     return (
       <InfiniteScroll
         hasMore={hasMoreAvailableDates}
         useWindow={false}
+        threshold={350}
         getScrollParent={() => document.querySelector(".wizard-modal__root")}
         loadMore={handleLoadMore}
         loader={
@@ -186,6 +202,8 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
           <TimeslotGroup
             key={date}
             lang={languageCode}
+            setActiveTimeslot={handleNewActiveTimeslot}
+            setTimeslotLocations={handleUpdateTimeslotLocations}
             timeslots={timeslotsByDay[date].map((timeslot) => {
               const handleSelect = () => handleTimeslotSelect(timeslot);
 
