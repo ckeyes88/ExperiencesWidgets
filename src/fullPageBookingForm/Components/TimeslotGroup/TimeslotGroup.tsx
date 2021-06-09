@@ -31,7 +31,6 @@ export const TimeslotGroup: FunctionComponent<TimeslotGroup> = ({
     const onScroll = () => {
       const currentY = ref.current?.getBoundingClientRect().y;
       setCurrentY(currentY);
-      setTimeslotLocations(startsAt, ref.current);
 
       if (
         currentY >= window.screen.height / 4 - ref.current.offsetHeight &&
