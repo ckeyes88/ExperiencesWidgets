@@ -10,7 +10,7 @@ export type TimeslotGroup = {
   timeslots: TimeslotCardProps[];
   lang: string;
   setActiveTimeslot: (startsAt: Date) => void;
-  setTimeslotLocations: (timeslot: Date, location: number) => void;
+  setTimeslotLocations: (timeslot: Date, element: HTMLDivElement) => void;
 };
 
 export const TimeslotGroup: FunctionComponent<TimeslotGroup> = ({
@@ -31,9 +31,12 @@ export const TimeslotGroup: FunctionComponent<TimeslotGroup> = ({
     const onScroll = () => {
       const currentY = ref.current?.getBoundingClientRect().y;
       setCurrentY(currentY);
-      setTimeslotLocations(startsAt, currentY);
+      setTimeslotLocations(startsAt, ref.current);
 
-      if (currentY >= 85 && currentY < ref.current?.offsetHeight + 85) {
+      if (
+        currentY >= window.screen.height / 4 - ref.current.offsetHeight &&
+        currentY < window.screen.height / 4
+      ) {
         setActiveTimeslot(startsAt);
       }
     };

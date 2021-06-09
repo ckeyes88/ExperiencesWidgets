@@ -91,10 +91,13 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
 
   const handleDateChange = (date: Date) => {
     setCurrentDate(date);
+    const timeslotKey = createTimeslotKey(date);
+    const element = timeslotLocations[timeslotKey];
 
-    // document
-    //   .querySelector(".wizard-modal__root")
-    //   ?.scrollTo({ top: 0, behavior: "smooth" });
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
 
     setCalendarOpen(false);
   };
@@ -155,6 +158,11 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
     return daysToRender;
   };
 
+  const createTimeslotKey = (date: Date) => {
+    const key = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`;
+    return key;
+  };
+
   const renderTimeslots = () => {
     if (isFetchingInitialAvailabilities) {
       return null;
@@ -166,12 +174,12 @@ export const TimeslotSelection: FunctionComponent<TimeslotSelectionProps> = ({
 
     const handleUpdateTimeslotLocations = (
       timeslot: Date,
-      location: number,
+      element: HTMLDivElement,
     ) => {
-      const timeString = timeslot.toString();
+      const timeString = createTimeslotKey(timeslot);
       setTimeslotLocations((prevState) => ({
         ...prevState,
-        [`${timeString}`]: location,
+        [`${timeString}`]: element,
       }));
     };
 
