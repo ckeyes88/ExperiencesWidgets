@@ -2,7 +2,6 @@
 import { h, FunctionComponent, Fragment } from "preact";
 import { useEffect, useState, useMemo } from "preact/hooks";
 import InfiniteScroll from "react-infinite-scroller";
-import moment from "moment";
 import { Availability } from "../../../../typings/Availability";
 import { getTimeslotsByDate } from "../../../../Utils/helpers";
 import { BookingFormPage } from "../../../Typings/BookingFormPage";
