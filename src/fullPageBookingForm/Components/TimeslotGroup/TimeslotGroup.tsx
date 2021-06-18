@@ -33,8 +33,8 @@ export const TimeslotGroup: FunctionComponent<TimeslotGroup> = ({
       setCurrentY(currentY);
 
       if (
-        currentY >= window.screen.height / 4 - ref.current.offsetHeight &&
-        currentY < window.screen.height / 4
+        currentY >= window.innerHeight / 2 - ref.current.offsetHeight / 2 - 2 &&
+        currentY < window.innerHeight / 2
       ) {
         setActiveTimeslot(startsAt);
       }
