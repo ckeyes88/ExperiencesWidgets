@@ -18,7 +18,6 @@ declare const baseUrl: string;
 if (urlPaths.length >= 6) {
   const langCodeIdx = 3;
   const productIdIdx = 4;
-  const autoOpenIdx = 5;
   /**
    * Mounts an instance of the widget component to the found HTML element.
    */
@@ -26,7 +25,7 @@ if (urlPaths.length >= 6) {
     try {
       const languageCode = urlPaths[langCodeIdx];
       const shopifyProductId = urlPaths[productIdIdx];
-      const autoOpen = urlPaths[autoOpenIdx];
+      const autoOpen = 1;
       const shopUrl = url.host;
 
       const props: AppProps = {
@@ -34,7 +33,7 @@ if (urlPaths.length >= 6) {
         languageCode,
         shopUrl,
         shopifyProductId: parseFloat(shopifyProductId),
-        autoOpen: parseFloat(autoOpen),
+        autoOpen,
       };
       render(h(component, props), el);
     } catch (err) {
