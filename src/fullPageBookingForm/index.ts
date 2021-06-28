@@ -15,10 +15,9 @@ const urlPaths = url.pathname.split("/");
 declare const baseUrl: string;
 
 //Proxied version of app has multiple path parameters.
-if (urlPaths.length >= 6) {
+if (urlPaths.length >= 5) {
   const langCodeIdx = 3;
   const productIdIdx = 4;
-  const autoOpenIdx = 5;
   /**
    * Mounts an instance of the widget component to the found HTML element.
    */
@@ -26,15 +25,15 @@ if (urlPaths.length >= 6) {
     try {
       const languageCode = urlPaths[langCodeIdx];
       const shopifyProductId = urlPaths[productIdIdx];
-      const autoOpen = urlPaths[autoOpenIdx];
-      const shopUrl = url.host;
+      const autoOpen = 1;
+      const shopUrl = url.searchParams.get("shop");
 
       const props: AppProps = {
         baseUrl,
         languageCode,
         shopUrl,
         shopifyProductId: parseFloat(shopifyProductId),
-        autoOpen: parseFloat(autoOpen),
+        autoOpen,
       };
       render(h(component, props), el);
     } catch (err) {
