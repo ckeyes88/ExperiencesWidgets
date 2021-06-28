@@ -15,7 +15,7 @@ const urlPaths = url.pathname.split("/");
 declare const baseUrl: string;
 
 //Proxied version of app has multiple path parameters.
-if (urlPaths.length >= 6) {
+if (urlPaths.length >= 5) {
   const langCodeIdx = 3;
   const productIdIdx = 4;
   /**
