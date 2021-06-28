@@ -26,7 +26,7 @@ if (urlPaths.length >= 6) {
       const languageCode = urlPaths[langCodeIdx];
       const shopifyProductId = urlPaths[productIdIdx];
       const autoOpen = 1;
-      const shopUrl = url.host;
+      const shopUrl = url.searchParams.get("shop");
 
       const props: AppProps = {
         baseUrl,
